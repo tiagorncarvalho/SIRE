@@ -11,5 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# Updates:
+# 1) removed bin folder from the classpath
 
-java -Djava.security.properties="./config/java.security" -Dlogback.configurationFile="./config/logback.xml" -cp :lib/* $@
+java -Djava.security.properties="./config/java.security" -Dlogback.configurationFile="./config/logback.xml" -cp lib/* $@
