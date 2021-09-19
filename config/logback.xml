@@ -1,4 +1,4 @@
-<configuration debug="false"> 
+<configuration debug="false">
 
   <!-- Logging to console -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -8,7 +8,7 @@
   </appender>
 
   <!-- Logging to console wih minimal output -->
-  <appender name="MIN-STDOUT" class="ch.qos.logback.core.ConsoleAppender">    
+  <appender name="MIN-STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <pattern> -- %msg%n</pattern>
     </encoder>
@@ -26,16 +26,19 @@
 
   <logger name="io.netty" level="OFF">
     <appender-ref ref="MIN-STDOUT" />
-  	<!--  <appender-ref ref="STDOUT" /> -->
+    <!--  <appender-ref ref="STDOUT" /> -->
   </logger>
-  
-  
-  <logger name="bftsmart" level="INFO"> 
-  	<appender-ref ref="MIN-STDOUT" />
-  	<!-- <appender-ref ref="STDOUT" /> -->
-  </logger> 
-  
-  
+
+
+  <logger name="bftsmart" level="INFO">
+    <appender-ref ref="MIN-STDOUT" />
+    <!-- <appender-ref ref="STDOUT" /> -->
+  </logger>
+
+  <logger name="sire" level="DEBUG">
+    <appender-ref ref="MIN-STDOUT" />
+  </logger>
+
   <!-- SPECIFIC CLASS LOGS -->
   <!--
   
@@ -46,5 +49,5 @@
    <logger name="bftsmart.reconfiguration.util.ECDSAKeyLoader" level="TRACE"></logger>
 	-->
   <logger name="bftsmart.reconfiguration.util.RSAKeyLoader" level="TRACE"></logger>
-  
+
 </configuration>
