@@ -10,7 +10,14 @@
   <!-- Logging to console wih minimal output -->
   <appender name="MIN-STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern> -- %msg%n</pattern>
+      <pattern> %d{HH:mm:ss.SSS} %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>log.txt</file>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level - %msg%n</pattern>
     </encoder>
   </appender>
 
@@ -24,6 +31,34 @@
     <!-- To use async logging use ref="ASYNC" instead -->
   </root>
 
+  <logger name="sire" level="INFO">
+    <appender-ref ref="MIN-STDOUT" />
+  </logger>
+
+  <logger name="communication" level="INFO">
+    <appender-ref ref="MIN-STDOUT" />
+  </logger>
+
+  <logger name="state_transfer" level="INFO">
+    <appender-ref ref="MIN-STDOUT" />
+  </logger>
+
+  <logger name="polynomial_generation" level="INFO">
+    <appender-ref ref="MIN-STDOUT" />
+  </logger>
+
+  <logger name="confidential" level="INFO">
+    <!--<appender-ref ref="FILE"/> -->
+    <appender-ref ref="MIN-STDOUT" />
+      <!--<appender-ref ref="STDOUT" /> -->
+  </logger>
+
+  <logger name="demo" level="INFO">
+    <!--<appender-ref ref="FILE"/>-->
+    <appender-ref ref="MIN-STDOUT" />
+    <!--<appender-ref ref="STDOUT" /> -->
+  </logger>
+
   <logger name="io.netty" level="OFF">
     <appender-ref ref="MIN-STDOUT" />
     <!--  <appender-ref ref="STDOUT" /> -->
@@ -31,13 +66,11 @@
 
 
   <logger name="bftsmart" level="INFO">
+    <!--<appender-ref ref="FILE"/> -->
     <appender-ref ref="MIN-STDOUT" />
-    <!-- <appender-ref ref="STDOUT" /> -->
+      <!--<appender-ref ref="STDOUT" /> -->
   </logger>
 
-  <logger name="sire" level="DEBUG">
-    <appender-ref ref="MIN-STDOUT" />
-  </logger>
 
   <!-- SPECIFIC CLASS LOGS -->
   <!--
