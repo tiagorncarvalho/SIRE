@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'distribution'
+    id 'org.hidetake.ssh' version '2.10.1'
 }
 
 group 'org.example'
@@ -12,6 +13,7 @@ repositories {
 
 distributions {
     main {
+        version = ''
         contents {
             into('config') {
                 from 'config'
@@ -26,29 +28,54 @@ distributions {
     }
 }
 
-task localDeploy {
-    int[] replicas = new int[]{0, 1, 2, 3}
-    int[] clients = new int[]{0}
-    dependsOn(clean, installDist)
-    String dst = System.getProperty("user.home") + System.getProperty("file.separator") +
-            "Desktop" + System.getProperty("file.separator") +
-            project.name + System.getProperty("file.separator")
+remotes {
+    master {
+        host = 'quinta.navigators.di.fc.ul.pt'
+        user = 'rvassantlal'
+        //password = 'root'
+        identity = file(System.getProperty("user.home") + System.getProperty("file.separator")
+                + ".ssh" + System.getProperty("file.separator") + "id_rsa")
+    }
+}
 
-    println ("Deploying project into ${dst}")
+ssh.settings {
+    fileTransfer = 'scp'
+}
 
-    replicas.each {
-        def target = dst + System.getProperty("file.separator") + "rep${it}"
-        copy {
-            from "build/install/${project.name}"
-            into target
+task remoteDeploy (dependsOn: installDist) {
+    doLast {
+        ssh.run {
+            session(remotes.master) {
+                put from: "build/install/${project.name}", into: '~/'
+            }
         }
     }
+}
 
-    clients.each {
-        def target = dst + System.getProperty("file.separator") + "cli${it}"
-        copy {
-            from "build/install/${project.name}"
-            into target
+task localDeploy (dependsOn: installDist) {
+    doLast {
+        int[] replicas = new int[]{0, 1, 2, 3}
+        int[] clients = new int[]{0}
+        String dst = System.getProperty("user.home") + System.getProperty("file.separator") +
+                "Desktop" + System.getProperty("file.separator") +
+                project.name + System.getProperty("file.separator")
+
+        println ("Deploying project into ${dst}")
+
+        replicas.each {
+            def target = dst + System.getProperty("file.separator") + "rep${it}"
+            copy {
+                from "build/install/${project.name}"
+                into target
+            }
+        }
+
+        clients.each {
+            def target = dst + System.getProperty("file.separator") + "cli${it}"
+            copy {
+                from "build/install/${project.name}"
+                into target
+            }
         }
     }
 }

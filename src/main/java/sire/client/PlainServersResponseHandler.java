@@ -1,8 +1,9 @@
 package sire.client;
 
 import bftsmart.tom.core.messages.TOMMessage;
+import bftsmart.tom.util.ExtractedResponse;
+import confidential.ConfidentialExtractedResponse;
 import confidential.ConfidentialMessage;
-import confidential.ExtractedResponse;
 import confidential.client.ClientConfidentialityScheme;
 import confidential.client.ServersResponseHandler;
 import vss.commitment.Commitment;
@@ -40,8 +41,9 @@ public class PlainServersResponseHandler extends ServersResponseHandler {
 	}
 
 	@Override
-	public TOMMessage extractResponse(TOMMessage[] replies, int sameContent, int lastReceived) {
+	public ExtractedResponse extractResponse(TOMMessage[] replies, int sameContent, int lastReceived) {
 		ConfidentialMessage response;
+		TOMMessage lastMsg = replies[lastReceived];
 		Map<Integer, LinkedList<ConfidentialMessage>> msgs = new HashMap<>();
 		for (TOMMessage msg : replies) {
 			if (msg == null)
@@ -102,22 +104,12 @@ public class PlainServersResponseHandler extends ServersResponseHandler {
 						try {
 							confidentialData[i] = combine(secret);
 						} catch (SecretSharingException e) {
-							ExtractedResponse extractedResponse = new ExtractedResponse(plainData, confidentialData, e);
-							TOMMessage lastMsg = replies[lastReceived];
-							return new TOMMessage(lastMsg.getSender(),
-									lastMsg.getSession(), lastMsg.getSequence(),
-									lastMsg.getOperationId(), extractedResponse.serialize(), new byte[0],
-									lastMsg.getViewID(), lastMsg.getReqType());
+							return new ConfidentialExtractedResponse(lastMsg.getViewID(), plainData,
+									confidentialData, e);
 						}
 					}
 				}
-				ExtractedResponse extractedResponse = new ExtractedResponse(plainData, confidentialData);
-				TOMMessage lastMsg = replies[lastReceived];
-				return new TOMMessage(lastMsg.getSender(),
-						lastMsg.getSession(), lastMsg.getSequence(),
-						lastMsg.getOperationId(), extractedResponse.serialize(), new byte[0],
-						lastMsg.getViewID(), lastMsg.getReqType());
-
+				return new ConfidentialExtractedResponse(lastMsg.getViewID(), plainData, confidentialData);
 			}
 		}
 		logger.error("This should not happen. Did not found {} equivalent responses", sameContent);

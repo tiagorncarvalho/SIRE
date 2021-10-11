@@ -15,4 +15,4 @@
 # Updates:
 # 1) removed bin folder from the classpath
 
-java -Djava.security.properties="./config/java.security" -Dlogback.configurationFile="./config/logback.xml" -cp lib/* $@
+java -Djava.security.properties="./config/java.security" -Dlogback.configurationFile="./config/logback.xml" -cp "lib/*" $@
