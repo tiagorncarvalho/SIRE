@@ -53,8 +53,6 @@ public class DummyAttester {
 		BigInteger attesterPrivateKey = new BigInteger("4049546346519992604730332816858472394381393488413156548605745581385");
 		ECPoint attesterPublicKey = curveGenerator.multiply(attesterPrivateKey);
 
-		System.out.println(Arrays.toString(attesterPublicKey.getEncoded(true)));
-
 		try {
 
 			//Generating a message0
