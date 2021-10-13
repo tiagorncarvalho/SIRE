@@ -1,6 +1,7 @@
 package sire.messages;
 
 import sire.Utils;
+import sire.schnorr.SchnorrSignature;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -10,29 +11,29 @@ import java.io.ObjectOutput;
  * @author robin
  */
 public class Message1 extends SireMessage {
-	private byte[] verifierPublicSessionKeyPart;
+	private byte[] verifierPublicSessionKey;
 	private byte[] verifierPublicKey;
-	private byte[] signatureOfSessionKeys;
+	private SchnorrSignature signatureOfSessionKeys;
 	private byte[] mac;
 
 	public Message1() {}
 
-	public Message1(byte[] verifierPublicSessionKeyPart, byte[] verifierPublicKey, byte[] signatureOfSessionKeys, byte[] mac) {
-		this.verifierPublicSessionKeyPart = verifierPublicSessionKeyPart;
+	public Message1(byte[] verifierPublicSessionKey, byte[] verifierPublicKey, SchnorrSignature signatureOfSessionKeys, byte[] mac) {
+		this.verifierPublicSessionKey = verifierPublicSessionKey;
 		this.verifierPublicKey = verifierPublicKey;
 		this.signatureOfSessionKeys = signatureOfSessionKeys;
 		this.mac = mac;
 	}
 
-	public byte[] getVerifierPublicSessionKeyPart() {
-		return verifierPublicSessionKeyPart;
+	public byte[] getVerifierPublicSessionKey() {
+		return verifierPublicSessionKey;
 	}
 
 	public byte[] getVerifierPublicKey() {
 		return verifierPublicKey;
 	}
 
-	public byte[] getSignatureOfSessionKeys() {
+	public SchnorrSignature getSignatureOfSessionKeys() {
 		return signatureOfSessionKeys;
 	}
 
@@ -42,17 +43,18 @@ public class Message1 extends SireMessage {
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
-		Utils.writeByteArray(out, verifierPublicSessionKeyPart);
+		Utils.writeByteArray(out, verifierPublicSessionKey);
 		Utils.writeByteArray(out, verifierPublicKey);
-		Utils.writeByteArray(out, signatureOfSessionKeys);
+		signatureOfSessionKeys.writeExternal(out);
 		Utils.writeByteArray(out, mac);
 	}
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException {
-		verifierPublicSessionKeyPart = Utils.readByteArray(in);
+		verifierPublicSessionKey = Utils.readByteArray(in);
 		verifierPublicKey = Utils.readByteArray(in);
-		signatureOfSessionKeys = Utils.readByteArray(in);
+		signatureOfSessionKeys = new SchnorrSignature();
+		signatureOfSessionKeys.readExternal(in);
 		mac = Utils.readByteArray(in);
 	}
 }

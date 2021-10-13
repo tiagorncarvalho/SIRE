@@ -30,11 +30,11 @@ distributions {
 
 remotes {
     master {
-        host = 'quinta.navigators.di.fc.ul.pt'
-        user = 'rvassantlal'
-        //password = 'root'
-        identity = file(System.getProperty("user.home") + System.getProperty("file.separator")
-                + ".ssh" + System.getProperty("file.separator") + "id_rsa")
+        host = '192.168.10.100'
+        user = 'testbed'
+        password = 'root'
+        //identity = file(System.getProperty("user.home") + System.getProperty("file.separator")
+        //        + ".ssh" + System.getProperty("file.separator") + "id_rsa")
     }
 }
 

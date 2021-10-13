@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 /**
  * @author robin
@@ -137,6 +138,11 @@ public class SchnorrSignature {
 		ECPoint V = generator.multiply(e);
 		BigInteger hash = new BigInteger(computeHash(message, V.getEncoded(true)));
 		BigInteger sigma = e.add(hash.multiply(x)).mod(order);
+
+		System.out.println("Private Key");
+		System.out.println(x);
+		System.out.println("Encoded Public Key");
+		System.out.println(Arrays.toString(Y.getEncoded(true)));
 
 		//Verifying the signature
 		boolean isValid = verifySignature(message, Y, V, sigma);

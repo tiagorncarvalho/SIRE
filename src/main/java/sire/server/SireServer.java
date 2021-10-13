@@ -15,8 +15,12 @@ import confidential.statemanagement.ConfidentialSnapshot;
 import org.bouncycastle.math.ec.ECPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sire.DeviceEvidence;
 import sire.Operation;
+import sire.proxy.Evidence;
+import sire.proxy.SireException;
 import sire.schnorr.PublicPartialSignature;
+import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.commitment.linear.LinearCommitments;
@@ -25,6 +29,7 @@ import vss.secretsharing.VerifiableShare;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -42,6 +47,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private final DistributedPolynomialManager distributedPolynomialManager;
 	private final ServiceReplica serviceReplica;
 	private final ConfidentialRecoverable cr;
+	private final MessageDigest messageDigest;
 
 	//used during requests and data map access
 	private final Lock lock;
@@ -66,6 +72,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private VerifiableShare verifierSigningPrivateKeyShare;
 	private ECPoint verifierSigningPublicKey;
 
+	private final byte[] dummyDataForAttester = "Sire".getBytes();
+	private final ECPoint dummyAttesterPublicKey;
+
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {
 			System.out.println("Usage: sire.server.SireServer <server id>");
@@ -77,6 +86,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public SireServer(int id) throws NoSuchAlgorithmException {
 		this.id = id;
 		lock = new ReentrantLock(true);
+		messageDigest = MessageDigest.getInstance("SHA256");
 		requests = new TreeMap<>();
 		data = new TreeMap<>();
 		signingKeyRequests = new LinkedList<>();
@@ -89,7 +99,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		distributedPolynomialManager.setRandomPolynomialListener(this);
 		distributedPolynomialManager.setRandomKeyPolynomialListener(this);
 		schnorrSignatureScheme = new SchnorrSignatureScheme();
-
+		dummyAttesterPublicKey = schnorrSignatureScheme.decodePublicKey(new byte[] {3, -27, -103, 52, -58, -46, 91, -103, -14, 0, 65, 73, -91, 31, -42, -97, 77, 19, -55, 8, 125, -9, -82, -117, -70, 102, -110, 88, -121, -76, -88, 44, -75});
 	}
 
 	@Override
@@ -146,8 +156,68 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				}
 				lock.unlock();
 			}
+			case GET_DATA -> {
+				byte[] requestData = new byte[bytes.length - 1];
+				System.arraycopy(bytes, 1, requestData, 0, requestData.length);
+				try {
+					DeviceEvidence deviceEvidence = DeviceEvidence.deserialize(requestData);
+					boolean isValidEvidence = isValidDeviceEvidence(deviceEvidence);
+					byte[] plainData;
+					if (isValidEvidence) {
+						plainData = new byte[dummyDataForAttester.length + 1];
+						plainData[0] = 1;
+						System.arraycopy(dummyDataForAttester, 0, plainData, 1,
+								dummyDataForAttester.length);
+					} else {
+						plainData = new byte[] {0};
+					}
+
+					return new ConfidentialMessage(plainData);
+				} catch (SireException e) {
+					e.printStackTrace();
+				}
+
+			}
 		}
 		return null;
+	}
+
+	private boolean isValidDeviceEvidence(DeviceEvidence deviceEvidence) {
+		Evidence evidence = deviceEvidence.getEvidence();
+		ECPoint attesterPublicKey = schnorrSignatureScheme.decodePublicKey(evidence
+				.getEncodedAttestationServicePublicKey());
+		if (!attesterPublicKey.equals(dummyAttesterPublicKey)) {
+			return false;
+		}
+
+		byte[] signingHash = computeHash(
+				evidence.getAnchor(),
+				attesterPublicKey.getEncoded(true),
+				evidence.getWaTZVersion().getBytes(),
+				evidence.getClaim()
+		);
+		SchnorrSignature evidenceSignature = deviceEvidence.getEvidenceSignature();
+		boolean isValidSignature = schnorrSignatureScheme.verifySignature(
+				signingHash,
+				attesterPublicKey,
+				schnorrSignatureScheme.decodePublicKey(evidenceSignature.getRandomPublicKey()),
+				new BigInteger(evidenceSignature.getSigma())
+		);
+		if (!isValidSignature)
+			return false;
+
+		return isValidEvidence(evidence);
+	}
+
+	private boolean isValidEvidence(Evidence evidence) {
+		return true;
+	}
+
+	private byte[] computeHash(byte[]... contents) {
+		for (byte[] content : contents) {
+			messageDigest.update(content);
+		}
+		return messageDigest.digest();
 	}
 
 	/**

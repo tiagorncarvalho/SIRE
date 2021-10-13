@@ -11,32 +11,32 @@ import java.io.ObjectOutput;
  */
 public class Message0 extends SireMessage {
 	private int attesterId;
-	private byte[] attesterPublicSessionKeyParte;
+	private byte[] encodedAttesterSessionPublicKey;
 
 	public Message0() {}
 
-	public Message0(int attesterId, byte[] attesterPublicSessionKeyParte) {
+	public Message0(int attesterId, byte[] encodedAttesterSessionPublicKey) {
 		this.attesterId = attesterId;
-		this.attesterPublicSessionKeyParte = attesterPublicSessionKeyParte;
+		this.encodedAttesterSessionPublicKey = encodedAttesterSessionPublicKey;
 	}
 
 	public int getAttesterId() {
 		return attesterId;
 	}
 
-	public byte[] getAttesterPublicSessionKeyParte() {
-		return attesterPublicSessionKeyParte;
+	public byte[] getEncodedAttesterSessionPublicKey() {
+		return encodedAttesterSessionPublicKey;
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeInt(attesterId);
-		Utils.writeByteArray(out, attesterPublicSessionKeyParte);
+		Utils.writeByteArray(out, encodedAttesterSessionPublicKey);
 	}
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		attesterId = in.readInt();
-		attesterPublicSessionKeyParte = Utils.readByteArray(in);
+		encodedAttesterSessionPublicKey = Utils.readByteArray(in);
 	}
 }

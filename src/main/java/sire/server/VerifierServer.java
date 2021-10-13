@@ -13,8 +13,6 @@ import confidential.server.ConfidentialRecoverable;
 import confidential.statemanagement.ConfidentialSnapshot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sire.messages.Message0;
-import sire.messages.Message1;
 import sire.messages.MessageType;
 import sire.messages.SireMessage;
 import vss.secretsharing.VerifiableShare;
@@ -108,7 +106,7 @@ public class VerifierServer implements ConfidentialSingleExecutable, RandomPolyn
 	@Override
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
-
+		/*
 		try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
 			 ObjectInputStream in = new ObjectInputStream(bis)) {
 			MessageType messageType = MessageType.getMessageType(in.read());
@@ -118,7 +116,7 @@ public class VerifierServer implements ConfidentialSingleExecutable, RandomPolyn
 				case MESSAGE_0 -> {
 					Message0 message0 = new Message0();
 					message0.readExternal(in);
-					BigInteger sharedSecretKeyNumber = new BigInteger(message0.getAttesterPublicSessionKeyParte())
+					BigInteger sharedSecretKeyNumber = new BigInteger(message0.getEncodedAttesterSessionPublicKey())
 							.modPow(myPrivateSessionKeyPart, primeField);
 					SecretKey sharedSecretKey = createSecretKey(sharedSecretKeyNumber.toString().toCharArray());
 					Application application = new Application(message0.getAttesterId());
@@ -127,7 +125,7 @@ public class VerifierServer implements ConfidentialSingleExecutable, RandomPolyn
 
 					//creating response
 					byte[] signatureOfSessionKeys = createSignature(servicePrivateKey,
-							myPublicSessionKeyPart.toByteArray(), message0.getAttesterPublicSessionKeyParte());
+							myPublicSessionKeyPart.toByteArray(), message0.getEncodedAttesterSessionPublicKey());
 					byte[] mac = createMac(sharedSecretKey, myPublicSessionKeyPart.toByteArray(),
 							servicePublicKey.getEncoded(), signatureOfSessionKeys);
 					Message1 response = new Message1(myPublicSessionKeyPart.toByteArray(),
