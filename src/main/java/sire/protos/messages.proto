@@ -1,0 +1,39 @@
+syntax= "proto3";
+
+package protos;
+
+//Complementary
+message SchnorrSig {
+  bytes sigma = 1;
+  bytes signPubKey = 2;
+  bytes randomPubKey = 3;
+}
+
+message Evidence {
+  string test = 1;
+}
+
+//=======Messages=======
+message ProtoMessage0 {
+  int32 attesterId = 1;
+  bytes attesterPubSesKey = 2; //Ga
+}
+
+message ProtoMessage1 {
+  bytes verifierPubSesKey = 1; //Gv
+  bytes verifierPubKey = 2; //V
+  SchnorrSig signatureSessionKeys = 3;  //Signv(Gv,Ga)
+  bytes mac = 4; //MAC_Km(content1)
+}
+
+message ProtoMessage2 {
+  bytes attesterPubSesKey = 1; //Ga
+  Evidence evidence = 2; //evidence
+  SchnorrSig signatureEvidence = 3; //Sign_A(Evidence)
+  bytes mac = 4; //MAC_Km(content2)
+}
+
+message ProtoMessage3 {
+  bytes iv = 1; //iv
+  bytes encryptedData = 2; //Sign_V(Enc_A(data))
+}

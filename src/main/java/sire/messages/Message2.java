@@ -12,10 +12,10 @@ import java.io.ObjectOutput;
  * @author robin
  */
 public class Message2 extends SireMessage {
-	private byte[] encodedAttesterSessionPublicKey;
-	private Evidence evidence;
-	private SchnorrSignature evidenceSignature;
-	private byte[] mac;
+	private byte[] encodedAttesterSessionPublicKey; //Ga
+	private Evidence evidence; //evidence
+	private SchnorrSignature evidenceSignature; //Sign_A(Evidence)
+	private byte[] mac; //MAC_Km(content2)
 
 	public Message2() {}
 

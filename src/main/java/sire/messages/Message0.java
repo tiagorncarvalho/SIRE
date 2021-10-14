@@ -10,8 +10,8 @@ import java.io.ObjectOutput;
  * @author robin
  */
 public class Message0 extends SireMessage {
-	private int attesterId;
-	private byte[] encodedAttesterSessionPublicKey;
+	private int attesterId; //id
+	private byte[] encodedAttesterSessionPublicKey; //Ga
 
 	public Message0() {}
 

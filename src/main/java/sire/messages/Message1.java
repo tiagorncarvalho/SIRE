@@ -11,10 +11,10 @@ import java.io.ObjectOutput;
  * @author robin
  */
 public class Message1 extends SireMessage {
-	private byte[] verifierPublicSessionKey;
-	private byte[] verifierPublicKey;
-	private SchnorrSignature signatureOfSessionKeys;
-	private byte[] mac;
+	private byte[] verifierPublicSessionKey; //Gv
+	private byte[] verifierPublicKey; //V
+	private SchnorrSignature signatureOfSessionKeys; //Signv(Gv,Ga)
+	private byte[] mac; //MAC_Km(content1)
 
 	public Message1() {}
 
