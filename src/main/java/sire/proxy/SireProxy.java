@@ -1,5 +1,6 @@
 package sire.proxy;
 
+import com.google.protobuf.ByteString;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import org.bouncycastle.crypto.BlockCipher;
@@ -93,9 +94,9 @@ public class SireProxy {
 
 
 	//public Message1 processMessage0(int attesterId, Message0 message) throws SireException {
-	public ProtoMessage1 processMessage0(ProtoMessage0 msg0) {
+	public ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
 		try {
-			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(message.getEncodedAttesterSessionPublicKey());
+			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(msg0.getAttesterPubSesKey().toByteArray());
 			BigInteger mySessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
 			ECPoint mySessionPublicKey = curveGenerator.multiply(mySessionPrivateKey);
 			ECPoint sharedPoint = attesterSessionPublicKey.multiply(mySessionPrivateKey);
@@ -108,25 +109,44 @@ public class SireProxy {
 			byte[] macKey = symmetricEncryptionKey.getEncoded();//sharedSecret.toByteArray();
 
 			SchnorrSignature signature = getSignatureFromVerifier(sessionPublicKeysHash);
+			SchnorrSig protoSign = schnorrToProto(signature);
 
 
 			byte[] mac = computeMac(macKey, mySessionPublicKey.getEncoded(true),
 					verifierPublicKey.getEncoded(true), signature.getRandomPublicKey(),
 					signature.getSigningPublicKey(), signature.getSigma());
 
-			AttesterContext newAttester = new AttesterContext(attesterId, mySessionPrivateKey,
+			AttesterContext newAttester = new AttesterContext(msg0.getAttesterId(), mySessionPrivateKey,
 					mySessionPublicKey,
 					attesterSessionPublicKey, symmetricEncryptionKey, macKey);
 			attesters.put(newAttester.getAttesterId(), newAttester);
 
-			return new Message1(mySessionPublicKey.getEncoded(true),
-					verifierPublicKey.getEncoded(true), signature, mac);
+			ProtoMessage1 msg1 = ProtoMessage1.newBuilder()
+					.setVerifierPubSesKey(ByteString.copyFrom(mySessionPublicKey.getEncoded(true)))
+					.setVerifierPubKey(ByteString.copyFrom(verifierPublicKey.getEncoded(true)))
+					.setSignatureSessionKeys(protoSign)
+					.setMac(ByteString.copyFrom(mac))
+					.build();
+
+			return msg1;
+
+			//return new Message1(mySessionPublicKey.getEncoded(true),
+			//		verifierPublicKey.getEncoded(true), signature, mac);
 		} catch (InvalidKeySpecException e) {
 			throw new SireException("Failed to create shared key", e);
 		}
 	}
 
-	public Message3 processMessage2(int attesterId, Message2 message) throws SireException {
+	private SchnorrSig schnorrToProto(SchnorrSignature signature) {
+		return SchnorrSig.newBuilder()
+				.setSigma(ByteString.copyFrom(signature.getSigma()))
+				.setSignPubKey(ByteString.copyFrom(signature.getSigningPublicKey()))
+				.setRandomPubKey(ByteString.copyFrom(signature.getRandomPublicKey()))
+				.build();
+	}
+
+	//public Message3 processMessage2(int attesterId, Message2 message) throws SireException {
+	public ProtoMessage3 processMessage2(int attesterId, ProtoMessage2 message) throws SireException {
 		AttesterContext attester = attesters.get(attesterId);
 		if (attester == null)
 			throw new SireException("Unknown attester id " + attesterId);
