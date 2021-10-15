@@ -10,7 +10,10 @@ message ProtoSchnorr {
 }
 
 message ProtoEvidence {
-  string test = 1;
+  bytes anchor = 1;
+  string watzVersion = 2;
+  bytes claim = 3;
+  bytes servicePubKey = 4;
 }
 
 //=======Messages=======

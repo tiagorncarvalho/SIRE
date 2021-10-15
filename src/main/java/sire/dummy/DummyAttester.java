@@ -9,7 +9,7 @@ import sire.messages.Message3;
 import sire.proxy.SireException;
 import sire.proxy.SireProxy;
 import com.google.protobuf.ByteString;
-import sire.schnorr.SchnorrSignature;
+import sire.schnorr.ProtoSchnorr;
 
 public class DummyAttester {
     int proxyId;
@@ -52,6 +52,10 @@ public class DummyAttester {
         ProtoMessage3 msg3 = proxy.processMessage2(attesterId, msg2);
 
         return new Message3(msg3.getIv().toByteArray(), msg3.getEncryptedData().toByteArray());
+    }
+
+    private ProtoSchnorr schnorrToProto(SchnorrSignature evidenceSignature) {
+        return SchnorrSig.newBuilder().set
     }
 
     private Evidence evidenceToProto(ProtoEvidence evidence) {

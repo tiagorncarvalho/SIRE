@@ -8,6 +8,7 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
+import protos.Messages;
 import sire.DeviceEvidence;
 import sire.Operation;
 import sire.client.ServersResponseHandlerWithoutCombine;
@@ -152,12 +153,12 @@ public class SireProxy {
 			throw new SireException("Unknown attester id " + attesterId);
 
 		ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(message.getEncodedAttesterSessionPublicKey());
-		Evidence evidence = message.getEvidence();
+		Evidence evidence = protoToEvidence(message.getEvidence());
 		byte[] encodedAttestationServicePublicKey = evidence.getEncodedAttestationServicePublicKey();
 		boolean isValidMac = verifyMac(
 				attester.getMacKey(),
 				message.getMac(),
-				message.getEncodedAttesterSessionPublicKey(),
+				message.getAttesterPubSesKey(),
 				evidence.getAnchor(),
 				encodedAttestationServicePublicKey,
 				evidence.getWaTZVersion().getBytes(),
@@ -197,6 +198,10 @@ public class SireProxy {
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to obtain data", e);
 		}
+	}
+
+	private Evidence protoToEvidence(Messages.Evidence evidence) {
+		return new Evidence (evidence.ge)
 	}
 
 	private SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {
