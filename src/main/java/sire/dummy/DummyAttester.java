@@ -6,18 +6,19 @@ import sire.messages.Message0;
 import sire.messages.Message1;
 import sire.messages.Message2;
 import sire.messages.Message3;
+import sire.proxy.Evidence;
 import sire.proxy.SireException;
 import sire.proxy.SireProxy;
 import com.google.protobuf.ByteString;
-import sire.schnorr.ProtoSchnorr;
+import sire.schnorr.SchnorrSignature;
 
 public class DummyAttester {
     int proxyId;
     SireProxy proxy;
 
     public DummyAttester (int proxyId) throws SireException {
-        proxyId = proxyId;
-        proxy = new SireProxy(proxyId);
+        this.proxyId = proxyId;
+        this.proxy = new SireProxy(proxyId);
     }
 
     public ECPoint getVerifierPublicKey() {
@@ -36,7 +37,8 @@ public class DummyAttester {
                 protoToSchnorr(msg1.getSignatureSessionKeys()), msg1.getMac().toByteArray());
     }
 
-    private SchnorrSignature protoToSchnorr(SchnorrSig sign) {
+    //TODO protoUtils
+    private SchnorrSignature protoToSchnorr(ProtoSchnorr sign) {
         return new SchnorrSignature(sign.getSigma().toByteArray(), sign.getSignPubKey().toByteArray(),
                 sign.getRandomPubKey().toByteArray());
     }
@@ -54,15 +56,25 @@ public class DummyAttester {
         return new Message3(msg3.getIv().toByteArray(), msg3.getEncryptedData().toByteArray());
     }
 
-    private ProtoSchnorr schnorrToProto(SchnorrSignature evidenceSignature) {
-        return SchnorrSig.newBuilder().set
+    //TODO protoUtils
+    private ProtoSchnorr schnorrToProto(SchnorrSignature sign) {
+        return ProtoSchnorr.newBuilder()
+                .setSigma(ByteString.copyFrom(sign.getSigma()))
+                .setSignPubKey(ByteString.copyFrom(sign.getSigningPublicKey()))
+                .setRandomPubKey(ByteString.copyFrom(sign.getRandomPublicKey()))
+                .build();
     }
 
-    private Evidence evidenceToProto(ProtoEvidence evidence) {
-        return null;
+    //TODO protoUtils
+    private ProtoEvidence evidenceToProto(Evidence evidence) {
+        return ProtoEvidence.newBuilder()
+                .setAnchor(ByteString.copyFrom(evidence.getAnchor()))
+                .setWatzVersion(evidence.getWaTZVersion())
+                .setClaim(ByteString.copyFrom(evidence.getClaim()))
+                .build();
     }
 
     public void close() {
-        //TODO
+        this.proxy.close();
     }
 }

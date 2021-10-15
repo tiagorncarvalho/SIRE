@@ -110,7 +110,7 @@ public class SireProxy {
 			byte[] macKey = symmetricEncryptionKey.getEncoded();//sharedSecret.toByteArray();
 
 			SchnorrSignature signature = getSignatureFromVerifier(sessionPublicKeysHash);
-			SchnorrSig protoSign = schnorrToProto(signature);
+			ProtoSchnorr protoSign = schnorrToProto(signature);
 
 
 			byte[] mac = computeMac(macKey, mySessionPublicKey.getEncoded(true),
@@ -138,8 +138,9 @@ public class SireProxy {
 		}
 	}
 
-	private SchnorrSig schnorrToProto(SchnorrSignature signature) {
-		return SchnorrSig.newBuilder()
+	//TODO protoUtils
+	private ProtoSchnorr schnorrToProto(SchnorrSignature signature) {
+		return ProtoSchnorr.newBuilder()
 				.setSigma(ByteString.copyFrom(signature.getSigma()))
 				.setSignPubKey(ByteString.copyFrom(signature.getSigningPublicKey()))
 				.setRandomPubKey(ByteString.copyFrom(signature.getRandomPublicKey()))
@@ -152,13 +153,13 @@ public class SireProxy {
 		if (attester == null)
 			throw new SireException("Unknown attester id " + attesterId);
 
-		ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(message.getEncodedAttesterSessionPublicKey());
+		ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(message.getAttesterPubSesKey().toByteArray());
 		Evidence evidence = protoToEvidence(message.getEvidence());
 		byte[] encodedAttestationServicePublicKey = evidence.getEncodedAttestationServicePublicKey();
 		boolean isValidMac = verifyMac(
 				attester.getMacKey(),
-				message.getMac(),
-				message.getAttesterPubSesKey(),
+				message.getMac().toByteArray(),
+				message.getAttesterPubSesKey().toByteArray(),
 				evidence.getAnchor(),
 				encodedAttestationServicePublicKey,
 				evidence.getWaTZVersion().getBytes(),
@@ -175,7 +176,7 @@ public class SireProxy {
 		if (!Arrays.equals(localAnchor, evidence.getAnchor()))
 			throw new SireException("Anchor is different");
 
-		DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, message.getEvidenceSignature());
+		DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(message.getSignatureEvidence()));
 
 		//asking for data - verifier will return data if evidence is valid
 		byte[] serializedDeviceEvidence = deviceEvidence.serialize();
@@ -194,14 +195,25 @@ public class SireProxy {
 			byte[] encryptedData = encryptData(attester.getSymmetricEncryptionKey(), data);
 			byte[] initializationVector = symmetricCipher.getIV();
 
-			return new Message3(initializationVector, encryptedData);
+			return ProtoMessage3.newBuilder()
+					.setIv(ByteString.copyFrom(initializationVector))
+					.setEncryptedData(ByteString.copyFrom(encryptedData))
+					.build();
+
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to obtain data", e);
 		}
 	}
 
-	private Evidence protoToEvidence(Messages.Evidence evidence) {
-		return new Evidence (evidence.ge)
+	//TODO protoUtils
+	private SchnorrSignature protoToSchnorr(ProtoSchnorr sign) {
+		return new SchnorrSignature(sign.getSigma().toByteArray(), sign.getSignPubKey().toByteArray(),
+				sign.getRandomPubKey().toByteArray());
+	}
+
+	//TODO protoUtils
+	private Evidence protoToEvidence(ProtoEvidence evidence) {
+		return new Evidence (evidence.getAnchor().toByteArray(), evidence.getWatzVersion(), evidence.getClaim().toByteArray(), evidence.getServicePubKey().toByteArray());
 	}
 
 	private SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {
