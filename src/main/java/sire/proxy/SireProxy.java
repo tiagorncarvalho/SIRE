@@ -15,6 +15,7 @@ import sire.messages.Message0;
 import sire.messages.Message1;
 import sire.messages.Message2;
 import sire.messages.Message3;
+import protos.Messages.*;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
@@ -90,7 +91,9 @@ public class SireProxy {
 		return verifierPublicKey;
 	}
 
-	public Message1 processMessage0(int attesterId, Message0 message) throws SireException {
+
+	//public Message1 processMessage0(int attesterId, Message0 message) throws SireException {
+	public ProtoMessage1 processMessage0(ProtoMessage0 msg0) {
 		try {
 			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(message.getEncodedAttesterSessionPublicKey());
 			BigInteger mySessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
