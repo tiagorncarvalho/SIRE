@@ -14,8 +14,8 @@ public final class Messages {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-  public interface SchnorrSigOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.SchnorrSig)
+  public interface ProtoSchnorrOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protos.ProtoSchnorr)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -38,18 +38,18 @@ public final class Messages {
    *Complementary
    * </pre>
    *
-   * Protobuf type {@code protos.SchnorrSig}
+   * Protobuf type {@code protos.ProtoSchnorr}
    */
-  public  static final class SchnorrSig extends
+  public  static final class ProtoSchnorr extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.SchnorrSig)
-      SchnorrSigOrBuilder {
+      // @@protoc_insertion_point(message_implements:protos.ProtoSchnorr)
+      ProtoSchnorrOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use SchnorrSig.newBuilder() to construct.
-    private SchnorrSig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use ProtoSchnorr.newBuilder() to construct.
+    private ProtoSchnorr(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private SchnorrSig() {
+    private ProtoSchnorr() {
       sigma_ = com.google.protobuf.ByteString.EMPTY;
       signPubKey_ = com.google.protobuf.ByteString.EMPTY;
       randomPubKey_ = com.google.protobuf.ByteString.EMPTY;
@@ -60,7 +60,7 @@ public final class Messages {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private SchnorrSig(
+    private ProtoSchnorr(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -115,15 +115,15 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protos.Messages.internal_static_protos_SchnorrSig_descriptor;
+      return protos.Messages.internal_static_protos_ProtoSchnorr_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protos.Messages.internal_static_protos_SchnorrSig_fieldAccessorTable
+      return protos.Messages.internal_static_protos_ProtoSchnorr_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protos.Messages.SchnorrSig.class, protos.Messages.SchnorrSig.Builder.class);
+              protos.Messages.ProtoSchnorr.class, protos.Messages.ProtoSchnorr.Builder.class);
     }
 
     public static final int SIGMA_FIELD_NUMBER = 1;
@@ -207,10 +207,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof protos.Messages.SchnorrSig)) {
+      if (!(obj instanceof protos.Messages.ProtoSchnorr)) {
         return super.equals(obj);
       }
-      protos.Messages.SchnorrSig other = (protos.Messages.SchnorrSig) obj;
+      protos.Messages.ProtoSchnorr other = (protos.Messages.ProtoSchnorr) obj;
 
       boolean result = true;
       result = result && getSigma()
@@ -241,69 +241,69 @@ public final class Messages {
       return hash;
     }
 
-    public static protos.Messages.SchnorrSig parseFrom(
+    public static protos.Messages.ProtoSchnorr parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protos.Messages.SchnorrSig parseFrom(
+    public static protos.Messages.ProtoSchnorr parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protos.Messages.SchnorrSig parseFrom(
+    public static protos.Messages.ProtoSchnorr parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protos.Messages.SchnorrSig parseFrom(
+    public static protos.Messages.ProtoSchnorr parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protos.Messages.SchnorrSig parseFrom(byte[] data)
+    public static protos.Messages.ProtoSchnorr parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protos.Messages.SchnorrSig parseFrom(
+    public static protos.Messages.ProtoSchnorr parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protos.Messages.SchnorrSig parseFrom(java.io.InputStream input)
+    public static protos.Messages.ProtoSchnorr parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static protos.Messages.SchnorrSig parseFrom(
+    public static protos.Messages.ProtoSchnorr parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static protos.Messages.SchnorrSig parseDelimitedFrom(java.io.InputStream input)
+    public static protos.Messages.ProtoSchnorr parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static protos.Messages.SchnorrSig parseDelimitedFrom(
+    public static protos.Messages.ProtoSchnorr parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static protos.Messages.SchnorrSig parseFrom(
+    public static protos.Messages.ProtoSchnorr parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static protos.Messages.SchnorrSig parseFrom(
+    public static protos.Messages.ProtoSchnorr parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -316,7 +316,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(protos.Messages.SchnorrSig prototype) {
+    public static Builder newBuilder(protos.Messages.ProtoSchnorr prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -336,26 +336,26 @@ public final class Messages {
      *Complementary
      * </pre>
      *
-     * Protobuf type {@code protos.SchnorrSig}
+     * Protobuf type {@code protos.ProtoSchnorr}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.SchnorrSig)
-        protos.Messages.SchnorrSigOrBuilder {
+        // @@protoc_insertion_point(builder_implements:protos.ProtoSchnorr)
+        protos.Messages.ProtoSchnorrOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protos.Messages.internal_static_protos_SchnorrSig_descriptor;
+        return protos.Messages.internal_static_protos_ProtoSchnorr_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protos.Messages.internal_static_protos_SchnorrSig_fieldAccessorTable
+        return protos.Messages.internal_static_protos_ProtoSchnorr_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protos.Messages.SchnorrSig.class, protos.Messages.SchnorrSig.Builder.class);
+                protos.Messages.ProtoSchnorr.class, protos.Messages.ProtoSchnorr.Builder.class);
       }
 
-      // Construct using protos.Messages.SchnorrSig.newBuilder()
+      // Construct using protos.Messages.ProtoSchnorr.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -385,17 +385,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protos.Messages.internal_static_protos_SchnorrSig_descriptor;
+        return protos.Messages.internal_static_protos_ProtoSchnorr_descriptor;
       }
 
       @java.lang.Override
-      public protos.Messages.SchnorrSig getDefaultInstanceForType() {
-        return protos.Messages.SchnorrSig.getDefaultInstance();
+      public protos.Messages.ProtoSchnorr getDefaultInstanceForType() {
+        return protos.Messages.ProtoSchnorr.getDefaultInstance();
       }
 
       @java.lang.Override
-      public protos.Messages.SchnorrSig build() {
-        protos.Messages.SchnorrSig result = buildPartial();
+      public protos.Messages.ProtoSchnorr build() {
+        protos.Messages.ProtoSchnorr result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -403,8 +403,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public protos.Messages.SchnorrSig buildPartial() {
-        protos.Messages.SchnorrSig result = new protos.Messages.SchnorrSig(this);
+      public protos.Messages.ProtoSchnorr buildPartial() {
+        protos.Messages.ProtoSchnorr result = new protos.Messages.ProtoSchnorr(this);
         result.sigma_ = sigma_;
         result.signPubKey_ = signPubKey_;
         result.randomPubKey_ = randomPubKey_;
@@ -446,16 +446,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protos.Messages.SchnorrSig) {
-          return mergeFrom((protos.Messages.SchnorrSig)other);
+        if (other instanceof protos.Messages.ProtoSchnorr) {
+          return mergeFrom((protos.Messages.ProtoSchnorr)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protos.Messages.SchnorrSig other) {
-        if (other == protos.Messages.SchnorrSig.getDefaultInstance()) return this;
+      public Builder mergeFrom(protos.Messages.ProtoSchnorr other) {
+        if (other == protos.Messages.ProtoSchnorr.getDefaultInstance()) return this;
         if (other.getSigma() != com.google.protobuf.ByteString.EMPTY) {
           setSigma(other.getSigma());
         }
@@ -480,11 +480,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protos.Messages.SchnorrSig parsedMessage = null;
+        protos.Messages.ProtoSchnorr parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protos.Messages.SchnorrSig) e.getUnfinishedMessage();
+          parsedMessage = (protos.Messages.ProtoSchnorr) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -593,74 +593,92 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:protos.SchnorrSig)
+      // @@protoc_insertion_point(builder_scope:protos.ProtoSchnorr)
     }
 
-    // @@protoc_insertion_point(class_scope:protos.SchnorrSig)
-    private static final protos.Messages.SchnorrSig DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:protos.ProtoSchnorr)
+    private static final protos.Messages.ProtoSchnorr DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protos.Messages.SchnorrSig();
+      DEFAULT_INSTANCE = new protos.Messages.ProtoSchnorr();
     }
 
-    public static protos.Messages.SchnorrSig getDefaultInstance() {
+    public static protos.Messages.ProtoSchnorr getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<SchnorrSig>
-        PARSER = new com.google.protobuf.AbstractParser<SchnorrSig>() {
+    private static final com.google.protobuf.Parser<ProtoSchnorr>
+        PARSER = new com.google.protobuf.AbstractParser<ProtoSchnorr>() {
       @java.lang.Override
-      public SchnorrSig parsePartialFrom(
+      public ProtoSchnorr parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SchnorrSig(input, extensionRegistry);
+        return new ProtoSchnorr(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<SchnorrSig> parser() {
+    public static com.google.protobuf.Parser<ProtoSchnorr> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<SchnorrSig> getParserForType() {
+    public com.google.protobuf.Parser<ProtoSchnorr> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public protos.Messages.SchnorrSig getDefaultInstanceForType() {
+    public protos.Messages.ProtoSchnorr getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public interface EvidenceOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:protos.Evidence)
+  public interface ProtoEvidenceOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protos.ProtoEvidence)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string test = 1;</code>
+     * <code>bytes anchor = 1;</code>
      */
-    java.lang.String getTest();
+    com.google.protobuf.ByteString getAnchor();
+
     /**
-     * <code>string test = 1;</code>
+     * <code>string watzVersion = 2;</code>
+     */
+    java.lang.String getWatzVersion();
+    /**
+     * <code>string watzVersion = 2;</code>
      */
     com.google.protobuf.ByteString
-        getTestBytes();
+        getWatzVersionBytes();
+
+    /**
+     * <code>bytes claim = 3;</code>
+     */
+    com.google.protobuf.ByteString getClaim();
+
+    /**
+     * <code>bytes servicePubKey = 4;</code>
+     */
+    com.google.protobuf.ByteString getServicePubKey();
   }
   /**
-   * Protobuf type {@code protos.Evidence}
+   * Protobuf type {@code protos.ProtoEvidence}
    */
-  public  static final class Evidence extends
+  public  static final class ProtoEvidence extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:protos.Evidence)
-      EvidenceOrBuilder {
+      // @@protoc_insertion_point(message_implements:protos.ProtoEvidence)
+      ProtoEvidenceOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use Evidence.newBuilder() to construct.
-    private Evidence(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use ProtoEvidence.newBuilder() to construct.
+    private ProtoEvidence(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private Evidence() {
-      test_ = "";
+    private ProtoEvidence() {
+      anchor_ = com.google.protobuf.ByteString.EMPTY;
+      watzVersion_ = "";
+      claim_ = com.google.protobuf.ByteString.EMPTY;
+      servicePubKey_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -668,7 +686,7 @@ public final class Messages {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private Evidence(
+    private ProtoEvidence(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -688,9 +706,24 @@ public final class Messages {
               done = true;
               break;
             case 10: {
+
+              anchor_ = input.readBytes();
+              break;
+            }
+            case 18: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              test_ = s;
+              watzVersion_ = s;
+              break;
+            }
+            case 26: {
+
+              claim_ = input.readBytes();
+              break;
+            }
+            case 34: {
+
+              servicePubKey_ = input.readBytes();
               break;
             }
             default: {
@@ -714,49 +747,76 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return protos.Messages.internal_static_protos_Evidence_descriptor;
+      return protos.Messages.internal_static_protos_ProtoEvidence_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return protos.Messages.internal_static_protos_Evidence_fieldAccessorTable
+      return protos.Messages.internal_static_protos_ProtoEvidence_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              protos.Messages.Evidence.class, protos.Messages.Evidence.Builder.class);
+              protos.Messages.ProtoEvidence.class, protos.Messages.ProtoEvidence.Builder.class);
     }
 
-    public static final int TEST_FIELD_NUMBER = 1;
-    private volatile java.lang.Object test_;
+    public static final int ANCHOR_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString anchor_;
     /**
-     * <code>string test = 1;</code>
+     * <code>bytes anchor = 1;</code>
      */
-    public java.lang.String getTest() {
-      java.lang.Object ref = test_;
+    public com.google.protobuf.ByteString getAnchor() {
+      return anchor_;
+    }
+
+    public static final int WATZVERSION_FIELD_NUMBER = 2;
+    private volatile java.lang.Object watzVersion_;
+    /**
+     * <code>string watzVersion = 2;</code>
+     */
+    public java.lang.String getWatzVersion() {
+      java.lang.Object ref = watzVersion_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        test_ = s;
+        watzVersion_ = s;
         return s;
       }
     }
     /**
-     * <code>string test = 1;</code>
+     * <code>string watzVersion = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getTestBytes() {
-      java.lang.Object ref = test_;
+        getWatzVersionBytes() {
+      java.lang.Object ref = watzVersion_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        test_ = b;
+        watzVersion_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
+    }
+
+    public static final int CLAIM_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString claim_;
+    /**
+     * <code>bytes claim = 3;</code>
+     */
+    public com.google.protobuf.ByteString getClaim() {
+      return claim_;
+    }
+
+    public static final int SERVICEPUBKEY_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString servicePubKey_;
+    /**
+     * <code>bytes servicePubKey = 4;</code>
+     */
+    public com.google.protobuf.ByteString getServicePubKey() {
+      return servicePubKey_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -773,8 +833,17 @@ public final class Messages {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getTestBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, test_);
+      if (!anchor_.isEmpty()) {
+        output.writeBytes(1, anchor_);
+      }
+      if (!getWatzVersionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, watzVersion_);
+      }
+      if (!claim_.isEmpty()) {
+        output.writeBytes(3, claim_);
+      }
+      if (!servicePubKey_.isEmpty()) {
+        output.writeBytes(4, servicePubKey_);
       }
       unknownFields.writeTo(output);
     }
@@ -785,8 +854,20 @@ public final class Messages {
       if (size != -1) return size;
 
       size = 0;
-      if (!getTestBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, test_);
+      if (!anchor_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, anchor_);
+      }
+      if (!getWatzVersionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, watzVersion_);
+      }
+      if (!claim_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, claim_);
+      }
+      if (!servicePubKey_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, servicePubKey_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -798,14 +879,20 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof protos.Messages.Evidence)) {
+      if (!(obj instanceof protos.Messages.ProtoEvidence)) {
         return super.equals(obj);
       }
-      protos.Messages.Evidence other = (protos.Messages.Evidence) obj;
+      protos.Messages.ProtoEvidence other = (protos.Messages.ProtoEvidence) obj;
 
       boolean result = true;
-      result = result && getTest()
-          .equals(other.getTest());
+      result = result && getAnchor()
+          .equals(other.getAnchor());
+      result = result && getWatzVersion()
+          .equals(other.getWatzVersion());
+      result = result && getClaim()
+          .equals(other.getClaim());
+      result = result && getServicePubKey()
+          .equals(other.getServicePubKey());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -817,76 +904,82 @@ public final class Messages {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + TEST_FIELD_NUMBER;
-      hash = (53 * hash) + getTest().hashCode();
+      hash = (37 * hash) + ANCHOR_FIELD_NUMBER;
+      hash = (53 * hash) + getAnchor().hashCode();
+      hash = (37 * hash) + WATZVERSION_FIELD_NUMBER;
+      hash = (53 * hash) + getWatzVersion().hashCode();
+      hash = (37 * hash) + CLAIM_FIELD_NUMBER;
+      hash = (53 * hash) + getClaim().hashCode();
+      hash = (37 * hash) + SERVICEPUBKEY_FIELD_NUMBER;
+      hash = (53 * hash) + getServicePubKey().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
-    public static protos.Messages.Evidence parseFrom(
+    public static protos.Messages.ProtoEvidence parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protos.Messages.Evidence parseFrom(
+    public static protos.Messages.ProtoEvidence parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protos.Messages.Evidence parseFrom(
+    public static protos.Messages.ProtoEvidence parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protos.Messages.Evidence parseFrom(
+    public static protos.Messages.ProtoEvidence parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protos.Messages.Evidence parseFrom(byte[] data)
+    public static protos.Messages.ProtoEvidence parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static protos.Messages.Evidence parseFrom(
+    public static protos.Messages.ProtoEvidence parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static protos.Messages.Evidence parseFrom(java.io.InputStream input)
+    public static protos.Messages.ProtoEvidence parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static protos.Messages.Evidence parseFrom(
+    public static protos.Messages.ProtoEvidence parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static protos.Messages.Evidence parseDelimitedFrom(java.io.InputStream input)
+    public static protos.Messages.ProtoEvidence parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static protos.Messages.Evidence parseDelimitedFrom(
+    public static protos.Messages.ProtoEvidence parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static protos.Messages.Evidence parseFrom(
+    public static protos.Messages.ProtoEvidence parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static protos.Messages.Evidence parseFrom(
+    public static protos.Messages.ProtoEvidence parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -899,7 +992,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(protos.Messages.Evidence prototype) {
+    public static Builder newBuilder(protos.Messages.ProtoEvidence prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -915,26 +1008,26 @@ public final class Messages {
       return builder;
     }
     /**
-     * Protobuf type {@code protos.Evidence}
+     * Protobuf type {@code protos.ProtoEvidence}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:protos.Evidence)
-        protos.Messages.EvidenceOrBuilder {
+        // @@protoc_insertion_point(builder_implements:protos.ProtoEvidence)
+        protos.Messages.ProtoEvidenceOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return protos.Messages.internal_static_protos_Evidence_descriptor;
+        return protos.Messages.internal_static_protos_ProtoEvidence_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return protos.Messages.internal_static_protos_Evidence_fieldAccessorTable
+        return protos.Messages.internal_static_protos_ProtoEvidence_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                protos.Messages.Evidence.class, protos.Messages.Evidence.Builder.class);
+                protos.Messages.ProtoEvidence.class, protos.Messages.ProtoEvidence.Builder.class);
       }
 
-      // Construct using protos.Messages.Evidence.newBuilder()
+      // Construct using protos.Messages.ProtoEvidence.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -952,7 +1045,13 @@ public final class Messages {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        test_ = "";
+        anchor_ = com.google.protobuf.ByteString.EMPTY;
+
+        watzVersion_ = "";
+
+        claim_ = com.google.protobuf.ByteString.EMPTY;
+
+        servicePubKey_ = com.google.protobuf.ByteString.EMPTY;
 
         return this;
       }
@@ -960,17 +1059,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return protos.Messages.internal_static_protos_Evidence_descriptor;
+        return protos.Messages.internal_static_protos_ProtoEvidence_descriptor;
       }
 
       @java.lang.Override
-      public protos.Messages.Evidence getDefaultInstanceForType() {
-        return protos.Messages.Evidence.getDefaultInstance();
+      public protos.Messages.ProtoEvidence getDefaultInstanceForType() {
+        return protos.Messages.ProtoEvidence.getDefaultInstance();
       }
 
       @java.lang.Override
-      public protos.Messages.Evidence build() {
-        protos.Messages.Evidence result = buildPartial();
+      public protos.Messages.ProtoEvidence build() {
+        protos.Messages.ProtoEvidence result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -978,9 +1077,12 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public protos.Messages.Evidence buildPartial() {
-        protos.Messages.Evidence result = new protos.Messages.Evidence(this);
-        result.test_ = test_;
+      public protos.Messages.ProtoEvidence buildPartial() {
+        protos.Messages.ProtoEvidence result = new protos.Messages.ProtoEvidence(this);
+        result.anchor_ = anchor_;
+        result.watzVersion_ = watzVersion_;
+        result.claim_ = claim_;
+        result.servicePubKey_ = servicePubKey_;
         onBuilt();
         return result;
       }
@@ -1019,19 +1121,28 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof protos.Messages.Evidence) {
-          return mergeFrom((protos.Messages.Evidence)other);
+        if (other instanceof protos.Messages.ProtoEvidence) {
+          return mergeFrom((protos.Messages.ProtoEvidence)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(protos.Messages.Evidence other) {
-        if (other == protos.Messages.Evidence.getDefaultInstance()) return this;
-        if (!other.getTest().isEmpty()) {
-          test_ = other.test_;
+      public Builder mergeFrom(protos.Messages.ProtoEvidence other) {
+        if (other == protos.Messages.ProtoEvidence.getDefaultInstance()) return this;
+        if (other.getAnchor() != com.google.protobuf.ByteString.EMPTY) {
+          setAnchor(other.getAnchor());
+        }
+        if (!other.getWatzVersion().isEmpty()) {
+          watzVersion_ = other.watzVersion_;
           onChanged();
+        }
+        if (other.getClaim() != com.google.protobuf.ByteString.EMPTY) {
+          setClaim(other.getClaim());
+        }
+        if (other.getServicePubKey() != com.google.protobuf.ByteString.EMPTY) {
+          setServicePubKey(other.getServicePubKey());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1048,11 +1159,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        protos.Messages.Evidence parsedMessage = null;
+        protos.Messages.ProtoEvidence parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (protos.Messages.Evidence) e.getUnfinishedMessage();
+          parsedMessage = (protos.Messages.ProtoEvidence) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1062,71 +1173,158 @@ public final class Messages {
         return this;
       }
 
-      private java.lang.Object test_ = "";
+      private com.google.protobuf.ByteString anchor_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>string test = 1;</code>
+       * <code>bytes anchor = 1;</code>
        */
-      public java.lang.String getTest() {
-        java.lang.Object ref = test_;
+      public com.google.protobuf.ByteString getAnchor() {
+        return anchor_;
+      }
+      /**
+       * <code>bytes anchor = 1;</code>
+       */
+      public Builder setAnchor(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        anchor_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes anchor = 1;</code>
+       */
+      public Builder clearAnchor() {
+        
+        anchor_ = getDefaultInstance().getAnchor();
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object watzVersion_ = "";
+      /**
+       * <code>string watzVersion = 2;</code>
+       */
+      public java.lang.String getWatzVersion() {
+        java.lang.Object ref = watzVersion_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          test_ = s;
+          watzVersion_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string test = 1;</code>
+       * <code>string watzVersion = 2;</code>
        */
       public com.google.protobuf.ByteString
-          getTestBytes() {
-        java.lang.Object ref = test_;
+          getWatzVersionBytes() {
+        java.lang.Object ref = watzVersion_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          test_ = b;
+          watzVersion_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string test = 1;</code>
+       * <code>string watzVersion = 2;</code>
        */
-      public Builder setTest(
+      public Builder setWatzVersion(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        test_ = value;
+        watzVersion_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string test = 1;</code>
+       * <code>string watzVersion = 2;</code>
        */
-      public Builder clearTest() {
+      public Builder clearWatzVersion() {
         
-        test_ = getDefaultInstance().getTest();
+        watzVersion_ = getDefaultInstance().getWatzVersion();
         onChanged();
         return this;
       }
       /**
-       * <code>string test = 1;</code>
+       * <code>string watzVersion = 2;</code>
        */
-      public Builder setTestBytes(
+      public Builder setWatzVersionBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        test_ = value;
+        watzVersion_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString claim_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes claim = 3;</code>
+       */
+      public com.google.protobuf.ByteString getClaim() {
+        return claim_;
+      }
+      /**
+       * <code>bytes claim = 3;</code>
+       */
+      public Builder setClaim(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        claim_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes claim = 3;</code>
+       */
+      public Builder clearClaim() {
+        
+        claim_ = getDefaultInstance().getClaim();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString servicePubKey_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes servicePubKey = 4;</code>
+       */
+      public com.google.protobuf.ByteString getServicePubKey() {
+        return servicePubKey_;
+      }
+      /**
+       * <code>bytes servicePubKey = 4;</code>
+       */
+      public Builder setServicePubKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        servicePubKey_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes servicePubKey = 4;</code>
+       */
+      public Builder clearServicePubKey() {
+        
+        servicePubKey_ = getDefaultInstance().getServicePubKey();
         onChanged();
         return this;
       }
@@ -1143,41 +1341,41 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:protos.Evidence)
+      // @@protoc_insertion_point(builder_scope:protos.ProtoEvidence)
     }
 
-    // @@protoc_insertion_point(class_scope:protos.Evidence)
-    private static final protos.Messages.Evidence DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:protos.ProtoEvidence)
+    private static final protos.Messages.ProtoEvidence DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new protos.Messages.Evidence();
+      DEFAULT_INSTANCE = new protos.Messages.ProtoEvidence();
     }
 
-    public static protos.Messages.Evidence getDefaultInstance() {
+    public static protos.Messages.ProtoEvidence getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<Evidence>
-        PARSER = new com.google.protobuf.AbstractParser<Evidence>() {
+    private static final com.google.protobuf.Parser<ProtoEvidence>
+        PARSER = new com.google.protobuf.AbstractParser<ProtoEvidence>() {
       @java.lang.Override
-      public Evidence parsePartialFrom(
+      public ProtoEvidence parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Evidence(input, extensionRegistry);
+        return new ProtoEvidence(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<Evidence> parser() {
+    public static com.google.protobuf.Parser<ProtoEvidence> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Evidence> getParserForType() {
+    public com.google.protobuf.Parser<ProtoEvidence> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public protos.Messages.Evidence getDefaultInstanceForType() {
+    public protos.Messages.ProtoEvidence getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1780,7 +1978,7 @@ public final class Messages {
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
     boolean hasSignatureSessionKeys();
     /**
@@ -1788,17 +1986,17 @@ public final class Messages {
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
-    protos.Messages.SchnorrSig getSignatureSessionKeys();
+    protos.Messages.ProtoSchnorr getSignatureSessionKeys();
     /**
      * <pre>
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
-    protos.Messages.SchnorrSigOrBuilder getSignatureSessionKeysOrBuilder();
+    protos.Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder();
 
     /**
      * <pre>
@@ -1862,11 +2060,11 @@ public final class Messages {
               break;
             }
             case 26: {
-              protos.Messages.SchnorrSig.Builder subBuilder = null;
+              protos.Messages.ProtoSchnorr.Builder subBuilder = null;
               if (signatureSessionKeys_ != null) {
                 subBuilder = signatureSessionKeys_.toBuilder();
               }
-              signatureSessionKeys_ = input.readMessage(protos.Messages.SchnorrSig.parser(), extensionRegistry);
+              signatureSessionKeys_ = input.readMessage(protos.Messages.ProtoSchnorr.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(signatureSessionKeys_);
                 signatureSessionKeys_ = subBuilder.buildPartial();
@@ -1938,13 +2136,13 @@ public final class Messages {
     }
 
     public static final int SIGNATURESESSIONKEYS_FIELD_NUMBER = 3;
-    private protos.Messages.SchnorrSig signatureSessionKeys_;
+    private protos.Messages.ProtoSchnorr signatureSessionKeys_;
     /**
      * <pre>
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
     public boolean hasSignatureSessionKeys() {
       return signatureSessionKeys_ != null;
@@ -1954,19 +2152,19 @@ public final class Messages {
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
-    public protos.Messages.SchnorrSig getSignatureSessionKeys() {
-      return signatureSessionKeys_ == null ? protos.Messages.SchnorrSig.getDefaultInstance() : signatureSessionKeys_;
+    public protos.Messages.ProtoSchnorr getSignatureSessionKeys() {
+      return signatureSessionKeys_ == null ? protos.Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
     }
     /**
      * <pre>
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
-    public protos.Messages.SchnorrSigOrBuilder getSignatureSessionKeysOrBuilder() {
+    public protos.Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder() {
       return getSignatureSessionKeys();
     }
 
@@ -2432,15 +2630,15 @@ public final class Messages {
         return this;
       }
 
-      private protos.Messages.SchnorrSig signatureSessionKeys_ = null;
+      private protos.Messages.ProtoSchnorr signatureSessionKeys_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          protos.Messages.SchnorrSig, protos.Messages.SchnorrSig.Builder, protos.Messages.SchnorrSigOrBuilder> signatureSessionKeysBuilder_;
+          protos.Messages.ProtoSchnorr, protos.Messages.ProtoSchnorr.Builder, protos.Messages.ProtoSchnorrOrBuilder> signatureSessionKeysBuilder_;
       /**
        * <pre>
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
       public boolean hasSignatureSessionKeys() {
         return signatureSessionKeysBuilder_ != null || signatureSessionKeys_ != null;
@@ -2450,11 +2648,11 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
-      public protos.Messages.SchnorrSig getSignatureSessionKeys() {
+      public protos.Messages.ProtoSchnorr getSignatureSessionKeys() {
         if (signatureSessionKeysBuilder_ == null) {
-          return signatureSessionKeys_ == null ? protos.Messages.SchnorrSig.getDefaultInstance() : signatureSessionKeys_;
+          return signatureSessionKeys_ == null ? protos.Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
         } else {
           return signatureSessionKeysBuilder_.getMessage();
         }
@@ -2464,9 +2662,9 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
-      public Builder setSignatureSessionKeys(protos.Messages.SchnorrSig value) {
+      public Builder setSignatureSessionKeys(protos.Messages.ProtoSchnorr value) {
         if (signatureSessionKeysBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2484,10 +2682,10 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
       public Builder setSignatureSessionKeys(
-          protos.Messages.SchnorrSig.Builder builderForValue) {
+          protos.Messages.ProtoSchnorr.Builder builderForValue) {
         if (signatureSessionKeysBuilder_ == null) {
           signatureSessionKeys_ = builderForValue.build();
           onChanged();
@@ -2502,13 +2700,13 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
-      public Builder mergeSignatureSessionKeys(protos.Messages.SchnorrSig value) {
+      public Builder mergeSignatureSessionKeys(protos.Messages.ProtoSchnorr value) {
         if (signatureSessionKeysBuilder_ == null) {
           if (signatureSessionKeys_ != null) {
             signatureSessionKeys_ =
-              protos.Messages.SchnorrSig.newBuilder(signatureSessionKeys_).mergeFrom(value).buildPartial();
+              protos.Messages.ProtoSchnorr.newBuilder(signatureSessionKeys_).mergeFrom(value).buildPartial();
           } else {
             signatureSessionKeys_ = value;
           }
@@ -2524,7 +2722,7 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
       public Builder clearSignatureSessionKeys() {
         if (signatureSessionKeysBuilder_ == null) {
@@ -2542,9 +2740,9 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
-      public protos.Messages.SchnorrSig.Builder getSignatureSessionKeysBuilder() {
+      public protos.Messages.ProtoSchnorr.Builder getSignatureSessionKeysBuilder() {
         
         onChanged();
         return getSignatureSessionKeysFieldBuilder().getBuilder();
@@ -2554,14 +2752,14 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
-      public protos.Messages.SchnorrSigOrBuilder getSignatureSessionKeysOrBuilder() {
+      public protos.Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder() {
         if (signatureSessionKeysBuilder_ != null) {
           return signatureSessionKeysBuilder_.getMessageOrBuilder();
         } else {
           return signatureSessionKeys_ == null ?
-              protos.Messages.SchnorrSig.getDefaultInstance() : signatureSessionKeys_;
+              protos.Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
         }
       }
       /**
@@ -2569,14 +2767,14 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureSessionKeys = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          protos.Messages.SchnorrSig, protos.Messages.SchnorrSig.Builder, protos.Messages.SchnorrSigOrBuilder> 
+          protos.Messages.ProtoSchnorr, protos.Messages.ProtoSchnorr.Builder, protos.Messages.ProtoSchnorrOrBuilder> 
           getSignatureSessionKeysFieldBuilder() {
         if (signatureSessionKeysBuilder_ == null) {
           signatureSessionKeysBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              protos.Messages.SchnorrSig, protos.Messages.SchnorrSig.Builder, protos.Messages.SchnorrSigOrBuilder>(
+              protos.Messages.ProtoSchnorr, protos.Messages.ProtoSchnorr.Builder, protos.Messages.ProtoSchnorrOrBuilder>(
                   getSignatureSessionKeys(),
                   getParentForChildren(),
                   isClean());
@@ -2696,7 +2894,7 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.protos.Evidence evidence = 2;</code>
+     * <code>.protos.ProtoEvidence evidence = 2;</code>
      */
     boolean hasEvidence();
     /**
@@ -2704,24 +2902,24 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.protos.Evidence evidence = 2;</code>
+     * <code>.protos.ProtoEvidence evidence = 2;</code>
      */
-    protos.Messages.Evidence getEvidence();
+    protos.Messages.ProtoEvidence getEvidence();
     /**
      * <pre>
      *evidence
      * </pre>
      *
-     * <code>.protos.Evidence evidence = 2;</code>
+     * <code>.protos.ProtoEvidence evidence = 2;</code>
      */
-    protos.Messages.EvidenceOrBuilder getEvidenceOrBuilder();
+    protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
 
     /**
      * <pre>
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
      */
     boolean hasSignatureEvidence();
     /**
@@ -2729,17 +2927,17 @@ public final class Messages {
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
      */
-    protos.Messages.SchnorrSig getSignatureEvidence();
+    protos.Messages.ProtoSchnorr getSignatureEvidence();
     /**
      * <pre>
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
      */
-    protos.Messages.SchnorrSigOrBuilder getSignatureEvidenceOrBuilder();
+    protos.Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder();
 
     /**
      * <pre>
@@ -2797,11 +2995,11 @@ public final class Messages {
               break;
             }
             case 18: {
-              protos.Messages.Evidence.Builder subBuilder = null;
+              protos.Messages.ProtoEvidence.Builder subBuilder = null;
               if (evidence_ != null) {
                 subBuilder = evidence_.toBuilder();
               }
-              evidence_ = input.readMessage(protos.Messages.Evidence.parser(), extensionRegistry);
+              evidence_ = input.readMessage(protos.Messages.ProtoEvidence.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(evidence_);
                 evidence_ = subBuilder.buildPartial();
@@ -2810,11 +3008,11 @@ public final class Messages {
               break;
             }
             case 26: {
-              protos.Messages.SchnorrSig.Builder subBuilder = null;
+              protos.Messages.ProtoSchnorr.Builder subBuilder = null;
               if (signatureEvidence_ != null) {
                 subBuilder = signatureEvidence_.toBuilder();
               }
-              signatureEvidence_ = input.readMessage(protos.Messages.SchnorrSig.parser(), extensionRegistry);
+              signatureEvidence_ = input.readMessage(protos.Messages.ProtoSchnorr.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(signatureEvidence_);
                 signatureEvidence_ = subBuilder.buildPartial();
@@ -2873,13 +3071,13 @@ public final class Messages {
     }
 
     public static final int EVIDENCE_FIELD_NUMBER = 2;
-    private protos.Messages.Evidence evidence_;
+    private protos.Messages.ProtoEvidence evidence_;
     /**
      * <pre>
      *evidence
      * </pre>
      *
-     * <code>.protos.Evidence evidence = 2;</code>
+     * <code>.protos.ProtoEvidence evidence = 2;</code>
      */
     public boolean hasEvidence() {
       return evidence_ != null;
@@ -2889,30 +3087,30 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.protos.Evidence evidence = 2;</code>
+     * <code>.protos.ProtoEvidence evidence = 2;</code>
      */
-    public protos.Messages.Evidence getEvidence() {
-      return evidence_ == null ? protos.Messages.Evidence.getDefaultInstance() : evidence_;
+    public protos.Messages.ProtoEvidence getEvidence() {
+      return evidence_ == null ? protos.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
     }
     /**
      * <pre>
      *evidence
      * </pre>
      *
-     * <code>.protos.Evidence evidence = 2;</code>
+     * <code>.protos.ProtoEvidence evidence = 2;</code>
      */
-    public protos.Messages.EvidenceOrBuilder getEvidenceOrBuilder() {
+    public protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
       return getEvidence();
     }
 
     public static final int SIGNATUREEVIDENCE_FIELD_NUMBER = 3;
-    private protos.Messages.SchnorrSig signatureEvidence_;
+    private protos.Messages.ProtoSchnorr signatureEvidence_;
     /**
      * <pre>
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
      */
     public boolean hasSignatureEvidence() {
       return signatureEvidence_ != null;
@@ -2922,19 +3120,19 @@ public final class Messages {
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
      */
-    public protos.Messages.SchnorrSig getSignatureEvidence() {
-      return signatureEvidence_ == null ? protos.Messages.SchnorrSig.getDefaultInstance() : signatureEvidence_;
+    public protos.Messages.ProtoSchnorr getSignatureEvidence() {
+      return signatureEvidence_ == null ? protos.Messages.ProtoSchnorr.getDefaultInstance() : signatureEvidence_;
     }
     /**
      * <pre>
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+     * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
      */
-    public protos.Messages.SchnorrSigOrBuilder getSignatureEvidenceOrBuilder() {
+    public protos.Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder() {
       return getSignatureEvidence();
     }
 
@@ -3372,15 +3570,15 @@ public final class Messages {
         return this;
       }
 
-      private protos.Messages.Evidence evidence_ = null;
+      private protos.Messages.ProtoEvidence evidence_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          protos.Messages.Evidence, protos.Messages.Evidence.Builder, protos.Messages.EvidenceOrBuilder> evidenceBuilder_;
+          protos.Messages.ProtoEvidence, protos.Messages.ProtoEvidence.Builder, protos.Messages.ProtoEvidenceOrBuilder> evidenceBuilder_;
       /**
        * <pre>
        *evidence
        * </pre>
        *
-       * <code>.protos.Evidence evidence = 2;</code>
+       * <code>.protos.ProtoEvidence evidence = 2;</code>
        */
       public boolean hasEvidence() {
         return evidenceBuilder_ != null || evidence_ != null;
@@ -3390,11 +3588,11 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.protos.Evidence evidence = 2;</code>
+       * <code>.protos.ProtoEvidence evidence = 2;</code>
        */
-      public protos.Messages.Evidence getEvidence() {
+      public protos.Messages.ProtoEvidence getEvidence() {
         if (evidenceBuilder_ == null) {
-          return evidence_ == null ? protos.Messages.Evidence.getDefaultInstance() : evidence_;
+          return evidence_ == null ? protos.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
         } else {
           return evidenceBuilder_.getMessage();
         }
@@ -3404,9 +3602,9 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.protos.Evidence evidence = 2;</code>
+       * <code>.protos.ProtoEvidence evidence = 2;</code>
        */
-      public Builder setEvidence(protos.Messages.Evidence value) {
+      public Builder setEvidence(protos.Messages.ProtoEvidence value) {
         if (evidenceBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -3424,10 +3622,10 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.protos.Evidence evidence = 2;</code>
+       * <code>.protos.ProtoEvidence evidence = 2;</code>
        */
       public Builder setEvidence(
-          protos.Messages.Evidence.Builder builderForValue) {
+          protos.Messages.ProtoEvidence.Builder builderForValue) {
         if (evidenceBuilder_ == null) {
           evidence_ = builderForValue.build();
           onChanged();
@@ -3442,13 +3640,13 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.protos.Evidence evidence = 2;</code>
+       * <code>.protos.ProtoEvidence evidence = 2;</code>
        */
-      public Builder mergeEvidence(protos.Messages.Evidence value) {
+      public Builder mergeEvidence(protos.Messages.ProtoEvidence value) {
         if (evidenceBuilder_ == null) {
           if (evidence_ != null) {
             evidence_ =
-              protos.Messages.Evidence.newBuilder(evidence_).mergeFrom(value).buildPartial();
+              protos.Messages.ProtoEvidence.newBuilder(evidence_).mergeFrom(value).buildPartial();
           } else {
             evidence_ = value;
           }
@@ -3464,7 +3662,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.protos.Evidence evidence = 2;</code>
+       * <code>.protos.ProtoEvidence evidence = 2;</code>
        */
       public Builder clearEvidence() {
         if (evidenceBuilder_ == null) {
@@ -3482,9 +3680,9 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.protos.Evidence evidence = 2;</code>
+       * <code>.protos.ProtoEvidence evidence = 2;</code>
        */
-      public protos.Messages.Evidence.Builder getEvidenceBuilder() {
+      public protos.Messages.ProtoEvidence.Builder getEvidenceBuilder() {
         
         onChanged();
         return getEvidenceFieldBuilder().getBuilder();
@@ -3494,14 +3692,14 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.protos.Evidence evidence = 2;</code>
+       * <code>.protos.ProtoEvidence evidence = 2;</code>
        */
-      public protos.Messages.EvidenceOrBuilder getEvidenceOrBuilder() {
+      public protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
         if (evidenceBuilder_ != null) {
           return evidenceBuilder_.getMessageOrBuilder();
         } else {
           return evidence_ == null ?
-              protos.Messages.Evidence.getDefaultInstance() : evidence_;
+              protos.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
         }
       }
       /**
@@ -3509,14 +3707,14 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.protos.Evidence evidence = 2;</code>
+       * <code>.protos.ProtoEvidence evidence = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          protos.Messages.Evidence, protos.Messages.Evidence.Builder, protos.Messages.EvidenceOrBuilder> 
+          protos.Messages.ProtoEvidence, protos.Messages.ProtoEvidence.Builder, protos.Messages.ProtoEvidenceOrBuilder> 
           getEvidenceFieldBuilder() {
         if (evidenceBuilder_ == null) {
           evidenceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              protos.Messages.Evidence, protos.Messages.Evidence.Builder, protos.Messages.EvidenceOrBuilder>(
+              protos.Messages.ProtoEvidence, protos.Messages.ProtoEvidence.Builder, protos.Messages.ProtoEvidenceOrBuilder>(
                   getEvidence(),
                   getParentForChildren(),
                   isClean());
@@ -3525,15 +3723,15 @@ public final class Messages {
         return evidenceBuilder_;
       }
 
-      private protos.Messages.SchnorrSig signatureEvidence_ = null;
+      private protos.Messages.ProtoSchnorr signatureEvidence_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          protos.Messages.SchnorrSig, protos.Messages.SchnorrSig.Builder, protos.Messages.SchnorrSigOrBuilder> signatureEvidenceBuilder_;
+          protos.Messages.ProtoSchnorr, protos.Messages.ProtoSchnorr.Builder, protos.Messages.ProtoSchnorrOrBuilder> signatureEvidenceBuilder_;
       /**
        * <pre>
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
        */
       public boolean hasSignatureEvidence() {
         return signatureEvidenceBuilder_ != null || signatureEvidence_ != null;
@@ -3543,11 +3741,11 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
        */
-      public protos.Messages.SchnorrSig getSignatureEvidence() {
+      public protos.Messages.ProtoSchnorr getSignatureEvidence() {
         if (signatureEvidenceBuilder_ == null) {
-          return signatureEvidence_ == null ? protos.Messages.SchnorrSig.getDefaultInstance() : signatureEvidence_;
+          return signatureEvidence_ == null ? protos.Messages.ProtoSchnorr.getDefaultInstance() : signatureEvidence_;
         } else {
           return signatureEvidenceBuilder_.getMessage();
         }
@@ -3557,9 +3755,9 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
        */
-      public Builder setSignatureEvidence(protos.Messages.SchnorrSig value) {
+      public Builder setSignatureEvidence(protos.Messages.ProtoSchnorr value) {
         if (signatureEvidenceBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -3577,10 +3775,10 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
        */
       public Builder setSignatureEvidence(
-          protos.Messages.SchnorrSig.Builder builderForValue) {
+          protos.Messages.ProtoSchnorr.Builder builderForValue) {
         if (signatureEvidenceBuilder_ == null) {
           signatureEvidence_ = builderForValue.build();
           onChanged();
@@ -3595,13 +3793,13 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
        */
-      public Builder mergeSignatureEvidence(protos.Messages.SchnorrSig value) {
+      public Builder mergeSignatureEvidence(protos.Messages.ProtoSchnorr value) {
         if (signatureEvidenceBuilder_ == null) {
           if (signatureEvidence_ != null) {
             signatureEvidence_ =
-              protos.Messages.SchnorrSig.newBuilder(signatureEvidence_).mergeFrom(value).buildPartial();
+              protos.Messages.ProtoSchnorr.newBuilder(signatureEvidence_).mergeFrom(value).buildPartial();
           } else {
             signatureEvidence_ = value;
           }
@@ -3617,7 +3815,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
        */
       public Builder clearSignatureEvidence() {
         if (signatureEvidenceBuilder_ == null) {
@@ -3635,9 +3833,9 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
        */
-      public protos.Messages.SchnorrSig.Builder getSignatureEvidenceBuilder() {
+      public protos.Messages.ProtoSchnorr.Builder getSignatureEvidenceBuilder() {
         
         onChanged();
         return getSignatureEvidenceFieldBuilder().getBuilder();
@@ -3647,14 +3845,14 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
        */
-      public protos.Messages.SchnorrSigOrBuilder getSignatureEvidenceOrBuilder() {
+      public protos.Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder() {
         if (signatureEvidenceBuilder_ != null) {
           return signatureEvidenceBuilder_.getMessageOrBuilder();
         } else {
           return signatureEvidence_ == null ?
-              protos.Messages.SchnorrSig.getDefaultInstance() : signatureEvidence_;
+              protos.Messages.ProtoSchnorr.getDefaultInstance() : signatureEvidence_;
         }
       }
       /**
@@ -3662,14 +3860,14 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.protos.SchnorrSig signatureEvidence = 3;</code>
+       * <code>.protos.ProtoSchnorr signatureEvidence = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          protos.Messages.SchnorrSig, protos.Messages.SchnorrSig.Builder, protos.Messages.SchnorrSigOrBuilder> 
+          protos.Messages.ProtoSchnorr, protos.Messages.ProtoSchnorr.Builder, protos.Messages.ProtoSchnorrOrBuilder> 
           getSignatureEvidenceFieldBuilder() {
         if (signatureEvidenceBuilder_ == null) {
           signatureEvidenceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              protos.Messages.SchnorrSig, protos.Messages.SchnorrSig.Builder, protos.Messages.SchnorrSigOrBuilder>(
+              protos.Messages.ProtoSchnorr, protos.Messages.ProtoSchnorr.Builder, protos.Messages.ProtoSchnorrOrBuilder>(
                   getSignatureEvidence(),
                   getParentForChildren(),
                   isClean());
@@ -4357,15 +4555,15 @@ public final class Messages {
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_SchnorrSig_descriptor;
+    internal_static_protos_ProtoSchnorr_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_SchnorrSig_fieldAccessorTable;
+      internal_static_protos_ProtoSchnorr_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_protos_Evidence_descriptor;
+    internal_static_protos_ProtoEvidence_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_protos_Evidence_fieldAccessorTable;
+      internal_static_protos_ProtoEvidence_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_ProtoMessage0_descriptor;
   private static final 
@@ -4395,19 +4593,21 @@ public final class Messages {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016messages.proto\022\006protos\"E\n\nSchnorrSig\022\r" +
-      "\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014\022\024\n\014ran" +
-      "domPubKey\030\003 \001(\014\"\030\n\010Evidence\022\014\n\004test\030\001 \001(" +
-      "\t\">\n\rProtoMessage0\022\022\n\nattesterId\030\001 \001(\005\022\031" +
-      "\n\021attesterPubSesKey\030\002 \001(\014\"\201\001\n\rProtoMessa" +
-      "ge1\022\031\n\021verifierPubSesKey\030\001 \001(\014\022\026\n\016verifi" +
-      "erPubKey\030\002 \001(\014\0220\n\024signatureSessionKeys\030\003" +
-      " \001(\0132\022.protos.SchnorrSig\022\013\n\003mac\030\004 \001(\014\"\212\001" +
-      "\n\rProtoMessage2\022\031\n\021attesterPubSesKey\030\001 \001" +
-      "(\014\022\"\n\010evidence\030\002 \001(\0132\020.protos.Evidence\022-" +
-      "\n\021signatureEvidence\030\003 \001(\0132\022.protos.Schno" +
-      "rrSig\022\013\n\003mac\030\004 \001(\014\"2\n\rProtoMessage3\022\n\n\002i" +
-      "v\030\001 \001(\014\022\025\n\rencryptedData\030\002 \001(\014b\006proto3"
+      "\n\016messages.proto\022\006protos\"G\n\014ProtoSchnorr" +
+      "\022\r\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014\022\024\n\014r" +
+      "andomPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022\016\n\006an" +
+      "chor\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005claim" +
+      "\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\">\n\rProtoMe" +
+      "ssage0\022\022\n\nattesterId\030\001 \001(\005\022\031\n\021attesterPu" +
+      "bSesKey\030\002 \001(\014\"\203\001\n\rProtoMessage1\022\031\n\021verif" +
+      "ierPubSesKey\030\001 \001(\014\022\026\n\016verifierPubKey\030\002 \001" +
+      "(\014\0222\n\024signatureSessionKeys\030\003 \001(\0132\024.proto" +
+      "s.ProtoSchnorr\022\013\n\003mac\030\004 \001(\014\"\221\001\n\rProtoMes" +
+      "sage2\022\031\n\021attesterPubSesKey\030\001 \001(\014\022\'\n\010evid" +
+      "ence\030\002 \001(\0132\025.protos.ProtoEvidence\022/\n\021sig" +
+      "natureEvidence\030\003 \001(\0132\024.protos.ProtoSchno" +
+      "rr\022\013\n\003mac\030\004 \001(\014\"2\n\rProtoMessage3\022\n\n\002iv\030\001" +
+      " \001(\014\022\025\n\rencryptedData\030\002 \001(\014b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4421,18 +4621,18 @@ public final class Messages {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
-    internal_static_protos_SchnorrSig_descriptor =
+    internal_static_protos_ProtoSchnorr_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_protos_SchnorrSig_fieldAccessorTable = new
+    internal_static_protos_ProtoSchnorr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_SchnorrSig_descriptor,
+        internal_static_protos_ProtoSchnorr_descriptor,
         new java.lang.String[] { "Sigma", "SignPubKey", "RandomPubKey", });
-    internal_static_protos_Evidence_descriptor =
+    internal_static_protos_ProtoEvidence_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_protos_Evidence_fieldAccessorTable = new
+    internal_static_protos_ProtoEvidence_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_protos_Evidence_descriptor,
-        new java.lang.String[] { "Test", });
+        internal_static_protos_ProtoEvidence_descriptor,
+        new java.lang.String[] { "Anchor", "WatzVersion", "Claim", "ServicePubKey", });
     internal_static_protos_ProtoMessage0_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_protos_ProtoMessage0_fieldAccessorTable = new
