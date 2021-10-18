@@ -1,7 +1,7 @@
 package sire.dummy;
 
 import org.bouncycastle.math.ec.ECPoint;
-import protos.Messages.*;
+import sire.protos.Messages.*;
 import sire.messages.Message0;
 import sire.messages.Message1;
 import sire.messages.Message2;
