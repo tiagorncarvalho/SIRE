@@ -25,6 +25,8 @@ public class DummyAttester {
         return proxy.getVerifierPublicKey();
     }
 
+    //TODO turn attesterId into hash of Ga
+    //TODO add sockets?
     public Message1 sendMessage0(int attesterId, Message0 message0) throws SireException {
         ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
                 .setAttesterId(message0.getAttesterId())
@@ -37,6 +39,8 @@ public class DummyAttester {
                 protoUtils.protoToSchnorr(msg1.getSignatureSessionKeys()), msg1.getMac().toByteArray());
     }
 
+    //TODO turn attesterId into hash of Ga
+    //TODO add sockets?
     public Message3 sendMessage2(int attesterId, Message2 message2) throws SireException {
         ProtoMessage2 msg2 = ProtoMessage2.newBuilder()
                 .setAttesterPubSesKey(ByteString.copyFrom(message2.getEncodedAttesterSessionPublicKey()))

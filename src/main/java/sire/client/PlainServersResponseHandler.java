@@ -50,7 +50,7 @@ public class PlainServersResponseHandler extends ServersResponseHandler {
 				continue;
 			response = responses.get(msg.getContent());
 			if (response == null) {
-				logger.warn("Something went wrong while getting deserialized response from {}", msg.getSender());
+//				logger.warn("Something went wrong while getting deserialized response from {}", msg.getSender());
 				continue;
 			}
 			int responseHash = responseHashes.get(response);
@@ -112,7 +112,7 @@ public class PlainServersResponseHandler extends ServersResponseHandler {
 				return new ConfidentialExtractedResponse(lastMsg.getViewID(), plainData, confidentialData);
 			}
 		}
-		logger.error("This should not happen. Did not found {} equivalent responses", sameContent);
+//		logger.error("This should not happen. Did not found {} equivalent responses", sameContent);
 		return null;
 	}
 

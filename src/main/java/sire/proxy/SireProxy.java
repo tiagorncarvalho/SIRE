@@ -12,6 +12,7 @@ import sire.DeviceEvidence;
 import sire.Operation;
 import sire.client.ServersResponseHandlerWithoutCombine;
 import sire.client.UncombinedConfidentialResponse;
+import sire.utils.cryptoUtils;
 import sire.utils.protoUtils;
 import sire.protos.Messages.*;
 import sire.schnorr.PublicPartialSignature;
@@ -108,7 +109,7 @@ public class SireProxy {
 			ProtoSchnorr protoSign = protoUtils.schnorrToProto(signature);
 
 
-			byte[] mac = computeMac(macKey, mySessionPublicKey.getEncoded(true),
+			byte[] mac = cryptoUtils.computeMac(macEngine, macKey, mySessionPublicKey.getEncoded(true),
 					verifierPublicKey.getEncoded(true), signature.getRandomPublicKey(),
 					signature.getSigningPublicKey(), signature.getSigma());
 
@@ -207,18 +208,8 @@ public class SireProxy {
 		}
 	}
 
-	private byte[] computeMac(byte[] secretKey, byte[]... contents) {
-		macEngine.init(new KeyParameter(secretKey));
-		for (byte[] content : contents) {
-			macEngine.update(content, 0, content.length);
-		}
-		byte[] mac = new byte[macEngine.getMacSize()];
-		macEngine.doFinal(mac, 0);
-		return mac;
-	}
-
 	private boolean verifyMac(byte[] secretKey, byte[] mac, byte[]... contents) {
-		return Arrays.equals(computeMac(secretKey, contents), mac);
+		return Arrays.equals(cryptoUtils.computeMac(macEngine, secretKey, contents), mac);
 	}
 
 	private SchnorrSignature getSignatureFromVerifier(byte[] data) throws SireException {

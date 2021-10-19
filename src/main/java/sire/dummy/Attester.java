@@ -10,9 +10,9 @@ import sire.messages.Message2;
 import sire.messages.Message3;
 import sire.proxy.Evidence;
 import sire.proxy.SireException;
-import sire.proxy.SireProxy;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
+import sire.utils.cryptoUtils;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
@@ -35,6 +35,7 @@ public class Attester {
 	private static MessageDigest messageDigest;
 	private static Cipher symmetricCipher;
 
+	//TODO add sockets
 	public static void main(String[] args) throws SireException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException {
 		int proxyId = 1000;
 		int attesterId = 1;
@@ -113,7 +114,8 @@ public class Attester {
 			SchnorrSignature signature = signatureScheme.computeSignature(signingHash, attesterPrivateKey,
 					attesterPublicKey, randomPrivateKey, randomPublicKey);
 
-			byte[] mac = computeMac(
+			byte[] mac = cryptoUtils.computeMac(
+					macEngine,
 					macKey,
 					attesterSessionPublicKey.getEncoded(true),
 					anchor,
@@ -161,18 +163,10 @@ public class Attester {
 		return new SecretKeySpec(secretKeyFactory.generateSecret(spec).getEncoded(), "AES");
 	}
 
-	private static byte[] computeMac(byte[] secretKey, byte[]... contents) {
-		macEngine.init(new KeyParameter(secretKey));
-		for (byte[] content : contents) {
-			macEngine.update(content, 0, content.length);
-		}
-		byte[] mac = new byte[macEngine.getMacSize()];
-		macEngine.doFinal(mac, 0);
-		return mac;
-	}
+
 
 	private static boolean verifyMac(byte[] secretKey, byte[] mac, byte[]... contents) {
-		return Arrays.equals(computeMac(secretKey, contents), mac);
+		return Arrays.equals(cryptoUtils.computeMac(macEngine, secretKey, contents), mac);
 	}
 
 	private static BigInteger getRandomNumber(BigInteger field) {

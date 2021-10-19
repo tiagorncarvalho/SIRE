@@ -42,7 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author robin
  */
 public class SireServer implements ConfidentialSingleExecutable, RandomPolynomialListener, RandomKeyPolynomialListener {
-	private final Logger logger = LoggerFactory.getLogger("sire");
+	//private final Logger logger = LoggerFactory.getLogger("sire");
 	private final ServerCommunicationSystem serverCommunicationSystem;
 	private final DistributedPolynomialManager distributedPolynomialManager;
 	private final ServiceReplica serviceReplica;
@@ -99,15 +99,17 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		distributedPolynomialManager.setRandomPolynomialListener(this);
 		distributedPolynomialManager.setRandomKeyPolynomialListener(this);
 		schnorrSignatureScheme = new SchnorrSignatureScheme();
-		dummyAttesterPublicKey = schnorrSignatureScheme.decodePublicKey(new byte[] {3, -27, -103, 52, -58, -46, 91, -103, -14, 0, 65, 73, -91, 31, -42, -97, 77, 19, -55, 8, 125, -9, -82, -117, -70, 102, -110, 88, -121, -76, -88, 44, -75});
+		dummyAttesterPublicKey = schnorrSignatureScheme.decodePublicKey(new byte[] {3, -27, -103, 52, -58, -46, 91,
+				-103, -14, 0, 65, 73, -91, 31, -42, -97, 77, 19, -55, 8, 125, -9, -82, -117, -70, 102, -110, 88,
+				-121, -76, -88, 44, -75});
 	}
 
 	@Override
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
 		Operation op = Operation.getOperation(bytes[0]);
-		logger.info("Received a {} request from {} in cid {}", op, messageContext.getSender(),
-				messageContext.getConsensusId());
+//		logger.info("Received a {} request from {} in cid {}", op, messageContext.getSender(),
+//				messageContext.getConsensusId());
 		switch (op) {
 			case GENERATE_SIGNING_KEY -> {
 				try {
@@ -116,10 +118,10 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 						signingKeyRequests.add(messageContext);
 						generateSigningKey();
 					} else if (verifierSigningPrivateKeyShare != null) {
-						logger.warn("I already have a signing key.");
+//						logger.warn("I already have a signing key.");
 						return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
 					} else {
-						logger.warn("Signing key is being created.");
+//						logger.warn("Signing key is being created.");
 					}
 				} finally {
 					lock.unlock();
@@ -151,7 +153,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				if (share == null)
 					generateRandomNumberFor(messageContext);
 				else {
-					logger.debug("Sending existing random number share to {}", messageContext.getSender());
+//					logger.debug("Sending existing random number share to {}", messageContext.getSender());
 					sendRandomNumberShareTo(messageContext, share);
 				}
 				lock.unlock();
@@ -288,22 +290,22 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public void onRandomPolynomialsCreation(RandomPolynomialContext context) {
 		lock.lock();
 		double delta = context.getTime() / 1_000_000.0;
-		logger.debug("Received random number polynomial with id {} in {} ms", context.getId(), delta);
+//		logger.debug("Received random number polynomial with id {} in {} ms", context.getId(), delta);
 		MessageContext messageContext = requests.remove(context.getId());
 		data.put(messageContext.getSender(), context.getPoint());
-		logger.debug("Sending random number share to {}", messageContext.getSender());
+//		logger.debug("Sending random number share to {}", messageContext.getSender());
 		sendRandomNumberShareTo(messageContext, context.getPoint());
 		lock.unlock();
 	}
 
 	private void onRandomKey(int id, VerifiableShare privateKeyShare, ECPoint publicKey) {
 		if (signingRequestContexts.containsKey(id)) {
-			logger.info("Received random signing key");
+//			logger.info("Received random signing key");
 			MessageContext messageContext = signingRequestContexts.remove(id);
 			signAndSend(messageContext, signingData.remove(messageContext.getSender()), verifierSigningPrivateKeyShare,
 					privateKeyShare, publicKey);
 		} else if (signingKeyGenerationId == id) {
-			logger.info("Received service signing key");
+//			logger.info("Received service signing key");
 			verifierSigningPrivateKeyShare = privateKeyShare;
 			verifierSigningPublicKey = publicKey;
 			for (MessageContext messageContext : signingKeyRequests) {
@@ -311,7 +313,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			}
 			signingKeyRequests.clear();
 		} else {
-			logger.warn("Received an unknown polynomial id {}", id);
+//			logger.warn("Received an unknown polynomial id {}", id);
 		}
 	}
 
@@ -388,7 +390,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			bout.flush();
 			return new ConfidentialSnapshot(bout.toByteArray(), shares);
 		} catch (IOException e) {
-			logger.error("Error while taking snapshot", e);
+//			logger.error("Error while taking snapshot", e);
 		}
 		return null;
 	}
@@ -414,7 +416,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				data.put(key, value);
 			}
 		} catch (IOException | ClassCastException | ClassNotFoundException e) {
-			logger.error("Error while installing snapshot", e);
+//			logger.error("Error while installing snapshot", e);
 		}
 	}
 }

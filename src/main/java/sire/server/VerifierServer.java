@@ -230,10 +230,10 @@ public class VerifierServer implements ConfidentialSingleExecutable, RandomPolyn
 	public void onRandomPolynomialsCreation(RandomPolynomialContext context) {
 		lock.lock();
 		double delta = context.getTime() / 1_000_000.0;
-		logger.debug("Received random number polynomial with id {} in {} ms", context.getId(), delta);
+//		logger.debug("Received random number polynomial with id {} in {} ms", context.getId(), delta);
 		MessageContext messageContext = requests.get(context.getId());
 		data.put(messageContext.getSender(), context.getPoint());
-		logger.debug("Sending random number share to {}", messageContext.getSender());
+//		logger.debug("Sending random number share to {}", messageContext.getSender());
 		sendRandomNumberShareTo(messageContext, context.getPoint());
 		lock.unlock();
 	}
@@ -264,7 +264,7 @@ public class VerifierServer implements ConfidentialSingleExecutable, RandomPolyn
 			bout.flush();
 			return new ConfidentialSnapshot(bout.toByteArray(), shares);
 		} catch (IOException e) {
-			logger.error("Error while taking snapshot", e);
+//			logger.error("Error while taking snapshot", e);
 		}
 		return null;
 	}
@@ -290,7 +290,7 @@ public class VerifierServer implements ConfidentialSingleExecutable, RandomPolyn
 				data.put(key, value);
 			}
 		} catch (IOException | ClassCastException | ClassNotFoundException e) {
-			logger.error("Error while installing snapshot", e);
+//			logger.error("Error while installing snapshot", e);
 		}
 	}
 }
