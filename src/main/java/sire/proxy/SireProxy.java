@@ -1,5 +1,6 @@
 package sire.proxy;
 
+import bftsmart.demo.ycsb.YCSBClient;
 import com.google.protobuf.ByteString;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
@@ -12,8 +13,7 @@ import sire.DeviceEvidence;
 import sire.Operation;
 import sire.client.ServersResponseHandlerWithoutCombine;
 import sire.client.UncombinedConfidentialResponse;
-import sire.utils.cryptoUtils;
-import sire.utils.protoUtils;
+import static sire.utils.protoUtils.*;
 import sire.protos.Messages.*;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
@@ -25,10 +25,7 @@ import vss.secretsharing.VerifiableShare;
 import javax.crypto.*;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -93,7 +90,8 @@ public class SireProxy {
 	//public Message1 processMessage0(int attesterId, Message0 message) throws SireException {
 	public ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
 		try {
-			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(msg0.getAttesterPubSesKey().toByteArray());
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg0.getAttesterPubSesKey()));
 			BigInteger mySessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
 			ECPoint mySessionPublicKey = curveGenerator.multiply(mySessionPrivateKey);
 			ECPoint sharedPoint = attesterSessionPublicKey.multiply(mySessionPrivateKey);
@@ -103,13 +101,13 @@ public class SireProxy {
 					attesterSessionPublicKey.getEncoded(true));
 
 			SecretKey symmetricEncryptionKey = createSecretKey(sharedSecret.toString().toCharArray(), sessionPublicKeysHash);
-			byte[] macKey = symmetricEncryptionKey.getEncoded();//sharedSecret.toByteArray();
+			byte[] macKey = symmetricEncryptionKey.getEncoded();
 
 			SchnorrSignature signature = getSignatureFromVerifier(sessionPublicKeysHash);
-			ProtoSchnorr protoSign = protoUtils.schnorrToProto(signature);
+			ProtoSchnorr protoSign = schnorrToProto(signature);
 
 
-			byte[] mac = cryptoUtils.computeMac(macEngine, macKey, mySessionPublicKey.getEncoded(true),
+			byte[] mac = computeMac(macKey, mySessionPublicKey.getEncoded(true),
 					verifierPublicKey.getEncoded(true), signature.getRandomPublicKey(),
 					signature.getSigningPublicKey(), signature.getSigma());
 
@@ -125,28 +123,32 @@ public class SireProxy {
 					.setMac(ByteString.copyFrom(mac))
 					.build();
 
+			out.close();
+
 			return msg1;
 
 			//return new Message1(mySessionPublicKey.getEncoded(true),
 			//		verifierPublicKey.getEncoded(true), signature, mac);
-		} catch (InvalidKeySpecException e) {
+		} catch (InvalidKeySpecException | IOException e) {
 			throw new SireException("Failed to create shared key", e);
 		}
 	}
 
 	//public Message3 processMessage2(int attesterId, Message2 message) throws SireException {
-	public ProtoMessage3 processMessage2(int attesterId, ProtoMessage2 message) throws SireException {
+	public ProtoMessage3 processMessage2(int attesterId, ProtoMessage2 message) throws SireException, IOException {
 		AttesterContext attester = attesters.get(attesterId);
 		if (attester == null)
 			throw new SireException("Unknown attester id " + attesterId);
 
-		ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(message.getAttesterPubSesKey().toByteArray());
-		Evidence evidence = protoUtils.protoToEvidence(message.getEvidence());
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out,message.getAttesterPubSesKey()));
+		Evidence evidence = protoToEvidence(message.getEvidence());
 		byte[] encodedAttestationServicePublicKey = evidence.getEncodedAttestationServicePublicKey();
+		//System.out.println("Message mac " + Arrays.toString(byteStringToByteArray(out,message.getMac())));
 		boolean isValidMac = verifyMac(
 				attester.getMacKey(),
-				message.getMac().toByteArray(),
-				message.getAttesterPubSesKey().toByteArray(),
+				byteStringToByteArray(out, message.getMac()),
+				byteStringToByteArray(out, message.getAttesterPubSesKey()),
 				evidence.getAnchor(),
 				encodedAttestationServicePublicKey,
 				evidence.getWaTZVersion().getBytes(),
@@ -163,7 +165,7 @@ public class SireProxy {
 		if (!Arrays.equals(localAnchor, evidence.getAnchor()))
 			throw new SireException("Anchor is different");
 
-		DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoUtils.protoToSchnorr(message.getSignatureEvidence()));
+		DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(message.getSignatureEvidence()));
 
 		//asking for data - verifier will return data if evidence is valid
 		byte[] serializedDeviceEvidence = deviceEvidence.serialize();
@@ -209,7 +211,8 @@ public class SireProxy {
 	}
 
 	private boolean verifyMac(byte[] secretKey, byte[] mac, byte[]... contents) {
-		return Arrays.equals(cryptoUtils.computeMac(macEngine, secretKey, contents), mac);
+		//System.out.println("Computed Mac " + Arrays.toString(computeMac(secretKey, contents)) + " message mac " + Arrays.toString(mac));
+		return Arrays.equals(computeMac(secretKey, contents), mac);
 	}
 
 	private SchnorrSignature getSignatureFromVerifier(byte[] data) throws SireException {
@@ -265,6 +268,16 @@ public class SireProxy {
 			messageDigest.update(content);
 		}
 		return messageDigest.digest();
+	}
+
+	private byte[] computeMac(byte[] secretKey, byte[]... contents) {
+		macEngine.init(new KeyParameter(secretKey));
+		for (byte[] content : contents) {
+			macEngine.update(content, 0, content.length);
+		}
+		byte[] mac = new byte[macEngine.getMacSize()];
+		macEngine.doFinal(mac, 0);
+		return mac;
 	}
 
 	private BigInteger getRandomNumber(BigInteger field) {

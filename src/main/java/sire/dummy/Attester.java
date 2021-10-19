@@ -12,12 +12,12 @@ import sire.proxy.Evidence;
 import sire.proxy.SireException;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
-import sire.utils.cryptoUtils;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
@@ -114,8 +114,7 @@ public class Attester {
 			SchnorrSignature signature = signatureScheme.computeSignature(signingHash, attesterPrivateKey,
 					attesterPublicKey, randomPrivateKey, randomPublicKey);
 
-			byte[] mac = cryptoUtils.computeMac(
-					macEngine,
+			byte[] mac = computeMac(
 					macKey,
 					attesterSessionPublicKey.getEncoded(true),
 					anchor,
@@ -135,6 +134,8 @@ public class Attester {
 			byte[] decryptedData = decryptData(symmetricEncryptionKey, message3.getInitializationVector(),
 					message3.getEncryptedData());
 			System.out.println("Verifier sent me: " + new String(decryptedData));
+		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			dummy.close();
 		}
@@ -166,7 +167,17 @@ public class Attester {
 
 
 	private static boolean verifyMac(byte[] secretKey, byte[] mac, byte[]... contents) {
-		return Arrays.equals(cryptoUtils.computeMac(macEngine, secretKey, contents), mac);
+		return Arrays.equals(computeMac(secretKey, contents), mac);
+	}
+
+	private static byte[] computeMac(byte[] secretKey, byte[]... contents) {
+		macEngine.init(new KeyParameter(secretKey));
+		for (byte[] content : contents) {
+			macEngine.update(content, 0, content.length);
+		}
+		byte[] mac = new byte[macEngine.getMacSize()];
+		macEngine.doFinal(mac, 0);
+		return mac;
 	}
 
 	private static BigInteger getRandomNumber(BigInteger field) {

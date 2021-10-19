@@ -6,10 +6,13 @@ import sire.messages.Message0;
 import sire.messages.Message1;
 import sire.messages.Message2;
 import sire.messages.Message3;
-import sire.utils.protoUtils;
+import static sire.utils.protoUtils.*;
 import sire.proxy.SireException;
 import sire.proxy.SireProxy;
 import com.google.protobuf.ByteString;
+
+import java.io.*;
+import java.util.Arrays;
 
 
 public class DummyAttester {
@@ -27,7 +30,7 @@ public class DummyAttester {
 
     //TODO turn attesterId into hash of Ga
     //TODO add sockets?
-    public Message1 sendMessage0(int attesterId, Message0 message0) throws SireException {
+    public Message1 sendMessage0(int attesterId, Message0 message0) throws SireException, IOException {
         ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
                 .setAttesterId(message0.getAttesterId())
                 .setAttesterPubSesKey(ByteString.copyFrom(message0.getEncodedAttesterSessionPublicKey()))
@@ -35,23 +38,36 @@ public class DummyAttester {
 
         ProtoMessage1 msg1 = proxy.processMessage0(msg0);
 
-        return new Message1(msg1.getVerifierPubSesKey().toByteArray(), msg1.getVerifierPubKey().toByteArray(),
-                protoUtils.protoToSchnorr(msg1.getSignatureSessionKeys()), msg1.getMac().toByteArray());
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Message1 result = new Message1(byteStringToByteArray(out, msg1.getVerifierPubSesKey()),
+                byteStringToByteArray(out, msg1.getVerifierPubKey()),
+                protoToSchnorr(msg1.getSignatureSessionKeys()),
+                byteStringToByteArray(out, msg1.getMac()));
+        out.close();
+
+        return result;
     }
 
     //TODO turn attesterId into hash of Ga
     //TODO add sockets?
-    public Message3 sendMessage2(int attesterId, Message2 message2) throws SireException {
+    public Message3 sendMessage2(int attesterId, Message2 message2) throws SireException, IOException {
         ProtoMessage2 msg2 = ProtoMessage2.newBuilder()
                 .setAttesterPubSesKey(ByteString.copyFrom(message2.getEncodedAttesterSessionPublicKey()))
-                .setEvidence(protoUtils.evidenceToProto(message2.getEvidence()))
-                .setSignatureEvidence(protoUtils.schnorrToProto(message2.getEvidenceSignature()))
+                .setEvidence(evidenceToProto(message2.getEvidence()))
+                .setSignatureEvidence(schnorrToProto(message2.getEvidenceSignature()))
                 .setMac(ByteString.copyFrom(message2.getMac()))
                 .build();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte [] test = byteStringToByteArray(out, msg2.getMac());
+        //System.out.println("Original mac " + Arrays.toString(message2.getMac()) + " Back to ByteArray " + Arrays.toString(test));
 
         ProtoMessage3 msg3 = proxy.processMessage2(attesterId, msg2);
 
-        return new Message3(msg3.getIv().toByteArray(), msg3.getEncryptedData().toByteArray());
+        Message3 result = new Message3(byteStringToByteArray(out, msg3.getIv()),
+                byteStringToByteArray(out, msg3.getEncryptedData()));
+        out.close();
+
+        return result;
     }
 
     public void close() {

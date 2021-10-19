@@ -5,6 +5,9 @@ import sire.protos.Messages;
 import sire.proxy.Evidence;
 import sire.schnorr.SchnorrSignature;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 public class protoUtils {
     public static Messages.ProtoSchnorr schnorrToProto(SchnorrSignature signature) {
         return Messages.ProtoSchnorr.newBuilder()
@@ -14,14 +17,20 @@ public class protoUtils {
                 .build();
     }
 
-    public static SchnorrSignature protoToSchnorr(Messages.ProtoSchnorr sign) {
-        return new SchnorrSignature(sign.getSigma().toByteArray(), sign.getSignPubKey().toByteArray(),
-                sign.getRandomPubKey().toByteArray());
+    public static SchnorrSignature protoToSchnorr(Messages.ProtoSchnorr sign) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        SchnorrSignature sch = new SchnorrSignature(byteStringToByteArray(out, sign.getSigma()), byteStringToByteArray(out, sign.getSignPubKey()),
+                byteStringToByteArray(out,sign.getRandomPubKey()));
+        out.close();
+        return sch;
     }
 
-    public static Evidence protoToEvidence(Messages.ProtoEvidence evidence) {
-        return new Evidence (evidence.getAnchor().toByteArray(), evidence.getWatzVersion(),
-                evidence.getClaim().toByteArray(), evidence.getServicePubKey().toByteArray());
+    public static Evidence protoToEvidence(Messages.ProtoEvidence evidence) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Evidence evi = new Evidence (byteStringToByteArray(out, evidence.getAnchor()), evidence.getWatzVersion(),
+                byteStringToByteArray(out, evidence.getClaim()), byteStringToByteArray(out, evidence.getServicePubKey()));
+        out.close();
+        return evi;
     }
 
     public static Messages.ProtoEvidence evidenceToProto(Evidence evidence) {
@@ -29,6 +38,14 @@ public class protoUtils {
                 .setAnchor(ByteString.copyFrom(evidence.getAnchor()))
                 .setWatzVersion(evidence.getWaTZVersion())
                 .setClaim(ByteString.copyFrom(evidence.getClaim()))
+                .setServicePubKey(ByteString.copyFrom(evidence.getEncodedAttestationServicePublicKey()))
                 .build();
+    }
+
+    public static byte[] byteStringToByteArray(ByteArrayOutputStream out, ByteString bytestr) throws IOException {
+        out.reset();
+        bytestr.writeTo(out);
+
+        return out.toByteArray();
     }
 }
