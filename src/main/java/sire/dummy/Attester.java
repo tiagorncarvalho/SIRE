@@ -166,7 +166,6 @@ public class Attester {
 			dummy.cas(key.getBytes(), value.getBytes(), newValue.getBytes());
 
 			System.out.println("Getting entry: " + key + " Value: " + new String(dummy.getData(key.getBytes())));
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

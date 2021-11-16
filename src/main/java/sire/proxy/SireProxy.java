@@ -322,9 +322,7 @@ public class SireProxy implements MapInterface, OperationalInterface{
 				.setValue(ByteString.copyFrom(value))
 				.build();
 		try {
-			System.out.println("Put started");
 			serviceProxy.invokeOrdered2(putRequest.toByteArray());
-			System.out.println("Put done");
 		} catch (SecretSharingException e) {
 			e.printStackTrace();
 		}

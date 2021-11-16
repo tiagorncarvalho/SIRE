@@ -265,15 +265,14 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					lock.unlock();
 				}
 				case MAP_PUT -> {
-					//lock.lock();
-					System.out.println("Put started");
+					lock.lock();
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					byte[] key = byteStringToByteArray(out, msg.getKey());
 					byte[] value = byteStringToByteArray(out, msg.getValue());
 					out.close();
 					storage.put(key, value);
-					System.out.println("Put done");
-					//lock.unlock();
+					lock.unlock();
+					return new ConfidentialMessage();
 				}
 				case MAP_DELETE -> {
 					lock.lock();
@@ -282,9 +281,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					out.close();
 					storage.remove(key);
 					lock.unlock();
+					return new ConfidentialMessage();
 				}
-				case MAP_GET -> { //TODO return
-					System.out.println("Get started");
+				case MAP_GET -> {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					byte[] key = byteStringToByteArray(out, msg.getKey());
 					out.close();
@@ -309,9 +308,11 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					byte[] oldValue = byteStringToByteArray(out, msg.getOldData());
 					byte[] newValue = byteStringToByteArray(out, msg.getValue());
 					out.close();
-					if(storage.get(key).equals(oldValue))
+					if(Arrays.equals(storage.get(key), oldValue)) {
 						storage.put(key, newValue);
+					}
 					lock.unlock();
+					return new ConfidentialMessage();
 				}
 			}
 		} catch (IOException e) {
