@@ -62,7 +62,7 @@ public class VerifierServer implements ConfidentialSingleExecutable, RandomPolyn
 	private final PublicKey servicePublicKey;
 	private final BigInteger myPrivateSessionKeyPart = new BigInteger("2673e6e0d6f66a15db4fa597b8160f23ab8767ed0e46692e01e04d49bd154426", 16);
 	private final BigInteger myPublicSessionKeyPart = generator.modPow(myPrivateSessionKeyPart, primeField);
-	private final Device device;
+	//private final Device device;
 
 	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		if (args.length < 1) {
@@ -100,7 +100,7 @@ public class VerifierServer implements ConfidentialSingleExecutable, RandomPolyn
 		byte[] devicePublicKeyBytes = {48, -126, 1, 34, 48, 13, 6, 9, 42, -122, 72, -122, -9, 13, 1, 1, 1, 5, 0, 3, -126, 1, 15, 0, 48, -126, 1, 10, 2, -126, 1, 1, 0, -41, -26, 10, -62, -2, -97, 123, 113, -21, 88, -127, 93, 95, 96, 18, 44, 47, -97, -45, -125, 32, -85, -11, -123, 63, -70, -29, -95, 16, 21, 102, 60, 106, -105, -115, -90, 29, 6, 119, -54, -47, -70, 13, -94, -52, -86, 59, 61, 43, 1, 87, 69, -99, -30, -59, 102, -58, -97, 83, 22, -16, 84, 95, -114, -100, 19, 77, -77, -68, 39, 91, 95, -117, 44, 89, 105, 22, 107, -30, -77, 38, 108, 97, -34, 21, -79, 28, -12, 39, 12, 52, -101, 17, -36, -38, -60, -98, 17, 46, 79, 80, -53, -99, -123, 29, -79, -45, 119, 23, 14, -81, -35, -19, -107, 64, 89, 14, 102, 12, 113, 105, 45, 50, -100, 80, -33, -10, 93, -113, 22, 17, -75, -17, -63, 32, 36, 45, -55, 70, 33, 23, -61, 62, 49, -75, 45, 99, -83, 37, 41, -109, -32, -79, 48, 65, -76, -40, 62, -47, 25, 87, 55, -7, -37, -61, -18, -64, 120, 113, -44, 119, 75, 104, 40, -66, -93, -103, -1, -63, -3, 123, -72, 82, -15, 64, -109, 40, 64, -120, -46, 24, -116, 39, 33, 109, -56, -15, -79, -109, -67, -128, -16, 15, -24, 96, 98, -115, -93, 60, 7, -118, 76, -1, -21, 46, 37, 24, 62, -51, -9, 58, 82, -5, 83, -123, -19, 39, -84, -69, 67, 99, 69, -86, -92, 84, -59, -95, -101, 2, -81, 96, -19, -35, 53, 48, -121, 94, -27, 15, -67, 43, -46, -15, -32, 94, 105, 2, 3, 1, 0, 1};
 		EncodedKeySpec devicePublicKeySpec = new X509EncodedKeySpec(devicePublicKeyBytes);
 		PublicKey devicePublicKey = keyFactory.generatePublic(devicePublicKeySpec);
-		device = new Device(devicePublicKey);
+		//device = new Device(devicePublicKey);
 	}
 
 	@Override

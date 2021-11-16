@@ -40,3 +40,65 @@ message ProtoMessage3 {
   bytes iv = 1; //iv
   bytes encryptedData = 2; //Sign_V(Enc_A(data))
 }
+
+//=======ProxyMsg=======
+message ProxyAttestationMessage {
+  enum AttOperation {
+      GENERATE_SIGNING_KEY = 0;
+      GET_PUBLIC_KEY = 1;
+      SIGN_DATA = 2;
+      GET_DATA = 3;
+      GET_RANDOM_NUMBER = 4;
+  }
+  AttOperation operation = 1;
+  ProtoEvidence evidence = 2;
+  ProtoSchnorr signature = 3;
+  bytes dataToSign = 4;
+}
+
+message ProxyMapMessage {
+  enum MapOperation {
+    MAP_PUT = 0;
+    MAP_DELETE = 1;
+    MAP_GET = 2;
+    MAP_LIST = 3;
+    MAP_CAS = 4;
+  }
+  MapOperation operation = 1;
+  bytes key = 2;
+  bytes value = 3; //also serves as newData
+  bytes oldData = 4;
+}
+
+message ProxyMessage {
+  enum Operation {
+    GENERATE_SIGNING_KEY = 0;
+    GET_PUBLIC_KEY = 1;
+    SIGN_DATA = 2;
+    GET_DATA = 3;
+    GET_RANDOM_NUMBER = 4;
+    MAP_PUT = 5;
+    MAP_DELETE = 6;
+    MAP_GET = 7;
+    MAP_LIST = 8;
+    MAP_CAS = 9;
+  }
+  Operation operation = 1;
+  ProtoEvidence evidence = 2;
+  ProtoSchnorr signature = 3;
+  bytes dataToSign = 4;
+
+  bytes key = 5;
+  bytes value = 6; //also serves as newData
+  bytes oldData = 7;
+}
+
+message ProxyResponse {
+  enum ResponseType {
+    MAP_GET = 0;
+    MAP_LIST = 1;
+  }
+  ResponseType type = 1;
+  repeated bytes list = 2;
+  bytes value = 3;
+}

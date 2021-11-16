@@ -4,6 +4,7 @@ import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.core.messages.TOMMessage;
+import com.google.protobuf.InvalidProtocolBufferException;
 import confidential.ConfidentialMessage;
 import confidential.facade.server.ConfidentialSingleExecutable;
 import confidential.polynomial.DistributedPolynomialManager;
@@ -17,11 +18,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sire.DeviceEvidence;
 import sire.Operation;
+import sire.protos.Messages.*;
 import sire.proxy.Evidence;
 import sire.proxy.SireException;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
+import sire.utils.ByteArrayComparator;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.commitment.linear.LinearCommitments;
 import vss.secretsharing.Share;
@@ -31,12 +34,11 @@ import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static sire.utils.protoUtils.*;
 
 /**
  * @author robin
@@ -75,6 +77,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private final byte[] dummyDataForAttester = "Sire".getBytes();
 	private final ECPoint dummyAttesterPublicKey;
 
+	//key value store for information concerning devices, applications and more
+	private Map<byte[], byte[]> storage;
+
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {
 			System.out.println("Usage: sire.server.SireServer <server id>");
@@ -89,6 +94,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		messageDigest = MessageDigest.getInstance("SHA256");
 		requests = new TreeMap<>();
 		data = new TreeMap<>();
+		storage = new TreeMap<>(new ByteArrayComparator());
 		signingKeyRequests = new LinkedList<>();
 		signingRequestContexts = new TreeMap<>();
 		signingData = new TreeMap<>();
@@ -104,7 +110,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				-121, -76, -88, 44, -75});
 	}
 
-	@Override
+/*	@Override
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
 		Operation op = Operation.getOperation(bytes[0]);
@@ -178,8 +184,138 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				} catch (SireException e) {
 					e.printStackTrace();
 				}
-
 			}
+		}
+		return null;
+	}*/
+
+	@Override
+	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
+												 MessageContext messageContext) {
+		try {
+			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
+			ProxyMessage.Operation op = msg.getOperation();
+			switch(op) {
+				case GENERATE_SIGNING_KEY -> {
+					try {
+						lock.lock();
+						if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
+							signingKeyRequests.add(messageContext);
+							generateSigningKey();
+						} else if (verifierSigningPrivateKeyShare != null) {
+//						logger.warn("I already have a signing key.");
+							return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
+						} else {
+//						logger.warn("Signing key is being created.");
+						}
+					} finally {
+						lock.unlock();
+					}
+				}
+				case GET_PUBLIC_KEY -> { //TODO return
+					try {
+						lock.lock();
+						if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
+							signingKeyRequests.add(messageContext);
+							generateSigningKey();
+						} else if (verifierSigningPrivateKeyShare != null){
+							return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
+						}
+					} finally {
+						lock.unlock();
+					}
+				}
+				case SIGN_DATA -> { //TODO return
+					lock.lock();
+					//byte[] data = Arrays.copyOfRange(bytes, 1, bytes.length);
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					byte[] data = byteStringToByteArray(out, msg.getDataToSign());
+					signingData.put(messageContext.getSender(), data);
+					generateRandomKey(messageContext);
+					out.close();
+					lock.unlock();
+				}
+				case GET_DATA -> { //TODO return
+/*					byte[] requestData = new byte[bytes.length - 1];
+					System.arraycopy(bytes, 1, requestData, 0, requestData.length);*/
+					DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
+							protoToSchnorr(msg.getSignature()));
+					boolean isValidEvidence = isValidDeviceEvidence(deviceEvidence);
+					byte[] plainData;
+					if (isValidEvidence) {
+						plainData = new byte[dummyDataForAttester.length + 1];
+						plainData[0] = 1;
+						System.arraycopy(dummyDataForAttester, 0, plainData, 1,
+								dummyDataForAttester.length);
+					} else {
+						plainData = new byte[] {0};
+					}
+
+					return new ConfidentialMessage(plainData);
+				}
+				case GET_RANDOM_NUMBER -> { //TODO return
+					lock.lock();
+					VerifiableShare	share = data.get(messageContext.getSender());
+					if (share == null)
+						generateRandomNumberFor(messageContext);
+					else {
+//					logger.debug("Sending existing random number share to {}", messageContext.getSender());
+						sendRandomNumberShareTo(messageContext, share);
+					}
+					lock.unlock();
+				}
+				case MAP_PUT -> {
+					//lock.lock();
+					System.out.println("Put started");
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					byte[] key = byteStringToByteArray(out, msg.getKey());
+					byte[] value = byteStringToByteArray(out, msg.getValue());
+					out.close();
+					storage.put(key, value);
+					System.out.println("Put done");
+					//lock.unlock();
+				}
+				case MAP_DELETE -> {
+					lock.lock();
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					byte[] key = byteStringToByteArray(out, msg.getKey());
+					out.close();
+					storage.remove(key);
+					lock.unlock();
+				}
+				case MAP_GET -> { //TODO return
+					System.out.println("Get started");
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					byte[] key = byteStringToByteArray(out, msg.getKey());
+					out.close();
+					return new ConfidentialMessage(storage.get(key));
+				}
+				case MAP_LIST -> { //TODO return
+					ArrayList<byte[]> lista = new ArrayList<>(storage.values());
+
+					ByteArrayOutputStream bout = new ByteArrayOutputStream();
+					ObjectOutputStream out = new ObjectOutputStream(bout);
+					out.writeObject(lista);
+					out.close();
+					byte[] result = bout.toByteArray();
+					bout.close();
+
+					return new ConfidentialMessage(result);
+				}
+				case MAP_CAS -> {
+					lock.lock();
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					byte[] key = byteStringToByteArray(out, msg.getKey());
+					byte[] oldValue = byteStringToByteArray(out, msg.getOldData());
+					byte[] newValue = byteStringToByteArray(out, msg.getValue());
+					out.close();
+					if(storage.get(key).equals(oldValue))
+						storage.put(key, newValue);
+					lock.unlock();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}

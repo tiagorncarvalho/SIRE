@@ -8,7 +8,12 @@ public enum Operation {
 	GET_PUBLIC_KEY,
 	SIGN_DATA,
 	GET_DATA,
-	GET_RANDOM_NUMBER;
+	GET_RANDOM_NUMBER,
+	MAP_PUT,
+	MAP_DELETE,
+	MAP_GET,
+	MAP_LIST,
+	MAP_CAS;
 
 	public static Operation[] values = values();
 

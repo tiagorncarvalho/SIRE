@@ -4554,6 +4554,4129 @@ public final class Messages {
 
   }
 
+  public interface ProxyAttestationMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:sire.protos.ProxyAttestationMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+     */
+    int getOperationValue();
+    /**
+     * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+     */
+    sire.protos.Messages.ProxyAttestationMessage.AttOperation getOperation();
+
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    boolean hasEvidence();
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    sire.protos.Messages.ProtoEvidence getEvidence();
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    sire.protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
+
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    boolean hasSignature();
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    sire.protos.Messages.ProtoSchnorr getSignature();
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    sire.protos.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder();
+
+    /**
+     * <code>bytes dataToSign = 4;</code>
+     */
+    com.google.protobuf.ByteString getDataToSign();
+  }
+  /**
+   * <pre>
+   *=======ProxyMsg=======
+   * </pre>
+   *
+   * Protobuf type {@code sire.protos.ProxyAttestationMessage}
+   */
+  public  static final class ProxyAttestationMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:sire.protos.ProxyAttestationMessage)
+      ProxyAttestationMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ProxyAttestationMessage.newBuilder() to construct.
+    private ProxyAttestationMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ProxyAttestationMessage() {
+      operation_ = 0;
+      dataToSign_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProxyAttestationMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              int rawValue = input.readEnum();
+
+              operation_ = rawValue;
+              break;
+            }
+            case 18: {
+              sire.protos.Messages.ProtoEvidence.Builder subBuilder = null;
+              if (evidence_ != null) {
+                subBuilder = evidence_.toBuilder();
+              }
+              evidence_ = input.readMessage(sire.protos.Messages.ProtoEvidence.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(evidence_);
+                evidence_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 26: {
+              sire.protos.Messages.ProtoSchnorr.Builder subBuilder = null;
+              if (signature_ != null) {
+                subBuilder = signature_.toBuilder();
+              }
+              signature_ = input.readMessage(sire.protos.Messages.ProtoSchnorr.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(signature_);
+                signature_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 34: {
+
+              dataToSign_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return sire.protos.Messages.internal_static_sire_protos_ProxyAttestationMessage_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return sire.protos.Messages.internal_static_sire_protos_ProxyAttestationMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              sire.protos.Messages.ProxyAttestationMessage.class, sire.protos.Messages.ProxyAttestationMessage.Builder.class);
+    }
+
+    /**
+     * Protobuf enum {@code sire.protos.ProxyAttestationMessage.AttOperation}
+     */
+    public enum AttOperation
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>GENERATE_SIGNING_KEY = 0;</code>
+       */
+      GENERATE_SIGNING_KEY(0),
+      /**
+       * <code>GET_PUBLIC_KEY = 1;</code>
+       */
+      GET_PUBLIC_KEY(1),
+      /**
+       * <code>SIGN_DATA = 2;</code>
+       */
+      SIGN_DATA(2),
+      /**
+       * <code>GET_DATA = 3;</code>
+       */
+      GET_DATA(3),
+      /**
+       * <code>GET_RANDOM_NUMBER = 4;</code>
+       */
+      GET_RANDOM_NUMBER(4),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <code>GENERATE_SIGNING_KEY = 0;</code>
+       */
+      public static final int GENERATE_SIGNING_KEY_VALUE = 0;
+      /**
+       * <code>GET_PUBLIC_KEY = 1;</code>
+       */
+      public static final int GET_PUBLIC_KEY_VALUE = 1;
+      /**
+       * <code>SIGN_DATA = 2;</code>
+       */
+      public static final int SIGN_DATA_VALUE = 2;
+      /**
+       * <code>GET_DATA = 3;</code>
+       */
+      public static final int GET_DATA_VALUE = 3;
+      /**
+       * <code>GET_RANDOM_NUMBER = 4;</code>
+       */
+      public static final int GET_RANDOM_NUMBER_VALUE = 4;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static AttOperation valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static AttOperation forNumber(int value) {
+        switch (value) {
+          case 0: return GENERATE_SIGNING_KEY;
+          case 1: return GET_PUBLIC_KEY;
+          case 2: return SIGN_DATA;
+          case 3: return GET_DATA;
+          case 4: return GET_RANDOM_NUMBER;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<AttOperation>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          AttOperation> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<AttOperation>() {
+              public AttOperation findValueByNumber(int number) {
+                return AttOperation.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return sire.protos.Messages.ProxyAttestationMessage.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final AttOperation[] VALUES = values();
+
+      public static AttOperation valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private AttOperation(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:sire.protos.ProxyAttestationMessage.AttOperation)
+    }
+
+    public static final int OPERATION_FIELD_NUMBER = 1;
+    private int operation_;
+    /**
+     * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+     */
+    public int getOperationValue() {
+      return operation_;
+    }
+    /**
+     * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+     */
+    public sire.protos.Messages.ProxyAttestationMessage.AttOperation getOperation() {
+      @SuppressWarnings("deprecation")
+      sire.protos.Messages.ProxyAttestationMessage.AttOperation result = sire.protos.Messages.ProxyAttestationMessage.AttOperation.valueOf(operation_);
+      return result == null ? sire.protos.Messages.ProxyAttestationMessage.AttOperation.UNRECOGNIZED : result;
+    }
+
+    public static final int EVIDENCE_FIELD_NUMBER = 2;
+    private sire.protos.Messages.ProtoEvidence evidence_;
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    public boolean hasEvidence() {
+      return evidence_ != null;
+    }
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    public sire.protos.Messages.ProtoEvidence getEvidence() {
+      return evidence_ == null ? sire.protos.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+    }
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    public sire.protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
+      return getEvidence();
+    }
+
+    public static final int SIGNATURE_FIELD_NUMBER = 3;
+    private sire.protos.Messages.ProtoSchnorr signature_;
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    public boolean hasSignature() {
+      return signature_ != null;
+    }
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    public sire.protos.Messages.ProtoSchnorr getSignature() {
+      return signature_ == null ? sire.protos.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+    }
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    public sire.protos.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
+      return getSignature();
+    }
+
+    public static final int DATATOSIGN_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString dataToSign_;
+    /**
+     * <code>bytes dataToSign = 4;</code>
+     */
+    public com.google.protobuf.ByteString getDataToSign() {
+      return dataToSign_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (operation_ != sire.protos.Messages.ProxyAttestationMessage.AttOperation.GENERATE_SIGNING_KEY.getNumber()) {
+        output.writeEnum(1, operation_);
+      }
+      if (evidence_ != null) {
+        output.writeMessage(2, getEvidence());
+      }
+      if (signature_ != null) {
+        output.writeMessage(3, getSignature());
+      }
+      if (!dataToSign_.isEmpty()) {
+        output.writeBytes(4, dataToSign_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (operation_ != sire.protos.Messages.ProxyAttestationMessage.AttOperation.GENERATE_SIGNING_KEY.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, operation_);
+      }
+      if (evidence_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getEvidence());
+      }
+      if (signature_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getSignature());
+      }
+      if (!dataToSign_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, dataToSign_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof sire.protos.Messages.ProxyAttestationMessage)) {
+        return super.equals(obj);
+      }
+      sire.protos.Messages.ProxyAttestationMessage other = (sire.protos.Messages.ProxyAttestationMessage) obj;
+
+      boolean result = true;
+      result = result && operation_ == other.operation_;
+      result = result && (hasEvidence() == other.hasEvidence());
+      if (hasEvidence()) {
+        result = result && getEvidence()
+            .equals(other.getEvidence());
+      }
+      result = result && (hasSignature() == other.hasSignature());
+      if (hasSignature()) {
+        result = result && getSignature()
+            .equals(other.getSignature());
+      }
+      result = result && getDataToSign()
+          .equals(other.getDataToSign());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + OPERATION_FIELD_NUMBER;
+      hash = (53 * hash) + operation_;
+      if (hasEvidence()) {
+        hash = (37 * hash) + EVIDENCE_FIELD_NUMBER;
+        hash = (53 * hash) + getEvidence().hashCode();
+      }
+      if (hasSignature()) {
+        hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
+        hash = (53 * hash) + getSignature().hashCode();
+      }
+      hash = (37 * hash) + DATATOSIGN_FIELD_NUMBER;
+      hash = (53 * hash) + getDataToSign().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static sire.protos.Messages.ProxyAttestationMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyAttestationMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(sire.protos.Messages.ProxyAttestationMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * <pre>
+     *=======ProxyMsg=======
+     * </pre>
+     *
+     * Protobuf type {@code sire.protos.ProxyAttestationMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:sire.protos.ProxyAttestationMessage)
+        sire.protos.Messages.ProxyAttestationMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyAttestationMessage_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyAttestationMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                sire.protos.Messages.ProxyAttestationMessage.class, sire.protos.Messages.ProxyAttestationMessage.Builder.class);
+      }
+
+      // Construct using sire.protos.Messages.ProxyAttestationMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        operation_ = 0;
+
+        if (evidenceBuilder_ == null) {
+          evidence_ = null;
+        } else {
+          evidence_ = null;
+          evidenceBuilder_ = null;
+        }
+        if (signatureBuilder_ == null) {
+          signature_ = null;
+        } else {
+          signature_ = null;
+          signatureBuilder_ = null;
+        }
+        dataToSign_ = com.google.protobuf.ByteString.EMPTY;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyAttestationMessage_descriptor;
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyAttestationMessage getDefaultInstanceForType() {
+        return sire.protos.Messages.ProxyAttestationMessage.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyAttestationMessage build() {
+        sire.protos.Messages.ProxyAttestationMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyAttestationMessage buildPartial() {
+        sire.protos.Messages.ProxyAttestationMessage result = new sire.protos.Messages.ProxyAttestationMessage(this);
+        result.operation_ = operation_;
+        if (evidenceBuilder_ == null) {
+          result.evidence_ = evidence_;
+        } else {
+          result.evidence_ = evidenceBuilder_.build();
+        }
+        if (signatureBuilder_ == null) {
+          result.signature_ = signature_;
+        } else {
+          result.signature_ = signatureBuilder_.build();
+        }
+        result.dataToSign_ = dataToSign_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof sire.protos.Messages.ProxyAttestationMessage) {
+          return mergeFrom((sire.protos.Messages.ProxyAttestationMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(sire.protos.Messages.ProxyAttestationMessage other) {
+        if (other == sire.protos.Messages.ProxyAttestationMessage.getDefaultInstance()) return this;
+        if (other.operation_ != 0) {
+          setOperationValue(other.getOperationValue());
+        }
+        if (other.hasEvidence()) {
+          mergeEvidence(other.getEvidence());
+        }
+        if (other.hasSignature()) {
+          mergeSignature(other.getSignature());
+        }
+        if (other.getDataToSign() != com.google.protobuf.ByteString.EMPTY) {
+          setDataToSign(other.getDataToSign());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        sire.protos.Messages.ProxyAttestationMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (sire.protos.Messages.ProxyAttestationMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int operation_ = 0;
+      /**
+       * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+       */
+      public int getOperationValue() {
+        return operation_;
+      }
+      /**
+       * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+       */
+      public Builder setOperationValue(int value) {
+        operation_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+       */
+      public sire.protos.Messages.ProxyAttestationMessage.AttOperation getOperation() {
+        @SuppressWarnings("deprecation")
+        sire.protos.Messages.ProxyAttestationMessage.AttOperation result = sire.protos.Messages.ProxyAttestationMessage.AttOperation.valueOf(operation_);
+        return result == null ? sire.protos.Messages.ProxyAttestationMessage.AttOperation.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+       */
+      public Builder setOperation(sire.protos.Messages.ProxyAttestationMessage.AttOperation value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        operation_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+       */
+      public Builder clearOperation() {
+        
+        operation_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private sire.protos.Messages.ProtoEvidence evidence_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          sire.protos.Messages.ProtoEvidence, sire.protos.Messages.ProtoEvidence.Builder, sire.protos.Messages.ProtoEvidenceOrBuilder> evidenceBuilder_;
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public boolean hasEvidence() {
+        return evidenceBuilder_ != null || evidence_ != null;
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public sire.protos.Messages.ProtoEvidence getEvidence() {
+        if (evidenceBuilder_ == null) {
+          return evidence_ == null ? sire.protos.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+        } else {
+          return evidenceBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public Builder setEvidence(sire.protos.Messages.ProtoEvidence value) {
+        if (evidenceBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          evidence_ = value;
+          onChanged();
+        } else {
+          evidenceBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public Builder setEvidence(
+          sire.protos.Messages.ProtoEvidence.Builder builderForValue) {
+        if (evidenceBuilder_ == null) {
+          evidence_ = builderForValue.build();
+          onChanged();
+        } else {
+          evidenceBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public Builder mergeEvidence(sire.protos.Messages.ProtoEvidence value) {
+        if (evidenceBuilder_ == null) {
+          if (evidence_ != null) {
+            evidence_ =
+              sire.protos.Messages.ProtoEvidence.newBuilder(evidence_).mergeFrom(value).buildPartial();
+          } else {
+            evidence_ = value;
+          }
+          onChanged();
+        } else {
+          evidenceBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public Builder clearEvidence() {
+        if (evidenceBuilder_ == null) {
+          evidence_ = null;
+          onChanged();
+        } else {
+          evidence_ = null;
+          evidenceBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public sire.protos.Messages.ProtoEvidence.Builder getEvidenceBuilder() {
+        
+        onChanged();
+        return getEvidenceFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public sire.protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
+        if (evidenceBuilder_ != null) {
+          return evidenceBuilder_.getMessageOrBuilder();
+        } else {
+          return evidence_ == null ?
+              sire.protos.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+        }
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          sire.protos.Messages.ProtoEvidence, sire.protos.Messages.ProtoEvidence.Builder, sire.protos.Messages.ProtoEvidenceOrBuilder> 
+          getEvidenceFieldBuilder() {
+        if (evidenceBuilder_ == null) {
+          evidenceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              sire.protos.Messages.ProtoEvidence, sire.protos.Messages.ProtoEvidence.Builder, sire.protos.Messages.ProtoEvidenceOrBuilder>(
+                  getEvidence(),
+                  getParentForChildren(),
+                  isClean());
+          evidence_ = null;
+        }
+        return evidenceBuilder_;
+      }
+
+      private sire.protos.Messages.ProtoSchnorr signature_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          sire.protos.Messages.ProtoSchnorr, sire.protos.Messages.ProtoSchnorr.Builder, sire.protos.Messages.ProtoSchnorrOrBuilder> signatureBuilder_;
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public boolean hasSignature() {
+        return signatureBuilder_ != null || signature_ != null;
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public sire.protos.Messages.ProtoSchnorr getSignature() {
+        if (signatureBuilder_ == null) {
+          return signature_ == null ? sire.protos.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+        } else {
+          return signatureBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public Builder setSignature(sire.protos.Messages.ProtoSchnorr value) {
+        if (signatureBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          signature_ = value;
+          onChanged();
+        } else {
+          signatureBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public Builder setSignature(
+          sire.protos.Messages.ProtoSchnorr.Builder builderForValue) {
+        if (signatureBuilder_ == null) {
+          signature_ = builderForValue.build();
+          onChanged();
+        } else {
+          signatureBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public Builder mergeSignature(sire.protos.Messages.ProtoSchnorr value) {
+        if (signatureBuilder_ == null) {
+          if (signature_ != null) {
+            signature_ =
+              sire.protos.Messages.ProtoSchnorr.newBuilder(signature_).mergeFrom(value).buildPartial();
+          } else {
+            signature_ = value;
+          }
+          onChanged();
+        } else {
+          signatureBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public Builder clearSignature() {
+        if (signatureBuilder_ == null) {
+          signature_ = null;
+          onChanged();
+        } else {
+          signature_ = null;
+          signatureBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public sire.protos.Messages.ProtoSchnorr.Builder getSignatureBuilder() {
+        
+        onChanged();
+        return getSignatureFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public sire.protos.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
+        if (signatureBuilder_ != null) {
+          return signatureBuilder_.getMessageOrBuilder();
+        } else {
+          return signature_ == null ?
+              sire.protos.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+        }
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          sire.protos.Messages.ProtoSchnorr, sire.protos.Messages.ProtoSchnorr.Builder, sire.protos.Messages.ProtoSchnorrOrBuilder> 
+          getSignatureFieldBuilder() {
+        if (signatureBuilder_ == null) {
+          signatureBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              sire.protos.Messages.ProtoSchnorr, sire.protos.Messages.ProtoSchnorr.Builder, sire.protos.Messages.ProtoSchnorrOrBuilder>(
+                  getSignature(),
+                  getParentForChildren(),
+                  isClean());
+          signature_ = null;
+        }
+        return signatureBuilder_;
+      }
+
+      private com.google.protobuf.ByteString dataToSign_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes dataToSign = 4;</code>
+       */
+      public com.google.protobuf.ByteString getDataToSign() {
+        return dataToSign_;
+      }
+      /**
+       * <code>bytes dataToSign = 4;</code>
+       */
+      public Builder setDataToSign(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        dataToSign_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes dataToSign = 4;</code>
+       */
+      public Builder clearDataToSign() {
+        
+        dataToSign_ = getDefaultInstance().getDataToSign();
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:sire.protos.ProxyAttestationMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:sire.protos.ProxyAttestationMessage)
+    private static final sire.protos.Messages.ProxyAttestationMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new sire.protos.Messages.ProxyAttestationMessage();
+    }
+
+    public static sire.protos.Messages.ProxyAttestationMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ProxyAttestationMessage>
+        PARSER = new com.google.protobuf.AbstractParser<ProxyAttestationMessage>() {
+      @java.lang.Override
+      public ProxyAttestationMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ProxyAttestationMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProxyAttestationMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProxyAttestationMessage> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public sire.protos.Messages.ProxyAttestationMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ProxyMapMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:sire.protos.ProxyMapMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+     */
+    int getOperationValue();
+    /**
+     * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+     */
+    sire.protos.Messages.ProxyMapMessage.MapOperation getOperation();
+
+    /**
+     * <code>bytes key = 2;</code>
+     */
+    com.google.protobuf.ByteString getKey();
+
+    /**
+     * <pre>
+     *also serves as newData
+     * </pre>
+     *
+     * <code>bytes value = 3;</code>
+     */
+    com.google.protobuf.ByteString getValue();
+
+    /**
+     * <code>bytes oldData = 4;</code>
+     */
+    com.google.protobuf.ByteString getOldData();
+  }
+  /**
+   * Protobuf type {@code sire.protos.ProxyMapMessage}
+   */
+  public  static final class ProxyMapMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:sire.protos.ProxyMapMessage)
+      ProxyMapMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ProxyMapMessage.newBuilder() to construct.
+    private ProxyMapMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ProxyMapMessage() {
+      operation_ = 0;
+      key_ = com.google.protobuf.ByteString.EMPTY;
+      value_ = com.google.protobuf.ByteString.EMPTY;
+      oldData_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProxyMapMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              int rawValue = input.readEnum();
+
+              operation_ = rawValue;
+              break;
+            }
+            case 18: {
+
+              key_ = input.readBytes();
+              break;
+            }
+            case 26: {
+
+              value_ = input.readBytes();
+              break;
+            }
+            case 34: {
+
+              oldData_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return sire.protos.Messages.internal_static_sire_protos_ProxyMapMessage_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return sire.protos.Messages.internal_static_sire_protos_ProxyMapMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              sire.protos.Messages.ProxyMapMessage.class, sire.protos.Messages.ProxyMapMessage.Builder.class);
+    }
+
+    /**
+     * Protobuf enum {@code sire.protos.ProxyMapMessage.MapOperation}
+     */
+    public enum MapOperation
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>MAP_PUT = 0;</code>
+       */
+      MAP_PUT(0),
+      /**
+       * <code>MAP_DELETE = 1;</code>
+       */
+      MAP_DELETE(1),
+      /**
+       * <code>MAP_GET = 2;</code>
+       */
+      MAP_GET(2),
+      /**
+       * <code>MAP_LIST = 3;</code>
+       */
+      MAP_LIST(3),
+      /**
+       * <code>MAP_CAS = 4;</code>
+       */
+      MAP_CAS(4),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <code>MAP_PUT = 0;</code>
+       */
+      public static final int MAP_PUT_VALUE = 0;
+      /**
+       * <code>MAP_DELETE = 1;</code>
+       */
+      public static final int MAP_DELETE_VALUE = 1;
+      /**
+       * <code>MAP_GET = 2;</code>
+       */
+      public static final int MAP_GET_VALUE = 2;
+      /**
+       * <code>MAP_LIST = 3;</code>
+       */
+      public static final int MAP_LIST_VALUE = 3;
+      /**
+       * <code>MAP_CAS = 4;</code>
+       */
+      public static final int MAP_CAS_VALUE = 4;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static MapOperation valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static MapOperation forNumber(int value) {
+        switch (value) {
+          case 0: return MAP_PUT;
+          case 1: return MAP_DELETE;
+          case 2: return MAP_GET;
+          case 3: return MAP_LIST;
+          case 4: return MAP_CAS;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<MapOperation>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          MapOperation> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<MapOperation>() {
+              public MapOperation findValueByNumber(int number) {
+                return MapOperation.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return sire.protos.Messages.ProxyMapMessage.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final MapOperation[] VALUES = values();
+
+      public static MapOperation valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private MapOperation(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:sire.protos.ProxyMapMessage.MapOperation)
+    }
+
+    public static final int OPERATION_FIELD_NUMBER = 1;
+    private int operation_;
+    /**
+     * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+     */
+    public int getOperationValue() {
+      return operation_;
+    }
+    /**
+     * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+     */
+    public sire.protos.Messages.ProxyMapMessage.MapOperation getOperation() {
+      @SuppressWarnings("deprecation")
+      sire.protos.Messages.ProxyMapMessage.MapOperation result = sire.protos.Messages.ProxyMapMessage.MapOperation.valueOf(operation_);
+      return result == null ? sire.protos.Messages.ProxyMapMessage.MapOperation.UNRECOGNIZED : result;
+    }
+
+    public static final int KEY_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString key_;
+    /**
+     * <code>bytes key = 2;</code>
+     */
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
+    }
+
+    public static final int VALUE_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString value_;
+    /**
+     * <pre>
+     *also serves as newData
+     * </pre>
+     *
+     * <code>bytes value = 3;</code>
+     */
+    public com.google.protobuf.ByteString getValue() {
+      return value_;
+    }
+
+    public static final int OLDDATA_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString oldData_;
+    /**
+     * <code>bytes oldData = 4;</code>
+     */
+    public com.google.protobuf.ByteString getOldData() {
+      return oldData_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (operation_ != sire.protos.Messages.ProxyMapMessage.MapOperation.MAP_PUT.getNumber()) {
+        output.writeEnum(1, operation_);
+      }
+      if (!key_.isEmpty()) {
+        output.writeBytes(2, key_);
+      }
+      if (!value_.isEmpty()) {
+        output.writeBytes(3, value_);
+      }
+      if (!oldData_.isEmpty()) {
+        output.writeBytes(4, oldData_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (operation_ != sire.protos.Messages.ProxyMapMessage.MapOperation.MAP_PUT.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, operation_);
+      }
+      if (!key_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, key_);
+      }
+      if (!value_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, value_);
+      }
+      if (!oldData_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, oldData_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof sire.protos.Messages.ProxyMapMessage)) {
+        return super.equals(obj);
+      }
+      sire.protos.Messages.ProxyMapMessage other = (sire.protos.Messages.ProxyMapMessage) obj;
+
+      boolean result = true;
+      result = result && operation_ == other.operation_;
+      result = result && getKey()
+          .equals(other.getKey());
+      result = result && getValue()
+          .equals(other.getValue());
+      result = result && getOldData()
+          .equals(other.getOldData());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + OPERATION_FIELD_NUMBER;
+      hash = (53 * hash) + operation_;
+      hash = (37 * hash) + KEY_FIELD_NUMBER;
+      hash = (53 * hash) + getKey().hashCode();
+      hash = (37 * hash) + VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getValue().hashCode();
+      hash = (37 * hash) + OLDDATA_FIELD_NUMBER;
+      hash = (53 * hash) + getOldData().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static sire.protos.Messages.ProxyMapMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyMapMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(sire.protos.Messages.ProxyMapMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code sire.protos.ProxyMapMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:sire.protos.ProxyMapMessage)
+        sire.protos.Messages.ProxyMapMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyMapMessage_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyMapMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                sire.protos.Messages.ProxyMapMessage.class, sire.protos.Messages.ProxyMapMessage.Builder.class);
+      }
+
+      // Construct using sire.protos.Messages.ProxyMapMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        operation_ = 0;
+
+        key_ = com.google.protobuf.ByteString.EMPTY;
+
+        value_ = com.google.protobuf.ByteString.EMPTY;
+
+        oldData_ = com.google.protobuf.ByteString.EMPTY;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyMapMessage_descriptor;
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyMapMessage getDefaultInstanceForType() {
+        return sire.protos.Messages.ProxyMapMessage.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyMapMessage build() {
+        sire.protos.Messages.ProxyMapMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyMapMessage buildPartial() {
+        sire.protos.Messages.ProxyMapMessage result = new sire.protos.Messages.ProxyMapMessage(this);
+        result.operation_ = operation_;
+        result.key_ = key_;
+        result.value_ = value_;
+        result.oldData_ = oldData_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof sire.protos.Messages.ProxyMapMessage) {
+          return mergeFrom((sire.protos.Messages.ProxyMapMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(sire.protos.Messages.ProxyMapMessage other) {
+        if (other == sire.protos.Messages.ProxyMapMessage.getDefaultInstance()) return this;
+        if (other.operation_ != 0) {
+          setOperationValue(other.getOperationValue());
+        }
+        if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
+          setKey(other.getKey());
+        }
+        if (other.getValue() != com.google.protobuf.ByteString.EMPTY) {
+          setValue(other.getValue());
+        }
+        if (other.getOldData() != com.google.protobuf.ByteString.EMPTY) {
+          setOldData(other.getOldData());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        sire.protos.Messages.ProxyMapMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (sire.protos.Messages.ProxyMapMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int operation_ = 0;
+      /**
+       * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+       */
+      public int getOperationValue() {
+        return operation_;
+      }
+      /**
+       * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+       */
+      public Builder setOperationValue(int value) {
+        operation_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+       */
+      public sire.protos.Messages.ProxyMapMessage.MapOperation getOperation() {
+        @SuppressWarnings("deprecation")
+        sire.protos.Messages.ProxyMapMessage.MapOperation result = sire.protos.Messages.ProxyMapMessage.MapOperation.valueOf(operation_);
+        return result == null ? sire.protos.Messages.ProxyMapMessage.MapOperation.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+       */
+      public Builder setOperation(sire.protos.Messages.ProxyMapMessage.MapOperation value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        operation_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+       */
+      public Builder clearOperation() {
+        
+        operation_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes key = 2;</code>
+       */
+      public com.google.protobuf.ByteString getKey() {
+        return key_;
+      }
+      /**
+       * <code>bytes key = 2;</code>
+       */
+      public Builder setKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        key_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes key = 2;</code>
+       */
+      public Builder clearKey() {
+        
+        key_ = getDefaultInstance().getKey();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <pre>
+       *also serves as newData
+       * </pre>
+       *
+       * <code>bytes value = 3;</code>
+       */
+      public com.google.protobuf.ByteString getValue() {
+        return value_;
+      }
+      /**
+       * <pre>
+       *also serves as newData
+       * </pre>
+       *
+       * <code>bytes value = 3;</code>
+       */
+      public Builder setValue(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *also serves as newData
+       * </pre>
+       *
+       * <code>bytes value = 3;</code>
+       */
+      public Builder clearValue() {
+        
+        value_ = getDefaultInstance().getValue();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString oldData_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes oldData = 4;</code>
+       */
+      public com.google.protobuf.ByteString getOldData() {
+        return oldData_;
+      }
+      /**
+       * <code>bytes oldData = 4;</code>
+       */
+      public Builder setOldData(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        oldData_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes oldData = 4;</code>
+       */
+      public Builder clearOldData() {
+        
+        oldData_ = getDefaultInstance().getOldData();
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:sire.protos.ProxyMapMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:sire.protos.ProxyMapMessage)
+    private static final sire.protos.Messages.ProxyMapMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new sire.protos.Messages.ProxyMapMessage();
+    }
+
+    public static sire.protos.Messages.ProxyMapMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ProxyMapMessage>
+        PARSER = new com.google.protobuf.AbstractParser<ProxyMapMessage>() {
+      @java.lang.Override
+      public ProxyMapMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ProxyMapMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProxyMapMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProxyMapMessage> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public sire.protos.Messages.ProxyMapMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ProxyMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:sire.protos.ProxyMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+     */
+    int getOperationValue();
+    /**
+     * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+     */
+    sire.protos.Messages.ProxyMessage.Operation getOperation();
+
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    boolean hasEvidence();
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    sire.protos.Messages.ProtoEvidence getEvidence();
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    sire.protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
+
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    boolean hasSignature();
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    sire.protos.Messages.ProtoSchnorr getSignature();
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    sire.protos.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder();
+
+    /**
+     * <code>bytes dataToSign = 4;</code>
+     */
+    com.google.protobuf.ByteString getDataToSign();
+
+    /**
+     * <code>bytes key = 5;</code>
+     */
+    com.google.protobuf.ByteString getKey();
+
+    /**
+     * <pre>
+     *also serves as newData
+     * </pre>
+     *
+     * <code>bytes value = 6;</code>
+     */
+    com.google.protobuf.ByteString getValue();
+
+    /**
+     * <code>bytes oldData = 7;</code>
+     */
+    com.google.protobuf.ByteString getOldData();
+  }
+  /**
+   * Protobuf type {@code sire.protos.ProxyMessage}
+   */
+  public  static final class ProxyMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:sire.protos.ProxyMessage)
+      ProxyMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ProxyMessage.newBuilder() to construct.
+    private ProxyMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ProxyMessage() {
+      operation_ = 0;
+      dataToSign_ = com.google.protobuf.ByteString.EMPTY;
+      key_ = com.google.protobuf.ByteString.EMPTY;
+      value_ = com.google.protobuf.ByteString.EMPTY;
+      oldData_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProxyMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              int rawValue = input.readEnum();
+
+              operation_ = rawValue;
+              break;
+            }
+            case 18: {
+              sire.protos.Messages.ProtoEvidence.Builder subBuilder = null;
+              if (evidence_ != null) {
+                subBuilder = evidence_.toBuilder();
+              }
+              evidence_ = input.readMessage(sire.protos.Messages.ProtoEvidence.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(evidence_);
+                evidence_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 26: {
+              sire.protos.Messages.ProtoSchnorr.Builder subBuilder = null;
+              if (signature_ != null) {
+                subBuilder = signature_.toBuilder();
+              }
+              signature_ = input.readMessage(sire.protos.Messages.ProtoSchnorr.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(signature_);
+                signature_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 34: {
+
+              dataToSign_ = input.readBytes();
+              break;
+            }
+            case 42: {
+
+              key_ = input.readBytes();
+              break;
+            }
+            case 50: {
+
+              value_ = input.readBytes();
+              break;
+            }
+            case 58: {
+
+              oldData_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return sire.protos.Messages.internal_static_sire_protos_ProxyMessage_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return sire.protos.Messages.internal_static_sire_protos_ProxyMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              sire.protos.Messages.ProxyMessage.class, sire.protos.Messages.ProxyMessage.Builder.class);
+    }
+
+    /**
+     * Protobuf enum {@code sire.protos.ProxyMessage.Operation}
+     */
+    public enum Operation
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>GENERATE_SIGNING_KEY = 0;</code>
+       */
+      GENERATE_SIGNING_KEY(0),
+      /**
+       * <code>GET_PUBLIC_KEY = 1;</code>
+       */
+      GET_PUBLIC_KEY(1),
+      /**
+       * <code>SIGN_DATA = 2;</code>
+       */
+      SIGN_DATA(2),
+      /**
+       * <code>GET_DATA = 3;</code>
+       */
+      GET_DATA(3),
+      /**
+       * <code>GET_RANDOM_NUMBER = 4;</code>
+       */
+      GET_RANDOM_NUMBER(4),
+      /**
+       * <code>MAP_PUT = 5;</code>
+       */
+      MAP_PUT(5),
+      /**
+       * <code>MAP_DELETE = 6;</code>
+       */
+      MAP_DELETE(6),
+      /**
+       * <code>MAP_GET = 7;</code>
+       */
+      MAP_GET(7),
+      /**
+       * <code>MAP_LIST = 8;</code>
+       */
+      MAP_LIST(8),
+      /**
+       * <code>MAP_CAS = 9;</code>
+       */
+      MAP_CAS(9),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <code>GENERATE_SIGNING_KEY = 0;</code>
+       */
+      public static final int GENERATE_SIGNING_KEY_VALUE = 0;
+      /**
+       * <code>GET_PUBLIC_KEY = 1;</code>
+       */
+      public static final int GET_PUBLIC_KEY_VALUE = 1;
+      /**
+       * <code>SIGN_DATA = 2;</code>
+       */
+      public static final int SIGN_DATA_VALUE = 2;
+      /**
+       * <code>GET_DATA = 3;</code>
+       */
+      public static final int GET_DATA_VALUE = 3;
+      /**
+       * <code>GET_RANDOM_NUMBER = 4;</code>
+       */
+      public static final int GET_RANDOM_NUMBER_VALUE = 4;
+      /**
+       * <code>MAP_PUT = 5;</code>
+       */
+      public static final int MAP_PUT_VALUE = 5;
+      /**
+       * <code>MAP_DELETE = 6;</code>
+       */
+      public static final int MAP_DELETE_VALUE = 6;
+      /**
+       * <code>MAP_GET = 7;</code>
+       */
+      public static final int MAP_GET_VALUE = 7;
+      /**
+       * <code>MAP_LIST = 8;</code>
+       */
+      public static final int MAP_LIST_VALUE = 8;
+      /**
+       * <code>MAP_CAS = 9;</code>
+       */
+      public static final int MAP_CAS_VALUE = 9;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static Operation valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static Operation forNumber(int value) {
+        switch (value) {
+          case 0: return GENERATE_SIGNING_KEY;
+          case 1: return GET_PUBLIC_KEY;
+          case 2: return SIGN_DATA;
+          case 3: return GET_DATA;
+          case 4: return GET_RANDOM_NUMBER;
+          case 5: return MAP_PUT;
+          case 6: return MAP_DELETE;
+          case 7: return MAP_GET;
+          case 8: return MAP_LIST;
+          case 9: return MAP_CAS;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<Operation>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          Operation> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<Operation>() {
+              public Operation findValueByNumber(int number) {
+                return Operation.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return sire.protos.Messages.ProxyMessage.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final Operation[] VALUES = values();
+
+      public static Operation valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private Operation(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:sire.protos.ProxyMessage.Operation)
+    }
+
+    public static final int OPERATION_FIELD_NUMBER = 1;
+    private int operation_;
+    /**
+     * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+     */
+    public int getOperationValue() {
+      return operation_;
+    }
+    /**
+     * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+     */
+    public sire.protos.Messages.ProxyMessage.Operation getOperation() {
+      @SuppressWarnings("deprecation")
+      sire.protos.Messages.ProxyMessage.Operation result = sire.protos.Messages.ProxyMessage.Operation.valueOf(operation_);
+      return result == null ? sire.protos.Messages.ProxyMessage.Operation.UNRECOGNIZED : result;
+    }
+
+    public static final int EVIDENCE_FIELD_NUMBER = 2;
+    private sire.protos.Messages.ProtoEvidence evidence_;
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    public boolean hasEvidence() {
+      return evidence_ != null;
+    }
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    public sire.protos.Messages.ProtoEvidence getEvidence() {
+      return evidence_ == null ? sire.protos.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+    }
+    /**
+     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     */
+    public sire.protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
+      return getEvidence();
+    }
+
+    public static final int SIGNATURE_FIELD_NUMBER = 3;
+    private sire.protos.Messages.ProtoSchnorr signature_;
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    public boolean hasSignature() {
+      return signature_ != null;
+    }
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    public sire.protos.Messages.ProtoSchnorr getSignature() {
+      return signature_ == null ? sire.protos.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+    }
+    /**
+     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     */
+    public sire.protos.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
+      return getSignature();
+    }
+
+    public static final int DATATOSIGN_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString dataToSign_;
+    /**
+     * <code>bytes dataToSign = 4;</code>
+     */
+    public com.google.protobuf.ByteString getDataToSign() {
+      return dataToSign_;
+    }
+
+    public static final int KEY_FIELD_NUMBER = 5;
+    private com.google.protobuf.ByteString key_;
+    /**
+     * <code>bytes key = 5;</code>
+     */
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
+    }
+
+    public static final int VALUE_FIELD_NUMBER = 6;
+    private com.google.protobuf.ByteString value_;
+    /**
+     * <pre>
+     *also serves as newData
+     * </pre>
+     *
+     * <code>bytes value = 6;</code>
+     */
+    public com.google.protobuf.ByteString getValue() {
+      return value_;
+    }
+
+    public static final int OLDDATA_FIELD_NUMBER = 7;
+    private com.google.protobuf.ByteString oldData_;
+    /**
+     * <code>bytes oldData = 7;</code>
+     */
+    public com.google.protobuf.ByteString getOldData() {
+      return oldData_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (operation_ != sire.protos.Messages.ProxyMessage.Operation.GENERATE_SIGNING_KEY.getNumber()) {
+        output.writeEnum(1, operation_);
+      }
+      if (evidence_ != null) {
+        output.writeMessage(2, getEvidence());
+      }
+      if (signature_ != null) {
+        output.writeMessage(3, getSignature());
+      }
+      if (!dataToSign_.isEmpty()) {
+        output.writeBytes(4, dataToSign_);
+      }
+      if (!key_.isEmpty()) {
+        output.writeBytes(5, key_);
+      }
+      if (!value_.isEmpty()) {
+        output.writeBytes(6, value_);
+      }
+      if (!oldData_.isEmpty()) {
+        output.writeBytes(7, oldData_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (operation_ != sire.protos.Messages.ProxyMessage.Operation.GENERATE_SIGNING_KEY.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, operation_);
+      }
+      if (evidence_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getEvidence());
+      }
+      if (signature_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getSignature());
+      }
+      if (!dataToSign_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, dataToSign_);
+      }
+      if (!key_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, key_);
+      }
+      if (!value_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, value_);
+      }
+      if (!oldData_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, oldData_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof sire.protos.Messages.ProxyMessage)) {
+        return super.equals(obj);
+      }
+      sire.protos.Messages.ProxyMessage other = (sire.protos.Messages.ProxyMessage) obj;
+
+      boolean result = true;
+      result = result && operation_ == other.operation_;
+      result = result && (hasEvidence() == other.hasEvidence());
+      if (hasEvidence()) {
+        result = result && getEvidence()
+            .equals(other.getEvidence());
+      }
+      result = result && (hasSignature() == other.hasSignature());
+      if (hasSignature()) {
+        result = result && getSignature()
+            .equals(other.getSignature());
+      }
+      result = result && getDataToSign()
+          .equals(other.getDataToSign());
+      result = result && getKey()
+          .equals(other.getKey());
+      result = result && getValue()
+          .equals(other.getValue());
+      result = result && getOldData()
+          .equals(other.getOldData());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + OPERATION_FIELD_NUMBER;
+      hash = (53 * hash) + operation_;
+      if (hasEvidence()) {
+        hash = (37 * hash) + EVIDENCE_FIELD_NUMBER;
+        hash = (53 * hash) + getEvidence().hashCode();
+      }
+      if (hasSignature()) {
+        hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
+        hash = (53 * hash) + getSignature().hashCode();
+      }
+      hash = (37 * hash) + DATATOSIGN_FIELD_NUMBER;
+      hash = (53 * hash) + getDataToSign().hashCode();
+      hash = (37 * hash) + KEY_FIELD_NUMBER;
+      hash = (53 * hash) + getKey().hashCode();
+      hash = (37 * hash) + VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getValue().hashCode();
+      hash = (37 * hash) + OLDDATA_FIELD_NUMBER;
+      hash = (53 * hash) + getOldData().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static sire.protos.Messages.ProxyMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(sire.protos.Messages.ProxyMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code sire.protos.ProxyMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:sire.protos.ProxyMessage)
+        sire.protos.Messages.ProxyMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyMessage_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                sire.protos.Messages.ProxyMessage.class, sire.protos.Messages.ProxyMessage.Builder.class);
+      }
+
+      // Construct using sire.protos.Messages.ProxyMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        operation_ = 0;
+
+        if (evidenceBuilder_ == null) {
+          evidence_ = null;
+        } else {
+          evidence_ = null;
+          evidenceBuilder_ = null;
+        }
+        if (signatureBuilder_ == null) {
+          signature_ = null;
+        } else {
+          signature_ = null;
+          signatureBuilder_ = null;
+        }
+        dataToSign_ = com.google.protobuf.ByteString.EMPTY;
+
+        key_ = com.google.protobuf.ByteString.EMPTY;
+
+        value_ = com.google.protobuf.ByteString.EMPTY;
+
+        oldData_ = com.google.protobuf.ByteString.EMPTY;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyMessage_descriptor;
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyMessage getDefaultInstanceForType() {
+        return sire.protos.Messages.ProxyMessage.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyMessage build() {
+        sire.protos.Messages.ProxyMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyMessage buildPartial() {
+        sire.protos.Messages.ProxyMessage result = new sire.protos.Messages.ProxyMessage(this);
+        result.operation_ = operation_;
+        if (evidenceBuilder_ == null) {
+          result.evidence_ = evidence_;
+        } else {
+          result.evidence_ = evidenceBuilder_.build();
+        }
+        if (signatureBuilder_ == null) {
+          result.signature_ = signature_;
+        } else {
+          result.signature_ = signatureBuilder_.build();
+        }
+        result.dataToSign_ = dataToSign_;
+        result.key_ = key_;
+        result.value_ = value_;
+        result.oldData_ = oldData_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof sire.protos.Messages.ProxyMessage) {
+          return mergeFrom((sire.protos.Messages.ProxyMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(sire.protos.Messages.ProxyMessage other) {
+        if (other == sire.protos.Messages.ProxyMessage.getDefaultInstance()) return this;
+        if (other.operation_ != 0) {
+          setOperationValue(other.getOperationValue());
+        }
+        if (other.hasEvidence()) {
+          mergeEvidence(other.getEvidence());
+        }
+        if (other.hasSignature()) {
+          mergeSignature(other.getSignature());
+        }
+        if (other.getDataToSign() != com.google.protobuf.ByteString.EMPTY) {
+          setDataToSign(other.getDataToSign());
+        }
+        if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
+          setKey(other.getKey());
+        }
+        if (other.getValue() != com.google.protobuf.ByteString.EMPTY) {
+          setValue(other.getValue());
+        }
+        if (other.getOldData() != com.google.protobuf.ByteString.EMPTY) {
+          setOldData(other.getOldData());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        sire.protos.Messages.ProxyMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (sire.protos.Messages.ProxyMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int operation_ = 0;
+      /**
+       * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+       */
+      public int getOperationValue() {
+        return operation_;
+      }
+      /**
+       * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+       */
+      public Builder setOperationValue(int value) {
+        operation_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+       */
+      public sire.protos.Messages.ProxyMessage.Operation getOperation() {
+        @SuppressWarnings("deprecation")
+        sire.protos.Messages.ProxyMessage.Operation result = sire.protos.Messages.ProxyMessage.Operation.valueOf(operation_);
+        return result == null ? sire.protos.Messages.ProxyMessage.Operation.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+       */
+      public Builder setOperation(sire.protos.Messages.ProxyMessage.Operation value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        operation_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+       */
+      public Builder clearOperation() {
+        
+        operation_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private sire.protos.Messages.ProtoEvidence evidence_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          sire.protos.Messages.ProtoEvidence, sire.protos.Messages.ProtoEvidence.Builder, sire.protos.Messages.ProtoEvidenceOrBuilder> evidenceBuilder_;
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public boolean hasEvidence() {
+        return evidenceBuilder_ != null || evidence_ != null;
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public sire.protos.Messages.ProtoEvidence getEvidence() {
+        if (evidenceBuilder_ == null) {
+          return evidence_ == null ? sire.protos.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+        } else {
+          return evidenceBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public Builder setEvidence(sire.protos.Messages.ProtoEvidence value) {
+        if (evidenceBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          evidence_ = value;
+          onChanged();
+        } else {
+          evidenceBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public Builder setEvidence(
+          sire.protos.Messages.ProtoEvidence.Builder builderForValue) {
+        if (evidenceBuilder_ == null) {
+          evidence_ = builderForValue.build();
+          onChanged();
+        } else {
+          evidenceBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public Builder mergeEvidence(sire.protos.Messages.ProtoEvidence value) {
+        if (evidenceBuilder_ == null) {
+          if (evidence_ != null) {
+            evidence_ =
+              sire.protos.Messages.ProtoEvidence.newBuilder(evidence_).mergeFrom(value).buildPartial();
+          } else {
+            evidence_ = value;
+          }
+          onChanged();
+        } else {
+          evidenceBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public Builder clearEvidence() {
+        if (evidenceBuilder_ == null) {
+          evidence_ = null;
+          onChanged();
+        } else {
+          evidence_ = null;
+          evidenceBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public sire.protos.Messages.ProtoEvidence.Builder getEvidenceBuilder() {
+        
+        onChanged();
+        return getEvidenceFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      public sire.protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
+        if (evidenceBuilder_ != null) {
+          return evidenceBuilder_.getMessageOrBuilder();
+        } else {
+          return evidence_ == null ?
+              sire.protos.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+        }
+      }
+      /**
+       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          sire.protos.Messages.ProtoEvidence, sire.protos.Messages.ProtoEvidence.Builder, sire.protos.Messages.ProtoEvidenceOrBuilder> 
+          getEvidenceFieldBuilder() {
+        if (evidenceBuilder_ == null) {
+          evidenceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              sire.protos.Messages.ProtoEvidence, sire.protos.Messages.ProtoEvidence.Builder, sire.protos.Messages.ProtoEvidenceOrBuilder>(
+                  getEvidence(),
+                  getParentForChildren(),
+                  isClean());
+          evidence_ = null;
+        }
+        return evidenceBuilder_;
+      }
+
+      private sire.protos.Messages.ProtoSchnorr signature_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          sire.protos.Messages.ProtoSchnorr, sire.protos.Messages.ProtoSchnorr.Builder, sire.protos.Messages.ProtoSchnorrOrBuilder> signatureBuilder_;
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public boolean hasSignature() {
+        return signatureBuilder_ != null || signature_ != null;
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public sire.protos.Messages.ProtoSchnorr getSignature() {
+        if (signatureBuilder_ == null) {
+          return signature_ == null ? sire.protos.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+        } else {
+          return signatureBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public Builder setSignature(sire.protos.Messages.ProtoSchnorr value) {
+        if (signatureBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          signature_ = value;
+          onChanged();
+        } else {
+          signatureBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public Builder setSignature(
+          sire.protos.Messages.ProtoSchnorr.Builder builderForValue) {
+        if (signatureBuilder_ == null) {
+          signature_ = builderForValue.build();
+          onChanged();
+        } else {
+          signatureBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public Builder mergeSignature(sire.protos.Messages.ProtoSchnorr value) {
+        if (signatureBuilder_ == null) {
+          if (signature_ != null) {
+            signature_ =
+              sire.protos.Messages.ProtoSchnorr.newBuilder(signature_).mergeFrom(value).buildPartial();
+          } else {
+            signature_ = value;
+          }
+          onChanged();
+        } else {
+          signatureBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public Builder clearSignature() {
+        if (signatureBuilder_ == null) {
+          signature_ = null;
+          onChanged();
+        } else {
+          signature_ = null;
+          signatureBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public sire.protos.Messages.ProtoSchnorr.Builder getSignatureBuilder() {
+        
+        onChanged();
+        return getSignatureFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      public sire.protos.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
+        if (signatureBuilder_ != null) {
+          return signatureBuilder_.getMessageOrBuilder();
+        } else {
+          return signature_ == null ?
+              sire.protos.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+        }
+      }
+      /**
+       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          sire.protos.Messages.ProtoSchnorr, sire.protos.Messages.ProtoSchnorr.Builder, sire.protos.Messages.ProtoSchnorrOrBuilder> 
+          getSignatureFieldBuilder() {
+        if (signatureBuilder_ == null) {
+          signatureBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              sire.protos.Messages.ProtoSchnorr, sire.protos.Messages.ProtoSchnorr.Builder, sire.protos.Messages.ProtoSchnorrOrBuilder>(
+                  getSignature(),
+                  getParentForChildren(),
+                  isClean());
+          signature_ = null;
+        }
+        return signatureBuilder_;
+      }
+
+      private com.google.protobuf.ByteString dataToSign_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes dataToSign = 4;</code>
+       */
+      public com.google.protobuf.ByteString getDataToSign() {
+        return dataToSign_;
+      }
+      /**
+       * <code>bytes dataToSign = 4;</code>
+       */
+      public Builder setDataToSign(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        dataToSign_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes dataToSign = 4;</code>
+       */
+      public Builder clearDataToSign() {
+        
+        dataToSign_ = getDefaultInstance().getDataToSign();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes key = 5;</code>
+       */
+      public com.google.protobuf.ByteString getKey() {
+        return key_;
+      }
+      /**
+       * <code>bytes key = 5;</code>
+       */
+      public Builder setKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        key_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes key = 5;</code>
+       */
+      public Builder clearKey() {
+        
+        key_ = getDefaultInstance().getKey();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <pre>
+       *also serves as newData
+       * </pre>
+       *
+       * <code>bytes value = 6;</code>
+       */
+      public com.google.protobuf.ByteString getValue() {
+        return value_;
+      }
+      /**
+       * <pre>
+       *also serves as newData
+       * </pre>
+       *
+       * <code>bytes value = 6;</code>
+       */
+      public Builder setValue(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *also serves as newData
+       * </pre>
+       *
+       * <code>bytes value = 6;</code>
+       */
+      public Builder clearValue() {
+        
+        value_ = getDefaultInstance().getValue();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString oldData_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes oldData = 7;</code>
+       */
+      public com.google.protobuf.ByteString getOldData() {
+        return oldData_;
+      }
+      /**
+       * <code>bytes oldData = 7;</code>
+       */
+      public Builder setOldData(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        oldData_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes oldData = 7;</code>
+       */
+      public Builder clearOldData() {
+        
+        oldData_ = getDefaultInstance().getOldData();
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:sire.protos.ProxyMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:sire.protos.ProxyMessage)
+    private static final sire.protos.Messages.ProxyMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new sire.protos.Messages.ProxyMessage();
+    }
+
+    public static sire.protos.Messages.ProxyMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ProxyMessage>
+        PARSER = new com.google.protobuf.AbstractParser<ProxyMessage>() {
+      @java.lang.Override
+      public ProxyMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ProxyMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProxyMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProxyMessage> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public sire.protos.Messages.ProxyMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ProxyResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:sire.protos.ProxyResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+     */
+    int getTypeValue();
+    /**
+     * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+     */
+    sire.protos.Messages.ProxyResponse.ResponseType getType();
+
+    /**
+     * <code>repeated bytes list = 2;</code>
+     */
+    java.util.List<com.google.protobuf.ByteString> getListList();
+    /**
+     * <code>repeated bytes list = 2;</code>
+     */
+    int getListCount();
+    /**
+     * <code>repeated bytes list = 2;</code>
+     */
+    com.google.protobuf.ByteString getList(int index);
+
+    /**
+     * <code>bytes value = 3;</code>
+     */
+    com.google.protobuf.ByteString getValue();
+  }
+  /**
+   * Protobuf type {@code sire.protos.ProxyResponse}
+   */
+  public  static final class ProxyResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:sire.protos.ProxyResponse)
+      ProxyResponseOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ProxyResponse.newBuilder() to construct.
+    private ProxyResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ProxyResponse() {
+      type_ = 0;
+      list_ = java.util.Collections.emptyList();
+      value_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProxyResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              int rawValue = input.readEnum();
+
+              type_ = rawValue;
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                list_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              list_.add(input.readBytes());
+              break;
+            }
+            case 26: {
+
+              value_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          list_ = java.util.Collections.unmodifiableList(list_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return sire.protos.Messages.internal_static_sire_protos_ProxyResponse_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return sire.protos.Messages.internal_static_sire_protos_ProxyResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              sire.protos.Messages.ProxyResponse.class, sire.protos.Messages.ProxyResponse.Builder.class);
+    }
+
+    /**
+     * Protobuf enum {@code sire.protos.ProxyResponse.ResponseType}
+     */
+    public enum ResponseType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>MAP_GET = 0;</code>
+       */
+      MAP_GET(0),
+      /**
+       * <code>MAP_LIST = 1;</code>
+       */
+      MAP_LIST(1),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <code>MAP_GET = 0;</code>
+       */
+      public static final int MAP_GET_VALUE = 0;
+      /**
+       * <code>MAP_LIST = 1;</code>
+       */
+      public static final int MAP_LIST_VALUE = 1;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static ResponseType valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static ResponseType forNumber(int value) {
+        switch (value) {
+          case 0: return MAP_GET;
+          case 1: return MAP_LIST;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<ResponseType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          ResponseType> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<ResponseType>() {
+              public ResponseType findValueByNumber(int number) {
+                return ResponseType.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return sire.protos.Messages.ProxyResponse.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final ResponseType[] VALUES = values();
+
+      public static ResponseType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private ResponseType(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:sire.protos.ProxyResponse.ResponseType)
+    }
+
+    private int bitField0_;
+    public static final int TYPE_FIELD_NUMBER = 1;
+    private int type_;
+    /**
+     * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+     */
+    public int getTypeValue() {
+      return type_;
+    }
+    /**
+     * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+     */
+    public sire.protos.Messages.ProxyResponse.ResponseType getType() {
+      @SuppressWarnings("deprecation")
+      sire.protos.Messages.ProxyResponse.ResponseType result = sire.protos.Messages.ProxyResponse.ResponseType.valueOf(type_);
+      return result == null ? sire.protos.Messages.ProxyResponse.ResponseType.UNRECOGNIZED : result;
+    }
+
+    public static final int LIST_FIELD_NUMBER = 2;
+    private java.util.List<com.google.protobuf.ByteString> list_;
+    /**
+     * <code>repeated bytes list = 2;</code>
+     */
+    public java.util.List<com.google.protobuf.ByteString>
+        getListList() {
+      return list_;
+    }
+    /**
+     * <code>repeated bytes list = 2;</code>
+     */
+    public int getListCount() {
+      return list_.size();
+    }
+    /**
+     * <code>repeated bytes list = 2;</code>
+     */
+    public com.google.protobuf.ByteString getList(int index) {
+      return list_.get(index);
+    }
+
+    public static final int VALUE_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString value_;
+    /**
+     * <code>bytes value = 3;</code>
+     */
+    public com.google.protobuf.ByteString getValue() {
+      return value_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (type_ != sire.protos.Messages.ProxyResponse.ResponseType.MAP_GET.getNumber()) {
+        output.writeEnum(1, type_);
+      }
+      for (int i = 0; i < list_.size(); i++) {
+        output.writeBytes(2, list_.get(i));
+      }
+      if (!value_.isEmpty()) {
+        output.writeBytes(3, value_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (type_ != sire.protos.Messages.ProxyResponse.ResponseType.MAP_GET.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, type_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < list_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(list_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getListList().size();
+      }
+      if (!value_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, value_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof sire.protos.Messages.ProxyResponse)) {
+        return super.equals(obj);
+      }
+      sire.protos.Messages.ProxyResponse other = (sire.protos.Messages.ProxyResponse) obj;
+
+      boolean result = true;
+      result = result && type_ == other.type_;
+      result = result && getListList()
+          .equals(other.getListList());
+      result = result && getValue()
+          .equals(other.getValue());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + TYPE_FIELD_NUMBER;
+      hash = (53 * hash) + type_;
+      if (getListCount() > 0) {
+        hash = (37 * hash) + LIST_FIELD_NUMBER;
+        hash = (53 * hash) + getListList().hashCode();
+      }
+      hash = (37 * hash) + VALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getValue().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static sire.protos.Messages.ProxyResponse parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyResponse parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.protos.Messages.ProxyResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static sire.protos.Messages.ProxyResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static sire.protos.Messages.ProxyResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(sire.protos.Messages.ProxyResponse prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code sire.protos.ProxyResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:sire.protos.ProxyResponse)
+        sire.protos.Messages.ProxyResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyResponse_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                sire.protos.Messages.ProxyResponse.class, sire.protos.Messages.ProxyResponse.Builder.class);
+      }
+
+      // Construct using sire.protos.Messages.ProxyResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        type_ = 0;
+
+        list_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        value_ = com.google.protobuf.ByteString.EMPTY;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyResponse_descriptor;
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyResponse getDefaultInstanceForType() {
+        return sire.protos.Messages.ProxyResponse.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyResponse build() {
+        sire.protos.Messages.ProxyResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyResponse buildPartial() {
+        sire.protos.Messages.ProxyResponse result = new sire.protos.Messages.ProxyResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        result.type_ = type_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          list_ = java.util.Collections.unmodifiableList(list_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.list_ = list_;
+        result.value_ = value_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof sire.protos.Messages.ProxyResponse) {
+          return mergeFrom((sire.protos.Messages.ProxyResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(sire.protos.Messages.ProxyResponse other) {
+        if (other == sire.protos.Messages.ProxyResponse.getDefaultInstance()) return this;
+        if (other.type_ != 0) {
+          setTypeValue(other.getTypeValue());
+        }
+        if (!other.list_.isEmpty()) {
+          if (list_.isEmpty()) {
+            list_ = other.list_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureListIsMutable();
+            list_.addAll(other.list_);
+          }
+          onChanged();
+        }
+        if (other.getValue() != com.google.protobuf.ByteString.EMPTY) {
+          setValue(other.getValue());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        sire.protos.Messages.ProxyResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (sire.protos.Messages.ProxyResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private int type_ = 0;
+      /**
+       * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+       */
+      public int getTypeValue() {
+        return type_;
+      }
+      /**
+       * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+       */
+      public Builder setTypeValue(int value) {
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+       */
+      public sire.protos.Messages.ProxyResponse.ResponseType getType() {
+        @SuppressWarnings("deprecation")
+        sire.protos.Messages.ProxyResponse.ResponseType result = sire.protos.Messages.ProxyResponse.ResponseType.valueOf(type_);
+        return result == null ? sire.protos.Messages.ProxyResponse.ResponseType.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+       */
+      public Builder setType(sire.protos.Messages.ProxyResponse.ResponseType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        type_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+       */
+      public Builder clearType() {
+        
+        type_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<com.google.protobuf.ByteString> list_ = java.util.Collections.emptyList();
+      private void ensureListIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          list_ = new java.util.ArrayList<com.google.protobuf.ByteString>(list_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      /**
+       * <code>repeated bytes list = 2;</code>
+       */
+      public java.util.List<com.google.protobuf.ByteString>
+          getListList() {
+        return java.util.Collections.unmodifiableList(list_);
+      }
+      /**
+       * <code>repeated bytes list = 2;</code>
+       */
+      public int getListCount() {
+        return list_.size();
+      }
+      /**
+       * <code>repeated bytes list = 2;</code>
+       */
+      public com.google.protobuf.ByteString getList(int index) {
+        return list_.get(index);
+      }
+      /**
+       * <code>repeated bytes list = 2;</code>
+       */
+      public Builder setList(
+          int index, com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureListIsMutable();
+        list_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated bytes list = 2;</code>
+       */
+      public Builder addList(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureListIsMutable();
+        list_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated bytes list = 2;</code>
+       */
+      public Builder addAllList(
+          java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
+        ensureListIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, list_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated bytes list = 2;</code>
+       */
+      public Builder clearList() {
+        list_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes value = 3;</code>
+       */
+      public com.google.protobuf.ByteString getValue() {
+        return value_;
+      }
+      /**
+       * <code>bytes value = 3;</code>
+       */
+      public Builder setValue(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes value = 3;</code>
+       */
+      public Builder clearValue() {
+        
+        value_ = getDefaultInstance().getValue();
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:sire.protos.ProxyResponse)
+    }
+
+    // @@protoc_insertion_point(class_scope:sire.protos.ProxyResponse)
+    private static final sire.protos.Messages.ProxyResponse DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new sire.protos.Messages.ProxyResponse();
+    }
+
+    public static sire.protos.Messages.ProxyResponse getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ProxyResponse>
+        PARSER = new com.google.protobuf.AbstractParser<ProxyResponse>() {
+      @java.lang.Override
+      public ProxyResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ProxyResponse(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProxyResponse> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProxyResponse> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public sire.protos.Messages.ProxyResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_sire_protos_ProtoSchnorr_descriptor;
   private static final 
@@ -4584,6 +8707,26 @@ public final class Messages {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_sire_protos_ProtoMessage3_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_sire_protos_ProxyAttestationMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_sire_protos_ProxyAttestationMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_sire_protos_ProxyMapMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_sire_protos_ProxyMapMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_sire_protos_ProxyMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_sire_protos_ProxyMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_sire_protos_ProxyResponse_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_sire_protos_ProxyResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -4608,7 +8751,34 @@ public final class Messages {
       "Evidence\0224\n\021signatureEvidence\030\003 \001(\0132\031.si" +
       "re.protos.ProtoSchnorr\022\013\n\003mac\030\004 \001(\014\"2\n\rP" +
       "rotoMessage3\022\n\n\002iv\030\001 \001(\014\022\025\n\rencryptedDat" +
-      "a\030\002 \001(\014b\006proto3"
+      "a\030\002 \001(\014\"\301\002\n\027ProxyAttestationMessage\022D\n\to" +
+      "peration\030\001 \001(\01621.sire.protos.ProxyAttest" +
+      "ationMessage.AttOperation\022,\n\010evidence\030\002 " +
+      "\001(\0132\032.sire.protos.ProtoEvidence\022,\n\tsigna" +
+      "ture\030\003 \001(\0132\031.sire.protos.ProtoSchnorr\022\022\n" +
+      "\ndataToSign\030\004 \001(\014\"p\n\014AttOperation\022\030\n\024GEN" +
+      "ERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022" +
+      "\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RAND" +
+      "OM_NUMBER\020\004\"\321\001\n\017ProxyMapMessage\022<\n\topera" +
+      "tion\030\001 \001(\0162).sire.protos.ProxyMapMessage" +
+      ".MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005value\030\003 \001(" +
+      "\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOperation\022\013\n\007MA" +
+      "P_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP_GET\020\002\022\014\n\010" +
+      "MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\230\003\n\014ProxyMessage" +
+      "\0226\n\toperation\030\001 \001(\0162#.sire.protos.ProxyM" +
+      "essage.Operation\022,\n\010evidence\030\002 \001(\0132\032.sir" +
+      "e.protos.ProtoEvidence\022,\n\tsignature\030\003 \001(" +
+      "\0132\031.sire.protos.ProtoSchnorr\022\022\n\ndataToSi" +
+      "gn\030\004 \001(\014\022\013\n\003key\030\005 \001(\014\022\r\n\005value\030\006 \001(\014\022\017\n\007" +
+      "oldData\030\007 \001(\014\"\262\001\n\tOperation\022\030\n\024GENERATE_" +
+      "SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIG" +
+      "N_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RANDOM_NUM" +
+      "BER\020\004\022\013\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MA" +
+      "P_GET\020\007\022\014\n\010MAP_LIST\020\010\022\013\n\007MAP_CAS\020\t\"\216\001\n\rP" +
+      "roxyResponse\0225\n\004type\030\001 \001(\0162\'.sire.protos" +
+      ".ProxyResponse.ResponseType\022\014\n\004list\030\002 \003(" +
+      "\014\022\r\n\005value\030\003 \001(\014\")\n\014ResponseType\022\013\n\007MAP_" +
+      "GET\020\000\022\014\n\010MAP_LIST\020\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4658,6 +8828,30 @@ public final class Messages {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_protos_ProtoMessage3_descriptor,
         new java.lang.String[] { "Iv", "EncryptedData", });
+    internal_static_sire_protos_ProxyAttestationMessage_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_sire_protos_ProxyAttestationMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_sire_protos_ProxyAttestationMessage_descriptor,
+        new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", });
+    internal_static_sire_protos_ProxyMapMessage_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_sire_protos_ProxyMapMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_sire_protos_ProxyMapMessage_descriptor,
+        new java.lang.String[] { "Operation", "Key", "Value", "OldData", });
+    internal_static_sire_protos_ProxyMessage_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_sire_protos_ProxyMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_sire_protos_ProxyMessage_descriptor,
+        new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", "Key", "Value", "OldData", });
+    internal_static_sire_protos_ProxyResponse_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_sire_protos_ProxyResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_sire_protos_ProxyResponse_descriptor,
+        new java.lang.String[] { "Type", "List", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

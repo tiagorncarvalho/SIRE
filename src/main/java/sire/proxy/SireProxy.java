@@ -27,20 +27,19 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author robin
  */
-public class SireProxy {
+public class SireProxy implements MapInterface, OperationalInterface{
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
 	private final MessageDigest messageDigest;
@@ -74,7 +73,10 @@ public class SireProxy {
 		}
 		Response response;
 		try {
-			response = serviceProxy.invokeOrdered(new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
+			ProxyMessage msg = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.GENERATE_SIGNING_KEY)
+					.build();
+			response = serviceProxy.invokeOrdered(msg.toByteArray());//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to obtain verifier's public key", e);
 		}
@@ -168,14 +170,21 @@ public class SireProxy {
 		DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(message.getSignatureEvidence()));
 
 		//asking for data - verifier will return data if evidence is valid
-		byte[] serializedDeviceEvidence = deviceEvidence.serialize();
+		/*byte[] serializedDeviceEvidence = deviceEvidence.serialize();
 		byte[] dataRequest = new byte[serializedDeviceEvidence.length + 1];
 		dataRequest[0] = (byte) Operation.GET_DATA.ordinal();
 		System.arraycopy(serializedDeviceEvidence, 0, dataRequest, 1,
-				serializedDeviceEvidence.length);
+				serializedDeviceEvidence.length);*/
+
+		ProxyMessage dataRequest = ProxyMessage.newBuilder()
+				.setOperation(ProxyMessage.Operation.GET_DATA)
+				.setEvidence(evidenceToProto(deviceEvidence.getEvidence()))
+				.setSignature(schnorrToProto(deviceEvidence.getEvidenceSignature()))
+				.build();
+
 
 		try {
-			Response dataResponse = serviceProxy.invokeOrdered(dataRequest);
+			Response dataResponse = serviceProxy.invokeOrdered(dataRequest.toByteArray());
 			byte isValid = dataResponse.getPainData()[0];
 			if (isValid == 0)
 				throw new SireException("Evidence is invalid");
@@ -216,12 +225,17 @@ public class SireProxy {
 	}
 
 	private SchnorrSignature getSignatureFromVerifier(byte[] data) throws SireException {
-		byte[] signingRequest = new byte[data.length + 1];
+		/*byte[] signingRequest = new byte[data.length + 1];
 		signingRequest[0] = (byte) Operation.SIGN_DATA.ordinal();
-		System.arraycopy(data, 0, signingRequest, 1, data.length);
+		System.arraycopy(data, 0, signingRequest, 1, data.length);*/
+
+		ProxyMessage signingRequest = ProxyMessage.newBuilder()
+				.setOperation(ProxyMessage.Operation.SIGN_DATA)
+				.setDataToSign(ByteString.copyFrom(data))
+				.build();
 		UncombinedConfidentialResponse signatureResponse;
 		try {
-			signatureResponse = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered2(signingRequest);
+			signatureResponse = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered2(signingRequest.toByteArray());
 		} catch (SecretSharingException e) {
 			throw new SireException("Verifier failed to sign", e);
 		}
@@ -291,5 +305,120 @@ public class SireProxy {
 
 	public void close() {
 		serviceProxy.close();
+	}
+
+	@Override
+	public void put(byte[] key, byte[] value) {
+		/*byte[] putRequest = new byte[key.length + value.length + 2];
+		putRequest[0] = (byte) Operation.MAP_PUT.ordinal();
+		byte[] mark = "/".getBytes();
+		System.arraycopy(key, 0, putRequest, 1, key.length);
+		System.arraycopy(mark, 0, putRequest, key.length + 1, mark.length);
+		System.arraycopy(value, 0, putRequest, key.length + 1, value.length);*/
+
+		ProxyMessage putRequest = ProxyMessage.newBuilder()
+				.setOperation(ProxyMessage.Operation.MAP_PUT)
+				.setKey(ByteString.copyFrom(key))
+				.setValue(ByteString.copyFrom(value))
+				.build();
+		try {
+			System.out.println("Put started");
+			serviceProxy.invokeOrdered2(putRequest.toByteArray());
+			System.out.println("Put done");
+		} catch (SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void delete(byte[] key) {
+		/*byte[] deleteRequest = new byte[key.length + 1];
+		deleteRequest[0] = (byte) Operation.MAP_DELETE.ordinal();
+		System.arraycopy(key, 0, deleteRequest, 1, key.length);*/
+		ProxyMessage deleteRequest = ProxyMessage.newBuilder()
+				.setOperation(ProxyMessage.Operation.MAP_DELETE)
+				.setKey(ByteString.copyFrom(key))
+				.build();
+		try {
+			serviceProxy.invokeOrdered2(deleteRequest.toByteArray());
+		} catch (SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public byte[] getData(byte[] key) {
+		/*byte[] getRequest = new byte[key.length + 1];
+		getRequest[0] = (byte) Operation.MAP_GET.ordinal();
+		System.arraycopy(key, 0, getRequest, 1, key.length);*/
+		ProxyMessage getRequest = ProxyMessage.newBuilder()
+				.setOperation(ProxyMessage.Operation.MAP_GET)
+				.setKey(ByteString.copyFrom(key))
+				.build();
+		try {
+			return serviceProxy.invokeOrdered(getRequest.toByteArray()).getPainData();
+		} catch (SecretSharingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List<byte[]> getList() {
+		ProxyMessage listRequest = ProxyMessage.newBuilder()
+				.setOperation(ProxyMessage.Operation.MAP_LIST)
+				.build();
+		try {
+			byte[] response = serviceProxy.invokeOrdered(listRequest.toByteArray()).getPainData();
+			ByteArrayInputStream bin = new ByteArrayInputStream(response);
+			ObjectInputStream in = new ObjectInputStream(bin);
+			List<byte[]> result = (ArrayList<byte[]>) in.readObject();
+			in.close();
+			bin.close();
+
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void cas(byte[] key, byte[] oldData, byte[] newData) {
+		/*byte[] casRequest = new byte[key.length + oldData.length + newData.length + 1];
+		casRequest[0] = (byte) Operation.MAP_CAS.ordinal();
+		byte[] mark = "/".getBytes();
+		System.arraycopy(key, 0, casRequest, 1, key.length);
+		System.arraycopy(mark, 0, casRequest, key.length + 1, mark.length);
+		System.arraycopy(oldData, 0, casRequest, key.length + mark.length + 1, oldData.length);
+		System.arraycopy(mark, 0, casRequest, key.length + mark.length + oldData.length + 1, mark.length);
+		System.arraycopy(newData, 0, casRequest, key.length + (mark.length * 2) + oldData.length + 1, newData.length);*/
+		ProxyMessage casRequest = ProxyMessage.newBuilder()
+				.setOperation(ProxyMessage.Operation.MAP_CAS)
+				.setKey(ByteString.copyFrom(key))
+				.setOldData(ByteString.copyFrom(oldData))
+				.setValue(ByteString.copyFrom(newData))
+				.build();
+		try {
+			serviceProxy.invokeOrdered(casRequest.toByteArray());
+		} catch (SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public ProtoMessage1 join(int deviceId, byte[] pubSesKey, Evidence evidence, SchnorrSignature schnorrSign) {
+		//TODO
+		return null;
+	}
+
+	@Override
+	public void leave(int deviceId) {
+		//TODO
+	}
+
+	@Override
+	public void heartbeat(int deviceId) {
+		//TODO
 	}
 }

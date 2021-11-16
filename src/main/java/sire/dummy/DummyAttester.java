@@ -7,12 +7,14 @@ import sire.messages.Message1;
 import sire.messages.Message2;
 import sire.messages.Message3;
 import static sire.utils.protoUtils.*;
-import sire.proxy.SireException;
-import sire.proxy.SireProxy;
+
+import sire.proxy.*;
 import com.google.protobuf.ByteString;
+import sire.schnorr.SchnorrSignature;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class DummyAttester {
@@ -70,7 +72,35 @@ public class DummyAttester {
         return result;
     }
 
+
+
     public void close() {
         this.proxy.close();
+    }
+
+
+
+    public void put(byte[] key, byte[] value) {
+        proxy.put(key, value);
+    }
+
+
+    public void delete(byte[] key) {
+        proxy.delete(key);
+    }
+
+
+    public byte[] getData(byte[] key) {
+        return proxy.getData(key);
+    }
+
+
+    public List<byte[]> getList() {
+        return proxy.getList();
+    }
+
+
+    public void cas(byte[] key, byte[] oldData, byte[] newData) {
+        proxy.cas(key, oldData, newData);
     }
 }

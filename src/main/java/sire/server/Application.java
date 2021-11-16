@@ -8,7 +8,7 @@ import javax.crypto.SecretKey;
 public class Application {
 	private final int id;
 	private byte[] codeMeasurement;
-	private SecretKey sessionKey;
+	//private SecretKey sessionKey;
 
 	public Application(int id) {
 		this.id = id;
@@ -22,15 +22,15 @@ public class Application {
 		return codeMeasurement;
 	}
 
-	public SecretKey getSessionKey() {
+	/*public SecretKey getSessionKey() {
 		return sessionKey;
-	}
+	}*/
 
 	public void setCodeMeasurement(byte[] codeMeasurement) {
 		this.codeMeasurement = codeMeasurement;
 	}
 
-	public void setSessionKey(SecretKey sessionKey) {
+	/*public void setSessionKey(SecretKey sessionKey) {
 		this.sessionKey = sessionKey;
-	}
+	}*/
 }

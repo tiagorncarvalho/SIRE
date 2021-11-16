@@ -17,8 +17,11 @@ import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
@@ -134,6 +137,36 @@ public class Attester {
 			byte[] decryptedData = decryptData(symmetricEncryptionKey, message3.getInitializationVector(),
 					message3.getEncryptedData());
 			System.out.println("Verifier sent me: " + new String(decryptedData));
+
+			String key = "exampleKey";
+			String key2 = "exampleKey2";
+			String value = "exampleValue";
+			String value2 = "exampleValue2";
+			String newValue = "exampleNewValue";
+
+			System.out.println("Putting entry: " + key + " " + value);
+			dummy.put(key.getBytes(), value.getBytes());
+			System.out.println("Getting entry: " + key + " Value: " + new String(dummy.getData(key.getBytes())));
+
+			System.out.println("Putting entry: " + key2 + " " + value2);
+			dummy.put(key2.getBytes(), value2.getBytes());
+			System.out.println("Getting all entries: " + Arrays.toString(dummy.getList().toArray()));
+
+			System.out.println("Delete entry: " + key2);
+			dummy.delete(key2.getBytes());
+
+			System.out.print("Getting entry: " + key2 + " Value: ");
+			byte[] arr = dummy.getData(key2.getBytes());
+			if(arr == null)
+				System.out.println("null");
+			else
+				System.out.println(new String(arr));
+
+			System.out.println("Cas, key: " + key + " oldValue: " + value + " newValue: " + newValue);
+			dummy.cas(key.getBytes(), value.getBytes(), newValue.getBytes());
+
+			System.out.println("Getting entry: " + key + " Value: " + new String(dummy.getData(key.getBytes())));
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
