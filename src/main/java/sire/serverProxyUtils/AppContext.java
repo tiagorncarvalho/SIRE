@@ -59,4 +59,8 @@ public class AppContext implements Serializable {
                 ", policy=" + policy +
                 '}';
     }
+
+    public Extension getExtension(ExtensionType type) {
+        return extensions.get(type);
+    }
 }

@@ -12,8 +12,13 @@ import confidential.polynomial.RandomPolynomialContext;
 import confidential.polynomial.RandomPolynomialListener;
 import confidential.server.ConfidentialRecoverable;
 import confidential.statemanagement.ConfidentialSnapshot;
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyShell;
+import groovy.lang.Script;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.DeviceEvidence;
+import sire.extensions.Extension;
+import sire.extensions.ExtensionType;
 import sire.protos.Messages.*;
 import sire.utils.Evidence;
 import sire.schnorr.PublicPartialSignature;
@@ -26,6 +31,7 @@ import vss.commitment.linear.LinearCommitments;
 import vss.secretsharing.Share;
 import vss.secretsharing.VerifiableShare;
 
+import groovy.util.GroovyScriptEngine;
 import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -33,7 +39,6 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -322,6 +327,11 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 					getAppContext(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
 							(new Timestamp(System.currentTimeMillis())).toInstant().truncatedTo(ChronoUnit.SECONDS))); //TODO
+					getAppContext(msg.getAppId()).addExtension(ExtensionType.JOIN, new Extension("println \"Hello World!\""));
+					GroovyShell sh = new GroovyShell();
+					Script s = sh.parse(getExtension(msg.getAppId(), ExtensionType.JOIN));
+					s.run();
+
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
@@ -334,19 +344,23 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				case PING -> {
 					lock.lock();
 					getAppContext(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(),
-							(new Timestamp(System.currentTimeMillis())).toInstant().truncatedTo(ChronoUnit.SECONDS));
+							(new Timestamp(System.currentTimeMillis())).toInstant().truncatedTo(ChronoUnit.SECONDS)); //TODO
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case VIEW -> {
 					byte[] res = serialize(getAppContext(msg.getAppId()));
-					return new ConfidentialMessage(res);
+					return new ConfidentialMessage(res); //TODO Add Proto
 				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	private String getExtension(String appId, ExtensionType type) {
+		return getAppContext(appId).getExtension(type).getCode();
 	}
 
 	private boolean isValidDeviceEvidence(DeviceEvidence deviceEvidence) {
