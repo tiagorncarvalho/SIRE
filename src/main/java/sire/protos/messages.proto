@@ -18,7 +18,7 @@ message ProtoEvidence {
 
 //=======Messages=======
 message ProtoMessage0 {
-  int32 attesterId = 1;
+  string attesterId = 1;
   bytes attesterPubSesKey = 2; //Ga
 }
 
@@ -82,15 +82,22 @@ message ProxyMessage {
     MAP_GET = 7;
     MAP_LIST = 8;
     MAP_CAS = 9;
-  }
-  Operation operation = 1;
+    JOIN = 10;
+    LEAVE = 11;
+    PING = 13;
+  }= 12;
+  VIEW
+      Operation operation = 1;
   ProtoEvidence evidence = 2;
   ProtoSchnorr signature = 3;
   bytes dataToSign = 4;
 
-  bytes key = 5;
+  string key = 5;
   bytes value = 6; //also serves as newData
   bytes oldData = 7;
+
+  string deviceId = 8;
+  string appId = 9;
 }
 
 message ProxyResponse {

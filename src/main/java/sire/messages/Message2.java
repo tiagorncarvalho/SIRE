@@ -1,7 +1,7 @@
 package sire.messages;
 
 import sire.Utils;
-import sire.proxy.Evidence;
+import sire.utils.Evidence;
 import sire.schnorr.SchnorrSignature;
 
 import java.io.IOException;

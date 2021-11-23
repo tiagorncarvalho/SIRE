@@ -1,6 +1,5 @@
 package sire.proxy;
 
-import bftsmart.demo.ycsb.YCSBClient;
 import com.google.protobuf.ByteString;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
@@ -10,14 +9,20 @@ import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.DeviceEvidence;
-import sire.Operation;
 import sire.client.ServersResponseHandlerWithoutCombine;
 import sire.client.UncombinedConfidentialResponse;
-import static sire.utils.protoUtils.*;
+import static sire.utils.ProtoUtils.*;
+
+import sire.interfaces.MapInterface;
+import sire.interfaces.OperationalInterface;
 import sire.protos.Messages.*;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
+import sire.serverProxyUtils.AppContext;
+import sire.serverProxyUtils.AttesterContext;
+import sire.serverProxyUtils.SireException;
+import sire.utils.Evidence;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.facade.SecretSharingException;
 import vss.secretsharing.Share;
@@ -27,7 +32,6 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -39,13 +43,13 @@ import java.util.*;
 /**
  * @author robin
  */
-public class SireProxy implements MapInterface, OperationalInterface{
+public class SireProxy implements MapInterface, OperationalInterface {
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
 	private final MessageDigest messageDigest;
 	private final ECPoint verifierPublicKey;
 	private final SchnorrSignatureScheme signatureScheme;
-	private final Map<Integer, AttesterContext> attesters;
+	private final Map<String, AttesterContext> attesters;
 	private final SecureRandom rndGenerator = new SecureRandom("sire".getBytes());
 	private final CMac macEngine;
 	private final SecretKeyFactory secretKeyFactory;
@@ -90,6 +94,7 @@ public class SireProxy implements MapInterface, OperationalInterface{
 
 
 	//public Message1 processMessage0(int attesterId, Message0 message) throws SireException {
+
 	public ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -137,7 +142,7 @@ public class SireProxy implements MapInterface, OperationalInterface{
 	}
 
 	//public Message3 processMessage2(int attesterId, Message2 message) throws SireException {
-	public ProtoMessage3 processMessage2(int attesterId, ProtoMessage2 message) throws SireException, IOException {
+	public ProtoMessage3 processMessage2(String attesterId, ProtoMessage2 message) throws SireException, IOException {
 		AttesterContext attester = attesters.get(attesterId);
 		if (attester == null)
 			throw new SireException("Unknown attester id " + attesterId);
@@ -308,34 +313,34 @@ public class SireProxy implements MapInterface, OperationalInterface{
 	}
 
 	@Override
-	public void put(byte[] key, byte[] value) {
+	public void put(String key, Object value) {
 		/*byte[] putRequest = new byte[key.length + value.length + 2];
 		putRequest[0] = (byte) Operation.MAP_PUT.ordinal();
 		byte[] mark = "/".getBytes();
 		System.arraycopy(key, 0, putRequest, 1, key.length);
 		System.arraycopy(mark, 0, putRequest, key.length + 1, mark.length);
 		System.arraycopy(value, 0, putRequest, key.length + 1, value.length);*/
-
-		ProxyMessage putRequest = ProxyMessage.newBuilder()
-				.setOperation(ProxyMessage.Operation.MAP_PUT)
-				.setKey(ByteString.copyFrom(key))
-				.setValue(ByteString.copyFrom(value))
-				.build();
 		try {
+			ProxyMessage putRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.MAP_PUT)
+					.setKey(key)
+					.setValue(ByteString.copyFrom(serialize(value)))
+					.build();
+
 			serviceProxy.invokeOrdered2(putRequest.toByteArray());
-		} catch (SecretSharingException e) {
+		} catch (SecretSharingException | IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void delete(byte[] key) {
+	public void delete(String key) {
 		/*byte[] deleteRequest = new byte[key.length + 1];
 		deleteRequest[0] = (byte) Operation.MAP_DELETE.ordinal();
 		System.arraycopy(key, 0, deleteRequest, 1, key.length);*/
 		ProxyMessage deleteRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.MAP_DELETE)
-				.setKey(ByteString.copyFrom(key))
+				.setKey(key)
 				.build();
 		try {
 			serviceProxy.invokeOrdered2(deleteRequest.toByteArray());
@@ -345,34 +350,30 @@ public class SireProxy implements MapInterface, OperationalInterface{
 	}
 
 	@Override
-	public byte[] getData(byte[] key) {
+	public Object getData(String key) {
 		/*byte[] getRequest = new byte[key.length + 1];
 		getRequest[0] = (byte) Operation.MAP_GET.ordinal();
 		System.arraycopy(key, 0, getRequest, 1, key.length);*/
 		ProxyMessage getRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.MAP_GET)
-				.setKey(ByteString.copyFrom(key))
+				.setKey(key)
 				.build();
 		try {
-			return serviceProxy.invokeOrdered(getRequest.toByteArray()).getPainData();
-		} catch (SecretSharingException e) {
+			return deserialize(serviceProxy.invokeOrdered(getRequest.toByteArray()).getPainData());
+		} catch (SecretSharingException | IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
 	@Override
-	public List<byte[]> getList() {
+	public List<Object> getList() {
 		ProxyMessage listRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.MAP_LIST)
 				.build();
 		try {
 			byte[] response = serviceProxy.invokeOrdered(listRequest.toByteArray()).getPainData();
-			ByteArrayInputStream bin = new ByteArrayInputStream(response);
-			ObjectInputStream in = new ObjectInputStream(bin);
-			List<byte[]> result = (ArrayList<byte[]>) in.readObject();
-			in.close();
-			bin.close();
+			List<Object> result = (ArrayList<Object>) deserialize(response);
 
 			return result;
 		} catch (Exception e) {
@@ -382,7 +383,7 @@ public class SireProxy implements MapInterface, OperationalInterface{
 	}
 
 	@Override
-	public void cas(byte[] key, byte[] oldData, byte[] newData) {
+	public void cas(String key, Object oldData, Object newData) {
 		/*byte[] casRequest = new byte[key.length + oldData.length + newData.length + 1];
 		casRequest[0] = (byte) Operation.MAP_CAS.ordinal();
 		byte[] mark = "/".getBytes();
@@ -391,32 +392,76 @@ public class SireProxy implements MapInterface, OperationalInterface{
 		System.arraycopy(oldData, 0, casRequest, key.length + mark.length + 1, oldData.length);
 		System.arraycopy(mark, 0, casRequest, key.length + mark.length + oldData.length + 1, mark.length);
 		System.arraycopy(newData, 0, casRequest, key.length + (mark.length * 2) + oldData.length + 1, newData.length);*/
-		ProxyMessage casRequest = ProxyMessage.newBuilder()
-				.setOperation(ProxyMessage.Operation.MAP_CAS)
-				.setKey(ByteString.copyFrom(key))
-				.setOldData(ByteString.copyFrom(oldData))
-				.setValue(ByteString.copyFrom(newData))
-				.build();
 		try {
+			ProxyMessage casRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.MAP_CAS)
+					.setKey(key)
+					.setOldData(ByteString.copyFrom(serialize(oldData)))
+					.setValue(ByteString.copyFrom(serialize(newData)))
+					.build();
 			serviceProxy.invokeOrdered(casRequest.toByteArray());
+		} catch (SecretSharingException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public ProtoMessage1 join(String appId, String deviceId, ProtoMessage0 msg)  {
+		try {
+			ProxyMessage joinRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.JOIN)
+					.setAppId(appId)
+					.setDeviceId(deviceId)
+					.build();
+			serviceProxy.invokeOrdered(joinRequest.toByteArray());
+
+			return processMessage0(msg);
+		} catch (SecretSharingException | SireException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void leave(String appId, String deviceId) {
+		try {
+			ProxyMessage leaveRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.LEAVE)
+					.setAppId(appId)
+					.setDeviceId(deviceId)
+					.build();
+			serviceProxy.invokeOrdered(leaveRequest.toByteArray());
 		} catch (SecretSharingException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public ProtoMessage1 join(int deviceId, byte[] pubSesKey, Evidence evidence, SchnorrSignature schnorrSign) {
-		//TODO
-		return null;
+	public void ping(String appId, String deviceId) {
+		try {
+			ProxyMessage pingRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.PING)
+					.setAppId(appId)
+					.setDeviceId(deviceId)
+					.build();
+			serviceProxy.invokeOrdered(pingRequest.toByteArray());
+		} catch (SecretSharingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void leave(int deviceId) {
-		//TODO
-	}
-
-	@Override
-	public void heartbeat(int deviceId) {
-		//TODO
+	public AppContext getView(String appId) {
+		try {
+			ProxyMessage leaveRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.VIEW)
+					.setAppId(appId)
+					.build();
+			Response res = serviceProxy.invokeOrdered(leaveRequest.toByteArray());
+			return (AppContext) deserialize(res.getPainData());
+		} catch (SecretSharingException | IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

@@ -1,4 +1,4 @@
-package sire.proxy;
+package sire.interfaces;
 
 import java.util.List;
 
@@ -12,26 +12,26 @@ public interface MapInterface {
      * @param key Key to store the information in
      * @param value Information to store
      */
-    void put(byte[] key, byte[] value);
+    void put(String key, Object value);
 
     /**
      * Removes an entry from the map.
      * @param key Key to delete entry
      */
-    void delete(byte[] key);
+    void delete(String key);
 
     /**
      * Gets the data associated with a key from the map. Returns null if non-existent.
      * @param key Key to get the information from
      * @return Data associated with said device.
      */
-    byte[] getData(byte[] key);
+    Object getData(String key);
 
     /**
      * Gets a list of all the entries in the system.
      * @return Information from all the entries in the system.
      */
-    List<byte[]> getList();
+    List<Object> getList();
 
     /**
      * Compare and swap operation, if data in key is equal to oldData, replaces it with newData.
@@ -40,5 +40,5 @@ public interface MapInterface {
      * @param oldData Data to compare
      * @param newData Data to replace
      */
-    void cas(byte[] key, byte[] oldData, byte[] newData);
+    void cas(String key, Object oldData, Object newData);
 }

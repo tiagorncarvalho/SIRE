@@ -1,4 +1,4 @@
-package sire.proxy;
+package sire.serverProxyUtils;
 
 /**
  * @author robin

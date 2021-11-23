@@ -8,20 +8,18 @@ import sire.messages.Message0;
 import sire.messages.Message1;
 import sire.messages.Message2;
 import sire.messages.Message3;
-import sire.proxy.Evidence;
-import sire.proxy.SireException;
+import sire.utils.Evidence;
+import sire.serverProxyUtils.SireException;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
+import sire.utils.ExampleObject;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
@@ -41,7 +39,8 @@ public class Attester {
 	//TODO add sockets
 	public static void main(String[] args) throws SireException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException {
 		int proxyId = 1000;
-		int attesterId = 1;
+		String attesterId = "1";
+		String appId = "app1";
 		String waTZVersion = "1.0";
 		byte[] claim = "claim".getBytes();
 
@@ -65,7 +64,7 @@ public class Attester {
 
 			Message0 message0 = new Message0(attesterId, attesterSessionPublicKey.getEncoded(true));
 
-			Message1 message1 = dummy.sendMessage0(attesterId, message0);
+			Message1 message1 = dummy.join(appId, attesterId, message0);
 
 			byte[] sessionPublicKeysHash = computeHash(message1.getVerifierPublicSessionKey(),
 					attesterSessionPublicKey.getEncoded(true));
@@ -140,32 +139,45 @@ public class Attester {
 
 			String key = "exampleKey";
 			String key2 = "exampleKey2";
-			String value = "exampleValue";
+			/*String value = "exampleValue";
 			String value2 = "exampleValue2";
-			String newValue = "exampleNewValue";
+			String newValue = "exampleNewValue";*/
+			ExampleObject value = new ExampleObject("exampleValue");
+			ExampleObject value2 = new ExampleObject("exampleValue2");
+			ExampleObject newValue = new ExampleObject("exampleNewValue");
 
-			System.out.println("Putting entry: " + key + " " + value);
-			dummy.put(key.getBytes(), value.getBytes());
-			System.out.println("Getting entry: " + key + " Value: " + new String(dummy.getData(key.getBytes())));
+			System.out.println("Putting entry: " + key + " " + value.getValue());
+			dummy.put(key, value);
+			Object aberration = dummy.getData(key);
+			ExampleObject nonAberration = (ExampleObject) aberration;
+			System.out.println("Getting entry: " + key + " Value: " + nonAberration.getValue());
 
-			System.out.println("Putting entry: " + key2 + " " + value2);
-			dummy.put(key2.getBytes(), value2.getBytes());
+			System.out.println("Putting entry: " + key2 + " " + value2.getValue());
+			dummy.put(key2, value2);
 			System.out.println("Getting all entries: " + Arrays.toString(dummy.getList().toArray()));
 
 			System.out.println("Delete entry: " + key2);
-			dummy.delete(key2.getBytes());
+			dummy.delete(key2);
 
 			System.out.print("Getting entry: " + key2 + " Value: ");
-			byte[] arr = dummy.getData(key2.getBytes());
+			Object arr = dummy.getData(key2);
 			if(arr == null)
 				System.out.println("null");
 			else
-				System.out.println(new String(arr));
+				System.out.println((String) arr);
 
-			System.out.println("Cas, key: " + key + " oldValue: " + value + " newValue: " + newValue);
-			dummy.cas(key.getBytes(), value.getBytes(), newValue.getBytes());
+			System.out.println("Cas, key: " + key + " oldValue: " + value.getValue() + " newValue: " + newValue.getValue());
+			dummy.cas(key, value, newValue);
 
-			System.out.println("Getting entry: " + key + " Value: " + new String(dummy.getData(key.getBytes())));
+			Object result = dummy.getData(key);
+
+			System.out.println("Getting entry: " + key + " Value: " + ((ExampleObject) result).getValue());
+
+			System.out.println(dummy.getView(appId).toString());
+			dummy.ping(appId, attesterId);
+			System.out.println(dummy.getView(appId).toString());
+			dummy.leave(appId, attesterId);
+			System.out.println(dummy.getView(appId).toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

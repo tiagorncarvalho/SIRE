@@ -1386,9 +1386,14 @@ public final class Messages {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int32 attesterId = 1;</code>
+     * <code>string attesterId = 1;</code>
      */
-    int getAttesterId();
+    java.lang.String getAttesterId();
+    /**
+     * <code>string attesterId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getAttesterIdBytes();
 
     /**
      * <pre>
@@ -1416,7 +1421,7 @@ public final class Messages {
       super(builder);
     }
     private ProtoMessage0() {
-      attesterId_ = 0;
+      attesterId_ = "";
       attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
     }
 
@@ -1444,9 +1449,10 @@ public final class Messages {
             case 0:
               done = true;
               break;
-            case 8: {
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              attesterId_ = input.readInt32();
+              attesterId_ = s;
               break;
             }
             case 18: {
@@ -1487,12 +1493,37 @@ public final class Messages {
     }
 
     public static final int ATTESTERID_FIELD_NUMBER = 1;
-    private int attesterId_;
+    private volatile java.lang.Object attesterId_;
     /**
-     * <code>int32 attesterId = 1;</code>
+     * <code>string attesterId = 1;</code>
      */
-    public int getAttesterId() {
-      return attesterId_;
+    public java.lang.String getAttesterId() {
+      java.lang.Object ref = attesterId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        attesterId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string attesterId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAttesterIdBytes() {
+      java.lang.Object ref = attesterId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        attesterId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int ATTESTERPUBSESKEY_FIELD_NUMBER = 2;
@@ -1522,8 +1553,8 @@ public final class Messages {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (attesterId_ != 0) {
-        output.writeInt32(1, attesterId_);
+      if (!getAttesterIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, attesterId_);
       }
       if (!attesterPubSesKey_.isEmpty()) {
         output.writeBytes(2, attesterPubSesKey_);
@@ -1537,9 +1568,8 @@ public final class Messages {
       if (size != -1) return size;
 
       size = 0;
-      if (attesterId_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, attesterId_);
+      if (!getAttesterIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, attesterId_);
       }
       if (!attesterPubSesKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
@@ -1561,8 +1591,8 @@ public final class Messages {
       sire.protos.Messages.ProtoMessage0 other = (sire.protos.Messages.ProtoMessage0) obj;
 
       boolean result = true;
-      result = result && (getAttesterId()
-          == other.getAttesterId());
+      result = result && getAttesterId()
+          .equals(other.getAttesterId());
       result = result && getAttesterPubSesKey()
           .equals(other.getAttesterPubSesKey());
       result = result && unknownFields.equals(other.unknownFields);
@@ -1577,7 +1607,7 @@ public final class Messages {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + ATTESTERID_FIELD_NUMBER;
-      hash = (53 * hash) + getAttesterId();
+      hash = (53 * hash) + getAttesterId().hashCode();
       hash = (37 * hash) + ATTESTERPUBSESKEY_FIELD_NUMBER;
       hash = (53 * hash) + getAttesterPubSesKey().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -1717,7 +1747,7 @@ public final class Messages {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        attesterId_ = 0;
+        attesterId_ = "";
 
         attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -1797,8 +1827,9 @@ public final class Messages {
 
       public Builder mergeFrom(sire.protos.Messages.ProtoMessage0 other) {
         if (other == sire.protos.Messages.ProtoMessage0.getDefaultInstance()) return this;
-        if (other.getAttesterId() != 0) {
-          setAttesterId(other.getAttesterId());
+        if (!other.getAttesterId().isEmpty()) {
+          attesterId_ = other.attesterId_;
+          onChanged();
         }
         if (other.getAttesterPubSesKey() != com.google.protobuf.ByteString.EMPTY) {
           setAttesterPubSesKey(other.getAttesterPubSesKey());
@@ -1832,28 +1863,71 @@ public final class Messages {
         return this;
       }
 
-      private int attesterId_ ;
+      private java.lang.Object attesterId_ = "";
       /**
-       * <code>int32 attesterId = 1;</code>
+       * <code>string attesterId = 1;</code>
        */
-      public int getAttesterId() {
-        return attesterId_;
+      public java.lang.String getAttesterId() {
+        java.lang.Object ref = attesterId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          attesterId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int32 attesterId = 1;</code>
+       * <code>string attesterId = 1;</code>
        */
-      public Builder setAttesterId(int value) {
-        
+      public com.google.protobuf.ByteString
+          getAttesterIdBytes() {
+        java.lang.Object ref = attesterId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          attesterId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string attesterId = 1;</code>
+       */
+      public Builder setAttesterId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
         attesterId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 attesterId = 1;</code>
+       * <code>string attesterId = 1;</code>
        */
       public Builder clearAttesterId() {
         
-        attesterId_ = 0;
+        attesterId_ = getDefaultInstance().getAttesterId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string attesterId = 1;</code>
+       */
+      public Builder setAttesterIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        attesterId_ = value;
         onChanged();
         return this;
       }
@@ -6543,9 +6617,14 @@ public final class Messages {
     com.google.protobuf.ByteString getDataToSign();
 
     /**
-     * <code>bytes key = 5;</code>
+     * <code>string key = 5;</code>
      */
-    com.google.protobuf.ByteString getKey();
+    java.lang.String getKey();
+    /**
+     * <code>string key = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getKeyBytes();
 
     /**
      * <pre>
@@ -6560,6 +6639,26 @@ public final class Messages {
      * <code>bytes oldData = 7;</code>
      */
     com.google.protobuf.ByteString getOldData();
+
+    /**
+     * <code>string deviceId = 8;</code>
+     */
+    java.lang.String getDeviceId();
+    /**
+     * <code>string deviceId = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getDeviceIdBytes();
+
+    /**
+     * <code>string appId = 9;</code>
+     */
+    java.lang.String getAppId();
+    /**
+     * <code>string appId = 9;</code>
+     */
+    com.google.protobuf.ByteString
+        getAppIdBytes();
   }
   /**
    * Protobuf type {@code sire.protos.ProxyMessage}
@@ -6576,9 +6675,11 @@ public final class Messages {
     private ProxyMessage() {
       operation_ = 0;
       dataToSign_ = com.google.protobuf.ByteString.EMPTY;
-      key_ = com.google.protobuf.ByteString.EMPTY;
+      key_ = "";
       value_ = com.google.protobuf.ByteString.EMPTY;
       oldData_ = com.google.protobuf.ByteString.EMPTY;
+      deviceId_ = "";
+      appId_ = "";
     }
 
     @java.lang.Override
@@ -6643,8 +6744,9 @@ public final class Messages {
               break;
             }
             case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              key_ = input.readBytes();
+              key_ = s;
               break;
             }
             case 50: {
@@ -6655,6 +6757,18 @@ public final class Messages {
             case 58: {
 
               oldData_ = input.readBytes();
+              break;
+            }
+            case 66: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              deviceId_ = s;
+              break;
+            }
+            case 74: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              appId_ = s;
               break;
             }
             default: {
@@ -6734,6 +6848,22 @@ public final class Messages {
        * <code>MAP_CAS = 9;</code>
        */
       MAP_CAS(9),
+      /**
+       * <code>JOIN = 10;</code>
+       */
+      JOIN(10),
+      /**
+       * <code>LEAVE = 11;</code>
+       */
+      LEAVE(11),
+      /**
+       * <code>PING = 12;</code>
+       */
+      PING(12),
+      /**
+       * <code>VIEW = 13;</code>
+       */
+      VIEW(13),
       UNRECOGNIZED(-1),
       ;
 
@@ -6777,6 +6907,22 @@ public final class Messages {
        * <code>MAP_CAS = 9;</code>
        */
       public static final int MAP_CAS_VALUE = 9;
+      /**
+       * <code>JOIN = 10;</code>
+       */
+      public static final int JOIN_VALUE = 10;
+      /**
+       * <code>LEAVE = 11;</code>
+       */
+      public static final int LEAVE_VALUE = 11;
+      /**
+       * <code>PING = 12;</code>
+       */
+      public static final int PING_VALUE = 12;
+      /**
+       * <code>VIEW = 13;</code>
+       */
+      public static final int VIEW_VALUE = 13;
 
 
       public final int getNumber() {
@@ -6807,6 +6953,10 @@ public final class Messages {
           case 7: return MAP_GET;
           case 8: return MAP_LIST;
           case 9: return MAP_CAS;
+          case 10: return JOIN;
+          case 11: return LEAVE;
+          case 12: return PING;
+          case 13: return VIEW;
           default: return null;
         }
       }
@@ -6928,12 +7078,37 @@ public final class Messages {
     }
 
     public static final int KEY_FIELD_NUMBER = 5;
-    private com.google.protobuf.ByteString key_;
+    private volatile java.lang.Object key_;
     /**
-     * <code>bytes key = 5;</code>
+     * <code>string key = 5;</code>
      */
-    public com.google.protobuf.ByteString getKey() {
-      return key_;
+    public java.lang.String getKey() {
+      java.lang.Object ref = key_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        key_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string key = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getKeyBytes() {
+      java.lang.Object ref = key_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        key_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int VALUE_FIELD_NUMBER = 6;
@@ -6956,6 +7131,74 @@ public final class Messages {
      */
     public com.google.protobuf.ByteString getOldData() {
       return oldData_;
+    }
+
+    public static final int DEVICEID_FIELD_NUMBER = 8;
+    private volatile java.lang.Object deviceId_;
+    /**
+     * <code>string deviceId = 8;</code>
+     */
+    public java.lang.String getDeviceId() {
+      java.lang.Object ref = deviceId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        deviceId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string deviceId = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDeviceIdBytes() {
+      java.lang.Object ref = deviceId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        deviceId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int APPID_FIELD_NUMBER = 9;
+    private volatile java.lang.Object appId_;
+    /**
+     * <code>string appId = 9;</code>
+     */
+    public java.lang.String getAppId() {
+      java.lang.Object ref = appId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        appId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string appId = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAppIdBytes() {
+      java.lang.Object ref = appId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        appId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -6984,14 +7227,20 @@ public final class Messages {
       if (!dataToSign_.isEmpty()) {
         output.writeBytes(4, dataToSign_);
       }
-      if (!key_.isEmpty()) {
-        output.writeBytes(5, key_);
+      if (!getKeyBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, key_);
       }
       if (!value_.isEmpty()) {
         output.writeBytes(6, value_);
       }
       if (!oldData_.isEmpty()) {
         output.writeBytes(7, oldData_);
+      }
+      if (!getDeviceIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, deviceId_);
+      }
+      if (!getAppIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, appId_);
       }
       unknownFields.writeTo(output);
     }
@@ -7018,9 +7267,8 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, dataToSign_);
       }
-      if (!key_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, key_);
+      if (!getKeyBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, key_);
       }
       if (!value_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
@@ -7029,6 +7277,12 @@ public final class Messages {
       if (!oldData_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(7, oldData_);
+      }
+      if (!getDeviceIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, deviceId_);
+      }
+      if (!getAppIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, appId_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -7065,6 +7319,10 @@ public final class Messages {
           .equals(other.getValue());
       result = result && getOldData()
           .equals(other.getOldData());
+      result = result && getDeviceId()
+          .equals(other.getDeviceId());
+      result = result && getAppId()
+          .equals(other.getAppId());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -7094,6 +7352,10 @@ public final class Messages {
       hash = (53 * hash) + getValue().hashCode();
       hash = (37 * hash) + OLDDATA_FIELD_NUMBER;
       hash = (53 * hash) + getOldData().hashCode();
+      hash = (37 * hash) + DEVICEID_FIELD_NUMBER;
+      hash = (53 * hash) + getDeviceId().hashCode();
+      hash = (37 * hash) + APPID_FIELD_NUMBER;
+      hash = (53 * hash) + getAppId().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -7243,11 +7505,15 @@ public final class Messages {
         }
         dataToSign_ = com.google.protobuf.ByteString.EMPTY;
 
-        key_ = com.google.protobuf.ByteString.EMPTY;
+        key_ = "";
 
         value_ = com.google.protobuf.ByteString.EMPTY;
 
         oldData_ = com.google.protobuf.ByteString.EMPTY;
+
+        deviceId_ = "";
+
+        appId_ = "";
 
         return this;
       }
@@ -7290,6 +7556,8 @@ public final class Messages {
         result.key_ = key_;
         result.value_ = value_;
         result.oldData_ = oldData_;
+        result.deviceId_ = deviceId_;
+        result.appId_ = appId_;
         onBuilt();
         return result;
       }
@@ -7350,14 +7618,23 @@ public final class Messages {
         if (other.getDataToSign() != com.google.protobuf.ByteString.EMPTY) {
           setDataToSign(other.getDataToSign());
         }
-        if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
-          setKey(other.getKey());
+        if (!other.getKey().isEmpty()) {
+          key_ = other.key_;
+          onChanged();
         }
         if (other.getValue() != com.google.protobuf.ByteString.EMPTY) {
           setValue(other.getValue());
         }
         if (other.getOldData() != com.google.protobuf.ByteString.EMPTY) {
           setOldData(other.getOldData());
+        }
+        if (!other.getDeviceId().isEmpty()) {
+          deviceId_ = other.deviceId_;
+          onChanged();
+        }
+        if (!other.getAppId().isEmpty()) {
+          appId_ = other.appId_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -7696,17 +7973,43 @@ public final class Messages {
         return this;
       }
 
-      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+      private java.lang.Object key_ = "";
       /**
-       * <code>bytes key = 5;</code>
+       * <code>string key = 5;</code>
        */
-      public com.google.protobuf.ByteString getKey() {
-        return key_;
+      public java.lang.String getKey() {
+        java.lang.Object ref = key_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          key_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>bytes key = 5;</code>
+       * <code>string key = 5;</code>
        */
-      public Builder setKey(com.google.protobuf.ByteString value) {
+      public com.google.protobuf.ByteString
+          getKeyBytes() {
+        java.lang.Object ref = key_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          key_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string key = 5;</code>
+       */
+      public Builder setKey(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -7716,11 +8019,25 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>bytes key = 5;</code>
+       * <code>string key = 5;</code>
        */
       public Builder clearKey() {
         
         key_ = getDefaultInstance().getKey();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string key = 5;</code>
+       */
+      public Builder setKeyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        key_ = value;
         onChanged();
         return this;
       }
@@ -7791,6 +8108,144 @@ public final class Messages {
       public Builder clearOldData() {
         
         oldData_ = getDefaultInstance().getOldData();
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object deviceId_ = "";
+      /**
+       * <code>string deviceId = 8;</code>
+       */
+      public java.lang.String getDeviceId() {
+        java.lang.Object ref = deviceId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          deviceId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string deviceId = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDeviceIdBytes() {
+        java.lang.Object ref = deviceId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          deviceId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string deviceId = 8;</code>
+       */
+      public Builder setDeviceId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        deviceId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string deviceId = 8;</code>
+       */
+      public Builder clearDeviceId() {
+        
+        deviceId_ = getDefaultInstance().getDeviceId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string deviceId = 8;</code>
+       */
+      public Builder setDeviceIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        deviceId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object appId_ = "";
+      /**
+       * <code>string appId = 9;</code>
+       */
+      public java.lang.String getAppId() {
+        java.lang.Object ref = appId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          appId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string appId = 9;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAppIdBytes() {
+        java.lang.Object ref = appId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          appId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string appId = 9;</code>
+       */
+      public Builder setAppId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        appId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string appId = 9;</code>
+       */
+      public Builder clearAppId() {
+        
+        appId_ = getDefaultInstance().getAppId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string appId = 9;</code>
+       */
+      public Builder setAppIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        appId_ = value;
         onChanged();
         return this;
       }
@@ -8741,7 +9196,7 @@ public final class Messages {
       "\022\024\n\014randomPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022" +
       "\016\n\006anchor\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005" +
       "claim\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\">\n\rPr" +
-      "otoMessage0\022\022\n\nattesterId\030\001 \001(\005\022\031\n\021attes" +
+      "otoMessage0\022\022\n\nattesterId\030\001 \001(\t\022\031\n\021attes" +
       "terPubSesKey\030\002 \001(\014\"\210\001\n\rProtoMessage1\022\031\n\021" +
       "verifierPubSesKey\030\001 \001(\014\022\026\n\016verifierPubKe" +
       "y\030\002 \001(\014\0227\n\024signatureSessionKeys\030\003 \001(\0132\031." +
@@ -8764,21 +9219,23 @@ public final class Messages {
       ".MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005value\030\003 \001(" +
       "\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOperation\022\013\n\007MA" +
       "P_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP_GET\020\002\022\014\n\010" +
-      "MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\230\003\n\014ProxyMessage" +
+      "MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\342\003\n\014ProxyMessage" +
       "\0226\n\toperation\030\001 \001(\0162#.sire.protos.ProxyM" +
       "essage.Operation\022,\n\010evidence\030\002 \001(\0132\032.sir" +
       "e.protos.ProtoEvidence\022,\n\tsignature\030\003 \001(" +
       "\0132\031.sire.protos.ProtoSchnorr\022\022\n\ndataToSi" +
-      "gn\030\004 \001(\014\022\013\n\003key\030\005 \001(\014\022\r\n\005value\030\006 \001(\014\022\017\n\007" +
-      "oldData\030\007 \001(\014\"\262\001\n\tOperation\022\030\n\024GENERATE_" +
-      "SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIG" +
-      "N_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RANDOM_NUM" +
-      "BER\020\004\022\013\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MA" +
-      "P_GET\020\007\022\014\n\010MAP_LIST\020\010\022\013\n\007MAP_CAS\020\t\"\216\001\n\rP" +
-      "roxyResponse\0225\n\004type\030\001 \001(\0162\'.sire.protos" +
-      ".ProxyResponse.ResponseType\022\014\n\004list\030\002 \003(" +
-      "\014\022\r\n\005value\030\003 \001(\014\")\n\014ResponseType\022\013\n\007MAP_" +
-      "GET\020\000\022\014\n\010MAP_LIST\020\001b\006proto3"
+      "gn\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value\030\006 \001(\014\022\017\n\007" +
+      "oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(\t\022\r\n\005appId" +
+      "\030\t \001(\t\"\333\001\n\tOperation\022\030\n\024GENERATE_SIGNING" +
+      "_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIGN_DATA\020" +
+      "\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RANDOM_NUMBER\020\004\022\013" +
+      "\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MAP_GET\020\007" +
+      "\022\014\n\010MAP_LIST\020\010\022\013\n\007MAP_CAS\020\t\022\010\n\004JOIN\020\n\022\t\n" +
+      "\005LEAVE\020\013\022\010\n\004PING\020\014\022\010\n\004VIEW\020\r\"\216\001\n\rProxyRe" +
+      "sponse\0225\n\004type\030\001 \001(\0162\'.sire.protos.Proxy" +
+      "Response.ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005v" +
+      "alue\030\003 \001(\014\")\n\014ResponseType\022\013\n\007MAP_GET\020\000\022" +
+      "\014\n\010MAP_LIST\020\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -8845,7 +9302,7 @@ public final class Messages {
     internal_static_sire_protos_ProxyMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_protos_ProxyMessage_descriptor,
-        new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", "Key", "Value", "OldData", });
+        new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", "Key", "Value", "OldData", "DeviceId", "AppId", });
     internal_static_sire_protos_ProxyResponse_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_sire_protos_ProxyResponse_fieldAccessorTable = new

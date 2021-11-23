@@ -1,19 +1,20 @@
 package sire.dummy;
 
 import org.bouncycastle.math.ec.ECPoint;
+import sire.interfaces.OperationalInterface;
 import sire.protos.Messages.*;
 import sire.messages.Message0;
 import sire.messages.Message1;
 import sire.messages.Message2;
 import sire.messages.Message3;
-import static sire.utils.protoUtils.*;
+import static sire.utils.ProtoUtils.*;
 
 import sire.proxy.*;
 import com.google.protobuf.ByteString;
-import sire.schnorr.SchnorrSignature;
+import sire.serverProxyUtils.AppContext;
+import sire.serverProxyUtils.SireException;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -32,13 +33,13 @@ public class DummyAttester {
 
     //TODO turn attesterId into hash of Ga
     //TODO add sockets?
-    public Message1 sendMessage0(int attesterId, Message0 message0) throws SireException, IOException {
+    public Message1 join(String appId, String attesterId, Message0 message0) throws SireException, IOException {
         ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
                 .setAttesterId(message0.getAttesterId())
                 .setAttesterPubSesKey(ByteString.copyFrom(message0.getEncodedAttesterSessionPublicKey()))
                 .build();
 
-        ProtoMessage1 msg1 = proxy.processMessage0(msg0);
+        ProtoMessage1 msg1 = proxy.join(appId, attesterId, msg0);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Message1 result = new Message1(byteStringToByteArray(out, msg1.getVerifierPubSesKey()),
@@ -52,7 +53,7 @@ public class DummyAttester {
 
     //TODO turn attesterId into hash of Ga
     //TODO add sockets?
-    public Message3 sendMessage2(int attesterId, Message2 message2) throws SireException, IOException {
+    public Message3 sendMessage2(String attesterId, Message2 message2) throws SireException, IOException {
         ProtoMessage2 msg2 = ProtoMessage2.newBuilder()
                 .setAttesterPubSesKey(ByteString.copyFrom(message2.getEncodedAttesterSessionPublicKey()))
                 .setEvidence(evidenceToProto(message2.getEvidence()))
@@ -80,27 +81,39 @@ public class DummyAttester {
 
 
 
-    public void put(byte[] key, byte[] value) {
+    public void put(String key, Object value) {
         proxy.put(key, value);
     }
 
 
-    public void delete(byte[] key) {
+    public void delete(String key) {
         proxy.delete(key);
     }
 
 
-    public byte[] getData(byte[] key) {
+    public Object getData(String key) {
         return proxy.getData(key);
     }
 
 
-    public List<byte[]> getList() {
+    public List<Object> getList() {
         return proxy.getList();
     }
 
 
-    public void cas(byte[] key, byte[] oldData, byte[] newData) {
+    public void cas(String key, Object oldData, Object newData) {
         proxy.cas(key, oldData, newData);
+    }
+
+    public void leave(String appId, String deviceId) {
+        this.proxy.leave(appId, deviceId);
+    }
+
+    public void ping(String appId, String deviceId) {
+        this.proxy.ping(appId, deviceId);
+    }
+
+    public AppContext getView(String appId) {
+        return this.proxy.getView(appId);
     }
 }

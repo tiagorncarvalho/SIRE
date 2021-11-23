@@ -2,13 +2,11 @@ package sire.utils;
 
 import com.google.protobuf.ByteString;
 import sire.protos.Messages;
-import sire.proxy.Evidence;
 import sire.schnorr.SchnorrSignature;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 
-public class protoUtils {
+public class ProtoUtils {
     public static Messages.ProtoSchnorr schnorrToProto(SchnorrSignature signature) {
         return Messages.ProtoSchnorr.newBuilder()
                 .setSigma(ByteString.copyFrom(signature.getSigma()))
@@ -47,5 +45,18 @@ public class protoUtils {
         bytestr.writeTo(out);
 
         return out.toByteArray();
+    }
+
+
+    public static byte[] serialize(Object obj) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(obj);
+        return out.toByteArray();
+    }
+    public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+        ObjectInputStream is = new ObjectInputStream(in);
+        return is.readObject();
     }
 }

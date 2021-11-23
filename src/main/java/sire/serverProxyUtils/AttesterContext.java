@@ -1,4 +1,4 @@
-package sire.proxy;
+package sire.serverProxyUtils;
 
 import org.bouncycastle.math.ec.ECPoint;
 
@@ -9,14 +9,14 @@ import java.math.BigInteger;
  * @author robin
  */
 public class AttesterContext {
-	private final int attesterId;
+	private final String attesterId;
 	private final ECPoint attesterSessionPublicKey;
 	private final BigInteger mySessionPrivateKey;
 	private final ECPoint mySessionPublicKey;
 	private final SecretKey symmetricEncryptionKey;
 	private final byte[] macKey;
 
-	public AttesterContext(int attesterId, BigInteger mySessionPrivateKey, ECPoint mySessionPublicKey,
+	public AttesterContext(String attesterId, BigInteger mySessionPrivateKey, ECPoint mySessionPublicKey,
 						   ECPoint attesterSessionPublicKey, SecretKey symmetricEncryptionKey, byte[] macKey) {
 		this.attesterId = attesterId;
 		this.attesterSessionPublicKey = attesterSessionPublicKey;
@@ -30,7 +30,7 @@ public class AttesterContext {
 		return mySessionPublicKey;
 	}
 
-	public int getAttesterId() {
+	public String getAttesterId() {
 		return attesterId;
 	}
 

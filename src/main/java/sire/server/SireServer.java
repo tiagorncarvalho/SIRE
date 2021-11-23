@@ -4,7 +4,6 @@ import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.core.messages.TOMMessage;
-import com.google.protobuf.InvalidProtocolBufferException;
 import confidential.ConfidentialMessage;
 import confidential.facade.server.ConfidentialSingleExecutable;
 import confidential.polynomial.DistributedPolynomialManager;
@@ -14,17 +13,14 @@ import confidential.polynomial.RandomPolynomialListener;
 import confidential.server.ConfidentialRecoverable;
 import confidential.statemanagement.ConfidentialSnapshot;
 import org.bouncycastle.math.ec.ECPoint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sire.DeviceEvidence;
-import sire.Operation;
 import sire.protos.Messages.*;
-import sire.proxy.Evidence;
-import sire.proxy.SireException;
+import sire.utils.Evidence;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
-import sire.utils.ByteArrayComparator;
+import sire.serverProxyUtils.AppContext;
+import sire.serverProxyUtils.DeviceContext;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.commitment.linear.LinearCommitments;
 import vss.secretsharing.Share;
@@ -34,11 +30,14 @@ import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static sire.utils.protoUtils.*;
+import static sire.utils.ProtoUtils.*;
 
 /**
  * @author robin
@@ -78,7 +77,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private final ECPoint dummyAttesterPublicKey;
 
 	//key value store for information concerning devices, applications and more
-	private Map<byte[], byte[]> storage;
+	private Map<String, Object> storage;
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {
@@ -94,7 +93,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		messageDigest = MessageDigest.getInstance("SHA256");
 		requests = new TreeMap<>();
 		data = new TreeMap<>();
-		storage = new TreeMap<>(new ByteArrayComparator());
+		storage = new TreeMap<>();
+		storage.put("sire_members", new TreeMap<String, AppContext>());
 		signingKeyRequests = new LinkedList<>();
 		signingRequestContexts = new TreeMap<>();
 		signingData = new TreeMap<>();
@@ -267,31 +267,32 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				case MAP_PUT -> {
 					lock.lock();
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					byte[] key = byteStringToByteArray(out, msg.getKey());
 					byte[] value = byteStringToByteArray(out, msg.getValue());
 					out.close();
-					storage.put(key, value);
-					lock.unlock();
+					if(msg.getKey().equals("sire_members")) {
+						Map.Entry<String, DeviceContext> temp = (Map.Entry<String, DeviceContext>) deserialize(value);
+
+						getAppContext(temp.getKey()).addDevice(temp.getValue().getDeviceId(), temp.getValue());
+						lock.unlock();
+					}
+					else {
+						storage.put(msg.getKey(), deserialize(value));
+						lock.unlock();
+					}
+
 					return new ConfidentialMessage();
 				}
 				case MAP_DELETE -> {
 					lock.lock();
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					byte[] key = byteStringToByteArray(out, msg.getKey());
-					out.close();
-					storage.remove(key);
+					storage.remove(msg.getKey());
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case MAP_GET -> {
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					byte[] key = byteStringToByteArray(out, msg.getKey());
-					out.close();
-					return new ConfidentialMessage(storage.get(key));
+					return new ConfidentialMessage(serialize(storage.get(msg.getKey())));
 				}
 				case MAP_LIST -> { //TODO return
-					ArrayList<byte[]> lista = new ArrayList<>(storage.values());
-
+					ArrayList<Object> lista = new ArrayList<>(storage.values());
 					ByteArrayOutputStream bout = new ByteArrayOutputStream();
 					ObjectOutputStream out = new ObjectOutputStream(bout);
 					out.writeObject(lista);
@@ -304,18 +305,45 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				case MAP_CAS -> {
 					lock.lock();
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					byte[] key = byteStringToByteArray(out, msg.getKey());
-					byte[] oldValue = byteStringToByteArray(out, msg.getOldData());
-					byte[] newValue = byteStringToByteArray(out, msg.getValue());
+					String key = msg.getKey();
+					Object oldValue = deserialize(byteStringToByteArray(out, msg.getOldData()));
+					Object newValue = deserialize(byteStringToByteArray(out, msg.getValue()));
 					out.close();
-					if(Arrays.equals(storage.get(key), oldValue)) {
+					if(storage.get(key).equals(oldValue)) {
 						storage.put(key, newValue);
 					}
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
+				case JOIN -> {
+					lock.lock();
+					if(!getMembership().containsKey(msg.getAppId()))
+						getMembership().put(msg.getAppId(), new AppContext(msg.getAppId()));
+
+					getAppContext(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
+							(new Timestamp(System.currentTimeMillis())).toInstant().truncatedTo(ChronoUnit.SECONDS))); //TODO
+					lock.unlock();
+					return new ConfidentialMessage();
+				}
+				case LEAVE -> {
+					lock.lock();
+					getAppContext(msg.getAppId()).removeDevice(msg.getDeviceId());
+					lock.unlock();
+					return new ConfidentialMessage();
+				}
+				case PING -> {
+					lock.lock();
+					getAppContext(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(),
+							(new Timestamp(System.currentTimeMillis())).toInstant().truncatedTo(ChronoUnit.SECONDS));
+					lock.unlock();
+					return new ConfidentialMessage();
+				}
+				case VIEW -> {
+					byte[] res = serialize(getAppContext(msg.getAppId()));
+					return new ConfidentialMessage(res);
+				}
 			}
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -555,5 +583,13 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		} catch (IOException | ClassCastException | ClassNotFoundException e) {
 //			logger.error("Error while installing snapshot", e);
 		}
+	}
+
+	private TreeMap<String, AppContext> getMembership() {
+		return (TreeMap<String, AppContext>) storage.get("sire_members");
+	}
+
+	private AppContext getAppContext(String appId) {
+		return getMembership().get(appId);
 	}
 }
