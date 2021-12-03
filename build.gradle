@@ -56,6 +56,7 @@ task localDeploy (dependsOn: installDist) {
     doLast {
         int[] replicas = new int[]{0, 1, 2, 3}
         int[] clients = new int[]{0}
+        int[] managers = new int[]{0}
         String dst = System.getProperty("user.home") + System.getProperty("file.separator") +
                 "Desktop" + System.getProperty("file.separator") +
                 project.name + System.getProperty("file.separator")
@@ -72,6 +73,13 @@ task localDeploy (dependsOn: installDist) {
 
         clients.each {
             def target = dst + System.getProperty("file.separator") + "cli${it}"
+            copy {
+                from "build/install/${project.name}"
+                into target
+            }
+        }
+        managers.each {
+            def target = dst + System.getProperty("file.separator") + "man${it}"
             copy {
                 from "build/install/${project.name}"
                 into target

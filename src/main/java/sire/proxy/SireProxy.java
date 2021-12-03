@@ -13,14 +13,18 @@ import sire.client.ServersResponseHandlerWithoutCombine;
 import sire.client.UncombinedConfidentialResponse;
 import static sire.utils.ProtoUtils.*;
 
-import sire.interfaces.MapInterface;
-import sire.interfaces.OperationalInterface;
+import sire.extensions.Extension;
+import sire.extensions.ExtensionType;
+import sire.api.ManagementInterface;
+import sire.api.MapInterface;
+import sire.api.OperationalInterface;
 import sire.protos.Messages.*;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.AppContext;
 import sire.serverProxyUtils.AttesterContext;
+import sire.serverProxyUtils.Policy;
 import sire.serverProxyUtils.SireException;
 import sire.utils.Evidence;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
@@ -43,7 +47,7 @@ import java.util.*;
 /**
  * @author robin
  */
-public class SireProxy implements MapInterface, OperationalInterface {
+public class SireProxy implements MapInterface, OperationalInterface, ManagementInterface {
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
 	private final MessageDigest messageDigest;
@@ -313,7 +317,7 @@ public class SireProxy implements MapInterface, OperationalInterface {
 	}
 
 	@Override
-	public void put(String key, Object value) {
+	public void put(String appId, String key, byte[] value) {
 		/*byte[] putRequest = new byte[key.length + value.length + 2];
 		putRequest[0] = (byte) Operation.MAP_PUT.ordinal();
 		byte[] mark = "/".getBytes();
@@ -324,23 +328,25 @@ public class SireProxy implements MapInterface, OperationalInterface {
 			ProxyMessage putRequest = ProxyMessage.newBuilder()
 					.setOperation(ProxyMessage.Operation.MAP_PUT)
 					.setKey(key)
-					.setValue(ByteString.copyFrom(serialize(value)))
+					.setAppId(appId)
+					.setValue(ByteString.copyFrom(value))
 					.build();
 
 			serviceProxy.invokeOrdered2(putRequest.toByteArray());
-		} catch (SecretSharingException | IOException e) {
+		} catch (SecretSharingException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void delete(String key) {
+	public void delete(String appId, String key) {
 		/*byte[] deleteRequest = new byte[key.length + 1];
 		deleteRequest[0] = (byte) Operation.MAP_DELETE.ordinal();
 		System.arraycopy(key, 0, deleteRequest, 1, key.length);*/
 		ProxyMessage deleteRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.MAP_DELETE)
 				.setKey(key)
+				.setAppId(appId)
 				.build();
 		try {
 			serviceProxy.invokeOrdered2(deleteRequest.toByteArray());
@@ -350,30 +356,32 @@ public class SireProxy implements MapInterface, OperationalInterface {
 	}
 
 	@Override
-	public Object getData(String key) {
+	public byte[] getData(String appId, String key) {
 		/*byte[] getRequest = new byte[key.length + 1];
 		getRequest[0] = (byte) Operation.MAP_GET.ordinal();
 		System.arraycopy(key, 0, getRequest, 1, key.length);*/
 		ProxyMessage getRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.MAP_GET)
 				.setKey(key)
+				.setAppId(appId)
 				.build();
 		try {
-			return deserialize(serviceProxy.invokeOrdered(getRequest.toByteArray()).getPainData());
-		} catch (SecretSharingException | IOException | ClassNotFoundException e) {
+			return serviceProxy.invokeOrdered(getRequest.toByteArray()).getPainData();
+		} catch (SecretSharingException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
 	@Override
-	public List<Object> getList() {
+	public List<byte[]> getList(String appId) {
 		ProxyMessage listRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.MAP_LIST)
+				.setAppId(appId)
 				.build();
 		try {
 			byte[] response = serviceProxy.invokeOrdered(listRequest.toByteArray()).getPainData();
-			List<Object> result = (ArrayList<Object>) deserialize(response);
+			List<byte[]> result = (ArrayList<byte[]>) deserialize(response);
 
 			return result;
 		} catch (Exception e) {
@@ -383,7 +391,7 @@ public class SireProxy implements MapInterface, OperationalInterface {
 	}
 
 	@Override
-	public void cas(String key, Object oldData, Object newData) {
+	public void cas(String appId, String key, byte[] oldData, byte[] newData) {
 		/*byte[] casRequest = new byte[key.length + oldData.length + newData.length + 1];
 		casRequest[0] = (byte) Operation.MAP_CAS.ordinal();
 		byte[] mark = "/".getBytes();
@@ -396,11 +404,12 @@ public class SireProxy implements MapInterface, OperationalInterface {
 			ProxyMessage casRequest = ProxyMessage.newBuilder()
 					.setOperation(ProxyMessage.Operation.MAP_CAS)
 					.setKey(key)
-					.setOldData(ByteString.copyFrom(serialize(oldData)))
-					.setValue(ByteString.copyFrom(serialize(newData)))
+					.setOldData(ByteString.copyFrom(oldData))
+					.setValue(ByteString.copyFrom(newData))
+					.setAppId(appId)
 					.build();
 			serviceProxy.invokeOrdered(casRequest.toByteArray());
-		} catch (SecretSharingException | IOException e) {
+		} catch (SecretSharingException e) {
 			e.printStackTrace();
 		}
 	}
@@ -463,5 +472,95 @@ public class SireProxy implements MapInterface, OperationalInterface {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public void addExtension(String appId, ExtensionType type, String key, String code) {
+		try {
+			ProxyMessage addExtRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.EXTENSION_ADD)
+					.setAppId(appId)
+					.setCode(code)
+					.setType(extTypeToProto(type))
+					.setKey(key)
+					.build();
+			serviceProxy.invokeOrdered(addExtRequest.toByteArray());
+		} catch (SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void removeExtension(String appId, ExtensionType type, String key) {
+		try {
+			ProxyMessage removeExtRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.EXTENSION_REMOVE)
+					.setAppId(appId)
+					.setType(extTypeToProto(type))
+					.setKey(key)
+					.build();
+			serviceProxy.invokeOrdered(removeExtRequest.toByteArray());
+		} catch (SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public Extension getExtension(String appId, ExtensionType type, String key) {
+		try {
+			ProxyMessage getExtRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.EXTENSION_GET)
+					.setAppId(appId)
+					.setType(extTypeToProto(type))
+					.setKey(key)
+					.build();
+			Response res = serviceProxy.invokeOrdered(getExtRequest.toByteArray());
+			return new Extension ((String) deserialize(res.getPainData()));
+		} catch (SecretSharingException | IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void setPolicy(String appId, String policy) {
+		try {
+			ProxyMessage addPolRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.POLICY_ADD)
+					.setAppId(appId)
+					.setPolicy(policy)
+					.build();
+			serviceProxy.invokeOrdered(addPolRequest.toByteArray());
+		} catch (SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void deletePolicy(String appId) {
+		try {
+			ProxyMessage removePolRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.POLICY_REMOVE)
+					.setAppId(appId)
+					.build();
+			serviceProxy.invokeOrdered(removePolRequest.toByteArray());
+		} catch (SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public Policy getPolicy(String appId) {
+		try {
+			ProxyMessage getPolRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.POLICY_GET)
+					.setAppId(appId)
+					.build();
+			Response res = serviceProxy.invokeOrdered(getPolRequest.toByteArray());
+			return (Policy) deserialize(res.getPainData());
+		} catch (SecretSharingException | IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

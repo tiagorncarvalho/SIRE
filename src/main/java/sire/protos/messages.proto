@@ -84,10 +84,16 @@ message ProxyMessage {
     MAP_CAS = 9;
     JOIN = 10;
     LEAVE = 11;
+    VIEW = 12;
     PING = 13;
-  }= 12;
-  VIEW
-      Operation operation = 1;
+    EXTENSION_ADD = 14;
+    EXTENSION_REMOVE = 15;
+    EXTENSION_GET = 16;
+    POLICY_ADD = 17;
+    POLICY_REMOVE = 18;
+    POLICY_GET = 19;
+  }
+  Operation operation = 1;
   ProtoEvidence evidence = 2;
   ProtoSchnorr signature = 3;
   bytes dataToSign = 4;
@@ -98,6 +104,22 @@ message ProxyMessage {
 
   string deviceId = 8;
   string appId = 9;
+
+  string code = 10;
+  enum ProtoExtType {
+    EXT_JOIN = 0;
+    EXT_LEAVE = 1;
+    EXT_PING = 2;
+    EXT_VIEW = 3;
+    EXT_PUT = 4;
+    EXT_DEL = 5;
+    EXT_GET = 6;
+    EXT_CAS = 7;
+    EXT_LIST = 8;
+  }
+  ProtoExtType type = 11;
+
+  string policy = 12;
 }
 
 message ProxyResponse {

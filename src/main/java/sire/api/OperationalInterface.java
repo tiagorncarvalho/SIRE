@@ -1,4 +1,4 @@
-package sire.interfaces;
+package sire.api;
 
 import sire.protos.Messages.ProtoMessage0;
 import sire.protos.Messages.ProtoMessage1;

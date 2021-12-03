@@ -2,13 +2,12 @@ package sire.serverProxyUtils;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.Instant;
 
 public class DeviceContext implements Serializable {
     private final String deviceId;
-    private Instant lastPing;
+    private Timestamp lastPing;
 
-    public DeviceContext(String deviceId, Instant lastPing) {
+    public DeviceContext(String deviceId, Timestamp lastPing) {
         this.deviceId = deviceId;
         this.lastPing = lastPing;
     }
@@ -17,11 +16,11 @@ public class DeviceContext implements Serializable {
         return deviceId;
     }
 
-    public Instant getLastPing() {
+    public Timestamp getLastPing() {
         return lastPing;
     }
 
-    public void setLastPing(Instant lastPing) {
+    public void setLastPing(Timestamp lastPing) {
         this.lastPing = lastPing;
     }
 

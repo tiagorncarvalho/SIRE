@@ -1,10 +1,15 @@
 package sire.extensions;
 
 public enum ExtensionType {
-    JOIN,
-    LEAVE,
-    PING,
-    VIEW;
+    EXT_JOIN,
+    EXT_LEAVE,
+    EXT_PING,
+    EXT_VIEW,
+    EXT_PUT,
+    EXT_DEL,
+    EXT_GET,
+    EXT_CAS,
+    EXT_LIST;
 
     public static ExtensionType[] values = values();
 

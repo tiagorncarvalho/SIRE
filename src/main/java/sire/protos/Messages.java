@@ -6659,6 +6659,35 @@ public final class Messages {
      */
     com.google.protobuf.ByteString
         getAppIdBytes();
+
+    /**
+     * <code>string code = 10;</code>
+     */
+    java.lang.String getCode();
+    /**
+     * <code>string code = 10;</code>
+     */
+    com.google.protobuf.ByteString
+        getCodeBytes();
+
+    /**
+     * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
+     */
+    int getTypeValue();
+    /**
+     * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
+     */
+    sire.protos.Messages.ProxyMessage.ProtoExtType getType();
+
+    /**
+     * <code>string policy = 12;</code>
+     */
+    java.lang.String getPolicy();
+    /**
+     * <code>string policy = 12;</code>
+     */
+    com.google.protobuf.ByteString
+        getPolicyBytes();
   }
   /**
    * Protobuf type {@code sire.protos.ProxyMessage}
@@ -6680,6 +6709,9 @@ public final class Messages {
       oldData_ = com.google.protobuf.ByteString.EMPTY;
       deviceId_ = "";
       appId_ = "";
+      code_ = "";
+      type_ = 0;
+      policy_ = "";
     }
 
     @java.lang.Override
@@ -6771,6 +6803,24 @@ public final class Messages {
               appId_ = s;
               break;
             }
+            case 82: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              code_ = s;
+              break;
+            }
+            case 88: {
+              int rawValue = input.readEnum();
+
+              type_ = rawValue;
+              break;
+            }
+            case 98: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              policy_ = s;
+              break;
+            }
             default: {
               if (!parseUnknownFieldProto3(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -6857,13 +6907,37 @@ public final class Messages {
        */
       LEAVE(11),
       /**
-       * <code>PING = 12;</code>
+       * <code>VIEW = 12;</code>
        */
-      PING(12),
+      VIEW(12),
       /**
-       * <code>VIEW = 13;</code>
+       * <code>PING = 13;</code>
        */
-      VIEW(13),
+      PING(13),
+      /**
+       * <code>EXTENSION_ADD = 14;</code>
+       */
+      EXTENSION_ADD(14),
+      /**
+       * <code>EXTENSION_REMOVE = 15;</code>
+       */
+      EXTENSION_REMOVE(15),
+      /**
+       * <code>EXTENSION_GET = 16;</code>
+       */
+      EXTENSION_GET(16),
+      /**
+       * <code>POLICY_ADD = 17;</code>
+       */
+      POLICY_ADD(17),
+      /**
+       * <code>POLICY_REMOVE = 18;</code>
+       */
+      POLICY_REMOVE(18),
+      /**
+       * <code>POLICY_GET = 19;</code>
+       */
+      POLICY_GET(19),
       UNRECOGNIZED(-1),
       ;
 
@@ -6916,13 +6990,37 @@ public final class Messages {
        */
       public static final int LEAVE_VALUE = 11;
       /**
-       * <code>PING = 12;</code>
+       * <code>VIEW = 12;</code>
        */
-      public static final int PING_VALUE = 12;
+      public static final int VIEW_VALUE = 12;
       /**
-       * <code>VIEW = 13;</code>
+       * <code>PING = 13;</code>
        */
-      public static final int VIEW_VALUE = 13;
+      public static final int PING_VALUE = 13;
+      /**
+       * <code>EXTENSION_ADD = 14;</code>
+       */
+      public static final int EXTENSION_ADD_VALUE = 14;
+      /**
+       * <code>EXTENSION_REMOVE = 15;</code>
+       */
+      public static final int EXTENSION_REMOVE_VALUE = 15;
+      /**
+       * <code>EXTENSION_GET = 16;</code>
+       */
+      public static final int EXTENSION_GET_VALUE = 16;
+      /**
+       * <code>POLICY_ADD = 17;</code>
+       */
+      public static final int POLICY_ADD_VALUE = 17;
+      /**
+       * <code>POLICY_REMOVE = 18;</code>
+       */
+      public static final int POLICY_REMOVE_VALUE = 18;
+      /**
+       * <code>POLICY_GET = 19;</code>
+       */
+      public static final int POLICY_GET_VALUE = 19;
 
 
       public final int getNumber() {
@@ -6955,8 +7053,14 @@ public final class Messages {
           case 9: return MAP_CAS;
           case 10: return JOIN;
           case 11: return LEAVE;
-          case 12: return PING;
-          case 13: return VIEW;
+          case 12: return VIEW;
+          case 13: return PING;
+          case 14: return EXTENSION_ADD;
+          case 15: return EXTENSION_REMOVE;
+          case 16: return EXTENSION_GET;
+          case 17: return POLICY_ADD;
+          case 18: return POLICY_REMOVE;
+          case 19: return POLICY_GET;
           default: return null;
         }
       }
@@ -7007,6 +7111,167 @@ public final class Messages {
       }
 
       // @@protoc_insertion_point(enum_scope:sire.protos.ProxyMessage.Operation)
+    }
+
+    /**
+     * Protobuf enum {@code sire.protos.ProxyMessage.ProtoExtType}
+     */
+    public enum ProtoExtType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>EXT_JOIN = 0;</code>
+       */
+      EXT_JOIN(0),
+      /**
+       * <code>EXT_LEAVE = 1;</code>
+       */
+      EXT_LEAVE(1),
+      /**
+       * <code>EXT_PING = 2;</code>
+       */
+      EXT_PING(2),
+      /**
+       * <code>EXT_VIEW = 3;</code>
+       */
+      EXT_VIEW(3),
+      /**
+       * <code>EXT_PUT = 4;</code>
+       */
+      EXT_PUT(4),
+      /**
+       * <code>EXT_DEL = 5;</code>
+       */
+      EXT_DEL(5),
+      /**
+       * <code>EXT_GET = 6;</code>
+       */
+      EXT_GET(6),
+      /**
+       * <code>EXT_CAS = 7;</code>
+       */
+      EXT_CAS(7),
+      /**
+       * <code>EXT_LIST = 8;</code>
+       */
+      EXT_LIST(8),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <code>EXT_JOIN = 0;</code>
+       */
+      public static final int EXT_JOIN_VALUE = 0;
+      /**
+       * <code>EXT_LEAVE = 1;</code>
+       */
+      public static final int EXT_LEAVE_VALUE = 1;
+      /**
+       * <code>EXT_PING = 2;</code>
+       */
+      public static final int EXT_PING_VALUE = 2;
+      /**
+       * <code>EXT_VIEW = 3;</code>
+       */
+      public static final int EXT_VIEW_VALUE = 3;
+      /**
+       * <code>EXT_PUT = 4;</code>
+       */
+      public static final int EXT_PUT_VALUE = 4;
+      /**
+       * <code>EXT_DEL = 5;</code>
+       */
+      public static final int EXT_DEL_VALUE = 5;
+      /**
+       * <code>EXT_GET = 6;</code>
+       */
+      public static final int EXT_GET_VALUE = 6;
+      /**
+       * <code>EXT_CAS = 7;</code>
+       */
+      public static final int EXT_CAS_VALUE = 7;
+      /**
+       * <code>EXT_LIST = 8;</code>
+       */
+      public static final int EXT_LIST_VALUE = 8;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static ProtoExtType valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static ProtoExtType forNumber(int value) {
+        switch (value) {
+          case 0: return EXT_JOIN;
+          case 1: return EXT_LEAVE;
+          case 2: return EXT_PING;
+          case 3: return EXT_VIEW;
+          case 4: return EXT_PUT;
+          case 5: return EXT_DEL;
+          case 6: return EXT_GET;
+          case 7: return EXT_CAS;
+          case 8: return EXT_LIST;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<ProtoExtType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          ProtoExtType> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<ProtoExtType>() {
+              public ProtoExtType findValueByNumber(int number) {
+                return ProtoExtType.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return sire.protos.Messages.ProxyMessage.getDescriptor().getEnumTypes().get(1);
+      }
+
+      private static final ProtoExtType[] VALUES = values();
+
+      public static ProtoExtType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private ProtoExtType(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:sire.protos.ProxyMessage.ProtoExtType)
     }
 
     public static final int OPERATION_FIELD_NUMBER = 1;
@@ -7201,6 +7466,91 @@ public final class Messages {
       }
     }
 
+    public static final int CODE_FIELD_NUMBER = 10;
+    private volatile java.lang.Object code_;
+    /**
+     * <code>string code = 10;</code>
+     */
+    public java.lang.String getCode() {
+      java.lang.Object ref = code_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        code_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string code = 10;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCodeBytes() {
+      java.lang.Object ref = code_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        code_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int TYPE_FIELD_NUMBER = 11;
+    private int type_;
+    /**
+     * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
+     */
+    public int getTypeValue() {
+      return type_;
+    }
+    /**
+     * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
+     */
+    public sire.protos.Messages.ProxyMessage.ProtoExtType getType() {
+      @SuppressWarnings("deprecation")
+      sire.protos.Messages.ProxyMessage.ProtoExtType result = sire.protos.Messages.ProxyMessage.ProtoExtType.valueOf(type_);
+      return result == null ? sire.protos.Messages.ProxyMessage.ProtoExtType.UNRECOGNIZED : result;
+    }
+
+    public static final int POLICY_FIELD_NUMBER = 12;
+    private volatile java.lang.Object policy_;
+    /**
+     * <code>string policy = 12;</code>
+     */
+    public java.lang.String getPolicy() {
+      java.lang.Object ref = policy_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        policy_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string policy = 12;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPolicyBytes() {
+      java.lang.Object ref = policy_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        policy_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -7241,6 +7591,15 @@ public final class Messages {
       }
       if (!getAppIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 9, appId_);
+      }
+      if (!getCodeBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, code_);
+      }
+      if (type_ != sire.protos.Messages.ProxyMessage.ProtoExtType.EXT_JOIN.getNumber()) {
+        output.writeEnum(11, type_);
+      }
+      if (!getPolicyBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 12, policy_);
       }
       unknownFields.writeTo(output);
     }
@@ -7284,6 +7643,16 @@ public final class Messages {
       if (!getAppIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, appId_);
       }
+      if (!getCodeBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, code_);
+      }
+      if (type_ != sire.protos.Messages.ProxyMessage.ProtoExtType.EXT_JOIN.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(11, type_);
+      }
+      if (!getPolicyBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, policy_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -7323,6 +7692,11 @@ public final class Messages {
           .equals(other.getDeviceId());
       result = result && getAppId()
           .equals(other.getAppId());
+      result = result && getCode()
+          .equals(other.getCode());
+      result = result && type_ == other.type_;
+      result = result && getPolicy()
+          .equals(other.getPolicy());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -7356,6 +7730,12 @@ public final class Messages {
       hash = (53 * hash) + getDeviceId().hashCode();
       hash = (37 * hash) + APPID_FIELD_NUMBER;
       hash = (53 * hash) + getAppId().hashCode();
+      hash = (37 * hash) + CODE_FIELD_NUMBER;
+      hash = (53 * hash) + getCode().hashCode();
+      hash = (37 * hash) + TYPE_FIELD_NUMBER;
+      hash = (53 * hash) + type_;
+      hash = (37 * hash) + POLICY_FIELD_NUMBER;
+      hash = (53 * hash) + getPolicy().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -7515,6 +7895,12 @@ public final class Messages {
 
         appId_ = "";
 
+        code_ = "";
+
+        type_ = 0;
+
+        policy_ = "";
+
         return this;
       }
 
@@ -7558,6 +7944,9 @@ public final class Messages {
         result.oldData_ = oldData_;
         result.deviceId_ = deviceId_;
         result.appId_ = appId_;
+        result.code_ = code_;
+        result.type_ = type_;
+        result.policy_ = policy_;
         onBuilt();
         return result;
       }
@@ -7634,6 +8023,17 @@ public final class Messages {
         }
         if (!other.getAppId().isEmpty()) {
           appId_ = other.appId_;
+          onChanged();
+        }
+        if (!other.getCode().isEmpty()) {
+          code_ = other.code_;
+          onChanged();
+        }
+        if (other.type_ != 0) {
+          setTypeValue(other.getTypeValue());
+        }
+        if (!other.getPolicy().isEmpty()) {
+          policy_ = other.policy_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -8246,6 +8646,189 @@ public final class Messages {
   checkByteStringIsUtf8(value);
         
         appId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object code_ = "";
+      /**
+       * <code>string code = 10;</code>
+       */
+      public java.lang.String getCode() {
+        java.lang.Object ref = code_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          code_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string code = 10;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCodeBytes() {
+        java.lang.Object ref = code_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          code_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string code = 10;</code>
+       */
+      public Builder setCode(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        code_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string code = 10;</code>
+       */
+      public Builder clearCode() {
+        
+        code_ = getDefaultInstance().getCode();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string code = 10;</code>
+       */
+      public Builder setCodeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        code_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int type_ = 0;
+      /**
+       * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
+       */
+      public int getTypeValue() {
+        return type_;
+      }
+      /**
+       * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
+       */
+      public Builder setTypeValue(int value) {
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
+       */
+      public sire.protos.Messages.ProxyMessage.ProtoExtType getType() {
+        @SuppressWarnings("deprecation")
+        sire.protos.Messages.ProxyMessage.ProtoExtType result = sire.protos.Messages.ProxyMessage.ProtoExtType.valueOf(type_);
+        return result == null ? sire.protos.Messages.ProxyMessage.ProtoExtType.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
+       */
+      public Builder setType(sire.protos.Messages.ProxyMessage.ProtoExtType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        type_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
+       */
+      public Builder clearType() {
+        
+        type_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object policy_ = "";
+      /**
+       * <code>string policy = 12;</code>
+       */
+      public java.lang.String getPolicy() {
+        java.lang.Object ref = policy_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          policy_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string policy = 12;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPolicyBytes() {
+        java.lang.Object ref = policy_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          policy_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string policy = 12;</code>
+       */
+      public Builder setPolicy(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        policy_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string policy = 12;</code>
+       */
+      public Builder clearPolicy() {
+        
+        policy_ = getDefaultInstance().getPolicy();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string policy = 12;</code>
+       */
+      public Builder setPolicyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        policy_ = value;
         onChanged();
         return this;
       }
@@ -9219,23 +9802,31 @@ public final class Messages {
       ".MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005value\030\003 \001(" +
       "\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOperation\022\013\n\007MA" +
       "P_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP_GET\020\002\022\014\n\010" +
-      "MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\342\003\n\014ProxyMessage" +
+      "MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\261\006\n\014ProxyMessage" +
       "\0226\n\toperation\030\001 \001(\0162#.sire.protos.ProxyM" +
       "essage.Operation\022,\n\010evidence\030\002 \001(\0132\032.sir" +
       "e.protos.ProtoEvidence\022,\n\tsignature\030\003 \001(" +
       "\0132\031.sire.protos.ProtoSchnorr\022\022\n\ndataToSi" +
       "gn\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value\030\006 \001(\014\022\017\n\007" +
       "oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(\t\022\r\n\005appId" +
-      "\030\t \001(\t\"\333\001\n\tOperation\022\030\n\024GENERATE_SIGNING" +
-      "_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIGN_DATA\020" +
-      "\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RANDOM_NUMBER\020\004\022\013" +
-      "\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MAP_GET\020\007" +
-      "\022\014\n\010MAP_LIST\020\010\022\013\n\007MAP_CAS\020\t\022\010\n\004JOIN\020\n\022\t\n" +
-      "\005LEAVE\020\013\022\010\n\004PING\020\014\022\010\n\004VIEW\020\r\"\216\001\n\rProxyRe" +
-      "sponse\0225\n\004type\030\001 \001(\0162\'.sire.protos.Proxy" +
-      "Response.ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005v" +
-      "alue\030\003 \001(\014\")\n\014ResponseType\022\013\n\007MAP_GET\020\000\022" +
-      "\014\n\010MAP_LIST\020\001b\006proto3"
+      "\030\t \001(\t\022\014\n\004code\030\n \001(\t\0224\n\004type\030\013 \001(\0162&.sir" +
+      "e.protos.ProxyMessage.ProtoExtType\022\016\n\006po" +
+      "licy\030\014 \001(\t\"\312\002\n\tOperation\022\030\n\024GENERATE_SIG" +
+      "NING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIGN_D" +
+      "ATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RANDOM_NUMBER" +
+      "\020\004\022\013\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MAP_G" +
+      "ET\020\007\022\014\n\010MAP_LIST\020\010\022\013\n\007MAP_CAS\020\t\022\010\n\004JOIN\020" +
+      "\n\022\t\n\005LEAVE\020\013\022\010\n\004VIEW\020\014\022\010\n\004PING\020\r\022\021\n\rEXTE" +
+      "NSION_ADD\020\016\022\024\n\020EXTENSION_REMOVE\020\017\022\021\n\rEXT" +
+      "ENSION_GET\020\020\022\016\n\nPOLICY_ADD\020\021\022\021\n\rPOLICY_R" +
+      "EMOVE\020\022\022\016\n\nPOLICY_GET\020\023\"\211\001\n\014ProtoExtType" +
+      "\022\014\n\010EXT_JOIN\020\000\022\r\n\tEXT_LEAVE\020\001\022\014\n\010EXT_PIN" +
+      "G\020\002\022\014\n\010EXT_VIEW\020\003\022\013\n\007EXT_PUT\020\004\022\013\n\007EXT_DE" +
+      "L\020\005\022\013\n\007EXT_GET\020\006\022\013\n\007EXT_CAS\020\007\022\014\n\010EXT_LIS" +
+      "T\020\010\"\216\001\n\rProxyResponse\0225\n\004type\030\001 \001(\0162\'.si" +
+      "re.protos.ProxyResponse.ResponseType\022\014\n\004" +
+      "list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\")\n\014ResponseTyp" +
+      "e\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -9302,7 +9893,7 @@ public final class Messages {
     internal_static_sire_protos_ProxyMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_protos_ProxyMessage_descriptor,
-        new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", "Key", "Value", "OldData", "DeviceId", "AppId", });
+        new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", "Key", "Value", "OldData", "DeviceId", "AppId", "Code", "Type", "Policy", });
     internal_static_sire_protos_ProxyResponse_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_sire_protos_ProxyResponse_fieldAccessorTable = new

@@ -25,6 +25,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
 
+import static sire.utils.ProtoUtils.deserialize;
+import static sire.utils.ProtoUtils.serialize;
+
 /**
  * @author robin
  */
@@ -147,38 +150,39 @@ public class Attester {
 			ExampleObject newValue = new ExampleObject("exampleNewValue");
 
 			System.out.println("Putting entry: " + key + " " + value.getValue());
-			dummy.put(key, value);
-			Object aberration = dummy.getData(key);
-			ExampleObject nonAberration = (ExampleObject) aberration;
-			System.out.println("Getting entry: " + key + " Value: " + nonAberration.getValue());
+			dummy.put(appId, key, serialize(value));
+			ExampleObject test = (ExampleObject) deserialize(serialize(value));
+			System.out.println("Test: " + test.getValue());
+			ExampleObject aberration = (ExampleObject) deserialize(dummy.getData(appId, key));
+			System.out.println("Getting entry: " + key + " Value: " + aberration.getValue());
 
 			System.out.println("Putting entry: " + key2 + " " + value2.getValue());
-			dummy.put(key2, value2);
-			System.out.println("Getting all entries: " + Arrays.toString(dummy.getList().toArray()));
+			dummy.put(appId, key2, serialize(value2));
+			System.out.println("Getting all entries: " + Arrays.toString(dummy.getList(appId).toArray()));
 
 			System.out.println("Delete entry: " + key2);
-			dummy.delete(key2);
+			dummy.delete(appId, key2);
 
 			System.out.print("Getting entry: " + key2 + " Value: ");
-			Object arr = dummy.getData(key2);
+			Object arr = dummy.getData(appId, key2);
 			if(arr == null)
 				System.out.println("null");
 			else
 				System.out.println((String) arr);
 
 			System.out.println("Cas, key: " + key + " oldValue: " + value.getValue() + " newValue: " + newValue.getValue());
-			dummy.cas(key, value, newValue);
+			dummy.cas(appId, key, serialize(value), serialize(newValue));
 
-			Object result = dummy.getData(key);
+			ExampleObject result = (ExampleObject) deserialize(dummy.getData(appId, key));
 
-			System.out.println("Getting entry: " + key + " Value: " + ((ExampleObject) result).getValue());
+			System.out.println("Getting entry: " + key + " Value: " + result.getValue());
 
 			System.out.println(dummy.getView(appId).toString());
 			dummy.ping(appId, attesterId);
 			System.out.println(dummy.getView(appId).toString());
 			dummy.leave(appId, attesterId);
 			System.out.println(dummy.getView(appId).toString());
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 			dummy.close();

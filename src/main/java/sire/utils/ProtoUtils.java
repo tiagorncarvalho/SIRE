@@ -1,7 +1,9 @@
 package sire.utils;
 
 import com.google.protobuf.ByteString;
+import sire.extensions.ExtensionType;
 import sire.protos.Messages;
+import sire.protos.Messages.ProxyMessage.ProtoExtType;
 import sire.schnorr.SchnorrSignature;
 
 import java.io.*;
@@ -58,5 +60,71 @@ public class ProtoUtils {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);
         return is.readObject();
+    }
+
+    public static ProtoExtType extTypeToProto (ExtensionType type) {
+        switch(type) {
+            case EXT_JOIN -> {
+                return ProtoExtType.EXT_JOIN;
+            }
+            case EXT_LEAVE -> {
+                return ProtoExtType.EXT_LEAVE;
+            }
+            case EXT_PING -> {
+                return ProtoExtType.EXT_PING;
+            }
+            case EXT_VIEW -> {
+                return ProtoExtType.EXT_VIEW;
+            }
+            case EXT_PUT -> {
+                return ProtoExtType.EXT_PUT;
+            }
+            case EXT_DEL -> {
+                return ProtoExtType.EXT_DEL;
+            }
+            case EXT_GET -> {
+                return ProtoExtType.EXT_GET;
+            }
+            case EXT_CAS -> {
+                return ProtoExtType.EXT_CAS;
+            }
+            case EXT_LIST -> {
+                return ProtoExtType.EXT_LIST;
+            }
+        }
+        return null;
+    }
+
+    public static ExtensionType protoToExtType (ProtoExtType type) {
+        switch(type) {
+            case EXT_JOIN -> {
+                return ExtensionType.EXT_JOIN;
+            }
+            case EXT_LEAVE -> {
+                return ExtensionType.EXT_LEAVE;
+            }
+            case EXT_PING -> {
+                return ExtensionType.EXT_PING;
+            }
+            case EXT_VIEW -> {
+                return ExtensionType.EXT_VIEW;
+            }
+            case EXT_PUT -> {
+                return ExtensionType.EXT_PUT;
+            }
+            case EXT_DEL -> {
+                return ExtensionType.EXT_DEL;
+            }
+            case EXT_GET -> {
+                return ExtensionType.EXT_GET;
+            }
+            case EXT_CAS -> {
+                return ExtensionType.EXT_CAS;
+            }
+            case EXT_LIST -> {
+                return ExtensionType.EXT_LIST;
+            }
+        }
+        return null;
     }
 }

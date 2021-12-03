@@ -12,12 +12,11 @@ import confidential.polynomial.RandomPolynomialContext;
 import confidential.polynomial.RandomPolynomialListener;
 import confidential.server.ConfidentialRecoverable;
 import confidential.statemanagement.ConfidentialSnapshot;
-import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.DeviceEvidence;
-import sire.extensions.Extension;
+import sire.extensions.ExtensionManager;
 import sire.extensions.ExtensionType;
 import sire.protos.Messages.*;
 import sire.utils.Evidence;
@@ -31,13 +30,11 @@ import vss.commitment.linear.LinearCommitments;
 import vss.secretsharing.Share;
 import vss.secretsharing.VerifiableShare;
 
-import groovy.util.GroovyScriptEngine;
 import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -82,7 +79,13 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private final ECPoint dummyAttesterPublicKey;
 
 	//key value store for information concerning devices, applications and more
-	private Map<String, Object> storage;
+	private Map<String, byte[]> storage;
+
+	//key value store for membership state, key = appId
+	private Map<String, AppContext> membership;
+
+	//runs and stores extensions
+	private ExtensionManager extensionManager = new ExtensionManager();
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {
@@ -99,7 +102,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		requests = new TreeMap<>();
 		data = new TreeMap<>();
 		storage = new TreeMap<>();
-		storage.put("sire_members", new TreeMap<String, AppContext>());
+		//storage.put("sire_members", new TreeMap<String, AppContext>());
+		membership = new TreeMap<>();
 		signingKeyRequests = new LinkedList<>();
 		signingRequestContexts = new TreeMap<>();
 		signingData = new TreeMap<>();
@@ -274,16 +278,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					byte[] value = byteStringToByteArray(out, msg.getValue());
 					out.close();
-					if(msg.getKey().equals("sire_members")) {
-						Map.Entry<String, DeviceContext> temp = (Map.Entry<String, DeviceContext>) deserialize(value);
-
-						getAppContext(temp.getKey()).addDevice(temp.getValue().getDeviceId(), temp.getValue());
-						lock.unlock();
-					}
-					else {
-						storage.put(msg.getKey(), deserialize(value));
-						lock.unlock();
-					}
+					storage.put(msg.getKey(), value);
+					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PUT, msg.getKey());
+					lock.unlock();
 
 					return new ConfidentialMessage();
 				}
@@ -291,13 +288,15 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					lock.lock();
 					storage.remove(msg.getKey());
 					lock.unlock();
+					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_DEL, msg.getKey());
 					return new ConfidentialMessage();
 				}
 				case MAP_GET -> {
-					return new ConfidentialMessage(serialize(storage.get(msg.getKey())));
+					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey());
+					return new ConfidentialMessage(storage.get(msg.getKey()));
 				}
 				case MAP_LIST -> { //TODO return
-					ArrayList<Object> lista = new ArrayList<>(storage.values());
+					ArrayList<byte []> lista = new ArrayList<>(storage.values());
 					ByteArrayOutputStream bout = new ByteArrayOutputStream();
 					ObjectOutputStream out = new ObjectOutputStream(bout);
 					out.writeObject(lista);
@@ -305,62 +304,100 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					byte[] result = bout.toByteArray();
 					bout.close();
 
+					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LIST, "");
+
 					return new ConfidentialMessage(result);
 				}
 				case MAP_CAS -> {
 					lock.lock();
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					String key = msg.getKey();
-					Object oldValue = deserialize(byteStringToByteArray(out, msg.getOldData()));
-					Object newValue = deserialize(byteStringToByteArray(out, msg.getValue()));
+					byte[] oldValue = byteStringToByteArray(out, msg.getOldData());
+					byte[] newValue = byteStringToByteArray(out, msg.getValue());
 					out.close();
 					if(storage.get(key).equals(oldValue)) {
 						storage.put(key, newValue);
 					}
+					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_CAS, msg.getKey());
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case JOIN -> {
 					lock.lock();
-					if(!getMembership().containsKey(msg.getAppId()))
-						getMembership().put(msg.getAppId(), new AppContext(msg.getAppId()));
+					if(!membership.containsKey(msg.getAppId()))
+						membership.put(msg.getAppId(), new AppContext(msg.getAppId()));
 
-					getAppContext(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
-							(new Timestamp(System.currentTimeMillis())).toInstant().truncatedTo(ChronoUnit.SECONDS))); //TODO
-					getAppContext(msg.getAppId()).addExtension(ExtensionType.JOIN, new Extension("println \"Hello World!\""));
-					GroovyShell sh = new GroovyShell();
-					Script s = sh.parse(getExtension(msg.getAppId(), ExtensionType.JOIN));
-					s.run();
+					membership.get(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
+							new Timestamp(messageContext.getTimestamp())));
+
+					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_JOIN, msg.getDeviceId());
 
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case LEAVE -> {
 					lock.lock();
-					getAppContext(msg.getAppId()).removeDevice(msg.getDeviceId());
+					membership.get(msg.getAppId()).removeDevice(msg.getDeviceId());
+
+					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LEAVE, msg.getDeviceId());
+
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case PING -> {
 					lock.lock();
-					getAppContext(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(),
-							(new Timestamp(System.currentTimeMillis())).toInstant().truncatedTo(ChronoUnit.SECONDS)); //TODO
+					membership.get(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(),
+							new Timestamp(messageContext.getTimestamp())); //TODO
+
+					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PING, msg.getDeviceId());
+
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case VIEW -> {
-					byte[] res = serialize(getAppContext(msg.getAppId()));
+					byte[] res = serialize(membership.get(msg.getAppId()));
+
+					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_VIEW, "");
+
 					return new ConfidentialMessage(res); //TODO Add Proto
 				}
+
+				case EXTENSION_ADD -> {
+					lock.lock();
+					extensionManager.addExtension(msg.getAppId(), protoToExtType(msg.getType()), msg.getKey(), msg.getCode());
+					lock.unlock();
+					return new ConfidentialMessage();
+				}
+				case EXTENSION_REMOVE -> {
+					lock.lock();
+					extensionManager.removeExtension(msg.getAppId(), protoToExtType(msg.getType()), msg.getKey());
+					lock.unlock();
+					return new ConfidentialMessage();
+				}
+				case EXTENSION_GET -> {
+					String code = extensionManager.getExtension(msg.getAppId(), protoToExtType(msg.getType()), msg.getKey());
+					return new ConfidentialMessage(serialize(code));
+				}
+				case POLICY_ADD -> {
+					lock.lock();
+					membership.get(msg.getAppId()).setPolicy(msg.getPolicy());
+					lock.unlock();
+					return new ConfidentialMessage();
+				}
+				case POLICY_REMOVE -> {
+					lock.lock();
+					membership.get(msg.getAppId()).removePolicy();
+					lock.unlock();
+					return new ConfidentialMessage();
+				}
+				case POLICY_GET -> {
+					return new ConfidentialMessage(serialize(membership.get(msg.getAppId()).getPolicy()));
+				}
 			}
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	private String getExtension(String appId, ExtensionType type) {
-		return getAppContext(appId).getExtension(type).getCode();
 	}
 
 	private boolean isValidDeviceEvidence(DeviceEvidence deviceEvidence) {
@@ -597,13 +634,5 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		} catch (IOException | ClassCastException | ClassNotFoundException e) {
 //			logger.error("Error while installing snapshot", e);
 		}
-	}
-
-	private TreeMap<String, AppContext> getMembership() {
-		return (TreeMap<String, AppContext>) storage.get("sire_members");
-	}
-
-	private AppContext getAppContext(String appId) {
-		return getMembership().get(appId);
 	}
 }

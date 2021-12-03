@@ -1,7 +1,6 @@
 package sire.dummy;
 
 import org.bouncycastle.math.ec.ECPoint;
-import sire.interfaces.OperationalInterface;
 import sire.protos.Messages.*;
 import sire.messages.Message0;
 import sire.messages.Message1;
@@ -81,28 +80,28 @@ public class DummyAttester {
 
 
 
-    public void put(String key, Object value) {
-        proxy.put(key, value);
+    public void put(String appId, String key, byte[] value) {
+        proxy.put(appId, key, value);
     }
 
 
-    public void delete(String key) {
-        proxy.delete(key);
+    public void delete(String appId, String key) {
+        proxy.delete(appId, key);
     }
 
 
-    public Object getData(String key) {
-        return proxy.getData(key);
+    public byte[] getData(String appId, String key) {
+        return proxy.getData(appId, key);
     }
 
 
-    public List<Object> getList() {
-        return proxy.getList();
+    public List<byte[]> getList(String appId) {
+        return proxy.getList(appId);
     }
 
 
-    public void cas(String key, Object oldData, Object newData) {
-        proxy.cas(key, oldData, newData);
+    public void cas(String appId, String key, byte[] oldData, byte[] newData) {
+        proxy.cas(appId, key, oldData, newData);
     }
 
     public void leave(String appId, String deviceId) {

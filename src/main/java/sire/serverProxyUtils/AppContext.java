@@ -1,24 +1,17 @@
 package sire.serverProxyUtils;
 
-import sire.extensions.Extension;
-import sire.extensions.ExtensionType;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 public class AppContext implements Serializable {
     final String id;
     TreeMap<String, DeviceContext> devices;
-    HashMap<ExtensionType, Extension> extensions;
     Policy policy;
 
     public AppContext(String id) {
         this.id = id;
         this.devices = new TreeMap<>();
-        this.extensions = new HashMap<>();
     }
 
     public String getId() {
@@ -40,14 +33,10 @@ public class AppContext implements Serializable {
         this.devices.remove(deviceId);
     }
 
-    public void updateDeviceTimestamp(String deviceId, Instant timestamp) {
+    public void updateDeviceTimestamp(String deviceId, Timestamp timestamp) {
         DeviceContext temp = this.devices.get(deviceId);
         temp.setLastPing(timestamp);
         this.devices.put(deviceId, temp);
-    }
-
-    public void addExtension(ExtensionType type, Extension extension){
-        this.extensions.put(type, extension);
     }
 
     @Override
@@ -55,12 +44,19 @@ public class AppContext implements Serializable {
         return "AppContext{" +
                 "id='" + id + '\'' +
                 ", devices=" + devices +
-                ", extensions=" + extensions +
                 ", policy=" + policy +
                 '}';
     }
 
-    public Extension getExtension(ExtensionType type) {
-        return extensions.get(type);
+    public void setPolicy(String policy) {
+        this.policy.setPolicy(policy);
+    }
+
+    public void removePolicy() {
+        this.policy = null;
+    }
+
+    public Policy getPolicy() {
+        return policy;
     }
 }
