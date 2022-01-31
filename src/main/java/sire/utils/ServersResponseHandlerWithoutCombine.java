@@ -1,11 +1,10 @@
-package sire.client;
+package sire.utils;
 
 import bftsmart.tom.core.messages.TOMMessage;
 import bftsmart.tom.util.ExtractedResponse;
 import confidential.ConfidentialMessage;
 import confidential.client.ClientConfidentialityScheme;
 import confidential.client.ServersResponseHandler;
-import sire.client.UncombinedConfidentialResponse;
 import vss.secretsharing.VerifiableShare;
 
 import java.util.*;

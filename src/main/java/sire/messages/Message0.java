@@ -1,10 +1,12 @@
 package sire.messages;
 
-import sire.Utils;
+import sire.utils.ProtoUtils;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+
+import static sire.utils.ProtoUtils.writeByteArray;
 
 /**
  * @author robin
@@ -31,12 +33,12 @@ public class Message0 extends SireMessage {
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeBytes(attesterId);
-		Utils.writeByteArray(out, encodedAttesterSessionPublicKey);
+		ProtoUtils.writeByteArray(out, encodedAttesterSessionPublicKey);
 	}
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		attesterId = in.readLine();
-		encodedAttesterSessionPublicKey = Utils.readByteArray(in);
+		encodedAttesterSessionPublicKey = ProtoUtils.readByteArray(in);
 	}
 }

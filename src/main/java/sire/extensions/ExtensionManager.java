@@ -1,5 +1,6 @@
 package sire.extensions;
 
+import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 
@@ -8,21 +9,23 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ExtensionManager {
-    Map<String, String> extensions;
-
+    Map<String, Script> extensions;
+    GroovyShell sh;
     public ExtensionManager() {
+        this.sh = new GroovyShell();
         this.extensions = new TreeMap<>();
     }
 
     public void addExtension(String appId, ExtensionType type, String key, String code) {
-        this.extensions.put(appId + type.name() + key, code);
+        this.extensions.put(appId + type.name() + key, sh.parse(code));
+
     }
 
-    public String getExtension(String appId, ExtensionType type, String key) {
+    public Script getExtension(String appId, ExtensionType type, String key) {
         return extensions.get(appId + type.name() + key);
     }
 
-    public String getExtension(String appId, ExtensionType type) {
+    public Script getExtension(String appId, ExtensionType type) {
         return extensions.get(appId + type.name());
     }
 
@@ -42,9 +45,7 @@ public class ExtensionManager {
             return;
         }
         System.out.println("Running extension...");
-        GroovyShell sh = new GroovyShell();
-        Script s = sh.parse(extensions.get(temp));
-        s.run();
+        extensions.get(temp).run();
         System.out.println("Extension ran!");
     }
 

@@ -1,8 +1,8 @@
 package sire.messages;
 
-import sire.Utils;
 import sire.utils.Evidence;
 import sire.schnorr.SchnorrSignature;
+import sire.utils.ProtoUtils;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -45,19 +45,19 @@ public class Message2 extends SireMessage {
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
-		Utils.writeByteArray(out, encodedAttesterSessionPublicKey);
+		ProtoUtils.writeByteArray(out, encodedAttesterSessionPublicKey);
 		evidence.writeExternal(out);
 		evidenceSignature.writeExternal(out);
-		Utils.writeByteArray(out, mac);
+		ProtoUtils.writeByteArray(out, mac);
 	}
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException {
-		encodedAttesterSessionPublicKey = Utils.readByteArray(in);
+		encodedAttesterSessionPublicKey = ProtoUtils.readByteArray(in);
 		evidence = new Evidence();
 		evidence.readExternal(in);
 		evidenceSignature = new SchnorrSignature();
 		evidenceSignature.readExternal(in);
-		mac = Utils.readByteArray(in);
+		mac = ProtoUtils.readByteArray(in);
 	}
 }

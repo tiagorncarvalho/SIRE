@@ -1,4 +1,4 @@
-package sire.client;
+package sire.utils;
 
 import confidential.ConfidentialExtractedResponse;
 import vss.secretsharing.VerifiableShare;

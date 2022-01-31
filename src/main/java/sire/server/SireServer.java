@@ -12,10 +12,8 @@ import confidential.polynomial.RandomPolynomialContext;
 import confidential.polynomial.RandomPolynomialListener;
 import confidential.server.ConfidentialRecoverable;
 import confidential.statemanagement.ConfidentialSnapshot;
-import groovy.lang.GroovyShell;
-import groovy.lang.Script;
 import org.bouncycastle.math.ec.ECPoint;
-import sire.DeviceEvidence;
+import sire.serverProxyUtils.DeviceEvidence;
 import sire.extensions.ExtensionManager;
 import sire.extensions.ExtensionType;
 import sire.protos.Messages.*;
@@ -119,85 +117,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				-121, -76, -88, 44, -75});
 	}
 
-/*	@Override
-	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
-												 MessageContext messageContext) {
-		Operation op = Operation.getOperation(bytes[0]);
-//		logger.info("Received a {} request from {} in cid {}", op, messageContext.getSender(),
-//				messageContext.getConsensusId());
-		switch (op) {
-			case GENERATE_SIGNING_KEY -> {
-				try {
-					lock.lock();
-					if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
-						signingKeyRequests.add(messageContext);
-						generateSigningKey();
-					} else if (verifierSigningPrivateKeyShare != null) {
-//						logger.warn("I already have a signing key.");
-						return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
-					} else {
-//						logger.warn("Signing key is being created.");
-					}
-				} finally {
-					lock.unlock();
-				}
-			}
-			case GET_PUBLIC_KEY -> {
-				try {
-					lock.lock();
-					if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
-						signingKeyRequests.add(messageContext);
-						generateSigningKey();
-					} else if (verifierSigningPrivateKeyShare != null){
-						return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
-					}
-				} finally {
-					lock.unlock();
-				}
-			}
-			case SIGN_DATA -> {
-				lock.lock();
-				byte[] data = Arrays.copyOfRange(bytes, 1, bytes.length);
-				signingData.put(messageContext.getSender(), data);
-				generateRandomKey(messageContext);
-				lock.unlock();
-			}
-			case GET_RANDOM_NUMBER -> {
-				lock.lock();
-				VerifiableShare	share = data.get(messageContext.getSender());
-				if (share == null)
-					generateRandomNumberFor(messageContext);
-				else {
-//					logger.debug("Sending existing random number share to {}", messageContext.getSender());
-					sendRandomNumberShareTo(messageContext, share);
-				}
-				lock.unlock();
-			}
-			case GET_DATA -> {
-				byte[] requestData = new byte[bytes.length - 1];
-				System.arraycopy(bytes, 1, requestData, 0, requestData.length);
-				try {
-					DeviceEvidence deviceEvidence = DeviceEvidence.deserialize(requestData);
-					boolean isValidEvidence = isValidDeviceEvidence(deviceEvidence);
-					byte[] plainData;
-					if (isValidEvidence) {
-						plainData = new byte[dummyDataForAttester.length + 1];
-						plainData[0] = 1;
-						System.arraycopy(dummyDataForAttester, 0, plainData, 1,
-								dummyDataForAttester.length);
-					} else {
-						plainData = new byte[] {0};
-					}
-
-					return new ConfidentialMessage(plainData);
-				} catch (SireException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return null;
-	}*/
-
 	@Override
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
@@ -236,7 +155,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				}
 				case SIGN_DATA -> { //TODO return
 					lock.lock();
-					//byte[] data = Arrays.copyOfRange(bytes, 1, bytes.length);
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					byte[] data = byteStringToByteArray(out, msg.getDataToSign());
 					signingData.put(messageContext.getSender(), data);
@@ -245,8 +163,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					lock.unlock();
 				}
 				case GET_DATA -> { //TODO return
-/*					byte[] requestData = new byte[bytes.length - 1];
-					System.arraycopy(bytes, 1, requestData, 0, requestData.length);*/
 					DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
 							protoToSchnorr(msg.getSignature()));
 					boolean isValidEvidence = isValidDeviceEvidence(deviceEvidence);
@@ -347,7 +263,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				case PING -> {
 					lock.lock();
 					membership.get(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(),
-							new Timestamp(messageContext.getTimestamp())); //TODO
+							new Timestamp(messageContext.getTimestamp()));
 
 					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PING, msg.getDeviceId());
 
@@ -375,7 +291,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					return new ConfidentialMessage();
 				}
 				case EXTENSION_GET -> {
-					String code = extensionManager.getExtension(msg.getAppId(), protoToExtType(msg.getType()), msg.getKey());
+					String code = extensionManager.getExtension(msg.getAppId(), protoToExtType(msg.getType()), msg.getKey()).toString();
 					return new ConfidentialMessage(serialize(code));
 				}
 				case POLICY_ADD -> {

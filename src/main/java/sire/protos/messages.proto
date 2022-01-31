@@ -19,7 +19,8 @@ message ProtoEvidence {
 //=======Messages=======
 message ProtoMessage0 {
   string attesterId = 1;
-  bytes attesterPubSesKey = 2; //Ga
+  string appId = 2;
+  bytes attesterPubSesKey = 3; //Ga
 }
 
 message ProtoMessage1 {
@@ -30,10 +31,12 @@ message ProtoMessage1 {
 }
 
 message ProtoMessage2 {
-  bytes attesterPubSesKey = 1; //Ga
-  ProtoEvidence evidence = 2; //evidence
-  ProtoSchnorr signatureEvidence = 3; //Sign_A(Evidence)
-  bytes mac = 4; //MAC_Km(content2)
+  string appId = 1;
+  bytes attesterPubSesKey = 2; //Ga
+  ProtoEvidence evidence = 3; //evidence
+  ProtoSchnorr signatureEvidence = 4; //Sign_A(Evidence)
+  bytes mac = 5; //MAC_Km(content2)
+  string attesterId = 6;
 }
 
 message ProtoMessage3 {

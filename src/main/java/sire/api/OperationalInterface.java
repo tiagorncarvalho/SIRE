@@ -1,9 +1,11 @@
 package sire.api;
 
+import sire.protos.Messages;
 import sire.protos.Messages.ProtoMessage0;
 import sire.protos.Messages.ProtoMessage1;
 import sire.serverProxyUtils.AppContext;
 import sire.serverProxyUtils.SireException;
+import sire.protos.Messages.ProxyMessage;
 
 /**
  * Interface to be used by the devices to perform the attestation and membership protocols.
@@ -13,24 +15,20 @@ public interface OperationalInterface {
      * Join the system and start the attestation protocol.
      * @param msg
      */
-    ProtoMessage1 join(String appId, String deviceId, ProtoMessage0 msg) throws SireException;
+    ProtoMessage1 join(ProtoMessage0 msg) throws SireException;
 
     /**
      * Leave the system.
-     * @param deviceId Id of the device that is leaving the system.
      */
-    void leave(String appId, String deviceId);
+    void leave(ProxyMessage msg);
 
     /**
      *
-     * @param appId
-     * @param deviceId
      */
-    void ping(String appId, String deviceId);
+    void ping(ProxyMessage msg);
 
     /**
      *
-     * @param appId
      */
-    AppContext getView(String appId);
+    AppContext getView(ProxyMessage msg);
 }

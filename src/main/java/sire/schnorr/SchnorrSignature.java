@@ -1,6 +1,6 @@
 package sire.schnorr;
 
-import sire.Utils;
+import sire.utils.ProtoUtils;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -38,15 +38,15 @@ public class SchnorrSignature implements Externalizable {
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
-		Utils.writeByteArray(out, sigma);
-		Utils.writeByteArray(out, signingPublicKey);
-		Utils.writeByteArray(out, randomPublicKey);
+		ProtoUtils.writeByteArray(out, sigma);
+		ProtoUtils.writeByteArray(out, signingPublicKey);
+		ProtoUtils.writeByteArray(out, randomPublicKey);
 	}
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException {
-		sigma = Utils.readByteArray(in);
-		signingPublicKey = Utils.readByteArray(in);
-		randomPublicKey = Utils.readByteArray(in);
+		sigma = ProtoUtils.readByteArray(in);
+		signingPublicKey = ProtoUtils.readByteArray(in);
+		randomPublicKey = ProtoUtils.readByteArray(in);
 	}
 }

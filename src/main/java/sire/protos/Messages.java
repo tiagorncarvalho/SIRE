@@ -1396,11 +1396,21 @@ public final class Messages {
         getAttesterIdBytes();
 
     /**
+     * <code>string appId = 2;</code>
+     */
+    java.lang.String getAppId();
+    /**
+     * <code>string appId = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAppIdBytes();
+
+    /**
      * <pre>
      *Ga
      * </pre>
      *
-     * <code>bytes attesterPubSesKey = 2;</code>
+     * <code>bytes attesterPubSesKey = 3;</code>
      */
     com.google.protobuf.ByteString getAttesterPubSesKey();
   }
@@ -1422,6 +1432,7 @@ public final class Messages {
     }
     private ProtoMessage0() {
       attesterId_ = "";
+      appId_ = "";
       attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
     }
 
@@ -1456,6 +1467,12 @@ public final class Messages {
               break;
             }
             case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              appId_ = s;
+              break;
+            }
+            case 26: {
 
               attesterPubSesKey_ = input.readBytes();
               break;
@@ -1526,14 +1543,48 @@ public final class Messages {
       }
     }
 
-    public static final int ATTESTERPUBSESKEY_FIELD_NUMBER = 2;
+    public static final int APPID_FIELD_NUMBER = 2;
+    private volatile java.lang.Object appId_;
+    /**
+     * <code>string appId = 2;</code>
+     */
+    public java.lang.String getAppId() {
+      java.lang.Object ref = appId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        appId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string appId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAppIdBytes() {
+      java.lang.Object ref = appId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        appId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ATTESTERPUBSESKEY_FIELD_NUMBER = 3;
     private com.google.protobuf.ByteString attesterPubSesKey_;
     /**
      * <pre>
      *Ga
      * </pre>
      *
-     * <code>bytes attesterPubSesKey = 2;</code>
+     * <code>bytes attesterPubSesKey = 3;</code>
      */
     public com.google.protobuf.ByteString getAttesterPubSesKey() {
       return attesterPubSesKey_;
@@ -1556,8 +1607,11 @@ public final class Messages {
       if (!getAttesterIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, attesterId_);
       }
+      if (!getAppIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, appId_);
+      }
       if (!attesterPubSesKey_.isEmpty()) {
-        output.writeBytes(2, attesterPubSesKey_);
+        output.writeBytes(3, attesterPubSesKey_);
       }
       unknownFields.writeTo(output);
     }
@@ -1571,9 +1625,12 @@ public final class Messages {
       if (!getAttesterIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, attesterId_);
       }
+      if (!getAppIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, appId_);
+      }
       if (!attesterPubSesKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, attesterPubSesKey_);
+          .computeBytesSize(3, attesterPubSesKey_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1593,6 +1650,8 @@ public final class Messages {
       boolean result = true;
       result = result && getAttesterId()
           .equals(other.getAttesterId());
+      result = result && getAppId()
+          .equals(other.getAppId());
       result = result && getAttesterPubSesKey()
           .equals(other.getAttesterPubSesKey());
       result = result && unknownFields.equals(other.unknownFields);
@@ -1608,6 +1667,8 @@ public final class Messages {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + ATTESTERID_FIELD_NUMBER;
       hash = (53 * hash) + getAttesterId().hashCode();
+      hash = (37 * hash) + APPID_FIELD_NUMBER;
+      hash = (53 * hash) + getAppId().hashCode();
       hash = (37 * hash) + ATTESTERPUBSESKEY_FIELD_NUMBER;
       hash = (53 * hash) + getAttesterPubSesKey().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -1749,6 +1810,8 @@ public final class Messages {
         super.clear();
         attesterId_ = "";
 
+        appId_ = "";
+
         attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
 
         return this;
@@ -1778,6 +1841,7 @@ public final class Messages {
       public sire.protos.Messages.ProtoMessage0 buildPartial() {
         sire.protos.Messages.ProtoMessage0 result = new sire.protos.Messages.ProtoMessage0(this);
         result.attesterId_ = attesterId_;
+        result.appId_ = appId_;
         result.attesterPubSesKey_ = attesterPubSesKey_;
         onBuilt();
         return result;
@@ -1829,6 +1893,10 @@ public final class Messages {
         if (other == sire.protos.Messages.ProtoMessage0.getDefaultInstance()) return this;
         if (!other.getAttesterId().isEmpty()) {
           attesterId_ = other.attesterId_;
+          onChanged();
+        }
+        if (!other.getAppId().isEmpty()) {
+          appId_ = other.appId_;
           onChanged();
         }
         if (other.getAttesterPubSesKey() != com.google.protobuf.ByteString.EMPTY) {
@@ -1932,13 +2000,82 @@ public final class Messages {
         return this;
       }
 
+      private java.lang.Object appId_ = "";
+      /**
+       * <code>string appId = 2;</code>
+       */
+      public java.lang.String getAppId() {
+        java.lang.Object ref = appId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          appId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string appId = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAppIdBytes() {
+        java.lang.Object ref = appId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          appId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string appId = 2;</code>
+       */
+      public Builder setAppId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        appId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string appId = 2;</code>
+       */
+      public Builder clearAppId() {
+        
+        appId_ = getDefaultInstance().getAppId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string appId = 2;</code>
+       */
+      public Builder setAppIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        appId_ = value;
+        onChanged();
+        return this;
+      }
+
       private com.google.protobuf.ByteString attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
        *Ga
        * </pre>
        *
-       * <code>bytes attesterPubSesKey = 2;</code>
+       * <code>bytes attesterPubSesKey = 3;</code>
        */
       public com.google.protobuf.ByteString getAttesterPubSesKey() {
         return attesterPubSesKey_;
@@ -1948,7 +2085,7 @@ public final class Messages {
        *Ga
        * </pre>
        *
-       * <code>bytes attesterPubSesKey = 2;</code>
+       * <code>bytes attesterPubSesKey = 3;</code>
        */
       public Builder setAttesterPubSesKey(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -1964,7 +2101,7 @@ public final class Messages {
        *Ga
        * </pre>
        *
-       * <code>bytes attesterPubSesKey = 2;</code>
+       * <code>bytes attesterPubSesKey = 3;</code>
        */
       public Builder clearAttesterPubSesKey() {
         
@@ -2955,11 +3092,21 @@ public final class Messages {
       com.google.protobuf.MessageOrBuilder {
 
     /**
+     * <code>string appId = 1;</code>
+     */
+    java.lang.String getAppId();
+    /**
+     * <code>string appId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getAppIdBytes();
+
+    /**
      * <pre>
      *Ga
      * </pre>
      *
-     * <code>bytes attesterPubSesKey = 1;</code>
+     * <code>bytes attesterPubSesKey = 2;</code>
      */
     com.google.protobuf.ByteString getAttesterPubSesKey();
 
@@ -2968,7 +3115,7 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
      */
     boolean hasEvidence();
     /**
@@ -2976,7 +3123,7 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
      */
     sire.protos.Messages.ProtoEvidence getEvidence();
     /**
@@ -2984,7 +3131,7 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
      */
     sire.protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
 
@@ -2993,7 +3140,7 @@ public final class Messages {
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
      */
     boolean hasSignatureEvidence();
     /**
@@ -3001,7 +3148,7 @@ public final class Messages {
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
      */
     sire.protos.Messages.ProtoSchnorr getSignatureEvidence();
     /**
@@ -3009,7 +3156,7 @@ public final class Messages {
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
      */
     sire.protos.Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder();
 
@@ -3018,9 +3165,19 @@ public final class Messages {
      *MAC_Km(content2)
      * </pre>
      *
-     * <code>bytes mac = 4;</code>
+     * <code>bytes mac = 5;</code>
      */
     com.google.protobuf.ByteString getMac();
+
+    /**
+     * <code>string attesterId = 6;</code>
+     */
+    java.lang.String getAttesterId();
+    /**
+     * <code>string attesterId = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getAttesterIdBytes();
   }
   /**
    * Protobuf type {@code sire.protos.ProtoMessage2}
@@ -3035,8 +3192,10 @@ public final class Messages {
       super(builder);
     }
     private ProtoMessage2() {
+      appId_ = "";
       attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
       mac_ = com.google.protobuf.ByteString.EMPTY;
+      attesterId_ = "";
     }
 
     @java.lang.Override
@@ -3064,11 +3223,17 @@ public final class Messages {
               done = true;
               break;
             case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              appId_ = s;
+              break;
+            }
+            case 18: {
 
               attesterPubSesKey_ = input.readBytes();
               break;
             }
-            case 18: {
+            case 26: {
               sire.protos.Messages.ProtoEvidence.Builder subBuilder = null;
               if (evidence_ != null) {
                 subBuilder = evidence_.toBuilder();
@@ -3081,7 +3246,7 @@ public final class Messages {
 
               break;
             }
-            case 26: {
+            case 34: {
               sire.protos.Messages.ProtoSchnorr.Builder subBuilder = null;
               if (signatureEvidence_ != null) {
                 subBuilder = signatureEvidence_.toBuilder();
@@ -3094,9 +3259,15 @@ public final class Messages {
 
               break;
             }
-            case 34: {
+            case 42: {
 
               mac_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              attesterId_ = s;
               break;
             }
             default: {
@@ -3131,27 +3302,61 @@ public final class Messages {
               sire.protos.Messages.ProtoMessage2.class, sire.protos.Messages.ProtoMessage2.Builder.class);
     }
 
-    public static final int ATTESTERPUBSESKEY_FIELD_NUMBER = 1;
+    public static final int APPID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object appId_;
+    /**
+     * <code>string appId = 1;</code>
+     */
+    public java.lang.String getAppId() {
+      java.lang.Object ref = appId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        appId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string appId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAppIdBytes() {
+      java.lang.Object ref = appId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        appId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ATTESTERPUBSESKEY_FIELD_NUMBER = 2;
     private com.google.protobuf.ByteString attesterPubSesKey_;
     /**
      * <pre>
      *Ga
      * </pre>
      *
-     * <code>bytes attesterPubSesKey = 1;</code>
+     * <code>bytes attesterPubSesKey = 2;</code>
      */
     public com.google.protobuf.ByteString getAttesterPubSesKey() {
       return attesterPubSesKey_;
     }
 
-    public static final int EVIDENCE_FIELD_NUMBER = 2;
+    public static final int EVIDENCE_FIELD_NUMBER = 3;
     private sire.protos.Messages.ProtoEvidence evidence_;
     /**
      * <pre>
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
      */
     public boolean hasEvidence() {
       return evidence_ != null;
@@ -3161,7 +3366,7 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
      */
     public sire.protos.Messages.ProtoEvidence getEvidence() {
       return evidence_ == null ? sire.protos.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
@@ -3171,20 +3376,20 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
      */
     public sire.protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
       return getEvidence();
     }
 
-    public static final int SIGNATUREEVIDENCE_FIELD_NUMBER = 3;
+    public static final int SIGNATUREEVIDENCE_FIELD_NUMBER = 4;
     private sire.protos.Messages.ProtoSchnorr signatureEvidence_;
     /**
      * <pre>
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
      */
     public boolean hasSignatureEvidence() {
       return signatureEvidence_ != null;
@@ -3194,7 +3399,7 @@ public final class Messages {
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
      */
     public sire.protos.Messages.ProtoSchnorr getSignatureEvidence() {
       return signatureEvidence_ == null ? sire.protos.Messages.ProtoSchnorr.getDefaultInstance() : signatureEvidence_;
@@ -3204,23 +3409,57 @@ public final class Messages {
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
      */
     public sire.protos.Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder() {
       return getSignatureEvidence();
     }
 
-    public static final int MAC_FIELD_NUMBER = 4;
+    public static final int MAC_FIELD_NUMBER = 5;
     private com.google.protobuf.ByteString mac_;
     /**
      * <pre>
      *MAC_Km(content2)
      * </pre>
      *
-     * <code>bytes mac = 4;</code>
+     * <code>bytes mac = 5;</code>
      */
     public com.google.protobuf.ByteString getMac() {
       return mac_;
+    }
+
+    public static final int ATTESTERID_FIELD_NUMBER = 6;
+    private volatile java.lang.Object attesterId_;
+    /**
+     * <code>string attesterId = 6;</code>
+     */
+    public java.lang.String getAttesterId() {
+      java.lang.Object ref = attesterId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        attesterId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string attesterId = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAttesterIdBytes() {
+      java.lang.Object ref = attesterId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        attesterId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -3237,17 +3476,23 @@ public final class Messages {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (!getAppIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, appId_);
+      }
       if (!attesterPubSesKey_.isEmpty()) {
-        output.writeBytes(1, attesterPubSesKey_);
+        output.writeBytes(2, attesterPubSesKey_);
       }
       if (evidence_ != null) {
-        output.writeMessage(2, getEvidence());
+        output.writeMessage(3, getEvidence());
       }
       if (signatureEvidence_ != null) {
-        output.writeMessage(3, getSignatureEvidence());
+        output.writeMessage(4, getSignatureEvidence());
       }
       if (!mac_.isEmpty()) {
-        output.writeBytes(4, mac_);
+        output.writeBytes(5, mac_);
+      }
+      if (!getAttesterIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, attesterId_);
       }
       unknownFields.writeTo(output);
     }
@@ -3258,21 +3503,27 @@ public final class Messages {
       if (size != -1) return size;
 
       size = 0;
+      if (!getAppIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, appId_);
+      }
       if (!attesterPubSesKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, attesterPubSesKey_);
+          .computeBytesSize(2, attesterPubSesKey_);
       }
       if (evidence_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getEvidence());
+          .computeMessageSize(3, getEvidence());
       }
       if (signatureEvidence_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getSignatureEvidence());
+          .computeMessageSize(4, getSignatureEvidence());
       }
       if (!mac_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, mac_);
+          .computeBytesSize(5, mac_);
+      }
+      if (!getAttesterIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, attesterId_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3290,6 +3541,8 @@ public final class Messages {
       sire.protos.Messages.ProtoMessage2 other = (sire.protos.Messages.ProtoMessage2) obj;
 
       boolean result = true;
+      result = result && getAppId()
+          .equals(other.getAppId());
       result = result && getAttesterPubSesKey()
           .equals(other.getAttesterPubSesKey());
       result = result && (hasEvidence() == other.hasEvidence());
@@ -3304,6 +3557,8 @@ public final class Messages {
       }
       result = result && getMac()
           .equals(other.getMac());
+      result = result && getAttesterId()
+          .equals(other.getAttesterId());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -3315,6 +3570,8 @@ public final class Messages {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + APPID_FIELD_NUMBER;
+      hash = (53 * hash) + getAppId().hashCode();
       hash = (37 * hash) + ATTESTERPUBSESKEY_FIELD_NUMBER;
       hash = (53 * hash) + getAttesterPubSesKey().hashCode();
       if (hasEvidence()) {
@@ -3327,6 +3584,8 @@ public final class Messages {
       }
       hash = (37 * hash) + MAC_FIELD_NUMBER;
       hash = (53 * hash) + getMac().hashCode();
+      hash = (37 * hash) + ATTESTERID_FIELD_NUMBER;
+      hash = (53 * hash) + getAttesterId().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3460,6 +3719,8 @@ public final class Messages {
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        appId_ = "";
+
         attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
 
         if (evidenceBuilder_ == null) {
@@ -3475,6 +3736,8 @@ public final class Messages {
           signatureEvidenceBuilder_ = null;
         }
         mac_ = com.google.protobuf.ByteString.EMPTY;
+
+        attesterId_ = "";
 
         return this;
       }
@@ -3502,6 +3765,7 @@ public final class Messages {
       @java.lang.Override
       public sire.protos.Messages.ProtoMessage2 buildPartial() {
         sire.protos.Messages.ProtoMessage2 result = new sire.protos.Messages.ProtoMessage2(this);
+        result.appId_ = appId_;
         result.attesterPubSesKey_ = attesterPubSesKey_;
         if (evidenceBuilder_ == null) {
           result.evidence_ = evidence_;
@@ -3514,6 +3778,7 @@ public final class Messages {
           result.signatureEvidence_ = signatureEvidenceBuilder_.build();
         }
         result.mac_ = mac_;
+        result.attesterId_ = attesterId_;
         onBuilt();
         return result;
       }
@@ -3562,6 +3827,10 @@ public final class Messages {
 
       public Builder mergeFrom(sire.protos.Messages.ProtoMessage2 other) {
         if (other == sire.protos.Messages.ProtoMessage2.getDefaultInstance()) return this;
+        if (!other.getAppId().isEmpty()) {
+          appId_ = other.appId_;
+          onChanged();
+        }
         if (other.getAttesterPubSesKey() != com.google.protobuf.ByteString.EMPTY) {
           setAttesterPubSesKey(other.getAttesterPubSesKey());
         }
@@ -3573,6 +3842,10 @@ public final class Messages {
         }
         if (other.getMac() != com.google.protobuf.ByteString.EMPTY) {
           setMac(other.getMac());
+        }
+        if (!other.getAttesterId().isEmpty()) {
+          attesterId_ = other.attesterId_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -3603,13 +3876,82 @@ public final class Messages {
         return this;
       }
 
+      private java.lang.Object appId_ = "";
+      /**
+       * <code>string appId = 1;</code>
+       */
+      public java.lang.String getAppId() {
+        java.lang.Object ref = appId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          appId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string appId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAppIdBytes() {
+        java.lang.Object ref = appId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          appId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string appId = 1;</code>
+       */
+      public Builder setAppId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        appId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string appId = 1;</code>
+       */
+      public Builder clearAppId() {
+        
+        appId_ = getDefaultInstance().getAppId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string appId = 1;</code>
+       */
+      public Builder setAppIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        appId_ = value;
+        onChanged();
+        return this;
+      }
+
       private com.google.protobuf.ByteString attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
        *Ga
        * </pre>
        *
-       * <code>bytes attesterPubSesKey = 1;</code>
+       * <code>bytes attesterPubSesKey = 2;</code>
        */
       public com.google.protobuf.ByteString getAttesterPubSesKey() {
         return attesterPubSesKey_;
@@ -3619,7 +3961,7 @@ public final class Messages {
        *Ga
        * </pre>
        *
-       * <code>bytes attesterPubSesKey = 1;</code>
+       * <code>bytes attesterPubSesKey = 2;</code>
        */
       public Builder setAttesterPubSesKey(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -3635,7 +3977,7 @@ public final class Messages {
        *Ga
        * </pre>
        *
-       * <code>bytes attesterPubSesKey = 1;</code>
+       * <code>bytes attesterPubSesKey = 2;</code>
        */
       public Builder clearAttesterPubSesKey() {
         
@@ -3652,7 +3994,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
        */
       public boolean hasEvidence() {
         return evidenceBuilder_ != null || evidence_ != null;
@@ -3662,7 +4004,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
        */
       public sire.protos.Messages.ProtoEvidence getEvidence() {
         if (evidenceBuilder_ == null) {
@@ -3676,7 +4018,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
        */
       public Builder setEvidence(sire.protos.Messages.ProtoEvidence value) {
         if (evidenceBuilder_ == null) {
@@ -3696,7 +4038,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
        */
       public Builder setEvidence(
           sire.protos.Messages.ProtoEvidence.Builder builderForValue) {
@@ -3714,7 +4056,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
        */
       public Builder mergeEvidence(sire.protos.Messages.ProtoEvidence value) {
         if (evidenceBuilder_ == null) {
@@ -3736,7 +4078,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
        */
       public Builder clearEvidence() {
         if (evidenceBuilder_ == null) {
@@ -3754,7 +4096,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
        */
       public sire.protos.Messages.ProtoEvidence.Builder getEvidenceBuilder() {
         
@@ -3766,7 +4108,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
        */
       public sire.protos.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
         if (evidenceBuilder_ != null) {
@@ -3781,7 +4123,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           sire.protos.Messages.ProtoEvidence, sire.protos.Messages.ProtoEvidence.Builder, sire.protos.Messages.ProtoEvidenceOrBuilder> 
@@ -3805,7 +4147,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public boolean hasSignatureEvidence() {
         return signatureEvidenceBuilder_ != null || signatureEvidence_ != null;
@@ -3815,7 +4157,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public sire.protos.Messages.ProtoSchnorr getSignatureEvidence() {
         if (signatureEvidenceBuilder_ == null) {
@@ -3829,7 +4171,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public Builder setSignatureEvidence(sire.protos.Messages.ProtoSchnorr value) {
         if (signatureEvidenceBuilder_ == null) {
@@ -3849,7 +4191,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public Builder setSignatureEvidence(
           sire.protos.Messages.ProtoSchnorr.Builder builderForValue) {
@@ -3867,7 +4209,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public Builder mergeSignatureEvidence(sire.protos.Messages.ProtoSchnorr value) {
         if (signatureEvidenceBuilder_ == null) {
@@ -3889,7 +4231,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public Builder clearSignatureEvidence() {
         if (signatureEvidenceBuilder_ == null) {
@@ -3907,7 +4249,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public sire.protos.Messages.ProtoSchnorr.Builder getSignatureEvidenceBuilder() {
         
@@ -3919,7 +4261,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public sire.protos.Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder() {
         if (signatureEvidenceBuilder_ != null) {
@@ -3934,7 +4276,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 3;</code>
+       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           sire.protos.Messages.ProtoSchnorr, sire.protos.Messages.ProtoSchnorr.Builder, sire.protos.Messages.ProtoSchnorrOrBuilder> 
@@ -3956,7 +4298,7 @@ public final class Messages {
        *MAC_Km(content2)
        * </pre>
        *
-       * <code>bytes mac = 4;</code>
+       * <code>bytes mac = 5;</code>
        */
       public com.google.protobuf.ByteString getMac() {
         return mac_;
@@ -3966,7 +4308,7 @@ public final class Messages {
        *MAC_Km(content2)
        * </pre>
        *
-       * <code>bytes mac = 4;</code>
+       * <code>bytes mac = 5;</code>
        */
       public Builder setMac(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -3982,11 +4324,80 @@ public final class Messages {
        *MAC_Km(content2)
        * </pre>
        *
-       * <code>bytes mac = 4;</code>
+       * <code>bytes mac = 5;</code>
        */
       public Builder clearMac() {
         
         mac_ = getDefaultInstance().getMac();
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object attesterId_ = "";
+      /**
+       * <code>string attesterId = 6;</code>
+       */
+      public java.lang.String getAttesterId() {
+        java.lang.Object ref = attesterId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          attesterId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string attesterId = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAttesterIdBytes() {
+        java.lang.Object ref = attesterId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          attesterId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string attesterId = 6;</code>
+       */
+      public Builder setAttesterId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        attesterId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string attesterId = 6;</code>
+       */
+      public Builder clearAttesterId() {
+        
+        attesterId_ = getDefaultInstance().getAttesterId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string attesterId = 6;</code>
+       */
+      public Builder setAttesterIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        attesterId_ = value;
         onChanged();
         return this;
       }
@@ -9778,55 +10189,57 @@ public final class Messages {
       "hnorr\022\r\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014" +
       "\022\024\n\014randomPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022" +
       "\016\n\006anchor\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005" +
-      "claim\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\">\n\rPr" +
-      "otoMessage0\022\022\n\nattesterId\030\001 \001(\t\022\031\n\021attes" +
-      "terPubSesKey\030\002 \001(\014\"\210\001\n\rProtoMessage1\022\031\n\021" +
-      "verifierPubSesKey\030\001 \001(\014\022\026\n\016verifierPubKe" +
-      "y\030\002 \001(\014\0227\n\024signatureSessionKeys\030\003 \001(\0132\031." +
-      "sire.protos.ProtoSchnorr\022\013\n\003mac\030\004 \001(\014\"\233\001" +
-      "\n\rProtoMessage2\022\031\n\021attesterPubSesKey\030\001 \001" +
-      "(\014\022,\n\010evidence\030\002 \001(\0132\032.sire.protos.Proto" +
-      "Evidence\0224\n\021signatureEvidence\030\003 \001(\0132\031.si" +
-      "re.protos.ProtoSchnorr\022\013\n\003mac\030\004 \001(\014\"2\n\rP" +
-      "rotoMessage3\022\n\n\002iv\030\001 \001(\014\022\025\n\rencryptedDat" +
-      "a\030\002 \001(\014\"\301\002\n\027ProxyAttestationMessage\022D\n\to" +
-      "peration\030\001 \001(\01621.sire.protos.ProxyAttest" +
-      "ationMessage.AttOperation\022,\n\010evidence\030\002 " +
-      "\001(\0132\032.sire.protos.ProtoEvidence\022,\n\tsigna" +
-      "ture\030\003 \001(\0132\031.sire.protos.ProtoSchnorr\022\022\n" +
-      "\ndataToSign\030\004 \001(\014\"p\n\014AttOperation\022\030\n\024GEN" +
-      "ERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022" +
-      "\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RAND" +
-      "OM_NUMBER\020\004\"\321\001\n\017ProxyMapMessage\022<\n\topera" +
-      "tion\030\001 \001(\0162).sire.protos.ProxyMapMessage" +
-      ".MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005value\030\003 \001(" +
-      "\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOperation\022\013\n\007MA" +
-      "P_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP_GET\020\002\022\014\n\010" +
-      "MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\261\006\n\014ProxyMessage" +
-      "\0226\n\toperation\030\001 \001(\0162#.sire.protos.ProxyM" +
-      "essage.Operation\022,\n\010evidence\030\002 \001(\0132\032.sir" +
-      "e.protos.ProtoEvidence\022,\n\tsignature\030\003 \001(" +
-      "\0132\031.sire.protos.ProtoSchnorr\022\022\n\ndataToSi" +
-      "gn\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value\030\006 \001(\014\022\017\n\007" +
-      "oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(\t\022\r\n\005appId" +
-      "\030\t \001(\t\022\014\n\004code\030\n \001(\t\0224\n\004type\030\013 \001(\0162&.sir" +
-      "e.protos.ProxyMessage.ProtoExtType\022\016\n\006po" +
-      "licy\030\014 \001(\t\"\312\002\n\tOperation\022\030\n\024GENERATE_SIG" +
-      "NING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIGN_D" +
-      "ATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RANDOM_NUMBER" +
-      "\020\004\022\013\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MAP_G" +
-      "ET\020\007\022\014\n\010MAP_LIST\020\010\022\013\n\007MAP_CAS\020\t\022\010\n\004JOIN\020" +
-      "\n\022\t\n\005LEAVE\020\013\022\010\n\004VIEW\020\014\022\010\n\004PING\020\r\022\021\n\rEXTE" +
-      "NSION_ADD\020\016\022\024\n\020EXTENSION_REMOVE\020\017\022\021\n\rEXT" +
-      "ENSION_GET\020\020\022\016\n\nPOLICY_ADD\020\021\022\021\n\rPOLICY_R" +
-      "EMOVE\020\022\022\016\n\nPOLICY_GET\020\023\"\211\001\n\014ProtoExtType" +
-      "\022\014\n\010EXT_JOIN\020\000\022\r\n\tEXT_LEAVE\020\001\022\014\n\010EXT_PIN" +
-      "G\020\002\022\014\n\010EXT_VIEW\020\003\022\013\n\007EXT_PUT\020\004\022\013\n\007EXT_DE" +
-      "L\020\005\022\013\n\007EXT_GET\020\006\022\013\n\007EXT_CAS\020\007\022\014\n\010EXT_LIS" +
-      "T\020\010\"\216\001\n\rProxyResponse\0225\n\004type\030\001 \001(\0162\'.si" +
-      "re.protos.ProxyResponse.ResponseType\022\014\n\004" +
-      "list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\")\n\014ResponseTyp" +
-      "e\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001b\006proto3"
+      "claim\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"M\n\rPr" +
+      "otoMessage0\022\022\n\nattesterId\030\001 \001(\t\022\r\n\005appId" +
+      "\030\002 \001(\t\022\031\n\021attesterPubSesKey\030\003 \001(\014\"\210\001\n\rPr" +
+      "otoMessage1\022\031\n\021verifierPubSesKey\030\001 \001(\014\022\026" +
+      "\n\016verifierPubKey\030\002 \001(\014\0227\n\024signatureSessi" +
+      "onKeys\030\003 \001(\0132\031.sire.protos.ProtoSchnorr\022" +
+      "\013\n\003mac\030\004 \001(\014\"\276\001\n\rProtoMessage2\022\r\n\005appId\030" +
+      "\001 \001(\t\022\031\n\021attesterPubSesKey\030\002 \001(\014\022,\n\010evid" +
+      "ence\030\003 \001(\0132\032.sire.protos.ProtoEvidence\0224" +
+      "\n\021signatureEvidence\030\004 \001(\0132\031.sire.protos." +
+      "ProtoSchnorr\022\013\n\003mac\030\005 \001(\014\022\022\n\nattesterId\030" +
+      "\006 \001(\t\"2\n\rProtoMessage3\022\n\n\002iv\030\001 \001(\014\022\025\n\ren" +
+      "cryptedData\030\002 \001(\014\"\301\002\n\027ProxyAttestationMe" +
+      "ssage\022D\n\toperation\030\001 \001(\01621.sire.protos.P" +
+      "roxyAttestationMessage.AttOperation\022,\n\010e" +
+      "vidence\030\002 \001(\0132\032.sire.protos.ProtoEvidenc" +
+      "e\022,\n\tsignature\030\003 \001(\0132\031.sire.protos.Proto" +
+      "Schnorr\022\022\n\ndataToSign\030\004 \001(\014\"p\n\014AttOperat" +
+      "ion\022\030\n\024GENERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUB" +
+      "LIC_KEY\020\001\022\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025" +
+      "\n\021GET_RANDOM_NUMBER\020\004\"\321\001\n\017ProxyMapMessag" +
+      "e\022<\n\toperation\030\001 \001(\0162).sire.protos.Proxy" +
+      "MapMessage.MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005" +
+      "value\030\003 \001(\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOpera" +
+      "tion\022\013\n\007MAP_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP" +
+      "_GET\020\002\022\014\n\010MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\261\006\n\014Pr" +
+      "oxyMessage\0226\n\toperation\030\001 \001(\0162#.sire.pro" +
+      "tos.ProxyMessage.Operation\022,\n\010evidence\030\002" +
+      " \001(\0132\032.sire.protos.ProtoEvidence\022,\n\tsign" +
+      "ature\030\003 \001(\0132\031.sire.protos.ProtoSchnorr\022\022" +
+      "\n\ndataToSign\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value" +
+      "\030\006 \001(\014\022\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(" +
+      "\t\022\r\n\005appId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0224\n\004type\030\013" +
+      " \001(\0162&.sire.protos.ProxyMessage.ProtoExt" +
+      "Type\022\016\n\006policy\030\014 \001(\t\"\312\002\n\tOperation\022\030\n\024GE" +
+      "NERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001" +
+      "\022\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RAN" +
+      "DOM_NUMBER\020\004\022\013\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020" +
+      "\006\022\013\n\007MAP_GET\020\007\022\014\n\010MAP_LIST\020\010\022\013\n\007MAP_CAS\020" +
+      "\t\022\010\n\004JOIN\020\n\022\t\n\005LEAVE\020\013\022\010\n\004VIEW\020\014\022\010\n\004PING" +
+      "\020\r\022\021\n\rEXTENSION_ADD\020\016\022\024\n\020EXTENSION_REMOV" +
+      "E\020\017\022\021\n\rEXTENSION_GET\020\020\022\016\n\nPOLICY_ADD\020\021\022\021" +
+      "\n\rPOLICY_REMOVE\020\022\022\016\n\nPOLICY_GET\020\023\"\211\001\n\014Pr" +
+      "otoExtType\022\014\n\010EXT_JOIN\020\000\022\r\n\tEXT_LEAVE\020\001\022" +
+      "\014\n\010EXT_PING\020\002\022\014\n\010EXT_VIEW\020\003\022\013\n\007EXT_PUT\020\004" +
+      "\022\013\n\007EXT_DEL\020\005\022\013\n\007EXT_GET\020\006\022\013\n\007EXT_CAS\020\007\022" +
+      "\014\n\010EXT_LIST\020\010\"\216\001\n\rProxyResponse\0225\n\004type\030" +
+      "\001 \001(\0162\'.sire.protos.ProxyResponse.Respon" +
+      "seType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\")\n\014R" +
+      "esponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001b\006" +
+      "proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -9857,7 +10270,7 @@ public final class Messages {
     internal_static_sire_protos_ProtoMessage0_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_protos_ProtoMessage0_descriptor,
-        new java.lang.String[] { "AttesterId", "AttesterPubSesKey", });
+        new java.lang.String[] { "AttesterId", "AppId", "AttesterPubSesKey", });
     internal_static_sire_protos_ProtoMessage1_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_sire_protos_ProtoMessage1_fieldAccessorTable = new
@@ -9869,7 +10282,7 @@ public final class Messages {
     internal_static_sire_protos_ProtoMessage2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_protos_ProtoMessage2_descriptor,
-        new java.lang.String[] { "AttesterPubSesKey", "Evidence", "SignatureEvidence", "Mac", });
+        new java.lang.String[] { "AppId", "AttesterPubSesKey", "Evidence", "SignatureEvidence", "Mac", "AttesterId", });
     internal_static_sire_protos_ProtoMessage3_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_sire_protos_ProtoMessage3_fieldAccessorTable = new

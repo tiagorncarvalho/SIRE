@@ -1,7 +1,6 @@
-package sire;
+package sire.serverProxyUtils;
 
 import sire.utils.Evidence;
-import sire.serverProxyUtils.SireException;
 import sire.schnorr.SchnorrSignature;
 
 import java.io.*;

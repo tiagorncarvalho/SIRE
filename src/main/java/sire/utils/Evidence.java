@@ -1,7 +1,5 @@
 package sire.utils;
 
-import sire.Utils;
-
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -43,17 +41,17 @@ public class Evidence implements Externalizable {
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
-		Utils.writeByteArray(out, anchor);
+		ProtoUtils.writeByteArray(out, anchor);
 		out.writeUTF(waTZVersion);
-		Utils.writeByteArray(out, claim);
-		Utils.writeByteArray(out, encodedAttestationServicePublicKey);
+		ProtoUtils.writeByteArray(out, claim);
+		ProtoUtils.writeByteArray(out, encodedAttestationServicePublicKey);
 	}
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException {
-		anchor = Utils.readByteArray(in);
+		anchor = ProtoUtils.readByteArray(in);
 		waTZVersion = in.readUTF();
-		claim = Utils.readByteArray(in);
-		encodedAttestationServicePublicKey = Utils.readByteArray(in);
+		claim = ProtoUtils.readByteArray(in);
+		encodedAttestationServicePublicKey = ProtoUtils.readByteArray(in);
 	}
 }

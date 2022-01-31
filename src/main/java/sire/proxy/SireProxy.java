@@ -8,9 +8,10 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
-import sire.DeviceEvidence;
-import sire.client.ServersResponseHandlerWithoutCombine;
-import sire.client.UncombinedConfidentialResponse;
+import sire.serverProxyUtils.DeviceEvidence;
+import sire.utils.ProtoUtils;
+import sire.utils.ServersResponseHandlerWithoutCombine;
+import sire.utils.UncombinedConfidentialResponse;
 import static sire.utils.ProtoUtils.*;
 
 import sire.extensions.Extension;
@@ -36,6 +37,8 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -47,7 +50,7 @@ import java.util.*;
 /**
  * @author robin
  */
-public class SireProxy implements MapInterface, OperationalInterface, ManagementInterface {
+public class SireProxy {
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
 	private final MessageDigest messageDigest;
@@ -90,14 +93,62 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 		this.verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
 		this.attesters = new HashMap<>();
+
+	}
+
+	public void main(String[] args) {
+		try {
+			ServerSocket ss = new ServerSocket(2500 + Integer.parseInt(args[0]));
+			while(true)
+				new ProxyClientHandler(ss.accept()).start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private class ProxyClientHandler extends Thread {
+		private Socket s;
+		private DataOutputStream dos;
+		private DataInputStream dis;
+
+		public ProxyClientHandler (Socket s) {
+			this.s = s;
+		}
+
+		public void run() {
+			try {
+				dos = new DataOutputStream(s.getOutputStream());
+				dis = new DataInputStream(s.getInputStream());
+
+				while(!s.isClosed()) {
+					byte[] b;
+					while((b = dis.readAllBytes()) != null) {
+						Object o = ProtoUtils.deserialize(b);
+						if(o instanceof ProtoMessage0) {
+							ProtoMessage0 msg0 = (ProtoMessage0) o;
+							ProtoMessage1 msg1 = joins(msg0);
+							dos.write(serialize(msg1));
+						}
+						else if(o instanceof ProtoMessage2) {
+							ProtoMessage2 msg2 = (ProtoMessage2) o;
+							ProtoMessage3 msg3 = processMessage2(msg2);
+							dos.write(serialize(msg3));
+						}
+						else if(o instanceof ProxyMessage) {
+
+						}
+
+					}
+				}
+			} catch (IOException | ClassNotFoundException | SireException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public ECPoint getVerifierPublicKey() {
 		return verifierPublicKey;
 	}
-
-
-	//public Message1 processMessage0(int attesterId, Message0 message) throws SireException {
 
 	public ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
 		try {
@@ -137,29 +188,26 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 			out.close();
 
 			return msg1;
-
-			//return new Message1(mySessionPublicKey.getEncoded(true),
-			//		verifierPublicKey.getEncoded(true), signature, mac);
 		} catch (InvalidKeySpecException | IOException e) {
 			throw new SireException("Failed to create shared key", e);
 		}
 	}
 
 	//public Message3 processMessage2(int attesterId, Message2 message) throws SireException {
-	public ProtoMessage3 processMessage2(String attesterId, ProtoMessage2 message) throws SireException, IOException {
-		AttesterContext attester = attesters.get(attesterId);
+	public ProtoMessage3 processMessage2(ProtoMessage2 msg2) throws SireException, IOException {
+		AttesterContext attester = attesters.get(msg2.getAttesterId());
 		if (attester == null)
-			throw new SireException("Unknown attester id " + attesterId);
+			throw new SireException("Unknown attester id " + msg2.getAttesterId());
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out,message.getAttesterPubSesKey()));
-		Evidence evidence = protoToEvidence(message.getEvidence());
+		ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out,msg2.getAttesterPubSesKey()));
+		Evidence evidence = protoToEvidence(msg2.getEvidence());
 		byte[] encodedAttestationServicePublicKey = evidence.getEncodedAttestationServicePublicKey();
 		//System.out.println("Message mac " + Arrays.toString(byteStringToByteArray(out,message.getMac())));
 		boolean isValidMac = verifyMac(
 				attester.getMacKey(),
-				byteStringToByteArray(out, message.getMac()),
-				byteStringToByteArray(out, message.getAttesterPubSesKey()),
+				byteStringToByteArray(out, msg2.getMac()),
+				byteStringToByteArray(out, msg2.getAttesterPubSesKey()),
 				evidence.getAnchor(),
 				encodedAttestationServicePublicKey,
 				evidence.getWaTZVersion().getBytes(),
@@ -167,23 +215,16 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		);
 
 		if (!isValidMac)
-			throw new SireException("Attester " + attesterId + "'s mac is invalid");
+			throw new SireException("Attester " + msg2.getAttesterId() + "'s mac is invalid");
 		if (!attester.getAttesterSessionPublicKey().equals(attesterSessionPublicKey))
-			throw new SireException("Attester " + attesterId + "'s session public key is different");
+			throw new SireException("Attester " + msg2.getAttesterId() + "'s session public key is different");
 
 		byte[] localAnchor = computeHash(attester.getAttesterSessionPublicKey().getEncoded(true),
 				attester.getMySessionPublicKey().getEncoded(true));
 		if (!Arrays.equals(localAnchor, evidence.getAnchor()))
 			throw new SireException("Anchor is different");
 
-		DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(message.getSignatureEvidence()));
-
-		//asking for data - verifier will return data if evidence is valid
-		/*byte[] serializedDeviceEvidence = deviceEvidence.serialize();
-		byte[] dataRequest = new byte[serializedDeviceEvidence.length + 1];
-		dataRequest[0] = (byte) Operation.GET_DATA.ordinal();
-		System.arraycopy(serializedDeviceEvidence, 0, dataRequest, 1,
-				serializedDeviceEvidence.length);*/
+		DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(msg2.getSignatureEvidence()));
 
 		ProxyMessage dataRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.GET_DATA)
@@ -212,7 +253,6 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 	}
 
-
 	private SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {
 		KeySpec spec = new PBEKeySpec(password, salt, 65536, AES_KEY_LENGTH);
 		return new SecretKeySpec(secretKeyFactory.generateSecret(spec).getEncoded(), "AES");
@@ -229,14 +269,10 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 	}
 
 	private boolean verifyMac(byte[] secretKey, byte[] mac, byte[]... contents) {
-		//System.out.println("Computed Mac " + Arrays.toString(computeMac(secretKey, contents)) + " message mac " + Arrays.toString(mac));
 		return Arrays.equals(computeMac(secretKey, contents), mac);
 	}
 
 	private SchnorrSignature getSignatureFromVerifier(byte[] data) throws SireException {
-		/*byte[] signingRequest = new byte[data.length + 1];
-		signingRequest[0] = (byte) Operation.SIGN_DATA.ordinal();
-		System.arraycopy(data, 0, signingRequest, 1, data.length);*/
 
 		ProxyMessage signingRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.SIGN_DATA)
@@ -316,14 +352,23 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		serviceProxy.close();
 	}
 
-	@Override
-	public void put(String appId, String key, byte[] value) {
-		/*byte[] putRequest = new byte[key.length + value.length + 2];
-		putRequest[0] = (byte) Operation.MAP_PUT.ordinal();
-		byte[] mark = "/".getBytes();
-		System.arraycopy(key, 0, putRequest, 1, key.length);
-		System.arraycopy(mark, 0, putRequest, key.length + 1, mark.length);
-		System.arraycopy(value, 0, putRequest, key.length + 1, value.length);*/
+	public ProtoMessage1 joins(ProtoMessage0 msg)  {
+		try {
+			ProxyMessage joinRequest = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.JOIN)
+					.setAppId(msg.getAppId())
+					.setDeviceId(msg.getAttesterId())
+					.build();
+			serviceProxy.invokeOrdered(joinRequest.toByteArray());
+
+			return processMessage0(msg);
+		} catch (SecretSharingException | SireException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/*public void put(String appId, String key, byte[] value) {
 		try {
 			ProxyMessage putRequest = ProxyMessage.newBuilder()
 					.setOperation(ProxyMessage.Operation.MAP_PUT)
@@ -338,11 +383,7 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 	}
 
-	@Override
 	public void delete(String appId, String key) {
-		/*byte[] deleteRequest = new byte[key.length + 1];
-		deleteRequest[0] = (byte) Operation.MAP_DELETE.ordinal();
-		System.arraycopy(key, 0, deleteRequest, 1, key.length);*/
 		ProxyMessage deleteRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.MAP_DELETE)
 				.setKey(key)
@@ -355,11 +396,7 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 	}
 
-	@Override
 	public byte[] getData(String appId, String key) {
-		/*byte[] getRequest = new byte[key.length + 1];
-		getRequest[0] = (byte) Operation.MAP_GET.ordinal();
-		System.arraycopy(key, 0, getRequest, 1, key.length);*/
 		ProxyMessage getRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.MAP_GET)
 				.setKey(key)
@@ -373,7 +410,6 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		return null;
 	}
 
-	@Override
 	public List<byte[]> getList(String appId) {
 		ProxyMessage listRequest = ProxyMessage.newBuilder()
 				.setOperation(ProxyMessage.Operation.MAP_LIST)
@@ -390,16 +426,7 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		return null;
 	}
 
-	@Override
 	public void cas(String appId, String key, byte[] oldData, byte[] newData) {
-		/*byte[] casRequest = new byte[key.length + oldData.length + newData.length + 1];
-		casRequest[0] = (byte) Operation.MAP_CAS.ordinal();
-		byte[] mark = "/".getBytes();
-		System.arraycopy(key, 0, casRequest, 1, key.length);
-		System.arraycopy(mark, 0, casRequest, key.length + 1, mark.length);
-		System.arraycopy(oldData, 0, casRequest, key.length + mark.length + 1, oldData.length);
-		System.arraycopy(mark, 0, casRequest, key.length + mark.length + oldData.length + 1, mark.length);
-		System.arraycopy(newData, 0, casRequest, key.length + (mark.length * 2) + oldData.length + 1, newData.length);*/
 		try {
 			ProxyMessage casRequest = ProxyMessage.newBuilder()
 					.setOperation(ProxyMessage.Operation.MAP_CAS)
@@ -414,39 +441,21 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 	}
 
-	@Override
-	public ProtoMessage1 join(String appId, String deviceId, ProtoMessage0 msg)  {
-		try {
-			ProxyMessage joinRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.JOIN)
-					.setAppId(appId)
-					.setDeviceId(deviceId)
-					.build();
-			serviceProxy.invokeOrdered(joinRequest.toByteArray());
 
-			return processMessage0(msg);
-		} catch (SecretSharingException | SireException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public void leave(String appId, String deviceId) {
+	public void leave(ProxyMessage msg) {
 		try {
 			ProxyMessage leaveRequest = ProxyMessage.newBuilder()
 					.setOperation(ProxyMessage.Operation.LEAVE)
 					.setAppId(appId)
 					.setDeviceId(deviceId)
-					.build();
+					.build();*//*
 			serviceProxy.invokeOrdered(leaveRequest.toByteArray());
 		} catch (SecretSharingException e) {
 			e.printStackTrace();
 		}
 	}
 
-	@Override
-	public void ping(String appId, String deviceId) {
+	public void ping(ProxyMessage msg) {
 		try {
 			ProxyMessage pingRequest = ProxyMessage.newBuilder()
 					.setOperation(ProxyMessage.Operation.PING)
@@ -459,8 +468,7 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 	}
 
-	@Override
-	public AppContext getView(String appId) {
+	public AppContext getView(ProxyMessage msg) {
 		try {
 			ProxyMessage leaveRequest = ProxyMessage.newBuilder()
 					.setOperation(ProxyMessage.Operation.VIEW)
@@ -474,7 +482,6 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 	}
 
-	@Override
 	public void addExtension(String appId, ExtensionType type, String key, String code) {
 		try {
 			ProxyMessage addExtRequest = ProxyMessage.newBuilder()
@@ -490,7 +497,6 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 	}
 
-	@Override
 	public void removeExtension(String appId, ExtensionType type, String key) {
 		try {
 			ProxyMessage removeExtRequest = ProxyMessage.newBuilder()
@@ -505,7 +511,6 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 	}
 
-	@Override
 	public Extension getExtension(String appId, ExtensionType type, String key) {
 		try {
 			ProxyMessage getExtRequest = ProxyMessage.newBuilder()
@@ -522,7 +527,6 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		return null;
 	}
 
-	@Override
 	public void setPolicy(String appId, String policy) {
 		try {
 			ProxyMessage addPolRequest = ProxyMessage.newBuilder()
@@ -536,7 +540,6 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 	}
 
-	@Override
 	public void deletePolicy(String appId) {
 		try {
 			ProxyMessage removePolRequest = ProxyMessage.newBuilder()
@@ -549,7 +552,6 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 		}
 	}
 
-	@Override
 	public Policy getPolicy(String appId) {
 		try {
 			ProxyMessage getPolRequest = ProxyMessage.newBuilder()
@@ -562,5 +564,5 @@ public class SireProxy implements MapInterface, OperationalInterface, Management
 			e.printStackTrace();
 		}
 		return null;
-	}
+	}*/
 }
