@@ -15,7 +15,7 @@ public class ManagementStub implements ManagementInterface {
     public ManagementStub (int proxyId) {
         this.proxyId = proxyId;
         try {
-            this.proxy = new SireProxy(proxyId);
+            this.proxy = new SireProxy(proxyId, null);
         } catch (SireException e) {
             e.printStackTrace();
         }
@@ -23,32 +23,34 @@ public class ManagementStub implements ManagementInterface {
 
     @Override
     public void addExtension(String appId, ExtensionType type, String key, String code) {
-        this.proxy.addExtension(appId, type, key, code);
+        //this.proxy.addExtension(appId, type, key, code);
     }
 
     @Override
     public void removeExtension(String appId, ExtensionType type, String key) {
-        this.proxy.removeExtension(appId, type, key);
+        //this.proxy.removeExtension(appId, type, key);
     }
 
     @Override
     public Extension getExtension(String appId, ExtensionType type, String key) {
-        return this.proxy.getExtension(appId, type, key);
+        //return this.proxy.getExtension(appId, type, key);
+        return null;
     }
 
     @Override
     public void setPolicy(String appId, String policy) {
-        this.proxy.setPolicy(appId, policy);
+        //this.proxy.setPolicy(appId, policy);
     }
 
     @Override
     public void deletePolicy(String appId) {
-        this.proxy.deletePolicy(appId);
+        //this.proxy.deletePolicy(appId);
     }
 
     @Override
     public Policy getPolicy(String appId) {
-        return this.proxy.getPolicy(appId);
+        //return this.proxy.getPolicy(appId);
+        return null;
     }
 
     public void close() {

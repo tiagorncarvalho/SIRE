@@ -37,7 +37,6 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -50,7 +49,7 @@ import java.util.*;
 /**
  * @author robin
  */
-public class SireProxy {
+public class SireProxy extends Thread {
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
 	private final MessageDigest messageDigest;
@@ -63,7 +62,11 @@ public class SireProxy {
 	private final ECPoint curveGenerator;
 	private final Cipher symmetricCipher;
 
-	public SireProxy(int proxyId) throws SireException {
+	private Socket s;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+
+	public SireProxy(int proxyId, Socket s) throws SireException {
 		try {
 			ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
 			this.serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
@@ -87,70 +90,146 @@ public class SireProxy {
 			ProxyMessage msg = ProxyMessage.newBuilder()
 					.setOperation(ProxyMessage.Operation.GENERATE_SIGNING_KEY)
 					.build();
-			response = serviceProxy.invokeOrdered(msg.toByteArray());//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
+			byte [] b = msg.toByteArray();
+			System.out.println(b);
+			response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to obtain verifier's public key", e);
 		}
 		this.verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
 		this.attesters = new HashMap<>();
-
+		this.s = s;
 	}
 
-	public void main(String[] args) {
+	public void run() {
 		try {
-			ServerSocket ss = new ServerSocket(2500 + Integer.parseInt(args[0]));
-			while(true)
-				new ProxyClientHandler(ss.accept()).start();
-		} catch (IOException e) {
+			oos = new ObjectOutputStream(s.getOutputStream());
+			ois = new ObjectInputStream(s.getInputStream());
+
+
+			while(!s.isClosed()) {
+				System.out.println("Running!");
+				//byte[] b = new byte[10000];
+				Object o;
+				//while(dis.read(b) > 0) {
+				while((o = ois.readObject()) != null) {
+					//System.out.println("Bytes received! " + b);
+					System.out.println("Object received! " + o);
+					//Object o = ProtoUtils.deserialize(b);
+					if(o instanceof ProtoMessage0) {
+						ProtoMessage0 msg0 = (ProtoMessage0) o;
+						ProtoMessage1 msg1 = joins(msg0);
+						oos.writeObject(msg1);
+					}
+					else if(o instanceof ProtoMessage2) {
+						ProtoMessage2 msg2 = (ProtoMessage2) o;
+						ProtoMessage3 msg3 = processMessage2(msg2);
+						oos.writeObject(msg3);
+					}
+					else if(o instanceof ProxyMessage) {
+						ProxyMessage msg = (ProxyMessage) o;
+						if(msg.getOperation() == ProxyMessage.Operation.GET_VERIFIER_PUBLIC_KEY) {
+							System.out.println("Getting key");
+							oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
+						}
+						else {
+							Response res = serviceProxy.invokeOrdered(msg.toByteArray());
+							if(msg.getOperation() == ProxyMessage.Operation.MAP_GET) {
+								byte[] tmp = res.getPainData();
+								ProxyResponse result;
+								if(tmp != null) {
+									result = ProxyResponse.newBuilder()
+											.setValue(ByteString.copyFrom(tmp))
+											.build();
+								}
+								else {
+									result = ProxyResponse.newBuilder().build();
+								}
+								oos.writeObject(result);
+							}
+							else if(msg.getOperation() == ProxyMessage.Operation.MAP_LIST) {
+								byte[] tmp = res.getPainData();
+								ProxyResponse result;
+								ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
+								if(tmp != null) {
+									ArrayList<byte []> lst = (ArrayList<byte[]>) deserialize(tmp);
+									System.out.println("List size: " + lst.size());
+									for(byte[] b : lst)
+										prBuilder.addList(ByteString.copyFrom(b));
+									/*for(int i = 0; i < lst.size(); i++)
+										prBuilder.setList(i, ByteString.copyFrom(lst.get(i)));*/
+									result = prBuilder.build();
+								}
+								else {
+									result = prBuilder.build();
+								}
+								oos.writeObject(result);
+							}
+
+						}
+						/*switch(msg.getOperation()) {
+							case GENERATE_SIGNING_KEY -> {
+							}
+							case GET_PUBLIC_KEY -> {
+							}
+							case SIGN_DATA -> {
+							}
+							case GET_DATA -> {
+							}
+							case GET_RANDOM_NUMBER -> {
+							}
+							case MAP_PUT -> {
+							}
+							case MAP_DELETE -> {
+							}
+							case MAP_GET -> {
+							}
+							case MAP_LIST -> {
+							}
+							case MAP_CAS -> {
+							}
+							case JOIN -> {
+							}
+							case LEAVE -> {
+							}
+							case VIEW -> {
+							}
+							case PING -> {
+							}
+							case EXTENSION_ADD -> {
+							}
+							case EXTENSION_REMOVE -> {
+							}
+							case EXTENSION_GET -> {
+							}
+							case POLICY_ADD -> {
+							}
+							case POLICY_REMOVE -> {
+							}
+							case POLICY_GET -> {
+							}
+							case GET_VERIFIER_PUBLIC_KEY -> {
+								System.out.println("Getting key");
+								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
+							}
+							case UNRECOGNIZED -> {
+							}
+						}*/
+					}
+
+				}
+			}
+		} catch (IOException | ClassNotFoundException | SireException | SecretSharingException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private class ProxyClientHandler extends Thread {
-		private Socket s;
-		private DataOutputStream dos;
-		private DataInputStream dis;
-
-		public ProxyClientHandler (Socket s) {
-			this.s = s;
-		}
-
-		public void run() {
-			try {
-				dos = new DataOutputStream(s.getOutputStream());
-				dis = new DataInputStream(s.getInputStream());
-
-				while(!s.isClosed()) {
-					byte[] b;
-					while((b = dis.readAllBytes()) != null) {
-						Object o = ProtoUtils.deserialize(b);
-						if(o instanceof ProtoMessage0) {
-							ProtoMessage0 msg0 = (ProtoMessage0) o;
-							ProtoMessage1 msg1 = joins(msg0);
-							dos.write(serialize(msg1));
-						}
-						else if(o instanceof ProtoMessage2) {
-							ProtoMessage2 msg2 = (ProtoMessage2) o;
-							ProtoMessage3 msg3 = processMessage2(msg2);
-							dos.write(serialize(msg3));
-						}
-						else if(o instanceof ProxyMessage) {
-
-						}
-
-					}
-				}
-			} catch (IOException | ClassNotFoundException | SireException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public ECPoint getVerifierPublicKey() {
+/*	public ECPoint getVerifierPublicKey() {
 		return verifierPublicKey;
-	}
+	}*/
 
 	public ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
+		System.out.println("Processing Message 0!");
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg0.getAttesterPubSesKey()));
@@ -186,6 +265,8 @@ public class SireProxy {
 					.build();
 
 			out.close();
+
+			System.out.println("Message 0 done!");
 
 			return msg1;
 		} catch (InvalidKeySpecException | IOException e) {

@@ -95,6 +95,7 @@ message ProxyMessage {
     POLICY_ADD = 17;
     POLICY_REMOVE = 18;
     POLICY_GET = 19;
+    GET_VERIFIER_PUBLIC_KEY = 20;
   }
   Operation operation = 1;
   ProtoEvidence evidence = 2;

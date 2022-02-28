@@ -7349,6 +7349,10 @@ public final class Messages {
        * <code>POLICY_GET = 19;</code>
        */
       POLICY_GET(19),
+      /**
+       * <code>GET_VERIFIER_PUBLIC_KEY = 20;</code>
+       */
+      GET_VERIFIER_PUBLIC_KEY(20),
       UNRECOGNIZED(-1),
       ;
 
@@ -7432,6 +7436,10 @@ public final class Messages {
        * <code>POLICY_GET = 19;</code>
        */
       public static final int POLICY_GET_VALUE = 19;
+      /**
+       * <code>GET_VERIFIER_PUBLIC_KEY = 20;</code>
+       */
+      public static final int GET_VERIFIER_PUBLIC_KEY_VALUE = 20;
 
 
       public final int getNumber() {
@@ -7472,6 +7480,7 @@ public final class Messages {
           case 17: return POLICY_ADD;
           case 18: return POLICY_REMOVE;
           case 19: return POLICY_GET;
+          case 20: return GET_VERIFIER_PUBLIC_KEY;
           default: return null;
         }
       }
@@ -10214,7 +10223,7 @@ public final class Messages {
       "MapMessage.MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005" +
       "value\030\003 \001(\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOpera" +
       "tion\022\013\n\007MAP_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP" +
-      "_GET\020\002\022\014\n\010MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\261\006\n\014Pr" +
+      "_GET\020\002\022\014\n\010MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\316\006\n\014Pr" +
       "oxyMessage\0226\n\toperation\030\001 \001(\0162#.sire.pro" +
       "tos.ProxyMessage.Operation\022,\n\010evidence\030\002" +
       " \001(\0132\032.sire.protos.ProtoEvidence\022,\n\tsign" +
@@ -10223,7 +10232,7 @@ public final class Messages {
       "\030\006 \001(\014\022\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(" +
       "\t\022\r\n\005appId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0224\n\004type\030\013" +
       " \001(\0162&.sire.protos.ProxyMessage.ProtoExt" +
-      "Type\022\016\n\006policy\030\014 \001(\t\"\312\002\n\tOperation\022\030\n\024GE" +
+      "Type\022\016\n\006policy\030\014 \001(\t\"\347\002\n\tOperation\022\030\n\024GE" +
       "NERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001" +
       "\022\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RAN" +
       "DOM_NUMBER\020\004\022\013\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020" +
@@ -10231,15 +10240,15 @@ public final class Messages {
       "\t\022\010\n\004JOIN\020\n\022\t\n\005LEAVE\020\013\022\010\n\004VIEW\020\014\022\010\n\004PING" +
       "\020\r\022\021\n\rEXTENSION_ADD\020\016\022\024\n\020EXTENSION_REMOV" +
       "E\020\017\022\021\n\rEXTENSION_GET\020\020\022\016\n\nPOLICY_ADD\020\021\022\021" +
-      "\n\rPOLICY_REMOVE\020\022\022\016\n\nPOLICY_GET\020\023\"\211\001\n\014Pr" +
-      "otoExtType\022\014\n\010EXT_JOIN\020\000\022\r\n\tEXT_LEAVE\020\001\022" +
-      "\014\n\010EXT_PING\020\002\022\014\n\010EXT_VIEW\020\003\022\013\n\007EXT_PUT\020\004" +
-      "\022\013\n\007EXT_DEL\020\005\022\013\n\007EXT_GET\020\006\022\013\n\007EXT_CAS\020\007\022" +
-      "\014\n\010EXT_LIST\020\010\"\216\001\n\rProxyResponse\0225\n\004type\030" +
-      "\001 \001(\0162\'.sire.protos.ProxyResponse.Respon" +
-      "seType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\")\n\014R" +
-      "esponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001b\006" +
-      "proto3"
+      "\n\rPOLICY_REMOVE\020\022\022\016\n\nPOLICY_GET\020\023\022\033\n\027GET" +
+      "_VERIFIER_PUBLIC_KEY\020\024\"\211\001\n\014ProtoExtType\022" +
+      "\014\n\010EXT_JOIN\020\000\022\r\n\tEXT_LEAVE\020\001\022\014\n\010EXT_PING" +
+      "\020\002\022\014\n\010EXT_VIEW\020\003\022\013\n\007EXT_PUT\020\004\022\013\n\007EXT_DEL" +
+      "\020\005\022\013\n\007EXT_GET\020\006\022\013\n\007EXT_CAS\020\007\022\014\n\010EXT_LIST" +
+      "\020\010\"\216\001\n\rProxyResponse\0225\n\004type\030\001 \001(\0162\'.sir" +
+      "e.protos.ProxyResponse.ResponseType\022\014\n\004l" +
+      "ist\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\")\n\014ResponseType" +
+      "\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

@@ -152,7 +152,7 @@ public class SchnorrSignatureScheme {
 		return curve.decodePoint(encodedKey);
 	}
 
-	public byte[] encodePublicKey(ECPoint publicKey) {
+	public static byte[] encodePublicKey(ECPoint publicKey) {
 		return publicKey.getEncoded(true);
 	}
 }

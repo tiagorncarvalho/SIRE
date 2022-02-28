@@ -121,6 +121,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
 		try {
+			System.out.println(bytes);
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
 			ProxyMessage.Operation op = msg.getOperation();
 			switch(op) {

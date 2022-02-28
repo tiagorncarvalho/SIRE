@@ -40,8 +40,8 @@ public class Attester {
 	private static Cipher symmetricCipher;
 
 	//TODO add sockets
-	public static void main(String[] args) throws SireException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException {
-		int proxyId = 1000;
+	public static void main(String[] args) throws SireException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, IOException, ClassNotFoundException {
+		int proxyId = 1;
 		String attesterId = "1";
 		String appId = "app1";
 		String waTZVersion = "1.0";
