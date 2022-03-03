@@ -73,7 +73,7 @@ task localDeploy (dependsOn: installDist) {
         }
 
         proxy.each {
-            def target = dst + System.getProperty("file.separator") + "rep${it}"
+            def target = dst + System.getProperty("file.separator") + "pro${it}"
             copy {
                 from "build/install/${project.name}"
                 into target
@@ -81,7 +81,7 @@ task localDeploy (dependsOn: installDist) {
         }
 
         clients.each {
-            def target = dst + System.getProperty("file.separator") + "pro${it}"
+            def target = dst + System.getProperty("file.separator") + "cli${it}"
             copy {
                 from "build/install/${project.name}"
                 into target

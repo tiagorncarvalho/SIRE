@@ -22,6 +22,7 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class DummyAttester {
@@ -223,7 +224,7 @@ public class DummyAttester {
         this.oos.writeObject(msg);
     }
 
-    public void leave(String appId, String deviceId) throws IOException {
+    public void leave(String appId, String deviceId) throws IOException, InterruptedException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.LEAVE)
                 .setAppId(appId)

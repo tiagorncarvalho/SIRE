@@ -26,6 +26,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static sire.utils.ProtoUtils.deserialize;
 import static sire.utils.ProtoUtils.serialize;
@@ -190,7 +191,8 @@ public class Attester {
 			for(DeviceContext d : dummy.getView(appId))
 				System.out.println(d.toString());
 			System.out.println("Done!");
-		} catch (IOException | ClassNotFoundException e) {
+
+		} catch (IOException | ClassNotFoundException | InterruptedException e) {
 			e.printStackTrace();
 		} finally {
 			dummy.close();
