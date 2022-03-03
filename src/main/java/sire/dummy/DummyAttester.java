@@ -257,7 +257,7 @@ public class DummyAttester {
             ArrayList<DeviceContext> tmp = new ArrayList<>();
             //System.out.println("List size: " + res.size());
             for(ProxyResponse.ProtoDeviceContext d : res)
-                tmp.add(new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getNanos())));
+                tmp.add(new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000)));
             return tmp;
             //return byteStringToByteArray(out,((ProxyResponse) o).getValue());
         }

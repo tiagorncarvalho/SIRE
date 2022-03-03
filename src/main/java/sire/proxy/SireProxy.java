@@ -191,7 +191,7 @@ public class SireProxy implements Runnable{
 											prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
 													.setDeviceId(d.getDeviceId())
 													.setTime(Timestamp.newBuilder()
-															.setNanos(d.getLastPing().getNanos())
+															.setSeconds(d.getLastPing().getTime() / 1000)
 															.build())
 													.build());
 										result = prBuilder.build();
