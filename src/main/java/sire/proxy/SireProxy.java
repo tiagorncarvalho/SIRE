@@ -1,6 +1,7 @@
 package sire.proxy;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.Timestamp;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import org.bouncycastle.crypto.BlockCipher;
@@ -8,7 +9,7 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
-import sire.serverProxyUtils.DeviceEvidence;
+import sire.serverProxyUtils.*;
 import sire.utils.ProtoUtils;
 import sire.utils.ServersResponseHandlerWithoutCombine;
 import sire.utils.UncombinedConfidentialResponse;
@@ -23,10 +24,6 @@ import sire.protos.Messages.*;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
-import sire.serverProxyUtils.AppContext;
-import sire.serverProxyUtils.AttesterContext;
-import sire.serverProxyUtils.Policy;
-import sire.serverProxyUtils.SireException;
 import sire.utils.Evidence;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.facade.SecretSharingException;
@@ -49,7 +46,7 @@ import java.util.*;
 /**
  * @author robin
  */
-public class SireProxy extends Thread {
+public class SireProxy implements Runnable {
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
 	private final MessageDigest messageDigest;
@@ -91,7 +88,6 @@ public class SireProxy extends Thread {
 					.setOperation(ProxyMessage.Operation.GENERATE_SIGNING_KEY)
 					.build();
 			byte [] b = msg.toByteArray();
-			System.out.println(b);
 			response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to obtain verifier's public key", e);
@@ -99,8 +95,10 @@ public class SireProxy extends Thread {
 		this.verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
 		this.attesters = new HashMap<>();
 		this.s = s;
+		System.out.println("Proxy Thread started!");
 	}
 
+	@Override
 	public void run() {
 		try {
 			oos = new ObjectOutputStream(s.getOutputStream());
@@ -152,7 +150,9 @@ public class SireProxy extends Thread {
 								ProxyResponse result;
 								ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
 								if(tmp != null) {
-									ArrayList<byte []> lst = (ArrayList<byte[]>) deserialize(tmp);
+									ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
+									ObjectInputStream oin = new ObjectInputStream(bin);
+									ArrayList<byte []> lst = (ArrayList<byte[]>) oin.readObject();
 									System.out.println("List size: " + lst.size());
 									for(byte[] b : lst)
 										prBuilder.addList(ByteString.copyFrom(b));
@@ -165,62 +165,39 @@ public class SireProxy extends Thread {
 								}
 								oos.writeObject(result);
 							}
+							else if(msg.getOperation() == ProxyMessage.Operation.VIEW) {
+								byte[] tmp = res.getPainData();
+								ProxyResponse result;
+								ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
+								if(tmp != null) {
+									ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
+									ObjectInputStream oin = new ObjectInputStream(bin);
+									List<DeviceContext> members = (List<DeviceContext>) oin.readObject();
+									System.out.println("List size: " + members.size());
+									for(DeviceContext d : members)
+										prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
+														.setDeviceId(d.getDeviceId())
+														.setTime(Timestamp.newBuilder()
+																.setNanos(d.getLastPing().getNanos())
+																.build())
+												.build());
+									/*for(int i = 0; i < lst.size(); i++)
+										prBuilder.setList(i, ByteString.copyFrom(lst.get(i)));*/
+									result = prBuilder.build();
+								}
+								else {
+									result = prBuilder.build();
+								}
+								oos.writeObject(result);
+							}
 
 						}
-						/*switch(msg.getOperation()) {
-							case GENERATE_SIGNING_KEY -> {
-							}
-							case GET_PUBLIC_KEY -> {
-							}
-							case SIGN_DATA -> {
-							}
-							case GET_DATA -> {
-							}
-							case GET_RANDOM_NUMBER -> {
-							}
-							case MAP_PUT -> {
-							}
-							case MAP_DELETE -> {
-							}
-							case MAP_GET -> {
-							}
-							case MAP_LIST -> {
-							}
-							case MAP_CAS -> {
-							}
-							case JOIN -> {
-							}
-							case LEAVE -> {
-							}
-							case VIEW -> {
-							}
-							case PING -> {
-							}
-							case EXTENSION_ADD -> {
-							}
-							case EXTENSION_REMOVE -> {
-							}
-							case EXTENSION_GET -> {
-							}
-							case POLICY_ADD -> {
-							}
-							case POLICY_REMOVE -> {
-							}
-							case POLICY_GET -> {
-							}
-							case GET_VERIFIER_PUBLIC_KEY -> {
-								System.out.println("Getting key");
-								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
-							}
-							case UNRECOGNIZED -> {
-							}
-						}*/
 					}
 
 				}
 			}
 		} catch (IOException | ClassNotFoundException | SireException | SecretSharingException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 

@@ -2,7 +2,7 @@ package sire.api;
 
 import sire.protos.Messages.ProtoMessage0;
 import sire.protos.Messages.ProtoMessage1;
-import sire.serverProxyUtils.AppContext;
+import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.SireException;
 import sire.protos.Messages.ProxyMessage;
 
@@ -29,5 +29,5 @@ public interface OperationalInterface {
     /**
      *
      */
-    AppContext getView(ProxyMessage msg);
+    DeviceContext[] getView(ProxyMessage msg);
 }

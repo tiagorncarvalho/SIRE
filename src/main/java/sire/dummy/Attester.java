@@ -8,6 +8,7 @@ import sire.messages.Message0;
 import sire.messages.Message1;
 import sire.messages.Message2;
 import sire.messages.Message3;
+import sire.serverProxyUtils.DeviceContext;
 import sire.utils.Evidence;
 import sire.serverProxyUtils.SireException;
 import sire.schnorr.SchnorrSignature;
@@ -24,6 +25,7 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
+import java.util.List;
 
 import static sire.utils.ProtoUtils.deserialize;
 import static sire.utils.ProtoUtils.serialize;
@@ -39,14 +41,12 @@ public class Attester {
 	private static MessageDigest messageDigest;
 	private static Cipher symmetricCipher;
 
-	//TODO add sockets
 	public static void main(String[] args) throws SireException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, IOException, ClassNotFoundException {
 		int proxyId = 1;
-		String attesterId = "1";
+		String attesterId = args[0];
 		String appId = "app1";
 		String waTZVersion = "1.0";
 		byte[] claim = "claim".getBytes();
-
 		secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 		messageDigest = MessageDigest.getInstance("SHA256");
 		macEngine = new CMac(new AESEngine());
@@ -67,7 +67,7 @@ public class Attester {
 
 			Message0 message0 = new Message0(attesterId, attesterSessionPublicKey.getEncoded(true));
 
-			Message1 message1 = dummy.join(appId, attesterId, message0);
+			Message1 message1 = dummy.join(appId, message0);
 
 			byte[] sessionPublicKeysHash = computeHash(message1.getVerifierPublicSessionKey(),
 					attesterSessionPublicKey.getEncoded(true));
@@ -140,14 +140,14 @@ public class Attester {
 					message3.getEncryptedData());
 			System.out.println("Verifier sent me: " + new String(decryptedData));
 
-			String key = "exampleKey";
-			String key2 = "exampleKey2";
+			String key = "exampleKey" + attesterId;
+			String key2 = "exampleKey2" + attesterId;
 			/*String value = "exampleValue";
 			String value2 = "exampleValue2";
 			String newValue = "exampleNewValue";*/
-			ExampleObject value = new ExampleObject("exampleValue");
-			ExampleObject value2 = new ExampleObject("exampleValue2");
-			ExampleObject newValue = new ExampleObject("exampleNewValue");
+			ExampleObject value = new ExampleObject("exampleValue" + attesterId);
+			ExampleObject value2 = new ExampleObject("exampleValue2" + attesterId);
+			ExampleObject newValue = new ExampleObject("exampleNewValue" + attesterId);
 
 			System.out.println("Putting entry: " + key + " " + value.getValue());
 			dummy.put(appId, key, serialize(value));
@@ -158,7 +158,11 @@ public class Attester {
 
 			System.out.println("Putting entry: " + key2 + " " + value2.getValue());
 			dummy.put(appId, key2, serialize(value2));
-			System.out.println("Getting all entries: " + Arrays.toString(dummy.getList(appId).toArray()));
+			System.out.print("Getting all entries: [");
+			List<byte[]> res = dummy.getList(appId);
+			for(byte[] b : res)
+				System.out.print(((ExampleObject) deserialize(b)).getValue() + ",");
+			System.out.println("]");
 
 			System.out.println("Delete entry: " + key2);
 			dummy.delete(appId, key2);
@@ -177,11 +181,15 @@ public class Attester {
 
 			System.out.println("Getting entry: " + key + " Value: " + result.getValue());
 
-			System.out.println(dummy.getView(appId).toString());
+			for(DeviceContext d : dummy.getView(appId))
+				System.out.println(d.toString());
 			dummy.ping(appId, attesterId);
-			System.out.println(dummy.getView(appId).toString());
+			for(DeviceContext d : dummy.getView(appId))
+				System.out.println(d.toString());
 			dummy.leave(appId, attesterId);
-			System.out.println(dummy.getView(appId).toString());
+			for(DeviceContext d : dummy.getView(appId))
+				System.out.println(d.toString());
+			System.out.println("Done!");
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {

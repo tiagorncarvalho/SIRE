@@ -1,7 +1,10 @@
 package sire.serverProxyUtils;
 
+import sire.server.Device;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.TreeMap;
 
 public class AppContext implements Serializable {
@@ -20,6 +23,10 @@ public class AppContext implements Serializable {
 
     public DeviceContext getDevice(String deviceId) {
         return this.devices.get(deviceId);
+    }
+
+    public List<DeviceContext> getMembership() {
+        return devices.values().stream().toList();
     }
 
     public void addDevice(String deviceId, DeviceContext device){

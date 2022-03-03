@@ -13,11 +13,13 @@ import sire.proxy.*;
 import com.google.protobuf.ByteString;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.AppContext;
+import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.SireException;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.net.Socket;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class DummyAttester {
 
     //TODO turn attesterId into hash of Ga
     //TODO add sockets?
-    public Message1 join(String appId, String attesterId, Message0 message0) throws SireException, IOException, ClassNotFoundException {
+    public Message1 join(String appId, Message0 message0) throws SireException, IOException, ClassNotFoundException {
         ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
                 .setAttesterId(message0.getAttesterId())
                 .setAppId(appId)
@@ -97,7 +99,7 @@ public class DummyAttester {
 
     //TODO turn attesterId into hash of Ga
     //TODO add sockets?
-    public Message3 sendMessage2(String attesterId, Message2 message2) throws SireException, IOException, ClassNotFoundException {
+    public Message3 sendMessage2(String attesterId, Message2 message2) throws IOException, ClassNotFoundException {
         System.out.println("Sending Message 2!");
         ProtoMessage2 msg2 = ProtoMessage2.newBuilder()
                 .setAttesterPubSesKey(ByteString.copyFrom(message2.getEncodedAttesterSessionPublicKey()))
@@ -199,7 +201,7 @@ public class DummyAttester {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             List<ByteString> res = ((ProxyResponse) o).getListList();
             ArrayList<byte[]> tmp = new ArrayList<>();
-            System.out.println("List size: " + res.size());
+            //System.out.println("List size: " + res.size());
             for(ByteString b : res)
                 tmp.add(byteStringToByteArray(out, b));
             return tmp;
@@ -241,13 +243,25 @@ public class DummyAttester {
         this.oos.writeObject(msg);
     }
 
-    public AppContext getView(String appId) throws IOException {
+    public List<DeviceContext> getView(String appId) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.VIEW)
                 .setAppId(appId)
                 .build();
         //this.dos.write(serialize(msg));
         this.oos.writeObject(msg);
+
+        Object o = this.ois.readObject();//deserialize(b);
+        if(o instanceof ProxyResponse) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            List<ProxyResponse.ProtoDeviceContext> res = ((ProxyResponse) o).getMembersList();
+            ArrayList<DeviceContext> tmp = new ArrayList<>();
+            //System.out.println("List size: " + res.size());
+            for(ProxyResponse.ProtoDeviceContext d : res)
+                tmp.add(new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getNanos())));
+            return tmp;
+            //return byteStringToByteArray(out,((ProxyResponse) o).getValue());
+        }
         return null;
     }
 }

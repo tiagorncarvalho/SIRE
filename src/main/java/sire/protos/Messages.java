@@ -9335,6 +9335,30 @@ public final class Messages {
      * <code>bytes value = 3;</code>
      */
     com.google.protobuf.ByteString getValue();
+
+    /**
+     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     */
+    java.util.List<sire.protos.Messages.ProxyResponse.ProtoDeviceContext> 
+        getMembersList();
+    /**
+     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     */
+    sire.protos.Messages.ProxyResponse.ProtoDeviceContext getMembers(int index);
+    /**
+     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     */
+    int getMembersCount();
+    /**
+     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     */
+    java.util.List<? extends sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder> 
+        getMembersOrBuilderList();
+    /**
+     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     */
+    sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder getMembersOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code sire.protos.ProxyResponse}
@@ -9352,6 +9376,7 @@ public final class Messages {
       type_ = 0;
       list_ = java.util.Collections.emptyList();
       value_ = com.google.protobuf.ByteString.EMPTY;
+      members_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -9397,6 +9422,15 @@ public final class Messages {
               value_ = input.readBytes();
               break;
             }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                members_ = new java.util.ArrayList<sire.protos.Messages.ProxyResponse.ProtoDeviceContext>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              members_.add(
+                  input.readMessage(sire.protos.Messages.ProxyResponse.ProtoDeviceContext.parser(), extensionRegistry));
+              break;
+            }
             default: {
               if (!parseUnknownFieldProto3(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -9414,6 +9448,9 @@ public final class Messages {
       } finally {
         if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
           list_ = java.util.Collections.unmodifiableList(list_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          members_ = java.util.Collections.unmodifiableList(members_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -9445,6 +9482,10 @@ public final class Messages {
        * <code>MAP_LIST = 1;</code>
        */
       MAP_LIST(1),
+      /**
+       * <code>VIEW = 2;</code>
+       */
+      VIEW(2),
       UNRECOGNIZED(-1),
       ;
 
@@ -9456,6 +9497,10 @@ public final class Messages {
        * <code>MAP_LIST = 1;</code>
        */
       public static final int MAP_LIST_VALUE = 1;
+      /**
+       * <code>VIEW = 2;</code>
+       */
+      public static final int VIEW_VALUE = 2;
 
 
       public final int getNumber() {
@@ -9478,6 +9523,7 @@ public final class Messages {
         switch (value) {
           case 0: return MAP_GET;
           case 1: return MAP_LIST;
+          case 2: return VIEW;
           default: return null;
         }
       }
@@ -9530,6 +9576,750 @@ public final class Messages {
       // @@protoc_insertion_point(enum_scope:sire.protos.ProxyResponse.ResponseType)
     }
 
+    public interface ProtoDeviceContextOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:sire.protos.ProxyResponse.ProtoDeviceContext)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>string deviceId = 1;</code>
+       */
+      java.lang.String getDeviceId();
+      /**
+       * <code>string deviceId = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getDeviceIdBytes();
+
+      /**
+       * <code>.google.protobuf.Timestamp time = 2;</code>
+       */
+      boolean hasTime();
+      /**
+       * <code>.google.protobuf.Timestamp time = 2;</code>
+       */
+      com.google.protobuf.Timestamp getTime();
+      /**
+       * <code>.google.protobuf.Timestamp time = 2;</code>
+       */
+      com.google.protobuf.TimestampOrBuilder getTimeOrBuilder();
+    }
+    /**
+     * Protobuf type {@code sire.protos.ProxyResponse.ProtoDeviceContext}
+     */
+    public  static final class ProtoDeviceContext extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:sire.protos.ProxyResponse.ProtoDeviceContext)
+        ProtoDeviceContextOrBuilder {
+    private static final long serialVersionUID = 0L;
+      // Use ProtoDeviceContext.newBuilder() to construct.
+      private ProtoDeviceContext(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private ProtoDeviceContext() {
+        deviceId_ = "";
+      }
+
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private ProtoDeviceContext(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        if (extensionRegistry == null) {
+          throw new java.lang.NullPointerException();
+        }
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              case 10: {
+                java.lang.String s = input.readStringRequireUtf8();
+
+                deviceId_ = s;
+                break;
+              }
+              case 18: {
+                com.google.protobuf.Timestamp.Builder subBuilder = null;
+                if (time_ != null) {
+                  subBuilder = time_.toBuilder();
+                }
+                time_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(time_);
+                  time_ = subBuilder.buildPartial();
+                }
+
+                break;
+              }
+              default: {
+                if (!parseUnknownFieldProto3(
+                    input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return sire.protos.Messages.internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                sire.protos.Messages.ProxyResponse.ProtoDeviceContext.class, sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder.class);
+      }
+
+      public static final int DEVICEID_FIELD_NUMBER = 1;
+      private volatile java.lang.Object deviceId_;
+      /**
+       * <code>string deviceId = 1;</code>
+       */
+      public java.lang.String getDeviceId() {
+        java.lang.Object ref = deviceId_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          deviceId_ = s;
+          return s;
+        }
+      }
+      /**
+       * <code>string deviceId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDeviceIdBytes() {
+        java.lang.Object ref = deviceId_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          deviceId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int TIME_FIELD_NUMBER = 2;
+      private com.google.protobuf.Timestamp time_;
+      /**
+       * <code>.google.protobuf.Timestamp time = 2;</code>
+       */
+      public boolean hasTime() {
+        return time_ != null;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp time = 2;</code>
+       */
+      public com.google.protobuf.Timestamp getTime() {
+        return time_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : time_;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp time = 2;</code>
+       */
+      public com.google.protobuf.TimestampOrBuilder getTimeOrBuilder() {
+        return getTime();
+      }
+
+      private byte memoizedIsInitialized = -1;
+      @java.lang.Override
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      @java.lang.Override
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (!getDeviceIdBytes().isEmpty()) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, deviceId_);
+        }
+        if (time_ != null) {
+          output.writeMessage(2, getTime());
+        }
+        unknownFields.writeTo(output);
+      }
+
+      @java.lang.Override
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (!getDeviceIdBytes().isEmpty()) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, deviceId_);
+        }
+        if (time_ != null) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(2, getTime());
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof sire.protos.Messages.ProxyResponse.ProtoDeviceContext)) {
+          return super.equals(obj);
+        }
+        sire.protos.Messages.ProxyResponse.ProtoDeviceContext other = (sire.protos.Messages.ProxyResponse.ProtoDeviceContext) obj;
+
+        boolean result = true;
+        result = result && getDeviceId()
+            .equals(other.getDeviceId());
+        result = result && (hasTime() == other.hasTime());
+        if (hasTime()) {
+          result = result && getTime()
+              .equals(other.getTime());
+        }
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + DEVICEID_FIELD_NUMBER;
+        hash = (53 * hash) + getDeviceId().hashCode();
+        if (hasTime()) {
+          hash = (37 * hash) + TIME_FIELD_NUMBER;
+          hash = (53 * hash) + getTime().hashCode();
+        }
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+          java.nio.ByteBuffer data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+          java.nio.ByteBuffer data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      @java.lang.Override
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(sire.protos.Messages.ProxyResponse.ProtoDeviceContext prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      @java.lang.Override
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code sire.protos.ProxyResponse.ProtoDeviceContext}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:sire.protos.ProxyResponse.ProtoDeviceContext)
+          sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return sire.protos.Messages.internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor;
+        }
+
+        @java.lang.Override
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return sire.protos.Messages.internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  sire.protos.Messages.ProxyResponse.ProtoDeviceContext.class, sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder.class);
+        }
+
+        // Construct using sire.protos.Messages.ProxyResponse.ProtoDeviceContext.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        @java.lang.Override
+        public Builder clear() {
+          super.clear();
+          deviceId_ = "";
+
+          if (timeBuilder_ == null) {
+            time_ = null;
+          } else {
+            time_ = null;
+            timeBuilder_ = null;
+          }
+          return this;
+        }
+
+        @java.lang.Override
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return sire.protos.Messages.internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor;
+        }
+
+        @java.lang.Override
+        public sire.protos.Messages.ProxyResponse.ProtoDeviceContext getDefaultInstanceForType() {
+          return sire.protos.Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance();
+        }
+
+        @java.lang.Override
+        public sire.protos.Messages.ProxyResponse.ProtoDeviceContext build() {
+          sire.protos.Messages.ProxyResponse.ProtoDeviceContext result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        @java.lang.Override
+        public sire.protos.Messages.ProxyResponse.ProtoDeviceContext buildPartial() {
+          sire.protos.Messages.ProxyResponse.ProtoDeviceContext result = new sire.protos.Messages.ProxyResponse.ProtoDeviceContext(this);
+          result.deviceId_ = deviceId_;
+          if (timeBuilder_ == null) {
+            result.time_ = time_;
+          } else {
+            result.time_ = timeBuilder_.build();
+          }
+          onBuilt();
+          return result;
+        }
+
+        @java.lang.Override
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        @java.lang.Override
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        @java.lang.Override
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        @java.lang.Override
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        @java.lang.Override
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, java.lang.Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        @java.lang.Override
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            java.lang.Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        @java.lang.Override
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof sire.protos.Messages.ProxyResponse.ProtoDeviceContext) {
+            return mergeFrom((sire.protos.Messages.ProxyResponse.ProtoDeviceContext)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(sire.protos.Messages.ProxyResponse.ProtoDeviceContext other) {
+          if (other == sire.protos.Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance()) return this;
+          if (!other.getDeviceId().isEmpty()) {
+            deviceId_ = other.deviceId_;
+            onChanged();
+          }
+          if (other.hasTime()) {
+            mergeTime(other.getTime());
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        @java.lang.Override
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        @java.lang.Override
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          sire.protos.Messages.ProxyResponse.ProtoDeviceContext parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (sire.protos.Messages.ProxyResponse.ProtoDeviceContext) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+
+        private java.lang.Object deviceId_ = "";
+        /**
+         * <code>string deviceId = 1;</code>
+         */
+        public java.lang.String getDeviceId() {
+          java.lang.Object ref = deviceId_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            deviceId_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>string deviceId = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getDeviceIdBytes() {
+          java.lang.Object ref = deviceId_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            deviceId_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>string deviceId = 1;</code>
+         */
+        public Builder setDeviceId(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  
+          deviceId_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string deviceId = 1;</code>
+         */
+        public Builder clearDeviceId() {
+          
+          deviceId_ = getDefaultInstance().getDeviceId();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>string deviceId = 1;</code>
+         */
+        public Builder setDeviceIdBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+          
+          deviceId_ = value;
+          onChanged();
+          return this;
+        }
+
+        private com.google.protobuf.Timestamp time_ = null;
+        private com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> timeBuilder_;
+        /**
+         * <code>.google.protobuf.Timestamp time = 2;</code>
+         */
+        public boolean hasTime() {
+          return timeBuilder_ != null || time_ != null;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp time = 2;</code>
+         */
+        public com.google.protobuf.Timestamp getTime() {
+          if (timeBuilder_ == null) {
+            return time_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : time_;
+          } else {
+            return timeBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>.google.protobuf.Timestamp time = 2;</code>
+         */
+        public Builder setTime(com.google.protobuf.Timestamp value) {
+          if (timeBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            time_ = value;
+            onChanged();
+          } else {
+            timeBuilder_.setMessage(value);
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp time = 2;</code>
+         */
+        public Builder setTime(
+            com.google.protobuf.Timestamp.Builder builderForValue) {
+          if (timeBuilder_ == null) {
+            time_ = builderForValue.build();
+            onChanged();
+          } else {
+            timeBuilder_.setMessage(builderForValue.build());
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp time = 2;</code>
+         */
+        public Builder mergeTime(com.google.protobuf.Timestamp value) {
+          if (timeBuilder_ == null) {
+            if (time_ != null) {
+              time_ =
+                com.google.protobuf.Timestamp.newBuilder(time_).mergeFrom(value).buildPartial();
+            } else {
+              time_ = value;
+            }
+            onChanged();
+          } else {
+            timeBuilder_.mergeFrom(value);
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp time = 2;</code>
+         */
+        public Builder clearTime() {
+          if (timeBuilder_ == null) {
+            time_ = null;
+            onChanged();
+          } else {
+            time_ = null;
+            timeBuilder_ = null;
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp time = 2;</code>
+         */
+        public com.google.protobuf.Timestamp.Builder getTimeBuilder() {
+          
+          onChanged();
+          return getTimeFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.google.protobuf.Timestamp time = 2;</code>
+         */
+        public com.google.protobuf.TimestampOrBuilder getTimeOrBuilder() {
+          if (timeBuilder_ != null) {
+            return timeBuilder_.getMessageOrBuilder();
+          } else {
+            return time_ == null ?
+                com.google.protobuf.Timestamp.getDefaultInstance() : time_;
+          }
+        }
+        /**
+         * <code>.google.protobuf.Timestamp time = 2;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
+            getTimeFieldBuilder() {
+          if (timeBuilder_ == null) {
+            timeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder>(
+                    getTime(),
+                    getParentForChildren(),
+                    isClean());
+            time_ = null;
+          }
+          return timeBuilder_;
+        }
+        @java.lang.Override
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFieldsProto3(unknownFields);
+        }
+
+        @java.lang.Override
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:sire.protos.ProxyResponse.ProtoDeviceContext)
+      }
+
+      // @@protoc_insertion_point(class_scope:sire.protos.ProxyResponse.ProtoDeviceContext)
+      private static final sire.protos.Messages.ProxyResponse.ProtoDeviceContext DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new sire.protos.Messages.ProxyResponse.ProtoDeviceContext();
+      }
+
+      public static sire.protos.Messages.ProxyResponse.ProtoDeviceContext getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      private static final com.google.protobuf.Parser<ProtoDeviceContext>
+          PARSER = new com.google.protobuf.AbstractParser<ProtoDeviceContext>() {
+        @java.lang.Override
+        public ProtoDeviceContext parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ProtoDeviceContext(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<ProtoDeviceContext> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<ProtoDeviceContext> getParserForType() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public sire.protos.Messages.ProxyResponse.ProtoDeviceContext getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
     private int bitField0_;
     public static final int TYPE_FIELD_NUMBER = 1;
     private int type_;
@@ -9579,6 +10369,41 @@ public final class Messages {
       return value_;
     }
 
+    public static final int MEMBERS_FIELD_NUMBER = 4;
+    private java.util.List<sire.protos.Messages.ProxyResponse.ProtoDeviceContext> members_;
+    /**
+     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     */
+    public java.util.List<sire.protos.Messages.ProxyResponse.ProtoDeviceContext> getMembersList() {
+      return members_;
+    }
+    /**
+     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     */
+    public java.util.List<? extends sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder> 
+        getMembersOrBuilderList() {
+      return members_;
+    }
+    /**
+     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     */
+    public int getMembersCount() {
+      return members_.size();
+    }
+    /**
+     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     */
+    public sire.protos.Messages.ProxyResponse.ProtoDeviceContext getMembers(int index) {
+      return members_.get(index);
+    }
+    /**
+     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     */
+    public sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder getMembersOrBuilder(
+        int index) {
+      return members_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -9601,6 +10426,9 @@ public final class Messages {
       }
       if (!value_.isEmpty()) {
         output.writeBytes(3, value_);
+      }
+      for (int i = 0; i < members_.size(); i++) {
+        output.writeMessage(4, members_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -9628,6 +10456,10 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, value_);
       }
+      for (int i = 0; i < members_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, members_.get(i));
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -9649,6 +10481,8 @@ public final class Messages {
           .equals(other.getListList());
       result = result && getValue()
           .equals(other.getValue());
+      result = result && getMembersList()
+          .equals(other.getMembersList());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -9668,6 +10502,10 @@ public final class Messages {
       }
       hash = (37 * hash) + VALUE_FIELD_NUMBER;
       hash = (53 * hash) + getValue().hashCode();
+      if (getMembersCount() > 0) {
+        hash = (37 * hash) + MEMBERS_FIELD_NUMBER;
+        hash = (53 * hash) + getMembersList().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -9796,6 +10634,7 @@ public final class Messages {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getMembersFieldBuilder();
         }
       }
       @java.lang.Override
@@ -9807,6 +10646,12 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000002);
         value_ = com.google.protobuf.ByteString.EMPTY;
 
+        if (membersBuilder_ == null) {
+          members_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          membersBuilder_.clear();
+        }
         return this;
       }
 
@@ -9842,6 +10687,15 @@ public final class Messages {
         }
         result.list_ = list_;
         result.value_ = value_;
+        if (membersBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            members_ = java.util.Collections.unmodifiableList(members_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.members_ = members_;
+        } else {
+          result.members_ = membersBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -9906,6 +10760,32 @@ public final class Messages {
         }
         if (other.getValue() != com.google.protobuf.ByteString.EMPTY) {
           setValue(other.getValue());
+        }
+        if (membersBuilder_ == null) {
+          if (!other.members_.isEmpty()) {
+            if (members_.isEmpty()) {
+              members_ = other.members_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureMembersIsMutable();
+              members_.addAll(other.members_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.members_.isEmpty()) {
+            if (membersBuilder_.isEmpty()) {
+              membersBuilder_.dispose();
+              membersBuilder_ = null;
+              members_ = other.members_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              membersBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getMembersFieldBuilder() : null;
+            } else {
+              membersBuilder_.addAllMessages(other.members_);
+            }
+          }
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -10082,6 +10962,246 @@ public final class Messages {
         onChanged();
         return this;
       }
+
+      private java.util.List<sire.protos.Messages.ProxyResponse.ProtoDeviceContext> members_ =
+        java.util.Collections.emptyList();
+      private void ensureMembersIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          members_ = new java.util.ArrayList<sire.protos.Messages.ProxyResponse.ProtoDeviceContext>(members_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          sire.protos.Messages.ProxyResponse.ProtoDeviceContext, sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder, sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder> membersBuilder_;
+
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public java.util.List<sire.protos.Messages.ProxyResponse.ProtoDeviceContext> getMembersList() {
+        if (membersBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(members_);
+        } else {
+          return membersBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public int getMembersCount() {
+        if (membersBuilder_ == null) {
+          return members_.size();
+        } else {
+          return membersBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public sire.protos.Messages.ProxyResponse.ProtoDeviceContext getMembers(int index) {
+        if (membersBuilder_ == null) {
+          return members_.get(index);
+        } else {
+          return membersBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public Builder setMembers(
+          int index, sire.protos.Messages.ProxyResponse.ProtoDeviceContext value) {
+        if (membersBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMembersIsMutable();
+          members_.set(index, value);
+          onChanged();
+        } else {
+          membersBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public Builder setMembers(
+          int index, sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder builderForValue) {
+        if (membersBuilder_ == null) {
+          ensureMembersIsMutable();
+          members_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          membersBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public Builder addMembers(sire.protos.Messages.ProxyResponse.ProtoDeviceContext value) {
+        if (membersBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMembersIsMutable();
+          members_.add(value);
+          onChanged();
+        } else {
+          membersBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public Builder addMembers(
+          int index, sire.protos.Messages.ProxyResponse.ProtoDeviceContext value) {
+        if (membersBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMembersIsMutable();
+          members_.add(index, value);
+          onChanged();
+        } else {
+          membersBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public Builder addMembers(
+          sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder builderForValue) {
+        if (membersBuilder_ == null) {
+          ensureMembersIsMutable();
+          members_.add(builderForValue.build());
+          onChanged();
+        } else {
+          membersBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public Builder addMembers(
+          int index, sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder builderForValue) {
+        if (membersBuilder_ == null) {
+          ensureMembersIsMutable();
+          members_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          membersBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public Builder addAllMembers(
+          java.lang.Iterable<? extends sire.protos.Messages.ProxyResponse.ProtoDeviceContext> values) {
+        if (membersBuilder_ == null) {
+          ensureMembersIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, members_);
+          onChanged();
+        } else {
+          membersBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public Builder clearMembers() {
+        if (membersBuilder_ == null) {
+          members_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          membersBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public Builder removeMembers(int index) {
+        if (membersBuilder_ == null) {
+          ensureMembersIsMutable();
+          members_.remove(index);
+          onChanged();
+        } else {
+          membersBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder getMembersBuilder(
+          int index) {
+        return getMembersFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder getMembersOrBuilder(
+          int index) {
+        if (membersBuilder_ == null) {
+          return members_.get(index);  } else {
+          return membersBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public java.util.List<? extends sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder> 
+           getMembersOrBuilderList() {
+        if (membersBuilder_ != null) {
+          return membersBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(members_);
+        }
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder addMembersBuilder() {
+        return getMembersFieldBuilder().addBuilder(
+            sire.protos.Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder addMembersBuilder(
+          int index) {
+        return getMembersFieldBuilder().addBuilder(
+            index, sire.protos.Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       */
+      public java.util.List<sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder> 
+           getMembersBuilderList() {
+        return getMembersFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          sire.protos.Messages.ProxyResponse.ProtoDeviceContext, sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder, sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder> 
+          getMembersFieldBuilder() {
+        if (membersBuilder_ == null) {
+          membersBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              sire.protos.Messages.ProxyResponse.ProtoDeviceContext, sire.protos.Messages.ProxyResponse.ProtoDeviceContext.Builder, sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder>(
+                  members_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  getParentForChildren(),
+                  isClean());
+          members_ = null;
+        }
+        return membersBuilder_;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -10185,6 +11305,11 @@ public final class Messages {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_sire_protos_ProxyResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -10194,61 +11319,66 @@ public final class Messages {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016messages.proto\022\013sire.protos\"G\n\014ProtoSc" +
-      "hnorr\022\r\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014" +
-      "\022\024\n\014randomPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022" +
-      "\016\n\006anchor\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005" +
-      "claim\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"M\n\rPr" +
-      "otoMessage0\022\022\n\nattesterId\030\001 \001(\t\022\r\n\005appId" +
-      "\030\002 \001(\t\022\031\n\021attesterPubSesKey\030\003 \001(\014\"\210\001\n\rPr" +
-      "otoMessage1\022\031\n\021verifierPubSesKey\030\001 \001(\014\022\026" +
-      "\n\016verifierPubKey\030\002 \001(\014\0227\n\024signatureSessi" +
-      "onKeys\030\003 \001(\0132\031.sire.protos.ProtoSchnorr\022" +
-      "\013\n\003mac\030\004 \001(\014\"\276\001\n\rProtoMessage2\022\r\n\005appId\030" +
-      "\001 \001(\t\022\031\n\021attesterPubSesKey\030\002 \001(\014\022,\n\010evid" +
-      "ence\030\003 \001(\0132\032.sire.protos.ProtoEvidence\0224" +
-      "\n\021signatureEvidence\030\004 \001(\0132\031.sire.protos." +
-      "ProtoSchnorr\022\013\n\003mac\030\005 \001(\014\022\022\n\nattesterId\030" +
-      "\006 \001(\t\"2\n\rProtoMessage3\022\n\n\002iv\030\001 \001(\014\022\025\n\ren" +
-      "cryptedData\030\002 \001(\014\"\301\002\n\027ProxyAttestationMe" +
-      "ssage\022D\n\toperation\030\001 \001(\01621.sire.protos.P" +
-      "roxyAttestationMessage.AttOperation\022,\n\010e" +
-      "vidence\030\002 \001(\0132\032.sire.protos.ProtoEvidenc" +
-      "e\022,\n\tsignature\030\003 \001(\0132\031.sire.protos.Proto" +
-      "Schnorr\022\022\n\ndataToSign\030\004 \001(\014\"p\n\014AttOperat" +
-      "ion\022\030\n\024GENERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUB" +
-      "LIC_KEY\020\001\022\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025" +
-      "\n\021GET_RANDOM_NUMBER\020\004\"\321\001\n\017ProxyMapMessag" +
-      "e\022<\n\toperation\030\001 \001(\0162).sire.protos.Proxy" +
-      "MapMessage.MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005" +
-      "value\030\003 \001(\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOpera" +
-      "tion\022\013\n\007MAP_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP" +
-      "_GET\020\002\022\014\n\010MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\316\006\n\014Pr" +
-      "oxyMessage\0226\n\toperation\030\001 \001(\0162#.sire.pro" +
-      "tos.ProxyMessage.Operation\022,\n\010evidence\030\002" +
-      " \001(\0132\032.sire.protos.ProtoEvidence\022,\n\tsign" +
-      "ature\030\003 \001(\0132\031.sire.protos.ProtoSchnorr\022\022" +
-      "\n\ndataToSign\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value" +
-      "\030\006 \001(\014\022\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(" +
-      "\t\022\r\n\005appId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0224\n\004type\030\013" +
-      " \001(\0162&.sire.protos.ProxyMessage.ProtoExt" +
-      "Type\022\016\n\006policy\030\014 \001(\t\"\347\002\n\tOperation\022\030\n\024GE" +
-      "NERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001" +
-      "\022\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RAN" +
-      "DOM_NUMBER\020\004\022\013\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020" +
-      "\006\022\013\n\007MAP_GET\020\007\022\014\n\010MAP_LIST\020\010\022\013\n\007MAP_CAS\020" +
-      "\t\022\010\n\004JOIN\020\n\022\t\n\005LEAVE\020\013\022\010\n\004VIEW\020\014\022\010\n\004PING" +
-      "\020\r\022\021\n\rEXTENSION_ADD\020\016\022\024\n\020EXTENSION_REMOV" +
-      "E\020\017\022\021\n\rEXTENSION_GET\020\020\022\016\n\nPOLICY_ADD\020\021\022\021" +
-      "\n\rPOLICY_REMOVE\020\022\022\016\n\nPOLICY_GET\020\023\022\033\n\027GET" +
-      "_VERIFIER_PUBLIC_KEY\020\024\"\211\001\n\014ProtoExtType\022" +
-      "\014\n\010EXT_JOIN\020\000\022\r\n\tEXT_LEAVE\020\001\022\014\n\010EXT_PING" +
-      "\020\002\022\014\n\010EXT_VIEW\020\003\022\013\n\007EXT_PUT\020\004\022\013\n\007EXT_DEL" +
-      "\020\005\022\013\n\007EXT_GET\020\006\022\013\n\007EXT_CAS\020\007\022\014\n\010EXT_LIST" +
-      "\020\010\"\216\001\n\rProxyResponse\0225\n\004type\030\001 \001(\0162\'.sir" +
-      "e.protos.ProxyResponse.ResponseType\022\014\n\004l" +
-      "ist\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\")\n\014ResponseType" +
-      "\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001b\006proto3"
+      "\n\016messages.proto\022\013sire.protos\032\037google/pr" +
+      "otobuf/timestamp.proto\"G\n\014ProtoSchnorr\022\r" +
+      "\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014\022\024\n\014ran" +
+      "domPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022\016\n\006anch" +
+      "or\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005claim\030\003" +
+      " \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"M\n\rProtoMess" +
+      "age0\022\022\n\nattesterId\030\001 \001(\t\022\r\n\005appId\030\002 \001(\t\022" +
+      "\031\n\021attesterPubSesKey\030\003 \001(\014\"\210\001\n\rProtoMess" +
+      "age1\022\031\n\021verifierPubSesKey\030\001 \001(\014\022\026\n\016verif" +
+      "ierPubKey\030\002 \001(\014\0227\n\024signatureSessionKeys\030" +
+      "\003 \001(\0132\031.sire.protos.ProtoSchnorr\022\013\n\003mac\030" +
+      "\004 \001(\014\"\276\001\n\rProtoMessage2\022\r\n\005appId\030\001 \001(\t\022\031" +
+      "\n\021attesterPubSesKey\030\002 \001(\014\022,\n\010evidence\030\003 " +
+      "\001(\0132\032.sire.protos.ProtoEvidence\0224\n\021signa" +
+      "tureEvidence\030\004 \001(\0132\031.sire.protos.ProtoSc" +
+      "hnorr\022\013\n\003mac\030\005 \001(\014\022\022\n\nattesterId\030\006 \001(\t\"2" +
+      "\n\rProtoMessage3\022\n\n\002iv\030\001 \001(\014\022\025\n\rencrypted" +
+      "Data\030\002 \001(\014\"\301\002\n\027ProxyAttestationMessage\022D" +
+      "\n\toperation\030\001 \001(\01621.sire.protos.ProxyAtt" +
+      "estationMessage.AttOperation\022,\n\010evidence" +
+      "\030\002 \001(\0132\032.sire.protos.ProtoEvidence\022,\n\tsi" +
+      "gnature\030\003 \001(\0132\031.sire.protos.ProtoSchnorr" +
+      "\022\022\n\ndataToSign\030\004 \001(\014\"p\n\014AttOperation\022\030\n\024" +
+      "GENERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY" +
+      "\020\001\022\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_R" +
+      "ANDOM_NUMBER\020\004\"\321\001\n\017ProxyMapMessage\022<\n\top" +
+      "eration\030\001 \001(\0162).sire.protos.ProxyMapMess" +
+      "age.MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005value\030\003" +
+      " \001(\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOperation\022\013\n" +
+      "\007MAP_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP_GET\020\002\022" +
+      "\014\n\010MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\316\006\n\014ProxyMess" +
+      "age\0226\n\toperation\030\001 \001(\0162#.sire.protos.Pro" +
+      "xyMessage.Operation\022,\n\010evidence\030\002 \001(\0132\032." +
+      "sire.protos.ProtoEvidence\022,\n\tsignature\030\003" +
+      " \001(\0132\031.sire.protos.ProtoSchnorr\022\022\n\ndataT" +
+      "oSign\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value\030\006 \001(\014\022" +
+      "\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(\t\022\r\n\005ap" +
+      "pId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0224\n\004type\030\013 \001(\0162&." +
+      "sire.protos.ProxyMessage.ProtoExtType\022\016\n" +
+      "\006policy\030\014 \001(\t\"\347\002\n\tOperation\022\030\n\024GENERATE_" +
+      "SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIG" +
+      "N_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RANDOM_NUM" +
+      "BER\020\004\022\013\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MA" +
+      "P_GET\020\007\022\014\n\010MAP_LIST\020\010\022\013\n\007MAP_CAS\020\t\022\010\n\004JO" +
+      "IN\020\n\022\t\n\005LEAVE\020\013\022\010\n\004VIEW\020\014\022\010\n\004PING\020\r\022\021\n\rE" +
+      "XTENSION_ADD\020\016\022\024\n\020EXTENSION_REMOVE\020\017\022\021\n\r" +
+      "EXTENSION_GET\020\020\022\016\n\nPOLICY_ADD\020\021\022\021\n\rPOLIC" +
+      "Y_REMOVE\020\022\022\016\n\nPOLICY_GET\020\023\022\033\n\027GET_VERIFI" +
+      "ER_PUBLIC_KEY\020\024\"\211\001\n\014ProtoExtType\022\014\n\010EXT_" +
+      "JOIN\020\000\022\r\n\tEXT_LEAVE\020\001\022\014\n\010EXT_PING\020\002\022\014\n\010E" +
+      "XT_VIEW\020\003\022\013\n\007EXT_PUT\020\004\022\013\n\007EXT_DEL\020\005\022\013\n\007E" +
+      "XT_GET\020\006\022\013\n\007EXT_CAS\020\007\022\014\n\010EXT_LIST\020\010\"\252\002\n\r" +
+      "ProxyResponse\0225\n\004type\030\001 \001(\0162\'.sire.proto" +
+      "s.ProxyResponse.ResponseType\022\014\n\004list\030\002 \003" +
+      "(\014\022\r\n\005value\030\003 \001(\014\022>\n\007members\030\004 \003(\0132-.sir" +
+      "e.protos.ProxyResponse.ProtoDeviceContex" +
+      "t\032P\n\022ProtoDeviceContext\022\020\n\010deviceId\030\001 \001(" +
+      "\t\022(\n\004time\030\002 \001(\0132\032.google.protobuf.Timest" +
+      "amp\"3\n\014ResponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_" +
+      "LIST\020\001\022\010\n\004VIEW\020\002b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -10261,6 +11391,7 @@ public final class Messages {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.protobuf.TimestampProto.getDescriptor(),
         }, assigner);
     internal_static_sire_protos_ProtoSchnorr_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -10321,7 +11452,14 @@ public final class Messages {
     internal_static_sire_protos_ProxyResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_protos_ProxyResponse_descriptor,
-        new java.lang.String[] { "Type", "List", "Value", });
+        new java.lang.String[] { "Type", "List", "Value", "Members", });
+    internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor =
+      internal_static_sire_protos_ProxyResponse_descriptor.getNestedTypes().get(0);
+    internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor,
+        new java.lang.String[] { "DeviceId", "Time", });
+    com.google.protobuf.TimestampProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

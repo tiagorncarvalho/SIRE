@@ -1,5 +1,7 @@
 syntax= "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package sire.protos;
 
 //Complementary
@@ -130,8 +132,14 @@ message ProxyResponse {
   enum ResponseType {
     MAP_GET = 0;
     MAP_LIST = 1;
+    VIEW = 2;
   }
   ResponseType type = 1;
   repeated bytes list = 2;
   bytes value = 3;
+  message ProtoDeviceContext {
+    string deviceId = 1;
+    google.protobuf.Timestamp time = 2;
+  }
+  repeated ProtoDeviceContext members = 4;
 }

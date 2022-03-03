@@ -272,7 +272,13 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					return new ConfidentialMessage();
 				}
 				case VIEW -> {
-					byte[] res = serialize(membership.get(msg.getAppId()));
+					List<DeviceContext> members = membership.get(msg.getAppId()).getMembership();
+					ByteArrayOutputStream bout = new ByteArrayOutputStream();
+					ObjectOutputStream out = new ObjectOutputStream(bout);
+					out.writeObject(members);
+					out.close();
+					byte[] res = bout.toByteArray();
+					bout.close();
 
 					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_VIEW, "");
 
