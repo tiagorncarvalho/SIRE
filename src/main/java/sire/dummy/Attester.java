@@ -42,8 +42,8 @@ public class Attester {
 	private static Cipher symmetricCipher;
 
 	public static void main(String[] args) throws SireException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, IOException, ClassNotFoundException {
-		int proxyId = 1;
 		String attesterId = args[0];
+		int proxyId = 1;
 		String appId = "app1";
 		String waTZVersion = "1.0";
 		byte[] claim = "claim".getBytes();

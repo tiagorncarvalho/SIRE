@@ -15,9 +15,9 @@ public class ManagementClient {
                     stub.getExtension("app1", ExtensionType.EXT_GET, "exampleKey").getCode());
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        } /*finally {
             stub.close();
-        }
+        }*/
     }
 
 }

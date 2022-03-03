@@ -14,8 +14,9 @@ public class ManagementStub implements ManagementInterface {
 
     public ManagementStub (int proxyId) {
         this.proxyId = proxyId;
+        //this.proxy = new SireProxy(proxyId);
         try {
-            this.proxy = new SireProxy(proxyId, null);
+            this.proxy = new SireProxy(proxyId);
         } catch (SireException e) {
             e.printStackTrace();
         }
@@ -53,7 +54,7 @@ public class ManagementStub implements ManagementInterface {
         return null;
     }
 
-    public void close() {
+/*    public void close() {
         this.proxy.close();
-    }
+    }*/
 }

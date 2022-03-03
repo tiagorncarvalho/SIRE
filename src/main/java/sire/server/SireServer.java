@@ -133,6 +133,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 							generateSigningKey();
 						} else if (verifierSigningPrivateKeyShare != null) {
 //						logger.warn("I already have a signing key.");
+							System.out.println("Signing key already created...");
 							return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
 						} else {
 //						logger.warn("Signing key is being created.");
