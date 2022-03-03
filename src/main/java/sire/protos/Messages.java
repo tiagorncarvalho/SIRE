@@ -9359,6 +9359,26 @@ public final class Messages {
      */
     sire.protos.Messages.ProxyResponse.ProtoDeviceContextOrBuilder getMembersOrBuilder(
         int index);
+
+    /**
+     * <code>string extension = 5;</code>
+     */
+    java.lang.String getExtension();
+    /**
+     * <code>string extension = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getExtensionBytes();
+
+    /**
+     * <code>string policy = 6;</code>
+     */
+    java.lang.String getPolicy();
+    /**
+     * <code>string policy = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getPolicyBytes();
   }
   /**
    * Protobuf type {@code sire.protos.ProxyResponse}
@@ -9377,6 +9397,8 @@ public final class Messages {
       list_ = java.util.Collections.emptyList();
       value_ = com.google.protobuf.ByteString.EMPTY;
       members_ = java.util.Collections.emptyList();
+      extension_ = "";
+      policy_ = "";
     }
 
     @java.lang.Override
@@ -9429,6 +9451,18 @@ public final class Messages {
               }
               members_.add(
                   input.readMessage(sire.protos.Messages.ProxyResponse.ProtoDeviceContext.parser(), extensionRegistry));
+              break;
+            }
+            case 42: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              extension_ = s;
+              break;
+            }
+            case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              policy_ = s;
               break;
             }
             default: {
@@ -9486,6 +9520,14 @@ public final class Messages {
        * <code>VIEW = 2;</code>
        */
       VIEW(2),
+      /**
+       * <code>EXTENSION_GET = 3;</code>
+       */
+      EXTENSION_GET(3),
+      /**
+       * <code>POLICY_GET = 4;</code>
+       */
+      POLICY_GET(4),
       UNRECOGNIZED(-1),
       ;
 
@@ -9501,6 +9543,14 @@ public final class Messages {
        * <code>VIEW = 2;</code>
        */
       public static final int VIEW_VALUE = 2;
+      /**
+       * <code>EXTENSION_GET = 3;</code>
+       */
+      public static final int EXTENSION_GET_VALUE = 3;
+      /**
+       * <code>POLICY_GET = 4;</code>
+       */
+      public static final int POLICY_GET_VALUE = 4;
 
 
       public final int getNumber() {
@@ -9524,6 +9574,8 @@ public final class Messages {
           case 0: return MAP_GET;
           case 1: return MAP_LIST;
           case 2: return VIEW;
+          case 3: return EXTENSION_GET;
+          case 4: return POLICY_GET;
           default: return null;
         }
       }
@@ -10404,6 +10456,74 @@ public final class Messages {
       return members_.get(index);
     }
 
+    public static final int EXTENSION_FIELD_NUMBER = 5;
+    private volatile java.lang.Object extension_;
+    /**
+     * <code>string extension = 5;</code>
+     */
+    public java.lang.String getExtension() {
+      java.lang.Object ref = extension_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        extension_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string extension = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getExtensionBytes() {
+      java.lang.Object ref = extension_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        extension_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int POLICY_FIELD_NUMBER = 6;
+    private volatile java.lang.Object policy_;
+    /**
+     * <code>string policy = 6;</code>
+     */
+    public java.lang.String getPolicy() {
+      java.lang.Object ref = policy_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        policy_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string policy = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPolicyBytes() {
+      java.lang.Object ref = policy_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        policy_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -10429,6 +10549,12 @@ public final class Messages {
       }
       for (int i = 0; i < members_.size(); i++) {
         output.writeMessage(4, members_.get(i));
+      }
+      if (!getExtensionBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, extension_);
+      }
+      if (!getPolicyBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, policy_);
       }
       unknownFields.writeTo(output);
     }
@@ -10460,6 +10586,12 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, members_.get(i));
       }
+      if (!getExtensionBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, extension_);
+      }
+      if (!getPolicyBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, policy_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -10483,6 +10615,10 @@ public final class Messages {
           .equals(other.getValue());
       result = result && getMembersList()
           .equals(other.getMembersList());
+      result = result && getExtension()
+          .equals(other.getExtension());
+      result = result && getPolicy()
+          .equals(other.getPolicy());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -10506,6 +10642,10 @@ public final class Messages {
         hash = (37 * hash) + MEMBERS_FIELD_NUMBER;
         hash = (53 * hash) + getMembersList().hashCode();
       }
+      hash = (37 * hash) + EXTENSION_FIELD_NUMBER;
+      hash = (53 * hash) + getExtension().hashCode();
+      hash = (37 * hash) + POLICY_FIELD_NUMBER;
+      hash = (53 * hash) + getPolicy().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -10652,6 +10792,10 @@ public final class Messages {
         } else {
           membersBuilder_.clear();
         }
+        extension_ = "";
+
+        policy_ = "";
+
         return this;
       }
 
@@ -10696,6 +10840,8 @@ public final class Messages {
         } else {
           result.members_ = membersBuilder_.build();
         }
+        result.extension_ = extension_;
+        result.policy_ = policy_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -10786,6 +10932,14 @@ public final class Messages {
               membersBuilder_.addAllMessages(other.members_);
             }
           }
+        }
+        if (!other.getExtension().isEmpty()) {
+          extension_ = other.extension_;
+          onChanged();
+        }
+        if (!other.getPolicy().isEmpty()) {
+          policy_ = other.policy_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -11202,6 +11356,144 @@ public final class Messages {
         }
         return membersBuilder_;
       }
+
+      private java.lang.Object extension_ = "";
+      /**
+       * <code>string extension = 5;</code>
+       */
+      public java.lang.String getExtension() {
+        java.lang.Object ref = extension_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          extension_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string extension = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getExtensionBytes() {
+        java.lang.Object ref = extension_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          extension_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string extension = 5;</code>
+       */
+      public Builder setExtension(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        extension_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string extension = 5;</code>
+       */
+      public Builder clearExtension() {
+        
+        extension_ = getDefaultInstance().getExtension();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string extension = 5;</code>
+       */
+      public Builder setExtensionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        extension_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object policy_ = "";
+      /**
+       * <code>string policy = 6;</code>
+       */
+      public java.lang.String getPolicy() {
+        java.lang.Object ref = policy_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          policy_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string policy = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPolicyBytes() {
+        java.lang.Object ref = policy_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          policy_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string policy = 6;</code>
+       */
+      public Builder setPolicy(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        policy_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string policy = 6;</code>
+       */
+      public Builder clearPolicy() {
+        
+        policy_ = getDefaultInstance().getPolicy();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string policy = 6;</code>
+       */
+      public Builder setPolicyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        policy_ = value;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -11370,15 +11662,17 @@ public final class Messages {
       "ER_PUBLIC_KEY\020\024\"\211\001\n\014ProtoExtType\022\014\n\010EXT_" +
       "JOIN\020\000\022\r\n\tEXT_LEAVE\020\001\022\014\n\010EXT_PING\020\002\022\014\n\010E" +
       "XT_VIEW\020\003\022\013\n\007EXT_PUT\020\004\022\013\n\007EXT_DEL\020\005\022\013\n\007E" +
-      "XT_GET\020\006\022\013\n\007EXT_CAS\020\007\022\014\n\010EXT_LIST\020\010\"\252\002\n\r" +
+      "XT_GET\020\006\022\013\n\007EXT_CAS\020\007\022\014\n\010EXT_LIST\020\010\"\360\002\n\r" +
       "ProxyResponse\0225\n\004type\030\001 \001(\0162\'.sire.proto" +
       "s.ProxyResponse.ResponseType\022\014\n\004list\030\002 \003" +
       "(\014\022\r\n\005value\030\003 \001(\014\022>\n\007members\030\004 \003(\0132-.sir" +
       "e.protos.ProxyResponse.ProtoDeviceContex" +
-      "t\032P\n\022ProtoDeviceContext\022\020\n\010deviceId\030\001 \001(" +
-      "\t\022(\n\004time\030\002 \001(\0132\032.google.protobuf.Timest" +
-      "amp\"3\n\014ResponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_" +
-      "LIST\020\001\022\010\n\004VIEW\020\002b\006proto3"
+      "t\022\021\n\textension\030\005 \001(\t\022\016\n\006policy\030\006 \001(\t\032P\n\022" +
+      "ProtoDeviceContext\022\020\n\010deviceId\030\001 \001(\t\022(\n\004" +
+      "time\030\002 \001(\0132\032.google.protobuf.Timestamp\"V" +
+      "\n\014ResponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020" +
+      "\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n\nPOLICY" +
+      "_GET\020\004b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -11452,7 +11746,7 @@ public final class Messages {
     internal_static_sire_protos_ProxyResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_protos_ProxyResponse_descriptor,
-        new java.lang.String[] { "Type", "List", "Value", "Members", });
+        new java.lang.String[] { "Type", "List", "Value", "Members", "Extension", "Policy", });
     internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor =
       internal_static_sire_protos_ProxyResponse_descriptor.getNestedTypes().get(0);
     internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_fieldAccessorTable = new

@@ -9,7 +9,7 @@ import sire.protos.Messages.ProxyMessage;
 /**
  * Interface to be used by the devices to perform the attestation and membership protocols.
  */
-public interface OperationalInterface {
+public interface MembershipInterface {
     /**
      * Join the system and start the attestation protocol.
      * @param msg

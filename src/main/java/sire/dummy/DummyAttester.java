@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 
 public class DummyAttester {
     int proxyId;
-    //SireProxy proxy;
     int port;
     Socket s;
     ObjectOutputStream oos;
@@ -45,7 +44,6 @@ public class DummyAttester {
 
         BigInteger cofactor = prime.divide(order);
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
-        //this.proxy = new SireProxy(proxyId);
         try {
             this.s = new Socket("localhost", port);
             this.oos = new ObjectOutputStream(s.getOutputStream());

@@ -1,10 +1,7 @@
 package sire.api;
 
-import sire.extensions.Extension;
 import sire.extensions.ExtensionType;
 import sire.serverProxyUtils.Policy;
-
-import java.util.List;
 
 /**
  *
@@ -34,7 +31,7 @@ public interface ManagementInterface {
      * @param key
      * @return
      */
-    Extension getExtension(String appId, ExtensionType type, String key);
+    String getExtension(String appId, ExtensionType type, String key);
 
     /**
      *

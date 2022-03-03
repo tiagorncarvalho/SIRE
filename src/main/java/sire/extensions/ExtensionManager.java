@@ -1,15 +1,13 @@
 package sire.extensions;
 
-import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class ExtensionManager {
-    Map<String, Script> extensions;
+    Map<String, Extension> extensions;
     GroovyShell sh;
     public ExtensionManager() {
         this.sh = new GroovyShell();
@@ -17,23 +15,20 @@ public class ExtensionManager {
     }
 
     public void addExtension(String appId, ExtensionType type, String key, String code) {
-        this.extensions.put(appId + type.name() + key, sh.parse(code));
+        this.extensions.put(appId + type.name() + key, new Extension(code, sh.parse(code)));
 
     }
 
     public Script getExtension(String appId, ExtensionType type, String key) {
-        return extensions.get(appId + type.name() + key);
+        return extensions.get(appId + type.name() + key).getScript();
     }
 
     public Script getExtension(String appId, ExtensionType type) {
-        return extensions.get(appId + type.name());
+        return extensions.get(appId + type.name()).getScript();
     }
 
     public void runExtension(String appId, ExtensionType type, String key) {
         String temp;
-        /*System.out.println("Checking...");
-        for(Map.Entry e : extensions.entrySet())
-            System.out.println("Key " + e.getKey() + " Value " + e.getValue());*/
         if(extensions.containsKey(appId + type.name() + key))
             temp = appId + type.name() + key;
         else if(extensions.containsKey(appId + type.name()))
@@ -45,11 +40,20 @@ public class ExtensionManager {
             return;
         }
         System.out.println("Running extension...");
-        extensions.get(temp).run();
+        extensions.get(temp).getScript().run();
         System.out.println("Extension ran!");
     }
 
     public void removeExtension(String appId, ExtensionType type, String key) {
         this.extensions.remove(appId + type + key);
     }
+
+    public String getExtensionCode(String appId, ExtensionType type, String key) {
+        return this.extensions.get(appId + type.name() + key).getCode();
+    }
+
+    public String getExtensionCode(String appId, ExtensionType type) {
+        return this.extensions.get(appId + type.name()).getCode();
+    }
+
 }

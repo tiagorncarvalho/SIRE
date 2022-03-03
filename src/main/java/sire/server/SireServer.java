@@ -233,7 +233,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					byte[] oldValue = byteStringToByteArray(out, msg.getOldData());
 					byte[] newValue = byteStringToByteArray(out, msg.getValue());
 					out.close();
-					if(storage.get(key).equals(oldValue)) {
+					if(Arrays.equals(storage.get(key), oldValue)) {
 						storage.put(key, newValue);
 					}
 					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_CAS, msg.getKey());
@@ -288,18 +288,18 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 				case EXTENSION_ADD -> {
 					lock.lock();
-					extensionManager.addExtension(msg.getAppId(), protoToExtType(msg.getType()), msg.getKey(), msg.getCode());
+					extensionManager.addExtension(msg.getAppId(), ExtensionType.values()[msg.getType().ordinal()], msg.getKey(), msg.getCode());
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case EXTENSION_REMOVE -> {
 					lock.lock();
-					extensionManager.removeExtension(msg.getAppId(), protoToExtType(msg.getType()), msg.getKey());
+					extensionManager.removeExtension(msg.getAppId(), ExtensionType.values()[msg.getType().ordinal()], msg.getKey());
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case EXTENSION_GET -> {
-					String code = extensionManager.getExtension(msg.getAppId(), protoToExtType(msg.getType()), msg.getKey()).toString();
+					String code = extensionManager.getExtensionCode(msg.getAppId(), ExtensionType.values()[msg.getType().ordinal()], msg.getKey());
 					return new ConfidentialMessage(serialize(code));
 				}
 				case POLICY_ADD -> {
@@ -315,7 +315,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					return new ConfidentialMessage();
 				}
 				case POLICY_GET -> {
-					return new ConfidentialMessage(serialize(membership.get(msg.getAppId()).getPolicy()));
+					return new ConfidentialMessage(serialize(membership.get(msg.getAppId()).getPolicy().getPolicy()));
 				}
 			}
 		} catch (IOException e) {

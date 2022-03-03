@@ -10,16 +10,10 @@ import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.serverProxyUtils.*;
-import sire.utils.ProtoUtils;
 import sire.utils.ServersResponseHandlerWithoutCombine;
 import sire.utils.UncombinedConfidentialResponse;
 import static sire.utils.ProtoUtils.*;
 
-import sire.extensions.Extension;
-import sire.extensions.ExtensionType;
-import sire.api.ManagementInterface;
-import sire.api.MapInterface;
-import sire.api.OperationalInterface;
 import sire.protos.Messages.*;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
@@ -60,7 +54,6 @@ public class SireProxy implements Runnable{
 	private final ECPoint curveGenerator;
 	private final Cipher symmetricCipher;
 	private final int proxyId;
-	//private boolean initialized = false;
 
 	public SireProxy (int proxyId) throws SireException{
 		this.proxyId = proxyId;
@@ -101,7 +94,6 @@ public class SireProxy implements Runnable{
 		verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
 
 		attesters = new HashMap<>();
-		//initialized = true;
 	}
 
 	@Override
@@ -130,45 +122,6 @@ public class SireProxy implements Runnable{
 		private ObjectInputStream ois;
 
 		public SireProxyThread(int proxyId, Socket s) throws SireException {
-			/*if(!initialized) {
-				try {
-					ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
-					serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
-					System.out.println("Check 1");
-				} catch (SecretSharingException e) {
-					throw new SireException("Failed to contact the distributed verifier", e);
-				}
-				try {
-					messageDigest = MessageDigest.getInstance("SHA256");
-					BlockCipher aes = new AESEngine();
-					System.out.println("Check 2");
-
-					macEngine = new CMac(aes);
-					secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-					signatureScheme = new SchnorrSignatureScheme();
-					curveGenerator = signatureScheme.getGenerator();
-					symmetricCipher = Cipher.getInstance("AES/GCM/NoPadding");
-					System.out.println("Check 3");
-				} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-					throw new SireException("Failed to initialize cryptographic tools", e);
-				}
-				Response response;
-				try {
-					ProxyMessage msg = ProxyMessage.newBuilder()
-							.setOperation(ProxyMessage.Operation.GENERATE_SIGNING_KEY)
-							.build();
-					byte[] b = msg.toByteArray();
-					System.out.println("Check 4");
-					response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
-					System.out.println("Check 5");
-				} catch (SecretSharingException e) {
-					throw new SireException("Failed to obtain verifier's public key", e);
-				}
-				verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
-
-				attesters = new HashMap<>();
-				initialized = true;
-			}*/
 			this.s = s;
 			System.out.println("Proxy Thread started!");
 		}
@@ -180,13 +133,9 @@ public class SireProxy implements Runnable{
 
 				while (!s.isClosed()) {
 					System.out.println("Running!");
-					//byte[] b = new byte[10000];
 					Object o;
-					//while(dis.read(b) > 0) {
 					while ((o = ois.readObject()) != null) {
-						//System.out.println("Bytes received! " + b);
 						System.out.println("Object received! " + o);
-						//Object o = ProtoUtils.deserialize(b);
 						if (o instanceof ProtoMessage0) {
 							ProtoMessage0 msg0 = (ProtoMessage0) o;
 							ProtoMessage1 msg1 = joins(msg0);
@@ -224,8 +173,6 @@ public class SireProxy implements Runnable{
 										System.out.println("List size: " + lst.size());
 										for (byte[] b : lst)
 											prBuilder.addList(ByteString.copyFrom(b));
-									/*for(int i = 0; i < lst.size(); i++)
-										prBuilder.setList(i, ByteString.copyFrom(lst.get(i)));*/
 										result = prBuilder.build();
 									} else {
 										result = prBuilder.build();
@@ -247,15 +194,36 @@ public class SireProxy implements Runnable{
 															.setNanos(d.getLastPing().getNanos())
 															.build())
 													.build());
-									/*for(int i = 0; i < lst.size(); i++)
-										prBuilder.setList(i, ByteString.copyFrom(lst.get(i)));*/
 										result = prBuilder.build();
 									} else {
 										result = prBuilder.build();
 									}
 									oos.writeObject(result);
+								} else if (msg.getOperation() == ProxyMessage.Operation.EXTENSION_GET) {
+									byte[] tmp = res.getPainData();
+									ProxyResponse result;
+									if (tmp != null) {
+										result = ProxyResponse.newBuilder()
+												.setType(ProxyResponse.ResponseType.EXTENSION_GET)
+												.setExtension((String) deserialize(tmp))
+												.build();
+									} else {
+										result = ProxyResponse.newBuilder().build();
+									}
+									oos.writeObject(result);
+								} else if(msg.getOperation() == ProxyMessage.Operation.POLICY_GET) {
+									byte[] tmp = res.getPainData();
+									ProxyResponse result;
+									if (tmp != null) {
+										result = ProxyResponse.newBuilder()
+												.setType(ProxyResponse.ResponseType.POLICY_GET)
+												.setPolicy((String) deserialize(tmp))
+												.build();
+									} else {
+										result = ProxyResponse.newBuilder().build();
+									}
+									oos.writeObject(result);
 								}
-
 							}
 						}
 
@@ -265,10 +233,6 @@ public class SireProxy implements Runnable{
 				//e.printStackTrace();
 			}
 		}
-
-/*	public ECPoint getVerifierPublicKey() {
-		return verifierPublicKey;
-	}*/
 
 		public ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
 			System.out.println("Processing Message 0!");
@@ -315,8 +279,6 @@ public class SireProxy implements Runnable{
 				throw new SireException("Failed to create shared key", e);
 			}
 		}
-
-		//public Message3 processMessage2(int attesterId, Message2 message) throws SireException {
 		public ProtoMessage3 processMessage2(ProtoMessage2 msg2) throws SireException, IOException {
 			AttesterContext attester = attesters.get(msg2.getAttesterId());
 			if (attester == null)
@@ -326,7 +288,6 @@ public class SireProxy implements Runnable{
 			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg2.getAttesterPubSesKey()));
 			Evidence evidence = protoToEvidence(msg2.getEvidence());
 			byte[] encodedAttestationServicePublicKey = evidence.getEncodedAttestationServicePublicKey();
-			//System.out.println("Message mac " + Arrays.toString(byteStringToByteArray(out,message.getMac())));
 			boolean isValidMac = verifyMac(
 					attester.getMacKey(),
 					byteStringToByteArray(out, msg2.getMac()),
@@ -491,202 +452,4 @@ public class SireProxy implements Runnable{
 			return null;
 		}
 	}
-
-	/*public void put(String appId, String key, byte[] value) {
-		try {
-			ProxyMessage putRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.MAP_PUT)
-					.setKey(key)
-					.setAppId(appId)
-					.setValue(ByteString.copyFrom(value))
-					.build();
-
-			serviceProxy.invokeOrdered2(putRequest.toByteArray());
-		} catch (SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void delete(String appId, String key) {
-		ProxyMessage deleteRequest = ProxyMessage.newBuilder()
-				.setOperation(ProxyMessage.Operation.MAP_DELETE)
-				.setKey(key)
-				.setAppId(appId)
-				.build();
-		try {
-			serviceProxy.invokeOrdered2(deleteRequest.toByteArray());
-		} catch (SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public byte[] getData(String appId, String key) {
-		ProxyMessage getRequest = ProxyMessage.newBuilder()
-				.setOperation(ProxyMessage.Operation.MAP_GET)
-				.setKey(key)
-				.setAppId(appId)
-				.build();
-		try {
-			return serviceProxy.invokeOrdered(getRequest.toByteArray()).getPainData();
-		} catch (SecretSharingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public List<byte[]> getList(String appId) {
-		ProxyMessage listRequest = ProxyMessage.newBuilder()
-				.setOperation(ProxyMessage.Operation.MAP_LIST)
-				.setAppId(appId)
-				.build();
-		try {
-			byte[] response = serviceProxy.invokeOrdered(listRequest.toByteArray()).getPainData();
-			List<byte[]> result = (ArrayList<byte[]>) deserialize(response);
-
-			return result;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public void cas(String appId, String key, byte[] oldData, byte[] newData) {
-		try {
-			ProxyMessage casRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.MAP_CAS)
-					.setKey(key)
-					.setOldData(ByteString.copyFrom(oldData))
-					.setValue(ByteString.copyFrom(newData))
-					.setAppId(appId)
-					.build();
-			serviceProxy.invokeOrdered(casRequest.toByteArray());
-		} catch (SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	public void leave(ProxyMessage msg) {
-		try {
-			ProxyMessage leaveRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.LEAVE)
-					.setAppId(appId)
-					.setDeviceId(deviceId)
-					.build();*//*
-			serviceProxy.invokeOrdered(leaveRequest.toByteArray());
-		} catch (SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void ping(ProxyMessage msg) {
-		try {
-			ProxyMessage pingRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.PING)
-					.setAppId(appId)
-					.setDeviceId(deviceId)
-					.build();
-			serviceProxy.invokeOrdered(pingRequest.toByteArray());
-		} catch (SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public AppContext getView(ProxyMessage msg) {
-		try {
-			ProxyMessage leaveRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.VIEW)
-					.setAppId(appId)
-					.build();
-			Response res = serviceProxy.invokeOrdered(leaveRequest.toByteArray());
-			return (AppContext) deserialize(res.getPainData());
-		} catch (SecretSharingException | IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public void addExtension(String appId, ExtensionType type, String key, String code) {
-		try {
-			ProxyMessage addExtRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.EXTENSION_ADD)
-					.setAppId(appId)
-					.setCode(code)
-					.setType(extTypeToProto(type))
-					.setKey(key)
-					.build();
-			serviceProxy.invokeOrdered(addExtRequest.toByteArray());
-		} catch (SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void removeExtension(String appId, ExtensionType type, String key) {
-		try {
-			ProxyMessage removeExtRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.EXTENSION_REMOVE)
-					.setAppId(appId)
-					.setType(extTypeToProto(type))
-					.setKey(key)
-					.build();
-			serviceProxy.invokeOrdered(removeExtRequest.toByteArray());
-		} catch (SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Extension getExtension(String appId, ExtensionType type, String key) {
-		try {
-			ProxyMessage getExtRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.EXTENSION_GET)
-					.setAppId(appId)
-					.setType(extTypeToProto(type))
-					.setKey(key)
-					.build();
-			Response res = serviceProxy.invokeOrdered(getExtRequest.toByteArray());
-			return new Extension ((String) deserialize(res.getPainData()));
-		} catch (SecretSharingException | IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public void setPolicy(String appId, String policy) {
-		try {
-			ProxyMessage addPolRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.POLICY_ADD)
-					.setAppId(appId)
-					.setPolicy(policy)
-					.build();
-			serviceProxy.invokeOrdered(addPolRequest.toByteArray());
-		} catch (SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void deletePolicy(String appId) {
-		try {
-			ProxyMessage removePolRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.POLICY_REMOVE)
-					.setAppId(appId)
-					.build();
-			serviceProxy.invokeOrdered(removePolRequest.toByteArray());
-		} catch (SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Policy getPolicy(String appId) {
-		try {
-			ProxyMessage getPolRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.POLICY_GET)
-					.setAppId(appId)
-					.build();
-			Response res = serviceProxy.invokeOrdered(getPolRequest.toByteArray());
-			return (Policy) deserialize(res.getPainData());
-		} catch (SecretSharingException | IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}*/
 }

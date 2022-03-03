@@ -95,39 +95,6 @@ public class ProtoUtils {
         return null;
     }
 
-    public static ExtensionType protoToExtType (ProtoExtType type) {
-        switch(type) {
-            case EXT_JOIN -> {
-                return ExtensionType.EXT_JOIN;
-            }
-            case EXT_LEAVE -> {
-                return ExtensionType.EXT_LEAVE;
-            }
-            case EXT_PING -> {
-                return ExtensionType.EXT_PING;
-            }
-            case EXT_VIEW -> {
-                return ExtensionType.EXT_VIEW;
-            }
-            case EXT_PUT -> {
-                return ExtensionType.EXT_PUT;
-            }
-            case EXT_DEL -> {
-                return ExtensionType.EXT_DEL;
-            }
-            case EXT_GET -> {
-                return ExtensionType.EXT_GET;
-            }
-            case EXT_CAS -> {
-                return ExtensionType.EXT_CAS;
-            }
-            case EXT_LIST -> {
-                return ExtensionType.EXT_LIST;
-            }
-        }
-        return null;
-    }
-
     public static void writeByteArray(ObjectOutput out, byte[] arr) throws IOException {
         out.writeInt(arr == null ? -1 : arr.length);
         if (arr != null)

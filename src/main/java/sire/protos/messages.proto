@@ -133,6 +133,8 @@ message ProxyResponse {
     MAP_GET = 0;
     MAP_LIST = 1;
     VIEW = 2;
+    EXTENSION_GET = 3;
+    POLICY_GET = 4;
   }
   ResponseType type = 1;
   repeated bytes list = 2;
@@ -142,4 +144,6 @@ message ProxyResponse {
     google.protobuf.Timestamp time = 2;
   }
   repeated ProtoDeviceContext members = 4;
+  string extension = 5;
+  string policy = 6;
 }
