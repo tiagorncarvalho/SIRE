@@ -142,7 +142,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 						lock.unlock();
 					}
 				}
-				case GET_PUBLIC_KEY -> { //TODO return
+				case GET_PUBLIC_KEY -> {
 					try {
 						lock.lock();
 						if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
@@ -155,7 +155,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 						lock.unlock();
 					}
 				}
-				case SIGN_DATA -> { //TODO return
+				case SIGN_DATA -> {
 					lock.lock();
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					byte[] data = byteStringToByteArray(out, msg.getDataToSign());
@@ -164,7 +164,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					out.close();
 					lock.unlock();
 				}
-				case GET_DATA -> { //TODO return
+				case GET_DATA -> {
 					DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
 							protoToSchnorr(msg.getSignature()));
 					boolean isValidEvidence = isValidDeviceEvidence(deviceEvidence);
@@ -180,7 +180,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 					return new ConfidentialMessage(plainData);
 				}
-				case GET_RANDOM_NUMBER -> { //TODO return
+				case GET_RANDOM_NUMBER -> {
 					lock.lock();
 					VerifiableShare	share = data.get(messageContext.getSender());
 					if (share == null)
@@ -213,7 +213,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey());
 					return new ConfidentialMessage(storage.get(msg.getKey()));
 				}
-				case MAP_LIST -> { //TODO return
+				case MAP_LIST -> {
 					ArrayList<byte []> lista = new ArrayList<>(storage.values());
 					ByteArrayOutputStream bout = new ByteArrayOutputStream();
 					ObjectOutputStream out = new ObjectOutputStream(bout);
@@ -286,7 +286,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_VIEW, "");
 
-					return new ConfidentialMessage(res); //TODO Add Proto
+					return new ConfidentialMessage(res);
 				}
 
 				case EXTENSION_ADD -> {
@@ -307,7 +307,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				}
 				case POLICY_ADD -> {
 					lock.lock();
-					membership.get(msg.getAppId()).setPolicy(msg.getPolicy());
+					membership.get(msg.getAppId()).setPolicy(msg.getPolicy().getPolicy(), msg.getPolicy().getType());
 					lock.unlock();
 					return new ConfidentialMessage();
 				}

@@ -3,18 +3,18 @@ package sire.dummy;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.protos.Messages.*;
-import sire.messages.Message0;
 import sire.messages.Message1;
-import sire.messages.Message2;
 import sire.messages.Message3;
 import static sire.utils.ProtoUtils.*;
 
 import sire.proxy.*;
 import com.google.protobuf.ByteString;
+import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.AppContext;
 import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.SireException;
+import sire.utils.Evidence;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -66,12 +66,11 @@ public class DummyAttester {
     }
 
     //TODO turn attesterId into hash of Ga
-    //TODO add sockets?
-    public Message1 join(String appId, Message0 message0) throws SireException, IOException, ClassNotFoundException {
+    public Message1 join(String appId, String attesterId, byte[] attesterSessionPubKey) throws SireException, IOException, ClassNotFoundException {
         ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
-                .setAttesterId(message0.getAttesterId())
+                .setAttesterId(attesterId)
                 .setAppId(appId)
-                .setAttesterPubSesKey(ByteString.copyFrom(message0.getEncodedAttesterSessionPublicKey()))
+                .setAttesterPubSesKey(ByteString.copyFrom(attesterSessionPubKey))
                 .build();
 
         System.out.println("Joining!");
@@ -97,14 +96,14 @@ public class DummyAttester {
     }
 
     //TODO turn attesterId into hash of Ga
-    //TODO add sockets?
-    public Message3 sendMessage2(String attesterId, Message2 message2) throws IOException, ClassNotFoundException {
+    public Message3 sendMessage2(String attesterId, byte[] attesterSessionPubKey, Evidence evidence, SchnorrSignature sign, byte[] mac)
+            throws IOException, ClassNotFoundException {
         System.out.println("Sending Message 2!");
         ProtoMessage2 msg2 = ProtoMessage2.newBuilder()
-                .setAttesterPubSesKey(ByteString.copyFrom(message2.getEncodedAttesterSessionPublicKey()))
-                .setEvidence(evidenceToProto(message2.getEvidence()))
-                .setSignatureEvidence(schnorrToProto(message2.getEvidenceSignature()))
-                .setMac(ByteString.copyFrom(message2.getMac()))
+                .setAttesterPubSesKey(ByteString.copyFrom(attesterSessionPubKey))
+                .setEvidence(evidenceToProto(evidence))
+                .setSignatureEvidence(schnorrToProto(sign))
+                .setMac(ByteString.copyFrom(mac))
                 .setAttesterId(attesterId)
                 .build();
 

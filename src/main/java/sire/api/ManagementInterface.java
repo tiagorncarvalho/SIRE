@@ -38,7 +38,7 @@ public interface ManagementInterface {
      * @param appId
      * @param policy
      */
-    void setPolicy(String appId, String policy);
+    void setPolicy(String appId, String policy, boolean type);
 
     /**
      *

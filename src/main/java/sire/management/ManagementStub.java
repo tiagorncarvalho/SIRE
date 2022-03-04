@@ -85,11 +85,14 @@ public class ManagementStub implements ManagementInterface {
     }
 
     @Override
-    public void setPolicy(String appId, String policy) {
+    public void setPolicy(String appId, String policy, boolean type) {
         Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
                 .setAppId(appId)
                 .setOperation(Messages.ProxyMessage.Operation.POLICY_ADD)
-                .setPolicy(policy)
+                .setPolicy(Messages.ProxyMessage.ProtoPolicy.newBuilder()
+                        .setPolicy(policy)
+                        .setType(type)
+                        .build())
                 .build();
         try {
             this.oos.writeObject(msg);
@@ -121,7 +124,7 @@ public class ManagementStub implements ManagementInterface {
             this.oos.writeObject(msg);
             Object o = this.ois.readObject();
             if(o instanceof Messages.ProxyResponse p && p.getType() == Messages.ProxyResponse.ResponseType.POLICY_GET) {
-                return new Policy(p.getPolicy());
+                return new Policy(p.getPolicy(), false);
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

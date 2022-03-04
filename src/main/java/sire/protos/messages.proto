@@ -125,7 +125,12 @@ message ProxyMessage {
   }
   ProtoExtType type = 11;
 
-  string policy = 12;
+  message ProtoPolicy {
+    string policy = 1;
+    bool type = 2; //false = logic expression, true = script
+  }
+
+  ProtoPolicy policy = 12;
 }
 
 message ProxyResponse {

@@ -55,8 +55,8 @@ public class AppContext implements Serializable {
                 '}';
     }
 
-    public void setPolicy(String policy) {
-        this.policy.setPolicy(policy);
+    public void setPolicy(String policy, boolean type) {
+        this.policy.setPolicy(policy, type);
     }
 
     public void removePolicy() {

@@ -4,9 +4,7 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
-import sire.messages.Message0;
 import sire.messages.Message1;
-import sire.messages.Message2;
 import sire.messages.Message3;
 import sire.serverProxyUtils.DeviceContext;
 import sire.utils.Evidence;
@@ -26,7 +24,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static sire.utils.ProtoUtils.deserialize;
 import static sire.utils.ProtoUtils.serialize;
@@ -66,9 +63,9 @@ public class Attester {
 			BigInteger attesterSessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
 			ECPoint attesterSessionPublicKey = curveGenerator.multiply(attesterSessionPrivateKey);
 
-			Message0 message0 = new Message0(attesterId, attesterSessionPublicKey.getEncoded(true));
+			//Message0 message0 = new Message0(attesterId, attesterSessionPublicKey.getEncoded(true));
 
-			Message1 message1 = dummy.join(appId, message0);
+			Message1 message1 = dummy.join(appId, attesterId, attesterSessionPublicKey.getEncoded(true));
 
 			byte[] sessionPublicKeysHash = computeHash(message1.getVerifierPublicSessionKey(),
 					attesterSessionPublicKey.getEncoded(true));
@@ -129,14 +126,8 @@ public class Attester {
 					claim
 			);
 
-			Message2 message2 = new Message2(
-					attesterSessionPublicKey.getEncoded(true),
-					evidence,
-					signature,
-					mac
-			);
-
-			Message3 message3 = dummy.sendMessage2(attesterId, message2);
+			Message3 message3 = dummy.sendMessage2(attesterId, attesterSessionPublicKey.getEncoded(true),
+					evidence, signature, mac);
 			byte[] decryptedData = decryptData(symmetricEncryptionKey, message3.getInitializationVector(),
 					message3.getEncryptedData());
 			System.out.println("Verifier sent me: " + new String(decryptedData));
