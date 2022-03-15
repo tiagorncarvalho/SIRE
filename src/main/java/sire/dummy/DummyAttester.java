@@ -6,12 +6,8 @@ import sire.protos.Messages.*;
 import sire.messages.Message1;
 import sire.messages.Message3;
 import static sire.utils.ProtoUtils.*;
-
-import sire.proxy.*;
 import com.google.protobuf.ByteString;
 import sire.schnorr.SchnorrSignature;
-import sire.schnorr.SchnorrSignatureScheme;
-import sire.serverProxyUtils.AppContext;
 import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.SireException;
 import sire.utils.Evidence;
@@ -22,9 +18,8 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-
+//TODO Add DeviceType Support
 public class DummyAttester {
     int proxyId;
     int port;

@@ -242,6 +242,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					return new ConfidentialMessage();
 				}
 				case JOIN -> {
+					//TODO Add DeviceType Support
 					lock.lock();
 					if(!membership.containsKey(msg.getAppId()))
 						membership.put(msg.getAppId(), new AppContext(msg.getAppId()));

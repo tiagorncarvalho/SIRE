@@ -1,7 +1,6 @@
 package sire.management;
 
 import sire.api.ManagementInterface;
-import sire.configuration.ExtensionType;
 import sire.protos.Messages;
 import sire.configuration.Policy;
 

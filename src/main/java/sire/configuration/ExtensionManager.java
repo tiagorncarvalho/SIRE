@@ -2,7 +2,6 @@ package sire.configuration;
 
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
-
 import java.util.Map;
 import java.util.TreeMap;
 

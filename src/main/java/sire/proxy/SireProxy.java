@@ -9,10 +9,7 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
-import org.springframework.boot.autoconfigure.integration.IntegrationProperties;
-import org.springframework.web.bind.annotation.*;
 import sire.api.ManagementInterface;
-import sire.configuration.ExtensionType;
 import sire.configuration.Policy;
 import sire.serverProxyUtils.*;
 import sire.utils.ServersResponseHandlerWithoutCombine;
@@ -42,7 +39,6 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author robin

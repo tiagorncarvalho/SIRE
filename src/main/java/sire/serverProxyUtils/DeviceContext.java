@@ -6,11 +6,17 @@ import java.sql.Timestamp;
 public class DeviceContext implements Serializable {
     private final String deviceId;
     private Timestamp lastPing;
-    //TODO device type
+    private DeviceType deviceType;
 
     public DeviceContext(String deviceId, Timestamp lastPing) {
         this.deviceId = deviceId;
         this.lastPing = lastPing;
+    }
+
+    public DeviceContext(String deviceId, Timestamp lastPing, DeviceType deviceType) {
+        this.deviceId = deviceId;
+        this.lastPing = lastPing;
+        this.deviceType = deviceType;
     }
 
     public String getDeviceId() {
@@ -31,5 +37,18 @@ public class DeviceContext implements Serializable {
                 "deviceId='" + deviceId + '\'' +
                 ", lastPing=" + lastPing +
                 '}';
+    }
+
+    public DeviceType getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(DeviceType deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public enum DeviceType {
+        CAMERA,
+
     }
 }
