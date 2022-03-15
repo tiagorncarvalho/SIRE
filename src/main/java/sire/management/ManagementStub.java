@@ -1,9 +1,9 @@
 package sire.management;
 
 import sire.api.ManagementInterface;
-import sire.extensions.ExtensionType;
+import sire.configuration.ExtensionType;
 import sire.protos.Messages;
-import sire.serverProxyUtils.Policy;
+import sire.configuration.Policy;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,11 +32,9 @@ public class ManagementStub implements ManagementInterface {
     }
 
     @Override
-    public void addExtension(String appId, ExtensionType type, String key, String code) {
+    public void addExtension(String key, String code) {
         Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
-                .setAppId(appId)
                 .setOperation(Messages.ProxyMessage.Operation.EXTENSION_ADD)
-                .setType(Messages.ProxyMessage.ProtoExtType.values()[type.ordinal()])
                 .setKey(key)
                 .setCode(code)
                 .build();
@@ -49,11 +47,9 @@ public class ManagementStub implements ManagementInterface {
     }
 
     @Override
-    public void removeExtension(String appId, ExtensionType type, String key) {
+    public void removeExtension(String key) {
         Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
-                .setAppId(appId)
                 .setOperation(Messages.ProxyMessage.Operation.EXTENSION_REMOVE)
-                .setTypeValue(type.ordinal())
                 .setKey(key)
                 .build();
         try {
@@ -65,11 +61,9 @@ public class ManagementStub implements ManagementInterface {
     }
 
     @Override
-    public String getExtension(String appId, ExtensionType type, String key) {
+    public String getExtension(String key) {
         Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
-                .setAppId(appId)
                 .setOperation(Messages.ProxyMessage.Operation.EXTENSION_GET)
-                .setTypeValue(type.ordinal())
                 .setKey(key)
                 .build();
         try {

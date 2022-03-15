@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript">
+function fetchExtension(extKey) {
+    var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
+    fetch(apiUrl).then(response => {
+      return response.json();
+    }).then(data => {
+      appendExtension(data)
+    }).catch(err => {
+      // Do something for an error here
+    });
+}
+function addExtension(extKey, newCode) {
+    var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
+    fetch(apiUrl, {
+		method: 'post',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(newCode)
+	}).then(response => {
+      return response.json();
+    }).then(data => {
+      //appendExtension(data)
+    }).catch(err => {
+      // Do something for an error here
+    });
+}
+
+function deleteExtension(extKey) {
+    var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
+    fetch(apiUrl, {
+		method: 'delete'
+	}).then(response => {
+      return response.json();
+    }).then(data => {
+      //appendExtension(data)
+    }).catch(err => {
+      // Do something for an error here
+    });
+}
+function fetchPolicy(appId) {
+    var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
+    fetch(apiUrl).then(response => {
+      return response.json();
+    }).then(data => {
+      appendPolicy(data)
+    }).catch(err => {
+      // Do something for an error here
+    });
+}
+
+function addPolicy(appId, policy) {
+    var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
+    fetch(apiUrl, {
+		method: 'post',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(policy)
+	}).then(response => {
+      return response.json();
+    }).then(data => {
+      //appendExtension(data)
+    }).catch(err => {
+      // Do something for an error here
+    });
+}
+
+function deletePolicy(appId) {
+    var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
+    fetch(apiUrl, {
+		method: 'delete'
+	}).then(response => {
+      return response.json();
+    }).then(data => {
+      //appendExtension(data)
+    }).catch(err => {
+      // Do something for an error here
+    });
+}
+
+function fetchMembership(appId) {
+    var apiUrl = 'http://localhost:8080/view?appId=' + appId;
+    fetch(apiUrl).then(response => {
+      return response.json();
+    }).then(data => {
+      appendMembership(data)
+    }).catch(err => {
+      // Do something for an error here
+    });
+}
+function appendExtension(data) {
+    var mainContainer = document.getElementById("extensionCode");
+    var div = document.createElement("div");
+    div.innerHTML = 'Extension:  ' + data.code;
+    mainContainer.appendChild(div);
+}
+
+function appendPolicy(data) {
+    var mainContainer = document.getElementById("policyGet");
+    var div = document.createElement("div");
+    div.innerHTML = 'Policy:  ' + data.policy;
+    mainContainer.appendChild(div);
+}
+
+function appendMembership(data) {
+    var mainContainer = document.getElementById("memberGet");
+	for(var i = 0; i < data.length; i++) {
+		var div = document.createElement("div");
+		div.innerHTML = 'Device ID:  ' + data[i].deviceId + ' Last ping: ' + data[i].lastPing;
+		mainContainer.appendChild(div);
+	}
+}
+</script>
+<head>
+<title>
+SIRE's Managment Interface</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Web page for app administrators to manage and configure extensions and policies, as well as view the membership state.">
+<style>
+body {background-color:#ffffff;background-repeat:no-repeat;background-position:top left;background-attachment:fixed;}
+h2{font-family:Arial, sans-serif;color:#000000;background-color:#ffffff;}
+p {font-family:Georgia, serif;font-size:14px;font-style:normal;font-weight:normal;color:#000000;background-color:#ffffff;}
+</style>
+</head>
+<body>
+<h1>SIRE's Management API</h1>
+<h2>Extensions</h2>
+<h3>Get Extension</h3>
+Extension key: <input type="text" id="extKey" name="extKey">
+<button onClick="fetchExtension(document.getElementById('extKey').value)">Get Extension</button>
+<div id="extensionCode"></div>
+<h3>Add Extension</h3>
+Extension key: <input type="text" id="extKeyAdd" name="extKeyAdd">
+Extension code: <input type="text" id="extCodeAdd" name="extCodeAdd">
+<button onClick="addExtension(document.getElementById('extKeyAdd').value, document.getElementById('extCodeAdd').value)">Add Extension</button>
+<h3>Remove Policy</h3>
+App ID: <input type="text" id="extKeyDel" name="extKeyDel">
+<button onClick="deleteExtension(document.getElementById('extKeyDel').value)">Remove Extension</button>
+
+<h2>Policy</h2>
+<h3>Get Policy</h3>
+App ID: <input type="text" id="policyId" name="policyId">
+<button onClick="fetchPolicy(document.getElementById('policyId').value)">Get Policy</button>
+<div id="policyGet"></div>
+
+<h3>Add Policy</h3>
+App ID: <input type="text" id="policyIdAdd" name="policyIdAdd">
+Policy: <input type="text" id="policyAdd" name="policyAdd">
+<button onClick="addPolicy(document.getElementById('policyIdAdd').value, document.getElementById('policyAdd').value)">Add Policy</button>
+
+<h3>Remove Policy</h3>
+App ID: <input type="text" id="policyIdDel" name="policyIdDel">
+<button onClick="deletePolicy(document.getElementById('policyIdDel').value)">Remove Policy</button>
+<h2>Membership</h2>
+App ID: <input type="text" id="memberId" name="memberId">
+<button onClick="fetchMembership(document.getElementById('memberId').value)">Get Membership</button>
+<div id="memberGet"></div>
+<p></p>
+</body>
+</html>

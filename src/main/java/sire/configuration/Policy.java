@@ -1,12 +1,16 @@
-package sire.serverProxyUtils;
+package sire.configuration;
 
 public class Policy {
-    String policy;
+    String policy = "NOT DEFINED";
     boolean type; //false = logic expression, true = script
 
     public Policy(String policy, boolean type) {
         this.policy = policy;
         this.type = type;
+    }
+
+    public Policy() {
+
     }
 
     public String getPolicy() {
@@ -15,6 +19,14 @@ public class Policy {
 
     public void setPolicy(String policy, boolean type) {
         this.policy = policy;
+        this.type = type;
+    }
+
+    public boolean getType() {
+        return type;
+    }
+
+    public void setType(boolean type) {
         this.type = type;
     }
 }

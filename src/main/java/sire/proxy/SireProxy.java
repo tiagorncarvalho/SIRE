@@ -9,6 +9,11 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties;
+import org.springframework.web.bind.annotation.*;
+import sire.api.ManagementInterface;
+import sire.configuration.ExtensionType;
+import sire.configuration.Policy;
 import sire.serverProxyUtils.*;
 import sire.utils.ServersResponseHandlerWithoutCombine;
 import sire.utils.UncombinedConfidentialResponse;
@@ -37,11 +42,13 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author robin
  */
-public class SireProxy implements Runnable{
+
+public class SireProxy implements Runnable, ManagementInterface {
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
 	private final MessageDigest messageDigest;
@@ -451,5 +458,115 @@ public class SireProxy implements Runnable{
 			}
 			return null;
 		}
+	}
+
+	@Override
+	public void addExtension(String key, String code) {
+		try {
+			ProxyMessage msg = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.EXTENSION_ADD)
+					.setKey(key)
+					.setCode(code)
+					.build();
+			serviceProxy.invokeOrdered(msg.toByteArray());
+		} catch(SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void removeExtension(String key) {
+		try {
+			ProxyMessage msg = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.EXTENSION_REMOVE)
+					.setKey(key)
+					.build();
+			serviceProxy.invokeOrdered(msg.toByteArray());
+		} catch(SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String getExtension(String key) {
+		try {
+			ProxyMessage msg = ProxyMessage.newBuilder()
+						.setOperation(ProxyMessage.Operation.EXTENSION_GET)
+					.setKey(key)
+					.build();
+			Response res = serviceProxy.invokeOrdered(msg.toByteArray());
+
+			return (String) deserialize(res.getPainData());
+		} catch(SecretSharingException | IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void setPolicy(String appId, String policy, boolean type) {
+		try {
+			ProxyMessage msg = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.POLICY_ADD)
+					.setAppId(appId)
+					.setPolicy(ProxyMessage.ProtoPolicy.newBuilder()
+							.setType(type)
+							.setPolicy(policy)
+							.build())
+					.build();
+			serviceProxy.invokeOrdered(msg.toByteArray());
+		} catch(SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void deletePolicy(String appId) {
+		try {
+			ProxyMessage msg = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.POLICY_REMOVE)
+					.setAppId(appId)
+					.build();
+			serviceProxy.invokeOrdered(msg.toByteArray());
+		} catch(SecretSharingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public Policy getPolicy(String appId) {
+		try {
+			ProxyMessage msg = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.POLICY_GET)
+					.setAppId(appId)
+					.build();
+			Response res = serviceProxy.invokeOrdered(msg.toByteArray());
+
+			return new Policy((String) deserialize(res.getPainData()), false);
+		} catch(SecretSharingException | IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public List<DeviceContext> getView(String appId) {
+		try {
+			ProxyMessage msg = ProxyMessage.newBuilder()
+					.setOperation(ProxyMessage.Operation.VIEW)
+					.setAppId(appId)
+					.build();
+			Response res = serviceProxy.invokeOrdered(msg.toByteArray());
+
+			byte[] tmp = res.getPainData();
+			if (tmp != null) {
+				ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
+				ObjectInputStream oin = new ObjectInputStream(bin);
+				return (List<DeviceContext>) oin.readObject();
+			} else
+				return null;
+		} catch(SecretSharingException | IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

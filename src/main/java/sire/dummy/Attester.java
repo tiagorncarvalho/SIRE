@@ -32,6 +32,7 @@ import static sire.utils.ProtoUtils.serialize;
  * @author robin
  */
 public class Attester {
+	//TODO keepalive pings
 	private static final int AES_KEY_LENGTH = 128;
 	private static final SecureRandom rndGenerator = new SecureRandom("sire".getBytes());
 	private static CMac macEngine;
@@ -178,12 +179,12 @@ public class Attester {
 			dummy.ping(appId, attesterId);
 			for(DeviceContext d : dummy.getView(appId))
 				System.out.println(d.toString());
-			dummy.leave(appId, attesterId);
+			/*dummy.leave(appId, attesterId);
 			for(DeviceContext d : dummy.getView(appId))
-				System.out.println(d.toString());
+				System.out.println(d.toString());*/
 			System.out.println("Done!");
 
-		} catch (IOException | ClassNotFoundException | InterruptedException e) {
+		} catch (IOException | ClassNotFoundException /*| InterruptedException*/ e) {
 			e.printStackTrace();
 		} finally {
 			dummy.close();

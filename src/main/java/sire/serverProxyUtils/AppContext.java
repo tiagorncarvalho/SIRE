@@ -1,6 +1,6 @@
 package sire.serverProxyUtils;
 
-import sire.server.Device;
+import sire.configuration.Policy;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -15,6 +15,13 @@ public class AppContext implements Serializable {
     public AppContext(String id) {
         this.id = id;
         this.devices = new TreeMap<>();
+        this.policy = new Policy();
+    }
+
+    public AppContext(String id, Policy policy) {
+        this.id = id;
+        this.devices = new TreeMap<>();
+        this.policy = policy;
     }
 
     public String getId() {
@@ -60,7 +67,7 @@ public class AppContext implements Serializable {
     }
 
     public void removePolicy() {
-        this.policy = null;
+        this.policy = new Policy();
     }
 
     public Policy getPolicy() {

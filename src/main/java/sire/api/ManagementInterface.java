@@ -1,7 +1,7 @@
 package sire.api;
 
-import sire.extensions.ExtensionType;
-import sire.serverProxyUtils.Policy;
+import sire.configuration.ExtensionType;
+import sire.configuration.Policy;
 
 /**
  *
@@ -9,29 +9,23 @@ import sire.serverProxyUtils.Policy;
 public interface ManagementInterface {
     /**
      *
-     * @param appId
-     * @param type
      * @param key
      * @param code
      */
-    void addExtension(String appId, ExtensionType type, String key, String code);
+    void addExtension(String key, String code);
 
     /**
      *
-     * @param appId
-     * @param type
      * @param key
      */
-    void removeExtension(String appId, ExtensionType type, String key);
+    void removeExtension(String key);
 
     /**
      *
-     * @param appId
-     * @param type
      * @param key
      * @return
      */
-    String getExtension(String appId, ExtensionType type, String key);
+    String getExtension(String key);
 
     /**
      *

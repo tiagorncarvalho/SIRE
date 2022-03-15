@@ -1,7 +1,7 @@
 package sire.utils;
 
 import com.google.protobuf.ByteString;
-import sire.extensions.ExtensionType;
+import sire.configuration.ExtensionType;
 import sire.protos.Messages;
 import sire.protos.Messages.ProxyMessage.ProtoExtType;
 import sire.schnorr.SchnorrSignature;

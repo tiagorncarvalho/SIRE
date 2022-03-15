@@ -1,4 +1,4 @@
-package sire.extensions;
+package sire.configuration;
 
 import groovy.lang.Script;
 import java.io.Serializable;
@@ -10,6 +10,10 @@ public class Extension implements Serializable {
     public Extension(String code, Script script) {
         this.code = code;
         this.script = script;
+    }
+
+    public Extension(String code) {
+        this.code = code;
     }
 
     public String getCode() {

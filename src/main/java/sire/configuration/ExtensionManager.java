@@ -1,4 +1,4 @@
-package sire.extensions;
+package sire.configuration;
 
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
@@ -14,17 +14,16 @@ public class ExtensionManager {
         this.extensions = new TreeMap<>();
     }
 
-    public void addExtension(String appId, ExtensionType type, String key, String code) {
-        this.extensions.put(appId + type.name() + key, new Extension(code, sh.parse(code)));
-
+    public void addExtension(String key, String code) {
+        this.extensions.put(key, new Extension(code, null/*sh.parse(code)*/));
     }
 
-    public Script getExtension(String appId, ExtensionType type, String key) {
-        return extensions.get(appId + type.name() + key).getScript();
+    public Script getExtension(String key) {
+        return extensions.get(key).getScript();
     }
 
-    public Script getExtension(String appId, ExtensionType type) {
-        return extensions.get(appId + type.name()).getScript();
+    public String getExtensionCode(String key) {
+        return extensions.containsKey(key) ? extensions.get(key).getCode() : null;
     }
 
     public void runExtension(String appId, ExtensionType type, String key) {
@@ -44,16 +43,16 @@ public class ExtensionManager {
         System.out.println("Extension ran!");
     }
 
-    public void removeExtension(String appId, ExtensionType type, String key) {
-        this.extensions.remove(appId + type + key);
+    public void removeExtension(String key) {
+        this.extensions.remove(key);
     }
 
-    public String getExtensionCode(String appId, ExtensionType type, String key) {
+/*    public String getExtensionCode(String appId, ExtensionType type, String key) {
         return this.extensions.get(appId + type.name() + key).getCode();
     }
 
     public String getExtensionCode(String appId, ExtensionType type) {
         return this.extensions.get(appId + type.name()).getCode();
-    }
+    }*/
 
 }

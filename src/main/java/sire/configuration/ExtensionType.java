@@ -1,4 +1,4 @@
-package sire.extensions;
+package sire.configuration;
 
 public enum ExtensionType {
     EXT_JOIN,

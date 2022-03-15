@@ -13,9 +13,10 @@ import confidential.polynomial.RandomPolynomialListener;
 import confidential.server.ConfidentialRecoverable;
 import confidential.statemanagement.ConfidentialSnapshot;
 import org.bouncycastle.math.ec.ECPoint;
+import sire.configuration.Policy;
 import sire.serverProxyUtils.DeviceEvidence;
-import sire.extensions.ExtensionManager;
-import sire.extensions.ExtensionType;
+import sire.configuration.ExtensionManager;
+import sire.configuration.ExtensionType;
 import sire.protos.Messages.*;
 import sire.utils.Evidence;
 import sire.schnorr.PublicPartialSignature;
@@ -276,6 +277,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					return new ConfidentialMessage();
 				}
 				case VIEW -> {
+					//TODO set timeout and prune timedout devices
 					List<DeviceContext> members = membership.get(msg.getAppId()).getMembership();
 					ByteArrayOutputStream bout = new ByteArrayOutputStream();
 					ObjectOutputStream out = new ObjectOutputStream(bout);
@@ -288,37 +290,45 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 					return new ConfidentialMessage(res);
 				}
-
 				case EXTENSION_ADD -> {
 					lock.lock();
-					extensionManager.addExtension(msg.getAppId(), ExtensionType.values()[msg.getType().ordinal()], msg.getKey(), msg.getCode());
+					extensionManager.addExtension(msg.getKey(), msg.getCode());
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case EXTENSION_REMOVE -> {
 					lock.lock();
-					extensionManager.removeExtension(msg.getAppId(), ExtensionType.values()[msg.getType().ordinal()], msg.getKey());
+					extensionManager.removeExtension(msg.getKey());
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case EXTENSION_GET -> {
-					String code = extensionManager.getExtensionCode(msg.getAppId(), ExtensionType.values()[msg.getType().ordinal()], msg.getKey());
-					return new ConfidentialMessage(serialize(code));
+					String code = extensionManager.getExtensionCode(msg.getKey());
+					return new ConfidentialMessage(serialize(code != null ? code : "NOT FOUND"));
 				}
 				case POLICY_ADD -> {
 					lock.lock();
-					membership.get(msg.getAppId()).setPolicy(msg.getPolicy().getPolicy(), msg.getPolicy().getType());
+					if(membership.containsKey(msg.getAppId()))
+						membership.get(msg.getAppId()).setPolicy(msg.getPolicy().getPolicy(), msg.getPolicy().getType());
+					else
+						membership.put(msg.getAppId(), new AppContext(msg.getAppId(),
+								new Policy(msg.getPolicy().getPolicy(), msg.getPolicy().getType())));
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case POLICY_REMOVE -> {
+					if(!membership.containsKey(msg.getAppId()))
+						return new ConfidentialMessage(serialize("NOT FOUND"));
 					lock.lock();
 					membership.get(msg.getAppId()).removePolicy();
 					lock.unlock();
 					return new ConfidentialMessage();
 				}
 				case POLICY_GET -> {
-					return new ConfidentialMessage(serialize(membership.get(msg.getAppId()).getPolicy().getPolicy()));
+					if(!membership.containsKey(msg.getAppId()))
+						return new ConfidentialMessage(serialize("NOT FOUND"));
+					else
+						return new ConfidentialMessage(serialize(membership.get(msg.getAppId()).getPolicy().getPolicy()));
 				}
 			}
 		} catch (IOException e) {

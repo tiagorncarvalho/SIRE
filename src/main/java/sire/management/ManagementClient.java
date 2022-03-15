@@ -1,7 +1,7 @@
 package sire.management;
 
 
-import sire.extensions.ExtensionType;
+import sire.configuration.ExtensionType;
 
 public class ManagementClient {
     public static void main(String[] args) {
@@ -9,10 +9,10 @@ public class ManagementClient {
         ManagementStub stub = new ManagementStub(proxyId);
         try {
             System.out.println("Adding extension...");
-            stub.addExtension("app1", ExtensionType.EXT_GET, "exampleKey1", "print \"Hello World!\\n\"");
+            stub.addExtension("app1" + ExtensionType.EXT_GET + "exampleKey1", "print \"Hello World!\\n\"");
             System.out.println("Extension added!");
             System.out.println("Getting Extension, Key: " + "app1" + ExtensionType.EXT_GET.name() + "exampleKey1 Code: " +
-                    stub.getExtension("app1", ExtensionType.EXT_GET, "exampleKey1"));
+                    stub.getExtension("app1" + ExtensionType.EXT_GET + "exampleKey1"));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 public class DeviceContext implements Serializable {
     private final String deviceId;
     private Timestamp lastPing;
+    //TODO device type
 
     public DeviceContext(String deviceId, Timestamp lastPing) {
         this.deviceId = deviceId;

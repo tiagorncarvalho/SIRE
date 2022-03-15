@@ -112,25 +112,13 @@ message ProxyMessage {
   string appId = 9;
 
   string code = 10;
-  enum ProtoExtType {
-    EXT_JOIN = 0;
-    EXT_LEAVE = 1;
-    EXT_PING = 2;
-    EXT_VIEW = 3;
-    EXT_PUT = 4;
-    EXT_DEL = 5;
-    EXT_GET = 6;
-    EXT_CAS = 7;
-    EXT_LIST = 8;
-  }
-  ProtoExtType type = 11;
 
   message ProtoPolicy {
     string policy = 1;
     bool type = 2; //false = logic expression, true = script
   }
 
-  ProtoPolicy policy = 12;
+  ProtoPolicy policy = 11;
 }
 
 message ProxyResponse {
