@@ -1,10 +1,10 @@
 # SIRE
 SIRE is a replicated infrastructure that supports remote attestation, application membership management, auditable integrity-protected storage and coordination primitives.  
 SIRE is composed by 4 main entities:
-- Server (rep* folders)
-- Proxy (pro* folders)
-- Attester (cli* folders)
-- App Admin (man* folders)
+- Server (``rep*`` folders)
+- Proxy (``pro*`` folders)
+- Attester (``cli*`` folders)
+- App Admin (``man*`` folders)
 # How to Compile
 To compile, use the following command:
 ```
