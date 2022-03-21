@@ -1,4 +1,4 @@
-package sire.dummy;
+package sire.attester;
 
 import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.DeviceContext.DeviceType;
@@ -15,7 +15,7 @@ import static sire.utils.ProtoUtils.serialize;
 /**
  * @author robin
  */
-public class Attester {
+public class AttesterClient {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException,
 			ClassNotFoundException {

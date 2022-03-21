@@ -1,4 +1,4 @@
-package sire.dummy;
+package sire.attester;
 
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
