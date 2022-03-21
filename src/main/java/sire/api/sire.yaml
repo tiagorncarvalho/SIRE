@@ -431,7 +431,6 @@ definitions:
         type: "string"
       code:
         type: "string"
-        #TODO
     xml:
       name: "Extension"
   Policy:

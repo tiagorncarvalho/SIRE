@@ -86,6 +86,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	//runs and stores extensions
 	private ExtensionManager extensionManager = new ExtensionManager();
 
+	//timeout for devices, in seconds
+	private final int timeout = 20;
+
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {
 			System.out.println("Usage: sire.server.SireServer <server id>");
@@ -243,16 +246,18 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					return new ConfidentialMessage();
 				}
 				case JOIN -> {
-					//TODO Add DeviceType Support
+
 					lock.lock();
 					if(!membership.containsKey(msg.getAppId()))
-						membership.put(msg.getAppId(), new AppContext(msg.getAppId()));
+						membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout));
 
 					membership.get(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
-							new Timestamp(messageContext.getTimestamp())));
+							new Timestamp(messageContext.getTimestamp()), protoDevToDev(msg.getDeviceType())));
+
+/*					System.out.println("Type: " + protoDevToDev(msg.getDeviceType()));
 
 					System.out.println("Timestamp: " + messageContext.getTimestamp() + " " +
-							new Timestamp(messageContext.getTimestamp()));
+							new Timestamp(messageContext.getTimestamp()));*/
 
 					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_JOIN, msg.getDeviceId());
 
@@ -279,7 +284,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					return new ConfidentialMessage();
 				}
 				case VIEW -> {
-					//TODO set timeout and prune timedout devices
 					List<DeviceContext> members = membership.get(msg.getAppId()).getMembership();
 					ByteArrayOutputStream bout = new ByteArrayOutputStream();
 					ObjectOutputStream out = new ObjectOutputStream(bout);
@@ -314,7 +318,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					if(membership.containsKey(msg.getAppId()))
 						membership.get(msg.getAppId()).setPolicy(msg.getPolicy().getPolicy(), msg.getPolicy().getType());
 					else
-						membership.put(msg.getAppId(), new AppContext(msg.getAppId(),
+						membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout,
 								new Policy(msg.getPolicy().getPolicy(), msg.getPolicy().getType())));
 					lock.unlock();
 					return new ConfidentialMessage();

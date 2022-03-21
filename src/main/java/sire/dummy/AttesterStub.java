@@ -13,6 +13,7 @@ import com.google.protobuf.ByteString;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.DeviceContext;
+import sire.serverProxyUtils.DeviceContext.DeviceType;
 import sire.serverProxyUtils.SireException;
 import sire.utils.Evidence;
 
@@ -31,9 +32,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//TODO Add DeviceType Support
 public class AttesterStub {
     String attesterId;
+    DeviceType type;
     int proxyId;
     String appId;
     String waTZVersion;
@@ -50,9 +51,10 @@ public class AttesterStub {
     private static MessageDigest messageDigest;
     private static Cipher symmetricCipher;
 
-    public AttesterStub(String attesterId, int proxyId, String appId, String waTZVersion) throws NoSuchAlgorithmException,
-            NoSuchPaddingException, IOException, ClassNotFoundException {
+    public AttesterStub(String attesterId, DeviceType type, int proxyId, String appId, String waTZVersion)
+            throws NoSuchAlgorithmException, NoSuchPaddingException, ClassNotFoundException {
         this.attesterId = attesterId;
+        this.type = type;
         this.proxyId = proxyId;
         this.appId = appId;
         this.waTZVersion = waTZVersion;
@@ -85,7 +87,7 @@ public class AttesterStub {
 
             //Message0 message0 = new Message0(attesterId, attesterSessionPublicKey.getEncoded(true));
 
-            Message1 message1 = join(appId, attesterId, attesterSessionPublicKey.getEncoded(true));
+            Message1 message1 = join(appId, attesterId, type, attesterSessionPublicKey.getEncoded(true));
 
             byte[] sessionPublicKeysHash = computeHash(message1.getVerifierPublicSessionKey(),
                     attesterSessionPublicKey.getEncoded(true));
@@ -217,9 +219,10 @@ public class AttesterStub {
     }
 
     //TODO turn attesterId into hash of Ga
-    public Message1 join(String appId, String attesterId, byte[] attesterSessionPubKey) throws SireException, IOException, ClassNotFoundException {
+    public Message1 join(String appId, String attesterId, DeviceType type, byte[] attesterSessionPubKey) throws SireException, IOException, ClassNotFoundException {
         ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
                 .setAttesterId(attesterId)
+                .setType(ProtoDeviceType.forNumber(type.ordinal()))
                 .setAppId(appId)
                 .setAttesterPubSesKey(ByteString.copyFrom(attesterSessionPubKey))
                 .build();
@@ -407,7 +410,8 @@ public class AttesterStub {
             ArrayList<DeviceContext> tmp = new ArrayList<>();
             //System.out.println("List size: " + res.size());
             for(ProxyResponse.ProtoDeviceContext d : res)
-                tmp.add(new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000)));
+                tmp.add(new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000),
+                        protoDevToDev(d.getDeviceType())));
             return tmp;
             //return byteStringToByteArray(out,((ProxyResponse) o).getValue());
         }

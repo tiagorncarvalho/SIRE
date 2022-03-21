@@ -8,11 +8,6 @@ public class DeviceContext implements Serializable {
     private Timestamp lastPing;
     private DeviceType deviceType;
 
-    public DeviceContext(String deviceId, Timestamp lastPing) {
-        this.deviceId = deviceId;
-        this.lastPing = lastPing;
-    }
-
     public DeviceContext(String deviceId, Timestamp lastPing, DeviceType deviceType) {
         this.deviceId = deviceId;
         this.lastPing = lastPing;
@@ -36,6 +31,7 @@ public class DeviceContext implements Serializable {
         return "DeviceContext{" +
                 "deviceId='" + deviceId + '\'' +
                 ", lastPing=" + lastPing +
+                ", deviceType=" + deviceType +
                 '}';
     }
 
@@ -49,6 +45,10 @@ public class DeviceContext implements Serializable {
 
     public enum DeviceType {
         CAMERA,
-
+        THERMOMETER,
+        RADAR,
+        LIDAR,
+        MOTIONSENSOR,
+        LIGHTSENSOR
     }
 }

@@ -439,6 +439,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 						.setOperation(ProxyMessage.Operation.JOIN)
 						.setAppId(msg.getAppId())
 						.setDeviceId(msg.getAttesterId())
+						.setDeviceType(msg.getType())
 						.build();
 				serviceProxy.invokeOrdered(joinRequest.toByteArray());
 

@@ -14,6 +14,140 @@ public final class Messages {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
+  /**
+   * Protobuf enum {@code sire.protos.ProtoDeviceType}
+   */
+  public enum ProtoDeviceType
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>CAMERA = 0;</code>
+     */
+    CAMERA(0),
+    /**
+     * <code>THERMOMETER = 1;</code>
+     */
+    THERMOMETER(1),
+    /**
+     * <code>RADAR = 2;</code>
+     */
+    RADAR(2),
+    /**
+     * <code>LIDAR = 3;</code>
+     */
+    LIDAR(3),
+    /**
+     * <code>MOTIONSENSOR = 4;</code>
+     */
+    MOTIONSENSOR(4),
+    /**
+     * <code>LIGHTSENSOR = 5;</code>
+     */
+    LIGHTSENSOR(5),
+    UNRECOGNIZED(-1),
+    ;
+
+    /**
+     * <code>CAMERA = 0;</code>
+     */
+    public static final int CAMERA_VALUE = 0;
+    /**
+     * <code>THERMOMETER = 1;</code>
+     */
+    public static final int THERMOMETER_VALUE = 1;
+    /**
+     * <code>RADAR = 2;</code>
+     */
+    public static final int RADAR_VALUE = 2;
+    /**
+     * <code>LIDAR = 3;</code>
+     */
+    public static final int LIDAR_VALUE = 3;
+    /**
+     * <code>MOTIONSENSOR = 4;</code>
+     */
+    public static final int MOTIONSENSOR_VALUE = 4;
+    /**
+     * <code>LIGHTSENSOR = 5;</code>
+     */
+    public static final int LIGHTSENSOR_VALUE = 5;
+
+
+    public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
+      return value;
+    }
+
+    /**
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static ProtoDeviceType valueOf(int value) {
+      return forNumber(value);
+    }
+
+    public static ProtoDeviceType forNumber(int value) {
+      switch (value) {
+        case 0: return CAMERA;
+        case 1: return THERMOMETER;
+        case 2: return RADAR;
+        case 3: return LIDAR;
+        case 4: return MOTIONSENSOR;
+        case 5: return LIGHTSENSOR;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<ProtoDeviceType>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+        ProtoDeviceType> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<ProtoDeviceType>() {
+            public ProtoDeviceType findValueByNumber(int number) {
+              return ProtoDeviceType.forNumber(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return sire.protos.Messages.getDescriptor().getEnumTypes().get(0);
+    }
+
+    private static final ProtoDeviceType[] VALUES = values();
+
+    public static ProtoDeviceType valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int value;
+
+    private ProtoDeviceType(int value) {
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:sire.protos.ProtoDeviceType)
+  }
+
   public interface ProtoSchnorrOrBuilder extends
       // @@protoc_insertion_point(interface_extends:sire.protos.ProtoSchnorr)
       com.google.protobuf.MessageOrBuilder {
@@ -1413,6 +1547,15 @@ public final class Messages {
      * <code>bytes attesterPubSesKey = 3;</code>
      */
     com.google.protobuf.ByteString getAttesterPubSesKey();
+
+    /**
+     * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+     */
+    int getTypeValue();
+    /**
+     * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+     */
+    sire.protos.Messages.ProtoDeviceType getType();
   }
   /**
    * <pre>
@@ -1434,6 +1577,7 @@ public final class Messages {
       attesterId_ = "";
       appId_ = "";
       attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
+      type_ = 0;
     }
 
     @java.lang.Override
@@ -1475,6 +1619,12 @@ public final class Messages {
             case 26: {
 
               attesterPubSesKey_ = input.readBytes();
+              break;
+            }
+            case 32: {
+              int rawValue = input.readEnum();
+
+              type_ = rawValue;
               break;
             }
             default: {
@@ -1590,6 +1740,23 @@ public final class Messages {
       return attesterPubSesKey_;
     }
 
+    public static final int TYPE_FIELD_NUMBER = 4;
+    private int type_;
+    /**
+     * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+     */
+    public int getTypeValue() {
+      return type_;
+    }
+    /**
+     * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+     */
+    public sire.protos.Messages.ProtoDeviceType getType() {
+      @SuppressWarnings("deprecation")
+      sire.protos.Messages.ProtoDeviceType result = sire.protos.Messages.ProtoDeviceType.valueOf(type_);
+      return result == null ? sire.protos.Messages.ProtoDeviceType.UNRECOGNIZED : result;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1613,6 +1780,9 @@ public final class Messages {
       if (!attesterPubSesKey_.isEmpty()) {
         output.writeBytes(3, attesterPubSesKey_);
       }
+      if (type_ != sire.protos.Messages.ProtoDeviceType.CAMERA.getNumber()) {
+        output.writeEnum(4, type_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1631,6 +1801,10 @@ public final class Messages {
       if (!attesterPubSesKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, attesterPubSesKey_);
+      }
+      if (type_ != sire.protos.Messages.ProtoDeviceType.CAMERA.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(4, type_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1654,6 +1828,7 @@ public final class Messages {
           .equals(other.getAppId());
       result = result && getAttesterPubSesKey()
           .equals(other.getAttesterPubSesKey());
+      result = result && type_ == other.type_;
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1671,6 +1846,8 @@ public final class Messages {
       hash = (53 * hash) + getAppId().hashCode();
       hash = (37 * hash) + ATTESTERPUBSESKEY_FIELD_NUMBER;
       hash = (53 * hash) + getAttesterPubSesKey().hashCode();
+      hash = (37 * hash) + TYPE_FIELD_NUMBER;
+      hash = (53 * hash) + type_;
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1814,6 +1991,8 @@ public final class Messages {
 
         attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
 
+        type_ = 0;
+
         return this;
       }
 
@@ -1843,6 +2022,7 @@ public final class Messages {
         result.attesterId_ = attesterId_;
         result.appId_ = appId_;
         result.attesterPubSesKey_ = attesterPubSesKey_;
+        result.type_ = type_;
         onBuilt();
         return result;
       }
@@ -1901,6 +2081,9 @@ public final class Messages {
         }
         if (other.getAttesterPubSesKey() != com.google.protobuf.ByteString.EMPTY) {
           setAttesterPubSesKey(other.getAttesterPubSesKey());
+        }
+        if (other.type_ != 0) {
+          setTypeValue(other.getTypeValue());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2106,6 +2289,51 @@ public final class Messages {
       public Builder clearAttesterPubSesKey() {
         
         attesterPubSesKey_ = getDefaultInstance().getAttesterPubSesKey();
+        onChanged();
+        return this;
+      }
+
+      private int type_ = 0;
+      /**
+       * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+       */
+      public int getTypeValue() {
+        return type_;
+      }
+      /**
+       * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+       */
+      public Builder setTypeValue(int value) {
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+       */
+      public sire.protos.Messages.ProtoDeviceType getType() {
+        @SuppressWarnings("deprecation")
+        sire.protos.Messages.ProtoDeviceType result = sire.protos.Messages.ProtoDeviceType.valueOf(type_);
+        return result == null ? sire.protos.Messages.ProtoDeviceType.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+       */
+      public Builder setType(sire.protos.Messages.ProtoDeviceType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        type_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+       */
+      public Builder clearType() {
+        
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -7082,26 +7310,26 @@ public final class Messages {
         getCodeBytes();
 
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
-     */
-    int getTypeValue();
-    /**
-     * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
-     */
-    sire.protos.Messages.ProxyMessage.ProtoExtType getType();
-
-    /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
     boolean hasPolicy();
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
     sire.protos.Messages.ProxyMessage.ProtoPolicy getPolicy();
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
     sire.protos.Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder();
+
+    /**
+     * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+     */
+    int getDeviceTypeValue();
+    /**
+     * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+     */
+    sire.protos.Messages.ProtoDeviceType getDeviceType();
   }
   /**
    * Protobuf type {@code sire.protos.ProxyMessage}
@@ -7124,7 +7352,7 @@ public final class Messages {
       deviceId_ = "";
       appId_ = "";
       code_ = "";
-      type_ = 0;
+      deviceType_ = 0;
     }
 
     @java.lang.Override
@@ -7222,13 +7450,7 @@ public final class Messages {
               code_ = s;
               break;
             }
-            case 88: {
-              int rawValue = input.readEnum();
-
-              type_ = rawValue;
-              break;
-            }
-            case 98: {
+            case 90: {
               sire.protos.Messages.ProxyMessage.ProtoPolicy.Builder subBuilder = null;
               if (policy_ != null) {
                 subBuilder = policy_.toBuilder();
@@ -7239,6 +7461,12 @@ public final class Messages {
                 policy_ = subBuilder.buildPartial();
               }
 
+              break;
+            }
+            case 96: {
+              int rawValue = input.readEnum();
+
+              deviceType_ = rawValue;
               break;
             }
             default: {
@@ -7540,167 +7768,6 @@ public final class Messages {
       }
 
       // @@protoc_insertion_point(enum_scope:sire.protos.ProxyMessage.Operation)
-    }
-
-    /**
-     * Protobuf enum {@code sire.protos.ProxyMessage.ProtoExtType}
-     */
-    public enum ProtoExtType
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>EXT_JOIN = 0;</code>
-       */
-      EXT_JOIN(0),
-      /**
-       * <code>EXT_LEAVE = 1;</code>
-       */
-      EXT_LEAVE(1),
-      /**
-       * <code>EXT_PING = 2;</code>
-       */
-      EXT_PING(2),
-      /**
-       * <code>EXT_VIEW = 3;</code>
-       */
-      EXT_VIEW(3),
-      /**
-       * <code>EXT_PUT = 4;</code>
-       */
-      EXT_PUT(4),
-      /**
-       * <code>EXT_DEL = 5;</code>
-       */
-      EXT_DEL(5),
-      /**
-       * <code>EXT_GET = 6;</code>
-       */
-      EXT_GET(6),
-      /**
-       * <code>EXT_CAS = 7;</code>
-       */
-      EXT_CAS(7),
-      /**
-       * <code>EXT_LIST = 8;</code>
-       */
-      EXT_LIST(8),
-      UNRECOGNIZED(-1),
-      ;
-
-      /**
-       * <code>EXT_JOIN = 0;</code>
-       */
-      public static final int EXT_JOIN_VALUE = 0;
-      /**
-       * <code>EXT_LEAVE = 1;</code>
-       */
-      public static final int EXT_LEAVE_VALUE = 1;
-      /**
-       * <code>EXT_PING = 2;</code>
-       */
-      public static final int EXT_PING_VALUE = 2;
-      /**
-       * <code>EXT_VIEW = 3;</code>
-       */
-      public static final int EXT_VIEW_VALUE = 3;
-      /**
-       * <code>EXT_PUT = 4;</code>
-       */
-      public static final int EXT_PUT_VALUE = 4;
-      /**
-       * <code>EXT_DEL = 5;</code>
-       */
-      public static final int EXT_DEL_VALUE = 5;
-      /**
-       * <code>EXT_GET = 6;</code>
-       */
-      public static final int EXT_GET_VALUE = 6;
-      /**
-       * <code>EXT_CAS = 7;</code>
-       */
-      public static final int EXT_CAS_VALUE = 7;
-      /**
-       * <code>EXT_LIST = 8;</code>
-       */
-      public static final int EXT_LIST_VALUE = 8;
-
-
-      public final int getNumber() {
-        if (this == UNRECOGNIZED) {
-          throw new java.lang.IllegalArgumentException(
-              "Can't get the number of an unknown enum value.");
-        }
-        return value;
-      }
-
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static ProtoExtType valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static ProtoExtType forNumber(int value) {
-        switch (value) {
-          case 0: return EXT_JOIN;
-          case 1: return EXT_LEAVE;
-          case 2: return EXT_PING;
-          case 3: return EXT_VIEW;
-          case 4: return EXT_PUT;
-          case 5: return EXT_DEL;
-          case 6: return EXT_GET;
-          case 7: return EXT_CAS;
-          case 8: return EXT_LIST;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<ProtoExtType>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          ProtoExtType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<ProtoExtType>() {
-              public ProtoExtType findValueByNumber(int number) {
-                return ProtoExtType.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return sire.protos.Messages.ProxyMessage.getDescriptor().getEnumTypes().get(1);
-      }
-
-      private static final ProtoExtType[] VALUES = values();
-
-      public static ProtoExtType valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        if (desc.getIndex() == -1) {
-          return UNRECOGNIZED;
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private ProtoExtType(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:sire.protos.ProxyMessage.ProtoExtType)
     }
 
     public interface ProtoPolicyOrBuilder extends
@@ -8563,42 +8630,42 @@ public final class Messages {
       }
     }
 
-    public static final int TYPE_FIELD_NUMBER = 11;
-    private int type_;
-    /**
-     * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
-     */
-    public int getTypeValue() {
-      return type_;
-    }
-    /**
-     * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
-     */
-    public sire.protos.Messages.ProxyMessage.ProtoExtType getType() {
-      @SuppressWarnings("deprecation")
-      sire.protos.Messages.ProxyMessage.ProtoExtType result = sire.protos.Messages.ProxyMessage.ProtoExtType.valueOf(type_);
-      return result == null ? sire.protos.Messages.ProxyMessage.ProtoExtType.UNRECOGNIZED : result;
-    }
-
-    public static final int POLICY_FIELD_NUMBER = 12;
+    public static final int POLICY_FIELD_NUMBER = 11;
     private sire.protos.Messages.ProxyMessage.ProtoPolicy policy_;
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
     public boolean hasPolicy() {
       return policy_ != null;
     }
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
     public sire.protos.Messages.ProxyMessage.ProtoPolicy getPolicy() {
       return policy_ == null ? sire.protos.Messages.ProxyMessage.ProtoPolicy.getDefaultInstance() : policy_;
     }
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
     public sire.protos.Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder() {
       return getPolicy();
+    }
+
+    public static final int DEVICETYPE_FIELD_NUMBER = 12;
+    private int deviceType_;
+    /**
+     * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+     */
+    public int getDeviceTypeValue() {
+      return deviceType_;
+    }
+    /**
+     * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+     */
+    public sire.protos.Messages.ProtoDeviceType getDeviceType() {
+      @SuppressWarnings("deprecation")
+      sire.protos.Messages.ProtoDeviceType result = sire.protos.Messages.ProtoDeviceType.valueOf(deviceType_);
+      return result == null ? sire.protos.Messages.ProtoDeviceType.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -8645,11 +8712,11 @@ public final class Messages {
       if (!getCodeBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 10, code_);
       }
-      if (type_ != sire.protos.Messages.ProxyMessage.ProtoExtType.EXT_JOIN.getNumber()) {
-        output.writeEnum(11, type_);
-      }
       if (policy_ != null) {
-        output.writeMessage(12, getPolicy());
+        output.writeMessage(11, getPolicy());
+      }
+      if (deviceType_ != sire.protos.Messages.ProtoDeviceType.CAMERA.getNumber()) {
+        output.writeEnum(12, deviceType_);
       }
       unknownFields.writeTo(output);
     }
@@ -8696,13 +8763,13 @@ public final class Messages {
       if (!getCodeBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, code_);
       }
-      if (type_ != sire.protos.Messages.ProxyMessage.ProtoExtType.EXT_JOIN.getNumber()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(11, type_);
-      }
       if (policy_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(12, getPolicy());
+          .computeMessageSize(11, getPolicy());
+      }
+      if (deviceType_ != sire.protos.Messages.ProtoDeviceType.CAMERA.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(12, deviceType_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -8745,12 +8812,12 @@ public final class Messages {
           .equals(other.getAppId());
       result = result && getCode()
           .equals(other.getCode());
-      result = result && type_ == other.type_;
       result = result && (hasPolicy() == other.hasPolicy());
       if (hasPolicy()) {
         result = result && getPolicy()
             .equals(other.getPolicy());
       }
+      result = result && deviceType_ == other.deviceType_;
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -8786,12 +8853,12 @@ public final class Messages {
       hash = (53 * hash) + getAppId().hashCode();
       hash = (37 * hash) + CODE_FIELD_NUMBER;
       hash = (53 * hash) + getCode().hashCode();
-      hash = (37 * hash) + TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + type_;
       if (hasPolicy()) {
         hash = (37 * hash) + POLICY_FIELD_NUMBER;
         hash = (53 * hash) + getPolicy().hashCode();
       }
+      hash = (37 * hash) + DEVICETYPE_FIELD_NUMBER;
+      hash = (53 * hash) + deviceType_;
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -8953,14 +9020,14 @@ public final class Messages {
 
         code_ = "";
 
-        type_ = 0;
-
         if (policyBuilder_ == null) {
           policy_ = null;
         } else {
           policy_ = null;
           policyBuilder_ = null;
         }
+        deviceType_ = 0;
+
         return this;
       }
 
@@ -9005,12 +9072,12 @@ public final class Messages {
         result.deviceId_ = deviceId_;
         result.appId_ = appId_;
         result.code_ = code_;
-        result.type_ = type_;
         if (policyBuilder_ == null) {
           result.policy_ = policy_;
         } else {
           result.policy_ = policyBuilder_.build();
         }
+        result.deviceType_ = deviceType_;
         onBuilt();
         return result;
       }
@@ -9093,11 +9160,11 @@ public final class Messages {
           code_ = other.code_;
           onChanged();
         }
-        if (other.type_ != 0) {
-          setTypeValue(other.getTypeValue());
-        }
         if (other.hasPolicy()) {
           mergePolicy(other.getPolicy());
+        }
+        if (other.deviceType_ != 0) {
+          setDeviceTypeValue(other.getDeviceTypeValue());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -9782,62 +9849,17 @@ public final class Messages {
         return this;
       }
 
-      private int type_ = 0;
-      /**
-       * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
-       */
-      public int getTypeValue() {
-        return type_;
-      }
-      /**
-       * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
-       */
-      public Builder setTypeValue(int value) {
-        type_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
-       */
-      public sire.protos.Messages.ProxyMessage.ProtoExtType getType() {
-        @SuppressWarnings("deprecation")
-        sire.protos.Messages.ProxyMessage.ProtoExtType result = sire.protos.Messages.ProxyMessage.ProtoExtType.valueOf(type_);
-        return result == null ? sire.protos.Messages.ProxyMessage.ProtoExtType.UNRECOGNIZED : result;
-      }
-      /**
-       * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
-       */
-      public Builder setType(sire.protos.Messages.ProxyMessage.ProtoExtType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        
-        type_ = value.getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.sire.protos.ProxyMessage.ProtoExtType type = 11;</code>
-       */
-      public Builder clearType() {
-        
-        type_ = 0;
-        onChanged();
-        return this;
-      }
-
       private sire.protos.Messages.ProxyMessage.ProtoPolicy policy_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
           sire.protos.Messages.ProxyMessage.ProtoPolicy, sire.protos.Messages.ProxyMessage.ProtoPolicy.Builder, sire.protos.Messages.ProxyMessage.ProtoPolicyOrBuilder> policyBuilder_;
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public boolean hasPolicy() {
         return policyBuilder_ != null || policy_ != null;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public sire.protos.Messages.ProxyMessage.ProtoPolicy getPolicy() {
         if (policyBuilder_ == null) {
@@ -9847,7 +9869,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public Builder setPolicy(sire.protos.Messages.ProxyMessage.ProtoPolicy value) {
         if (policyBuilder_ == null) {
@@ -9863,7 +9885,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public Builder setPolicy(
           sire.protos.Messages.ProxyMessage.ProtoPolicy.Builder builderForValue) {
@@ -9877,7 +9899,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public Builder mergePolicy(sire.protos.Messages.ProxyMessage.ProtoPolicy value) {
         if (policyBuilder_ == null) {
@@ -9895,7 +9917,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public Builder clearPolicy() {
         if (policyBuilder_ == null) {
@@ -9909,7 +9931,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public sire.protos.Messages.ProxyMessage.ProtoPolicy.Builder getPolicyBuilder() {
         
@@ -9917,7 +9939,7 @@ public final class Messages {
         return getPolicyFieldBuilder().getBuilder();
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public sire.protos.Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder() {
         if (policyBuilder_ != null) {
@@ -9928,7 +9950,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 12;</code>
+       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           sire.protos.Messages.ProxyMessage.ProtoPolicy, sire.protos.Messages.ProxyMessage.ProtoPolicy.Builder, sire.protos.Messages.ProxyMessage.ProtoPolicyOrBuilder> 
@@ -9942,6 +9964,51 @@ public final class Messages {
           policy_ = null;
         }
         return policyBuilder_;
+      }
+
+      private int deviceType_ = 0;
+      /**
+       * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+       */
+      public int getDeviceTypeValue() {
+        return deviceType_;
+      }
+      /**
+       * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+       */
+      public Builder setDeviceTypeValue(int value) {
+        deviceType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+       */
+      public sire.protos.Messages.ProtoDeviceType getDeviceType() {
+        @SuppressWarnings("deprecation")
+        sire.protos.Messages.ProtoDeviceType result = sire.protos.Messages.ProtoDeviceType.valueOf(deviceType_);
+        return result == null ? sire.protos.Messages.ProtoDeviceType.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+       */
+      public Builder setDeviceType(sire.protos.Messages.ProtoDeviceType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        deviceType_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+       */
+      public Builder clearDeviceType() {
+        
+        deviceType_ = 0;
+        onChanged();
+        return this;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -10345,6 +10412,15 @@ public final class Messages {
        * <code>.google.protobuf.Timestamp time = 2;</code>
        */
       com.google.protobuf.TimestampOrBuilder getTimeOrBuilder();
+
+      /**
+       * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+       */
+      int getDeviceTypeValue();
+      /**
+       * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+       */
+      sire.protos.Messages.ProtoDeviceType getDeviceType();
     }
     /**
      * Protobuf type {@code sire.protos.ProxyResponse.ProtoDeviceContext}
@@ -10360,6 +10436,7 @@ public final class Messages {
       }
       private ProtoDeviceContext() {
         deviceId_ = "";
+        deviceType_ = 0;
       }
 
       @java.lang.Override
@@ -10403,6 +10480,12 @@ public final class Messages {
                   time_ = subBuilder.buildPartial();
                 }
 
+                break;
+              }
+              case 24: {
+                int rawValue = input.readEnum();
+
+                deviceType_ = rawValue;
                 break;
               }
               default: {
@@ -10492,6 +10575,23 @@ public final class Messages {
         return getTime();
       }
 
+      public static final int DEVICETYPE_FIELD_NUMBER = 3;
+      private int deviceType_;
+      /**
+       * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+       */
+      public int getDeviceTypeValue() {
+        return deviceType_;
+      }
+      /**
+       * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+       */
+      public sire.protos.Messages.ProtoDeviceType getDeviceType() {
+        @SuppressWarnings("deprecation")
+        sire.protos.Messages.ProtoDeviceType result = sire.protos.Messages.ProtoDeviceType.valueOf(deviceType_);
+        return result == null ? sire.protos.Messages.ProtoDeviceType.UNRECOGNIZED : result;
+      }
+
       private byte memoizedIsInitialized = -1;
       @java.lang.Override
       public final boolean isInitialized() {
@@ -10512,6 +10612,9 @@ public final class Messages {
         if (time_ != null) {
           output.writeMessage(2, getTime());
         }
+        if (deviceType_ != sire.protos.Messages.ProtoDeviceType.CAMERA.getNumber()) {
+          output.writeEnum(3, deviceType_);
+        }
         unknownFields.writeTo(output);
       }
 
@@ -10527,6 +10630,10 @@ public final class Messages {
         if (time_ != null) {
           size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(2, getTime());
+        }
+        if (deviceType_ != sire.protos.Messages.ProtoDeviceType.CAMERA.getNumber()) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeEnumSize(3, deviceType_);
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -10551,6 +10658,7 @@ public final class Messages {
           result = result && getTime()
               .equals(other.getTime());
         }
+        result = result && deviceType_ == other.deviceType_;
         result = result && unknownFields.equals(other.unknownFields);
         return result;
       }
@@ -10568,6 +10676,8 @@ public final class Messages {
           hash = (37 * hash) + TIME_FIELD_NUMBER;
           hash = (53 * hash) + getTime().hashCode();
         }
+        hash = (37 * hash) + DEVICETYPE_FIELD_NUMBER;
+        hash = (53 * hash) + deviceType_;
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
         return hash;
@@ -10709,6 +10819,8 @@ public final class Messages {
             time_ = null;
             timeBuilder_ = null;
           }
+          deviceType_ = 0;
+
           return this;
         }
 
@@ -10741,6 +10853,7 @@ public final class Messages {
           } else {
             result.time_ = timeBuilder_.build();
           }
+          result.deviceType_ = deviceType_;
           onBuilt();
           return result;
         }
@@ -10795,6 +10908,9 @@ public final class Messages {
           }
           if (other.hasTime()) {
             mergeTime(other.getTime());
+          }
+          if (other.deviceType_ != 0) {
+            setDeviceTypeValue(other.getDeviceTypeValue());
           }
           this.mergeUnknownFields(other.unknownFields);
           onChanged();
@@ -11009,6 +11125,51 @@ public final class Messages {
             time_ = null;
           }
           return timeBuilder_;
+        }
+
+        private int deviceType_ = 0;
+        /**
+         * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+         */
+        public int getDeviceTypeValue() {
+          return deviceType_;
+        }
+        /**
+         * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+         */
+        public Builder setDeviceTypeValue(int value) {
+          deviceType_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+         */
+        public sire.protos.Messages.ProtoDeviceType getDeviceType() {
+          @SuppressWarnings("deprecation")
+          sire.protos.Messages.ProtoDeviceType result = sire.protos.Messages.ProtoDeviceType.valueOf(deviceType_);
+          return result == null ? sire.protos.Messages.ProtoDeviceType.UNRECOGNIZED : result;
+        }
+        /**
+         * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+         */
+        public Builder setDeviceType(sire.protos.Messages.ProtoDeviceType value) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          
+          deviceType_ = value.getNumber();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+         */
+        public Builder clearDeviceType() {
+          
+          deviceType_ = 0;
+          onChanged();
+          return this;
         }
         @java.lang.Override
         public final Builder setUnknownFields(
@@ -12312,42 +12473,43 @@ public final class Messages {
       "\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014\022\024\n\014ran" +
       "domPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022\016\n\006anch" +
       "or\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005claim\030\003" +
-      " \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"M\n\rProtoMess" +
+      " \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"y\n\rProtoMess" +
       "age0\022\022\n\nattesterId\030\001 \001(\t\022\r\n\005appId\030\002 \001(\t\022" +
-      "\031\n\021attesterPubSesKey\030\003 \001(\014\"\210\001\n\rProtoMess" +
-      "age1\022\031\n\021verifierPubSesKey\030\001 \001(\014\022\026\n\016verif" +
-      "ierPubKey\030\002 \001(\014\0227\n\024signatureSessionKeys\030" +
-      "\003 \001(\0132\031.sire.protos.ProtoSchnorr\022\013\n\003mac\030" +
-      "\004 \001(\014\"\276\001\n\rProtoMessage2\022\r\n\005appId\030\001 \001(\t\022\031" +
-      "\n\021attesterPubSesKey\030\002 \001(\014\022,\n\010evidence\030\003 " +
-      "\001(\0132\032.sire.protos.ProtoEvidence\0224\n\021signa" +
-      "tureEvidence\030\004 \001(\0132\031.sire.protos.ProtoSc" +
-      "hnorr\022\013\n\003mac\030\005 \001(\014\022\022\n\nattesterId\030\006 \001(\t\"2" +
-      "\n\rProtoMessage3\022\n\n\002iv\030\001 \001(\014\022\025\n\rencrypted" +
-      "Data\030\002 \001(\014\"\301\002\n\027ProxyAttestationMessage\022D" +
-      "\n\toperation\030\001 \001(\01621.sire.protos.ProxyAtt" +
-      "estationMessage.AttOperation\022,\n\010evidence" +
-      "\030\002 \001(\0132\032.sire.protos.ProtoEvidence\022,\n\tsi" +
-      "gnature\030\003 \001(\0132\031.sire.protos.ProtoSchnorr" +
-      "\022\022\n\ndataToSign\030\004 \001(\014\"p\n\014AttOperation\022\030\n\024" +
-      "GENERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY" +
-      "\020\001\022\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_R" +
-      "ANDOM_NUMBER\020\004\"\321\001\n\017ProxyMapMessage\022<\n\top" +
-      "eration\030\001 \001(\0162).sire.protos.ProxyMapMess" +
-      "age.MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005value\030\003" +
-      " \001(\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOperation\022\013\n" +
-      "\007MAP_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP_GET\020\002\022" +
-      "\014\n\010MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\242\007\n\014ProxyMess" +
-      "age\0226\n\toperation\030\001 \001(\0162#.sire.protos.Pro" +
-      "xyMessage.Operation\022,\n\010evidence\030\002 \001(\0132\032." +
-      "sire.protos.ProtoEvidence\022,\n\tsignature\030\003" +
-      " \001(\0132\031.sire.protos.ProtoSchnorr\022\022\n\ndataT" +
-      "oSign\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value\030\006 \001(\014\022" +
-      "\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(\t\022\r\n\005ap" +
-      "pId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0224\n\004type\030\013 \001(\0162&." +
-      "sire.protos.ProxyMessage.ProtoExtType\0225\n" +
-      "\006policy\030\014 \001(\0132%.sire.protos.ProxyMessage" +
-      ".ProtoPolicy\032+\n\013ProtoPolicy\022\016\n\006policy\030\001 " +
+      "\031\n\021attesterPubSesKey\030\003 \001(\014\022*\n\004type\030\004 \001(\016" +
+      "2\034.sire.protos.ProtoDeviceType\"\210\001\n\rProto" +
+      "Message1\022\031\n\021verifierPubSesKey\030\001 \001(\014\022\026\n\016v" +
+      "erifierPubKey\030\002 \001(\014\0227\n\024signatureSessionK" +
+      "eys\030\003 \001(\0132\031.sire.protos.ProtoSchnorr\022\013\n\003" +
+      "mac\030\004 \001(\014\"\276\001\n\rProtoMessage2\022\r\n\005appId\030\001 \001" +
+      "(\t\022\031\n\021attesterPubSesKey\030\002 \001(\014\022,\n\010evidenc" +
+      "e\030\003 \001(\0132\032.sire.protos.ProtoEvidence\0224\n\021s" +
+      "ignatureEvidence\030\004 \001(\0132\031.sire.protos.Pro" +
+      "toSchnorr\022\013\n\003mac\030\005 \001(\014\022\022\n\nattesterId\030\006 \001" +
+      "(\t\"2\n\rProtoMessage3\022\n\n\002iv\030\001 \001(\014\022\025\n\rencry" +
+      "ptedData\030\002 \001(\014\"\301\002\n\027ProxyAttestationMessa" +
+      "ge\022D\n\toperation\030\001 \001(\01621.sire.protos.Prox" +
+      "yAttestationMessage.AttOperation\022,\n\010evid" +
+      "ence\030\002 \001(\0132\032.sire.protos.ProtoEvidence\022," +
+      "\n\tsignature\030\003 \001(\0132\031.sire.protos.ProtoSch" +
+      "norr\022\022\n\ndataToSign\030\004 \001(\014\"p\n\014AttOperation" +
+      "\022\030\n\024GENERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC" +
+      "_KEY\020\001\022\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021G" +
+      "ET_RANDOM_NUMBER\020\004\"\321\001\n\017ProxyMapMessage\022<" +
+      "\n\toperation\030\001 \001(\0162).sire.protos.ProxyMap" +
+      "Message.MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005val" +
+      "ue\030\003 \001(\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOperatio" +
+      "n\022\013\n\007MAP_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP_GE" +
+      "T\020\002\022\014\n\010MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\222\006\n\014Proxy" +
+      "Message\0226\n\toperation\030\001 \001(\0162#.sire.protos" +
+      ".ProxyMessage.Operation\022,\n\010evidence\030\002 \001(" +
+      "\0132\032.sire.protos.ProtoEvidence\022,\n\tsignatu" +
+      "re\030\003 \001(\0132\031.sire.protos.ProtoSchnorr\022\022\n\nd" +
+      "ataToSign\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value\030\006 " +
+      "\001(\014\022\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(\t\022\r" +
+      "\n\005appId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0225\n\006policy\030\013 " +
+      "\001(\0132%.sire.protos.ProxyMessage.ProtoPoli" +
+      "cy\0220\n\ndeviceType\030\014 \001(\0162\034.sire.protos.Pro" +
+      "toDeviceType\032+\n\013ProtoPolicy\022\016\n\006policy\030\001 " +
       "\001(\t\022\014\n\004type\030\002 \001(\010\"\347\002\n\tOperation\022\030\n\024GENER" +
       "ATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n" +
       "\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RANDOM" +
@@ -12357,20 +12519,20 @@ public final class Messages {
       "\021\n\rEXTENSION_ADD\020\016\022\024\n\020EXTENSION_REMOVE\020\017" +
       "\022\021\n\rEXTENSION_GET\020\020\022\016\n\nPOLICY_ADD\020\021\022\021\n\rP" +
       "OLICY_REMOVE\020\022\022\016\n\nPOLICY_GET\020\023\022\033\n\027GET_VE" +
-      "RIFIER_PUBLIC_KEY\020\024\"\211\001\n\014ProtoExtType\022\014\n\010" +
-      "EXT_JOIN\020\000\022\r\n\tEXT_LEAVE\020\001\022\014\n\010EXT_PING\020\002\022" +
-      "\014\n\010EXT_VIEW\020\003\022\013\n\007EXT_PUT\020\004\022\013\n\007EXT_DEL\020\005\022" +
-      "\013\n\007EXT_GET\020\006\022\013\n\007EXT_CAS\020\007\022\014\n\010EXT_LIST\020\010\"" +
-      "\360\002\n\rProxyResponse\0225\n\004type\030\001 \001(\0162\'.sire.p" +
-      "rotos.ProxyResponse.ResponseType\022\014\n\004list" +
-      "\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022>\n\007members\030\004 \003(\0132-" +
-      ".sire.protos.ProxyResponse.ProtoDeviceCo" +
-      "ntext\022\021\n\textension\030\005 \001(\t\022\016\n\006policy\030\006 \001(\t" +
-      "\032P\n\022ProtoDeviceContext\022\020\n\010deviceId\030\001 \001(\t" +
-      "\022(\n\004time\030\002 \001(\0132\032.google.protobuf.Timesta" +
-      "mp\"V\n\014ResponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_L" +
-      "IST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n\nPO" +
-      "LICY_GET\020\004b\006proto3"
+      "RIFIER_PUBLIC_KEY\020\024\"\243\003\n\rProxyResponse\0225\n" +
+      "\004type\030\001 \001(\0162\'.sire.protos.ProxyResponse." +
+      "ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(" +
+      "\014\022>\n\007members\030\004 \003(\0132-.sire.protos.ProxyRe" +
+      "sponse.ProtoDeviceContext\022\021\n\textension\030\005" +
+      " \001(\t\022\016\n\006policy\030\006 \001(\t\032\202\001\n\022ProtoDeviceCont" +
+      "ext\022\020\n\010deviceId\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.go" +
+      "ogle.protobuf.Timestamp\0220\n\ndeviceType\030\003 " +
+      "\001(\0162\034.sire.protos.ProtoDeviceType\"V\n\014Res" +
+      "ponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004" +
+      "VIEW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n\nPOLICY_GET\020" +
+      "\004*g\n\017ProtoDeviceType\022\n\n\006CAMERA\020\000\022\017\n\013THER" +
+      "MOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTIO" +
+      "NSENSOR\020\004\022\017\n\013LIGHTSENSOR\020\005b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -12402,7 +12564,7 @@ public final class Messages {
     internal_static_sire_protos_ProtoMessage0_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_protos_ProtoMessage0_descriptor,
-        new java.lang.String[] { "AttesterId", "AppId", "AttesterPubSesKey", });
+        new java.lang.String[] { "AttesterId", "AppId", "AttesterPubSesKey", "Type", });
     internal_static_sire_protos_ProtoMessage1_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_sire_protos_ProtoMessage1_fieldAccessorTable = new
@@ -12438,7 +12600,7 @@ public final class Messages {
     internal_static_sire_protos_ProxyMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_protos_ProxyMessage_descriptor,
-        new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", "Key", "Value", "OldData", "DeviceId", "AppId", "Code", "Type", "Policy", });
+        new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", "Key", "Value", "OldData", "DeviceId", "AppId", "Code", "Policy", "DeviceType", });
     internal_static_sire_protos_ProxyMessage_ProtoPolicy_descriptor =
       internal_static_sire_protos_ProxyMessage_descriptor.getNestedTypes().get(0);
     internal_static_sire_protos_ProxyMessage_ProtoPolicy_fieldAccessorTable = new
@@ -12456,7 +12618,7 @@ public final class Messages {
     internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor,
-        new java.lang.String[] { "DeviceId", "Time", });
+        new java.lang.String[] { "DeviceId", "Time", "DeviceType", });
     com.google.protobuf.TimestampProto.getDescriptor();
   }
 

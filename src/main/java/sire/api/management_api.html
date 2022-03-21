@@ -139,7 +139,8 @@ function appendMembership(data) {
     mainContainer.innerHTML = "";
 	for(var i = 0; i < data.length; i++) {
 		var div = document.createElement("code");
-		div.innerHTML = 'Device ID:  ' + data[i].deviceId + ' Last ping: ' + data[i].lastPing;
+		div.innerHTML = 'Device ID: ' + data[i].deviceId + ' Device Type: ' + data[i].deviceType + ' Last ping: ' +
+            data[i].lastPing;
 		mainContainer.appendChild(div);
 	}
 }

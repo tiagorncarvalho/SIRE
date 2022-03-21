@@ -3,8 +3,8 @@ package sire.utils;
 import com.google.protobuf.ByteString;
 import sire.configuration.ExtensionType;
 import sire.protos.Messages;
-import sire.protos.Messages.ProxyMessage.ProtoExtType;
 import sire.schnorr.SchnorrSignature;
+import sire.serverProxyUtils.DeviceContext;
 
 import java.io.*;
 
@@ -62,7 +62,7 @@ public class ProtoUtils {
         return is.readObject();
     }
 
-    public static ProtoExtType extTypeToProto (ExtensionType type) {
+    /*public static ProtoExtType extTypeToProto (ExtensionType type) {
         switch(type) {
             case EXT_JOIN -> {
                 return ProtoExtType.EXT_JOIN;
@@ -93,7 +93,7 @@ public class ProtoUtils {
             }
         }
         return null;
-    }
+    }*/
 
     public static void writeByteArray(ObjectOutput out, byte[] arr) throws IOException {
         out.writeInt(arr == null ? -1 : arr.length);
@@ -109,5 +109,9 @@ public class ProtoUtils {
             return result;
         }
         return null;
+    }
+
+    public static DeviceContext.DeviceType protoDevToDev(Messages.ProtoDeviceType deviceType) {
+        return DeviceContext.DeviceType.values()[deviceType.getNumber()];
     }
 }

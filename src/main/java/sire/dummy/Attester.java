@@ -1,6 +1,7 @@
 package sire.dummy;
 
 import sire.serverProxyUtils.DeviceContext;
+import sire.serverProxyUtils.DeviceContext.DeviceType;
 import sire.utils.ExampleObject;
 
 import javax.crypto.*;
@@ -26,7 +27,8 @@ public class Attester {
 		int proxyId = 1;
 		String appId = "app1";
 		String waTZVersion = "1.0";
-		AttesterStub dummy = new AttesterStub(attesterId, proxyId, appId, waTZVersion);
+		DeviceType type = DeviceType.MOTIONSENSOR;
+		AttesterStub dummy = new AttesterStub(attesterId, type, proxyId, appId, waTZVersion);
 
 		try {
 			String key = "exampleKey" + attesterId;

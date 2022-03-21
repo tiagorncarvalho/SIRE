@@ -5,21 +5,25 @@ import sire.configuration.Policy;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class AppContext implements Serializable {
     final String id;
     TreeMap<String, DeviceContext> devices;
     Policy policy;
+    int timeout;
 
-    public AppContext(String id) {
+    public AppContext(String id, int timeout) {
         this.id = id;
+        this.timeout = timeout;
         this.devices = new TreeMap<>();
         this.policy = new Policy();
     }
 
-    public AppContext(String id, Policy policy) {
+    public AppContext(String id, int timeout, Policy policy) {
         this.id = id;
+        this.timeout = timeout;
         this.devices = new TreeMap<>();
         this.policy = policy;
     }
@@ -33,6 +37,10 @@ public class AppContext implements Serializable {
     }
 
     public List<DeviceContext> getMembership() {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        for(Map.Entry<String, DeviceContext> e : devices.entrySet())
+            if(new Timestamp(e.getValue().getLastPing().getTime() + (this.timeout * 1000)).before(now))
+                devices.remove(e.getKey());
         return devices.values().stream().toList();
     }
 

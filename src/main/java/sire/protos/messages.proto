@@ -23,6 +23,7 @@ message ProtoMessage0 {
   string attesterId = 1;
   string appId = 2;
   bytes attesterPubSesKey = 3; //Ga
+  ProtoDeviceType type = 4;
 }
 
 message ProtoMessage1 {
@@ -75,6 +76,15 @@ message ProxyMapMessage {
   bytes oldData = 4;
 }
 
+enum ProtoDeviceType {
+  CAMERA = 0;
+  THERMOMETER = 1;
+  RADAR = 2;
+  LIDAR = 3;
+  MOTIONSENSOR = 4;
+  LIGHTSENSOR = 5;
+}
+
 message ProxyMessage {
   enum Operation {
     GENERATE_SIGNING_KEY = 0;
@@ -119,6 +129,7 @@ message ProxyMessage {
   }
 
   ProtoPolicy policy = 11;
+  ProtoDeviceType deviceType = 12;
 }
 
 message ProxyResponse {
@@ -135,6 +146,7 @@ message ProxyResponse {
   message ProtoDeviceContext {
     string deviceId = 1;
     google.protobuf.Timestamp time = 2;
+    ProtoDeviceType deviceType = 3;
   }
   repeated ProtoDeviceContext members = 4;
   string extension = 5;
