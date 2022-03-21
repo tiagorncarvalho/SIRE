@@ -64,21 +64,18 @@ public class SireProxy implements Runnable, ManagementInterface {
 		try {
 			ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
 			serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
-			System.out.println("Check 1");
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to contact the distributed verifier", e);
 		}
 		try {
 			messageDigest = MessageDigest.getInstance("SHA256");
 			BlockCipher aes = new AESEngine();
-			System.out.println("Check 2");
 
 			macEngine = new CMac(aes);
 			secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			signatureScheme = new SchnorrSignatureScheme();
 			curveGenerator = signatureScheme.getGenerator();
 			symmetricCipher = Cipher.getInstance("AES/GCM/NoPadding");
-			System.out.println("Check 3");
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			throw new SireException("Failed to initialize cryptographic tools", e);
 		}
@@ -88,9 +85,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 					.setOperation(ProxyMessage.Operation.GENERATE_SIGNING_KEY)
 					.build();
 			byte[] b = msg.toByteArray();
-			System.out.println("Check 4");
 			response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
-			System.out.println("Check 5");
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to obtain verifier's public key", e);
 		}
@@ -135,7 +130,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 				ois = new ObjectInputStream(s.getInputStream());
 
 				while (!s.isClosed()) {
-					System.out.println("Running!");
+					//System.out.println("Running!");
 					Object o;
 					while ((o = ois.readObject()) != null) {
 						System.out.println("Object received! " + o);
@@ -150,7 +145,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 						} else if (o instanceof ProxyMessage) {
 							ProxyMessage msg = (ProxyMessage) o;
 							if (msg.getOperation() == ProxyMessage.Operation.GET_VERIFIER_PUBLIC_KEY) {
-								System.out.println("Getting key");
+								//System.out.println("Getting key");
 								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
 							} else {
 								Response res = serviceProxy.invokeOrdered(msg.toByteArray());
@@ -173,7 +168,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 										ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
 										ObjectInputStream oin = new ObjectInputStream(bin);
 										ArrayList<byte[]> lst = (ArrayList<byte[]>) oin.readObject();
-										System.out.println("List size: " + lst.size());
+										//System.out.println("List size: " + lst.size());
 										for (byte[] b : lst)
 											prBuilder.addList(ByteString.copyFrom(b));
 										result = prBuilder.build();
@@ -189,7 +184,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 										ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
 										ObjectInputStream oin = new ObjectInputStream(bin);
 										List<DeviceContext> members = (List<DeviceContext>) oin.readObject();
-										System.out.println("List size: " + members.size());
+										//System.out.println("List size: " + members.size());
 										for (DeviceContext d : members)
 											prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
 													.setDeviceId(d.getDeviceId())
@@ -238,7 +233,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 		}
 
 		public ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
-			System.out.println("Processing Message 0!");
+			//System.out.println("Processing Message 0!");
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg0.getAttesterPubSesKey()));
@@ -275,7 +270,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 
 				out.close();
 
-				System.out.println("Message 0 done!");
+				//System.out.println("Message 0 done!");
 
 				return msg1;
 			} catch (InvalidKeySpecException | IOException e) {
@@ -318,7 +313,6 @@ public class SireProxy implements Runnable, ManagementInterface {
 					.setEvidence(evidenceToProto(deviceEvidence.getEvidence()))
 					.setSignature(schnorrToProto(deviceEvidence.getEvidenceSignature()))
 					.build();
-
 
 			try {
 				Response dataResponse = serviceProxy.invokeOrdered(dataRequest.toByteArray());

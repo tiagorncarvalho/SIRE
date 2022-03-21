@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+<style>
+    .content input {
+        width: 100%;
+        clear: both;
+    }
+    .collapsible {
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        border-radius: 2px;
+    }
+
+    .content {
+        width: 500px;
+        clear: both;
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+    }
+</style>
 <script type="text/javascript">
 function fetchExtension(extKey) {
     var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
@@ -20,7 +44,7 @@ function addExtension(extKey, newCode) {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(newCode)
+		body: JSON.stringify(newCode).replace(/\\/g, '')
 	}).then(response => {
       return response.json();
     }).then(data => {
@@ -96,6 +120,7 @@ function fetchMembership(appId) {
 }
 function appendExtension(data) {
     var mainContainer = document.getElementById("extensionCode");
+    mainContainer.innerHTML = "";
     var div = document.createElement("code");
     div.innerHTML = 'Extension:  ' + data.code;
     mainContainer.appendChild(div);
@@ -103,6 +128,7 @@ function appendExtension(data) {
 
 function appendPolicy(data) {
     var mainContainer = document.getElementById("policyGet");
+    mainContainer.innerHTML = "";
     var div = document.createElement("code");
     div.innerHTML = 'Policy:  ' + data.policy;
     mainContainer.appendChild(div);
@@ -110,6 +136,7 @@ function appendPolicy(data) {
 
 function appendMembership(data) {
     var mainContainer = document.getElementById("memberGet");
+    mainContainer.innerHTML = "";
 	for(var i = 0; i < data.length; i++) {
 		var div = document.createElement("code");
 		div.innerHTML = 'Device ID:  ' + data[i].deviceId + ' Last ping: ' + data[i].lastPing;
@@ -119,43 +146,91 @@ function appendMembership(data) {
 </script>
 <head>
 <title>
-SIRE's Managment Interface</title>
+SIRE's Management Interface</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Web page for app administrators to manage and configure extensions and policies, as well as view the membership state.">
 </head>
 <body>
-<h1>SIRE's Management API</h1>
+<header>
+<h1>SIRE's Management Interface</h1>
+</header>
 <h2>Extensions</h2>
-<h3>Get Extension</h3>
-<label>Extension key:</label><input type="text" id="extKey" name="extKey">
-<button onClick="fetchExtension(document.getElementById('extKey').value)">Get Extension</button>
-<div id="extensionCode"></div>
-<h3>Add Extension</h3>
-<label>Extension key:</label> <input type="text" id="extKeyAdd" name="extKeyAdd">
-<label>Extension code:</label> <input type="text" id="extCodeAdd" name="extCodeAdd">
-<button onClick="addExtension(document.getElementById('extKeyAdd').value, document.getElementById('extCodeAdd').value)">Add Extension</button>
-<h3>Remove Extension</h3>
-<label>Extension key:</label><input type="text" id="extKeyDel" name="extKeyDel">
-<button onClick="deleteExtension(document.getElementById('extKeyDel').value)">Remove Extension</button>
+<button type="button" class="collapsible">Get Extension</button>
+<div class="content">
+    <label>Extension key: </label><input type="text" id="extKey" name="extKey"> <br>
+    <button onClick="fetchExtension(document.getElementById('extKey').value)">Get Extension</button>
+    <div id="extensionCode"></div>
+</div>
+<button type="button" class="collapsible">Add Extension</button>
+<div class="content">
+    <form>
+        <label>Extension key: </label> <input type="text" id="extKeyAdd" name="extKeyAdd"> <br>
+        <label>Extension code: </label> <input type="text" id="extCodeAdd" name="extCodeAdd"> <br>
+    </form>
+    <button onClick="addExtension(document.getElementById('extKeyAdd').value, document.getElementById('extCodeAdd').value)">Add Extension</button>
+</div>
+<button type="button" class="collapsible">Remove Extension</button>
+<div class="content">
+    <label>Extension key: </label><input type="text" id="extKeyDel" name="extKeyDel">
+    <button onClick="deleteExtension(document.getElementById('extKeyDel').value)">Remove Extension</button>
+</div>
 
 <h2>Policy</h2>
-<h3>Get Policy</h3>
-<label>App ID:</label><input type="text" id="policyId" name="policyId">
-<button onClick="fetchPolicy(document.getElementById('policyId').value)">Get Policy</button>
+<button type="button" class="collapsible">Get Policy</button>
+<div class="content">
+    <form>
+        <label>App ID: </label><input type="text" id="policyId" name="policyId">
+    </form>
+    <button onClick="fetchPolicy(document.getElementById('policyId').value)">Get Policy</button>
 <div id="policyGet"></div>
+</div>
 
-<h3>Add Policy</h3>
-<label>App ID:</label><input type="text" id="policyIdAdd" name="policyIdAdd">
-<label>Policy:</label><input type="text" id="policyAdd" name="policyAdd">
-<button onClick="addPolicy(document.getElementById('policyIdAdd').value, document.getElementById('policyAdd').value)">Add Policy</button>
+<button type="button" class="collapsible">Add Policy</button>
+<div class="content">
+    <form>
+        <label>App ID: </label><input type="text" id="policyIdAdd" name="policyIdAdd">
+        <label>Policy: </label><input type="text" id="policyAdd" name="policyAdd">
+    </form>
+    <button onClick="addPolicy(document.getElementById('policyIdAdd').value, document.getElementById('policyAdd').value)">Add Policy</button>
+</div>
 
-<h3>Remove Policy</h3>
-<label>App ID:</label><input type="text" id="policyIdDel" name="policyIdDel">
-<button onClick="deletePolicy(document.getElementById('policyIdDel').value)">Remove Policy</button>
+<button type="button" class="collapsible">Remove Policy</button>
+<div class="content">
+    <form>
+        <label>App ID: </label><input type="text" id="policyIdDel" name="policyIdDel">
+    </form>
+    <button onClick="deletePolicy(document.getElementById('policyIdDel').value)">Remove Policy</button>
+</div>
 <h2>Membership</h2>
-<label>App ID:</label><input type="text" id="memberId" name="memberId">
-<button onClick="fetchMembership(document.getElementById('memberId').value)">Get Membership</button>
-<div id="memberGet"></div>
-<p></p>
+<button type="button" class="collapsible">Get View</button>
+<div class="content">
+    <form>
+        <label>App ID: </label><input type="text" id="memberId" name="memberId">
+    </form>
+    <button onClick="fetchMembership(document.getElementById('memberId').value)">Get View</button>
+    <div id="memberGet"></div>
+    <p></p>
+</div>
+
+<footer>
+    <p>SIRE - Trusted Verifier Service</p>
+</footer>
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>
 </body>
 </html>

@@ -14,7 +14,8 @@ public class ExtensionManager {
     }
 
     public void addExtension(String key, String code) {
-        this.extensions.put(key, new Extension(code, null/*sh.parse(code)*/));
+        System.out.println("============================================= Code: " + code + " =============================================");
+        this.extensions.put(key, new Extension(code, sh.parse(code)));
     }
 
     public Script getExtension(String key) {

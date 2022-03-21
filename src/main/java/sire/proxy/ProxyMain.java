@@ -14,6 +14,10 @@ import java.util.List;
 public class ProxyMain {
     static SireProxy proxy;
     public static void main(String[] args) {
+        if (args.length < 1) {
+            System.out.println("Usage: sire.proxy.ProxyMain <proxy id>");
+            System.exit(-1);
+        }
         proxy = null;
         try {
             proxy = new SireProxy(Integer.parseInt(args[0]));
@@ -32,7 +36,8 @@ public class ProxyMain {
         public void addExtension(@RequestParam(value = "key") String key, @RequestBody String code) throws SireException {
             if(key == null || key == "")
                 throw new SireException("Malformed key");
-            proxy.addExtension(key, code);
+            String newCode = code.substring(1, code.length() - 1);
+            proxy.addExtension(key, newCode);
         }
 
         @DeleteMapping("/extension")

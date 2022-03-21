@@ -122,7 +122,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
 		try {
-			System.out.println(bytes);
+			//System.out.println(bytes);
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
 			ProxyMessage.Operation op = msg.getOperation();
 			switch(op) {
@@ -211,6 +211,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					return new ConfidentialMessage();
 				}
 				case MAP_GET -> {
+					System.out.println(msg.getAppId() + ExtensionType.EXT_GET + msg.getKey());
 					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey());
 					return new ConfidentialMessage(storage.get(msg.getKey()));
 				}
@@ -295,6 +296,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					lock.lock();
 					extensionManager.addExtension(msg.getKey(), msg.getCode());
 					lock.unlock();
+					System.out.println("Code: " + msg.getCode());
 					return new ConfidentialMessage();
 				}
 				case EXTENSION_REMOVE -> {
