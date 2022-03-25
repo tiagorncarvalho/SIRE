@@ -1,10 +1,10 @@
 package sire.api;
 
-import sire.protos.Messages.ProtoMessage0;
-import sire.protos.Messages.ProtoMessage1;
+import sire.messages.Messages.ProtoMessage0;
+import sire.messages.Messages.ProtoMessage1;
 import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.SireException;
-import sire.protos.Messages.ProxyMessage;
+import sire.messages.Messages.ProxyMessage;
 
 /**
  * Interface to be used by the devices to perform the attestation and membership protocols.

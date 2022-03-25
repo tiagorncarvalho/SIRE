@@ -1,7 +1,7 @@
 package sire.management;
 
 import sire.api.ManagementInterface;
-import sire.protos.Messages;
+import sire.messages.Messages;
 import sire.configuration.Policy;
 
 import java.io.IOException;

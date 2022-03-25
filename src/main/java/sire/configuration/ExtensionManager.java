@@ -2,6 +2,8 @@ package sire.configuration;
 
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
+import org.codehaus.groovy.control.CompilationFailedException;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -14,12 +16,17 @@ public class ExtensionManager {
     }
 
     public void addExtension(String key, String code) {
-        System.out.println("============================================= Code: " + code + " =============================================");
-        this.extensions.put(key, new Extension(code, sh.parse(code)));
+        //System.out.println("============================================= Code: " + code + " =============================================");
+        try {
+            this.extensions.put(key, new Extension(code, sh.parse(code)));
+        } catch (CompilationFailedException e) {
+            System.err.println("PARSING ERROR: Extension could not be compiled");
+            e.printStackTrace(System.err);
+        }
     }
 
     public Script getExtension(String key) {
-        return extensions.get(key).getScript();
+        return extensions.containsKey(key) ? extensions.get(key).getScript() : null;
     }
 
     public String getExtensionCode(String key) {
@@ -38,21 +45,12 @@ public class ExtensionManager {
             //System.out.println("Left! " + appId + type.name() + key);
             return;
         }
-        System.out.println("Running extension...");
+        //System.out.println("Running extension...");
         extensions.get(temp).getScript().run();
-        System.out.println("Extension ran!");
+        //System.out.println("Extension ran!");
     }
 
     public void removeExtension(String key) {
         this.extensions.remove(key);
     }
-
-/*    public String getExtensionCode(String appId, ExtensionType type, String key) {
-        return this.extensions.get(appId + type.name() + key).getCode();
-    }
-
-    public String getExtensionCode(String appId, ExtensionType type) {
-        return this.extensions.get(appId + type.name()).getCode();
-    }*/
-
 }

@@ -5,7 +5,7 @@ import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
-import sire.protos.Messages.*;
+import sire.messages.Messages.*;
 import sire.messages.Message1;
 import sire.messages.Message3;
 import static sire.utils.ProtoUtils.*;

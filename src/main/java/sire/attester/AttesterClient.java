@@ -20,7 +20,7 @@ public class AttesterClient {
 	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException,
 			ClassNotFoundException {
 		if (args.length < 1) {
-			System.out.println("Usage: sire.dummy.Attester <attester id>");
+			System.out.println("Usage: sire.attester.AttesterClient <attester id>");
 			System.exit(-1);
 		}
 		String attesterId = args[0];

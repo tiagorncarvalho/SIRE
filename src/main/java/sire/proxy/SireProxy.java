@@ -16,7 +16,7 @@ import sire.utils.ServersResponseHandlerWithoutCombine;
 import sire.utils.UncombinedConfidentialResponse;
 import static sire.utils.ProtoUtils.*;
 
-import sire.protos.Messages.*;
+import sire.messages.Messages.*;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
@@ -105,7 +105,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 					s = ss.accept();
 				}
 				System.out.println("New client!");
-				new SireProxyThread(this.proxyId, s).start();
+				new SireProxyThread(s).start();
 				System.out.println("Connection accepted");
 			}
 		} catch (IOException | SireException e) {
@@ -119,7 +119,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 		private ObjectOutputStream oos;
 		private ObjectInputStream ois;
 
-		public SireProxyThread(int proxyId, Socket s) throws SireException {
+		public SireProxyThread(Socket s) throws SireException {
 			this.s = s;
 			System.out.println("Proxy Thread started!");
 		}

@@ -17,7 +17,7 @@ import sire.configuration.Policy;
 import sire.serverProxyUtils.DeviceEvidence;
 import sire.configuration.ExtensionManager;
 import sire.configuration.ExtensionType;
-import sire.protos.Messages.*;
+import sire.messages.Messages.*;
 import sire.utils.Evidence;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;

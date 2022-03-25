@@ -7,7 +7,6 @@ import sire.configuration.Extension;
 import sire.configuration.Policy;
 import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.SireException;
-
 import java.util.List;
 
 @SpringBootApplication
@@ -27,7 +26,7 @@ public class ProxyMain {
         SpringApplication.run(ProxyMain.class, args);
         proxy.run();
     }
-
+    //TODO security issues (no appId)
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RestController
     public class ProxyController {
