@@ -1,4 +1,4 @@
-package sire.utils;
+package sire.proxy;
 
 import bftsmart.tom.core.messages.TOMMessage;
 import bftsmart.tom.util.ExtractedResponse;

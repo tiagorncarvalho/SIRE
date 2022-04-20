@@ -39,16 +39,15 @@ public class AppContext implements Serializable {
     public List<DeviceContext> getMembership() {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         for(Map.Entry<String, DeviceContext> e : devices.entrySet())
-            if(new Timestamp(e.getValue().getLastPing().getTime() + (this.timeout * 1000)).before(now))
+            if(new Timestamp(e.getValue().getLastPing().getTime() + (this.timeout * 1000L)).before(now))
                 devices.remove(e.getKey());
         return devices.values().stream().toList();
     }
 
     public void addDevice(String deviceId, DeviceContext device){
-        if(this.devices.containsKey(deviceId))
-            return;
-        else
+        if (!this.devices.containsKey(deviceId)) {
             this.devices.put(deviceId, device);
+        }
     }
 
     public void removeDevice(String deviceId) {

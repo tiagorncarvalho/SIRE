@@ -1,4 +1,6 @@
-package sire.utils;
+package sire.attestation;
+
+import sire.messages.ProtoUtils;
 
 import java.io.Externalizable;
 import java.io.IOException;

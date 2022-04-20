@@ -13,14 +13,13 @@ import confidential.polynomial.RandomPolynomialListener;
 import confidential.server.ConfidentialRecoverable;
 import confidential.statemanagement.ConfidentialSnapshot;
 import org.bouncycastle.math.ec.ECPoint;
+import sire.attestation.VerifierManager;
 import sire.configuration.Policy;
-import sire.serverProxyUtils.DeviceEvidence;
+import sire.attestation.DeviceEvidence;
 import sire.configuration.ExtensionManager;
 import sire.configuration.ExtensionType;
 import sire.messages.Messages.*;
-import sire.utils.Evidence;
 import sire.schnorr.PublicPartialSignature;
-import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.AppContext;
 import sire.serverProxyUtils.DeviceContext;
@@ -31,14 +30,13 @@ import vss.secretsharing.VerifiableShare;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static sire.utils.ProtoUtils.*;
+import static sire.messages.ProtoUtils.*;
 
 /**
  * @author robin
@@ -49,7 +47,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private final DistributedPolynomialManager distributedPolynomialManager;
 	private final ServiceReplica serviceReplica;
 	private final ConfidentialRecoverable cr;
-	private final MessageDigest messageDigest;
+	//private final MessageDigest messageDigest;
 
 	//used during requests and data map access
 	private final Lock lock;
@@ -75,7 +73,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private ECPoint verifierSigningPublicKey;
 
 	private final byte[] dummyDataForAttester = "Sire".getBytes();
-	private final ECPoint dummyAttesterPublicKey;
+	//private final ECPoint dummyAttesterPublicKey;
 
 	//key value store for information concerning devices, applications and more
 	private Map<String, byte[]> storage;
@@ -89,6 +87,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	//timeout for devices, in seconds
 	private final int timeout = 20;
 
+	private VerifierManager verifierManager;
+
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {
 			System.out.println("Usage: sire.server.SireServer <server id>");
@@ -100,7 +100,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public SireServer(int id) throws NoSuchAlgorithmException {
 		this.id = id;
 		lock = new ReentrantLock(true);
-		messageDigest = MessageDigest.getInstance("SHA256");
+		//messageDigest = MessageDigest.getInstance("SHA256");
 		requests = new TreeMap<>();
 		data = new TreeMap<>();
 		storage = new TreeMap<>();
@@ -111,14 +111,12 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		signingData = new TreeMap<>();
 		cr = new ConfidentialRecoverable(id, this);
 		serviceReplica = new ServiceReplica(id, cr, cr, null, null, null, null, cr);
+		verifierManager = new VerifierManager();
 		serverCommunicationSystem = serviceReplica.getServerCommunicationSystem();
 		distributedPolynomialManager = cr.getDistributedPolynomialManager();
 		distributedPolynomialManager.setRandomPolynomialListener(this);
 		distributedPolynomialManager.setRandomKeyPolynomialListener(this);
 		schnorrSignatureScheme = new SchnorrSignatureScheme();
-		dummyAttesterPublicKey = schnorrSignatureScheme.decodePublicKey(new byte[] {3, -27, -103, 52, -58, -46, 91,
-				-103, -14, 0, 65, 73, -91, 31, -42, -97, 77, 19, -55, 8, 125, -9, -82, -117, -70, 102, -110, 88,
-				-121, -76, -88, 44, -75});
 	}
 
 	@Override
@@ -168,10 +166,10 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					out.close();
 					lock.unlock();
 				}
-				case GET_DATA -> {
+				case VERIFY -> {
 					DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
 							protoToSchnorr(msg.getSignature()));
-					boolean isValidEvidence = isValidDeviceEvidence(deviceEvidence);
+					boolean isValidEvidence = verifierManager.verifyEvidence(deviceEvidence);
 					byte[] plainData;
 					if (isValidEvidence) {
 						plainData = new byte[dummyDataForAttester.length + 1];
@@ -344,44 +342,15 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		return null;
 	}
 
-	private boolean isValidDeviceEvidence(DeviceEvidence deviceEvidence) {
-		Evidence evidence = deviceEvidence.getEvidence();
-		ECPoint attesterPublicKey = schnorrSignatureScheme.decodePublicKey(evidence
-				.getEncodedAttestationServicePublicKey());
-		if (!attesterPublicKey.equals(dummyAttesterPublicKey)) {
-			return false;
-		}
 
-		byte[] signingHash = computeHash(
-				evidence.getAnchor(),
-				attesterPublicKey.getEncoded(true),
-				evidence.getWaTZVersion().getBytes(),
-				evidence.getClaim()
-		);
-		SchnorrSignature evidenceSignature = deviceEvidence.getEvidenceSignature();
-		boolean isValidSignature = schnorrSignatureScheme.verifySignature(
-				signingHash,
-				attesterPublicKey,
-				schnorrSignatureScheme.decodePublicKey(evidenceSignature.getRandomPublicKey()),
-				new BigInteger(evidenceSignature.getSigma())
-		);
-		if (!isValidSignature)
-			return false;
 
-		return isValidEvidence(evidence);
-	}
-
-	private boolean isValidEvidence(Evidence evidence) {
-		return true;
-	}
-
-	private byte[] computeHash(byte[]... contents) {
+	/*private byte[] computeHash(byte[]... contents) {
 		for (byte[] content : contents) {
 			messageDigest.update(content);
 		}
 		return messageDigest.digest();
 	}
-
+*/
 	/**
 	 * Method used to generate a random number
 	 * @param messageContext Message context of the client requesting the generation of a random number

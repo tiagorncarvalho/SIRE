@@ -10,17 +10,17 @@ import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.api.ManagementInterface;
+import sire.attestation.DeviceEvidence;
 import sire.configuration.Policy;
 import sire.serverProxyUtils.*;
-import sire.utils.ServersResponseHandlerWithoutCombine;
-import sire.utils.UncombinedConfidentialResponse;
-import static sire.utils.ProtoUtils.*;
+
+import static sire.messages.ProtoUtils.*;
 
 import sire.messages.Messages.*;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
-import sire.utils.Evidence;
+import sire.attestation.Evidence;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.facade.SecretSharingException;
 import vss.secretsharing.Share;
@@ -309,7 +309,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 			DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(msg2.getSignatureEvidence()));
 
 			ProxyMessage dataRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.GET_DATA)
+					.setOperation(ProxyMessage.Operation.VERIFY)
 					.setEvidence(evidenceToProto(deviceEvidence.getEvidence()))
 					.setSignature(schnorrToProto(deviceEvidence.getEvidenceSignature()))
 					.build();

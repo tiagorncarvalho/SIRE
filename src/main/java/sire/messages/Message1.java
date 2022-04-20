@@ -1,7 +1,6 @@
 package sire.messages;
 
 import sire.schnorr.SchnorrSignature;
-import sire.utils.ProtoUtils;
 
 import java.io.IOException;
 import java.io.ObjectInput;

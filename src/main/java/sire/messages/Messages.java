@@ -15,7 +15,7 @@ public final class Messages {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   /**
-   * Protobuf enum {@code sire.protos.ProtoDeviceType}
+   * Protobuf enum {@code sire.messages.ProtoDeviceType}
    */
   public enum ProtoDeviceType
       implements com.google.protobuf.ProtocolMessageEnum {
@@ -122,7 +122,7 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return Messages.getDescriptor().getEnumTypes().get(0);
+      return sire.messages.Messages.getDescriptor().getEnumTypes().get(0);
     }
 
     private static final ProtoDeviceType[] VALUES = values();
@@ -145,11 +145,11 @@ public final class Messages {
       this.value = value;
     }
 
-    // @@protoc_insertion_point(enum_scope:sire.protos.ProtoDeviceType)
+    // @@protoc_insertion_point(enum_scope:sire.messages.ProtoDeviceType)
   }
 
   public interface ProtoSchnorrOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:sire.protos.ProtoSchnorr)
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProtoSchnorr)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -172,11 +172,11 @@ public final class Messages {
    *Complementary
    * </pre>
    *
-   * Protobuf type {@code sire.protos.ProtoSchnorr}
+   * Protobuf type {@code sire.messages.ProtoSchnorr}
    */
   public  static final class ProtoSchnorr extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:sire.protos.ProtoSchnorr)
+      // @@protoc_insertion_point(message_implements:sire.messages.ProtoSchnorr)
       ProtoSchnorrOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ProtoSchnorr.newBuilder() to construct.
@@ -249,15 +249,15 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Messages.internal_static_sire_protos_ProtoSchnorr_descriptor;
+      return sire.messages.Messages.internal_static_sire_messages_ProtoSchnorr_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Messages.internal_static_sire_protos_ProtoSchnorr_fieldAccessorTable
+      return sire.messages.Messages.internal_static_sire_messages_ProtoSchnorr_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Messages.ProtoSchnorr.class, Messages.ProtoSchnorr.Builder.class);
+              sire.messages.Messages.ProtoSchnorr.class, sire.messages.Messages.ProtoSchnorr.Builder.class);
     }
 
     public static final int SIGMA_FIELD_NUMBER = 1;
@@ -341,10 +341,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Messages.ProtoSchnorr)) {
+      if (!(obj instanceof sire.messages.Messages.ProtoSchnorr)) {
         return super.equals(obj);
       }
-      Messages.ProtoSchnorr other = (Messages.ProtoSchnorr) obj;
+      sire.messages.Messages.ProtoSchnorr other = (sire.messages.Messages.ProtoSchnorr) obj;
 
       boolean result = true;
       result = result && getSigma()
@@ -375,69 +375,69 @@ public final class Messages {
       return hash;
     }
 
-    public static Messages.ProtoSchnorr parseFrom(
+    public static sire.messages.Messages.ProtoSchnorr parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoSchnorr parseFrom(
+    public static sire.messages.Messages.ProtoSchnorr parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoSchnorr parseFrom(
+    public static sire.messages.Messages.ProtoSchnorr parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoSchnorr parseFrom(
+    public static sire.messages.Messages.ProtoSchnorr parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoSchnorr parseFrom(byte[] data)
+    public static sire.messages.Messages.ProtoSchnorr parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoSchnorr parseFrom(
+    public static sire.messages.Messages.ProtoSchnorr parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoSchnorr parseFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoSchnorr parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoSchnorr parseFrom(
+    public static sire.messages.Messages.ProtoSchnorr parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoSchnorr parseDelimitedFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoSchnorr parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Messages.ProtoSchnorr parseDelimitedFrom(
+    public static sire.messages.Messages.ProtoSchnorr parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoSchnorr parseFrom(
+    public static sire.messages.Messages.ProtoSchnorr parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoSchnorr parseFrom(
+    public static sire.messages.Messages.ProtoSchnorr parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -450,7 +450,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Messages.ProtoSchnorr prototype) {
+    public static Builder newBuilder(sire.messages.Messages.ProtoSchnorr prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -470,23 +470,23 @@ public final class Messages {
      *Complementary
      * </pre>
      *
-     * Protobuf type {@code sire.protos.ProtoSchnorr}
+     * Protobuf type {@code sire.messages.ProtoSchnorr}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:sire.protos.ProtoSchnorr)
-        Messages.ProtoSchnorrOrBuilder {
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProtoSchnorr)
+        sire.messages.Messages.ProtoSchnorrOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProtoSchnorr_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoSchnorr_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProtoSchnorr_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProtoSchnorr_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProtoSchnorr.class, Messages.ProtoSchnorr.Builder.class);
+                sire.messages.Messages.ProtoSchnorr.class, sire.messages.Messages.ProtoSchnorr.Builder.class);
       }
 
       // Construct using sire.messages.Messages.ProtoSchnorr.newBuilder()
@@ -519,17 +519,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Messages.internal_static_sire_protos_ProtoSchnorr_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoSchnorr_descriptor;
       }
 
       @java.lang.Override
-      public Messages.ProtoSchnorr getDefaultInstanceForType() {
-        return Messages.ProtoSchnorr.getDefaultInstance();
+      public sire.messages.Messages.ProtoSchnorr getDefaultInstanceForType() {
+        return sire.messages.Messages.ProtoSchnorr.getDefaultInstance();
       }
 
       @java.lang.Override
-      public Messages.ProtoSchnorr build() {
-        Messages.ProtoSchnorr result = buildPartial();
+      public sire.messages.Messages.ProtoSchnorr build() {
+        sire.messages.Messages.ProtoSchnorr result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -537,8 +537,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProtoSchnorr buildPartial() {
-        Messages.ProtoSchnorr result = new Messages.ProtoSchnorr(this);
+      public sire.messages.Messages.ProtoSchnorr buildPartial() {
+        sire.messages.Messages.ProtoSchnorr result = new sire.messages.Messages.ProtoSchnorr(this);
         result.sigma_ = sigma_;
         result.signPubKey_ = signPubKey_;
         result.randomPubKey_ = randomPubKey_;
@@ -580,16 +580,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Messages.ProtoSchnorr) {
-          return mergeFrom((Messages.ProtoSchnorr)other);
+        if (other instanceof sire.messages.Messages.ProtoSchnorr) {
+          return mergeFrom((sire.messages.Messages.ProtoSchnorr)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Messages.ProtoSchnorr other) {
-        if (other == Messages.ProtoSchnorr.getDefaultInstance()) return this;
+      public Builder mergeFrom(sire.messages.Messages.ProtoSchnorr other) {
+        if (other == sire.messages.Messages.ProtoSchnorr.getDefaultInstance()) return this;
         if (other.getSigma() != com.google.protobuf.ByteString.EMPTY) {
           setSigma(other.getSigma());
         }
@@ -614,11 +614,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Messages.ProtoSchnorr parsedMessage = null;
+        sire.messages.Messages.ProtoSchnorr parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Messages.ProtoSchnorr) e.getUnfinishedMessage();
+          parsedMessage = (sire.messages.Messages.ProtoSchnorr) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -727,16 +727,16 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:sire.protos.ProtoSchnorr)
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProtoSchnorr)
     }
 
-    // @@protoc_insertion_point(class_scope:sire.protos.ProtoSchnorr)
-    private static final Messages.ProtoSchnorr DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:sire.messages.ProtoSchnorr)
+    private static final sire.messages.Messages.ProtoSchnorr DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Messages.ProtoSchnorr();
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProtoSchnorr();
     }
 
-    public static Messages.ProtoSchnorr getDefaultInstance() {
+    public static sire.messages.Messages.ProtoSchnorr getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -761,14 +761,14 @@ public final class Messages {
     }
 
     @java.lang.Override
-    public Messages.ProtoSchnorr getDefaultInstanceForType() {
+    public sire.messages.Messages.ProtoSchnorr getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public interface ProtoEvidenceOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:sire.protos.ProtoEvidence)
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProtoEvidence)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -797,11 +797,11 @@ public final class Messages {
     com.google.protobuf.ByteString getServicePubKey();
   }
   /**
-   * Protobuf type {@code sire.protos.ProtoEvidence}
+   * Protobuf type {@code sire.messages.ProtoEvidence}
    */
   public  static final class ProtoEvidence extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:sire.protos.ProtoEvidence)
+      // @@protoc_insertion_point(message_implements:sire.messages.ProtoEvidence)
       ProtoEvidenceOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ProtoEvidence.newBuilder() to construct.
@@ -881,15 +881,15 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Messages.internal_static_sire_protos_ProtoEvidence_descriptor;
+      return sire.messages.Messages.internal_static_sire_messages_ProtoEvidence_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Messages.internal_static_sire_protos_ProtoEvidence_fieldAccessorTable
+      return sire.messages.Messages.internal_static_sire_messages_ProtoEvidence_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Messages.ProtoEvidence.class, Messages.ProtoEvidence.Builder.class);
+              sire.messages.Messages.ProtoEvidence.class, sire.messages.Messages.ProtoEvidence.Builder.class);
     }
 
     public static final int ANCHOR_FIELD_NUMBER = 1;
@@ -1013,10 +1013,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Messages.ProtoEvidence)) {
+      if (!(obj instanceof sire.messages.Messages.ProtoEvidence)) {
         return super.equals(obj);
       }
-      Messages.ProtoEvidence other = (Messages.ProtoEvidence) obj;
+      sire.messages.Messages.ProtoEvidence other = (sire.messages.Messages.ProtoEvidence) obj;
 
       boolean result = true;
       result = result && getAnchor()
@@ -1051,69 +1051,69 @@ public final class Messages {
       return hash;
     }
 
-    public static Messages.ProtoEvidence parseFrom(
+    public static sire.messages.Messages.ProtoEvidence parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoEvidence parseFrom(
+    public static sire.messages.Messages.ProtoEvidence parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoEvidence parseFrom(
+    public static sire.messages.Messages.ProtoEvidence parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoEvidence parseFrom(
+    public static sire.messages.Messages.ProtoEvidence parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoEvidence parseFrom(byte[] data)
+    public static sire.messages.Messages.ProtoEvidence parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoEvidence parseFrom(
+    public static sire.messages.Messages.ProtoEvidence parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoEvidence parseFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoEvidence parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoEvidence parseFrom(
+    public static sire.messages.Messages.ProtoEvidence parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoEvidence parseDelimitedFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoEvidence parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Messages.ProtoEvidence parseDelimitedFrom(
+    public static sire.messages.Messages.ProtoEvidence parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoEvidence parseFrom(
+    public static sire.messages.Messages.ProtoEvidence parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoEvidence parseFrom(
+    public static sire.messages.Messages.ProtoEvidence parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1126,7 +1126,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Messages.ProtoEvidence prototype) {
+    public static Builder newBuilder(sire.messages.Messages.ProtoEvidence prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -1142,23 +1142,23 @@ public final class Messages {
       return builder;
     }
     /**
-     * Protobuf type {@code sire.protos.ProtoEvidence}
+     * Protobuf type {@code sire.messages.ProtoEvidence}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:sire.protos.ProtoEvidence)
-        Messages.ProtoEvidenceOrBuilder {
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProtoEvidence)
+        sire.messages.Messages.ProtoEvidenceOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProtoEvidence_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoEvidence_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProtoEvidence_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProtoEvidence_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProtoEvidence.class, Messages.ProtoEvidence.Builder.class);
+                sire.messages.Messages.ProtoEvidence.class, sire.messages.Messages.ProtoEvidence.Builder.class);
       }
 
       // Construct using sire.messages.Messages.ProtoEvidence.newBuilder()
@@ -1193,17 +1193,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Messages.internal_static_sire_protos_ProtoEvidence_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoEvidence_descriptor;
       }
 
       @java.lang.Override
-      public Messages.ProtoEvidence getDefaultInstanceForType() {
-        return Messages.ProtoEvidence.getDefaultInstance();
+      public sire.messages.Messages.ProtoEvidence getDefaultInstanceForType() {
+        return sire.messages.Messages.ProtoEvidence.getDefaultInstance();
       }
 
       @java.lang.Override
-      public Messages.ProtoEvidence build() {
-        Messages.ProtoEvidence result = buildPartial();
+      public sire.messages.Messages.ProtoEvidence build() {
+        sire.messages.Messages.ProtoEvidence result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -1211,8 +1211,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProtoEvidence buildPartial() {
-        Messages.ProtoEvidence result = new Messages.ProtoEvidence(this);
+      public sire.messages.Messages.ProtoEvidence buildPartial() {
+        sire.messages.Messages.ProtoEvidence result = new sire.messages.Messages.ProtoEvidence(this);
         result.anchor_ = anchor_;
         result.watzVersion_ = watzVersion_;
         result.claim_ = claim_;
@@ -1255,16 +1255,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Messages.ProtoEvidence) {
-          return mergeFrom((Messages.ProtoEvidence)other);
+        if (other instanceof sire.messages.Messages.ProtoEvidence) {
+          return mergeFrom((sire.messages.Messages.ProtoEvidence)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Messages.ProtoEvidence other) {
-        if (other == Messages.ProtoEvidence.getDefaultInstance()) return this;
+      public Builder mergeFrom(sire.messages.Messages.ProtoEvidence other) {
+        if (other == sire.messages.Messages.ProtoEvidence.getDefaultInstance()) return this;
         if (other.getAnchor() != com.google.protobuf.ByteString.EMPTY) {
           setAnchor(other.getAnchor());
         }
@@ -1293,11 +1293,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Messages.ProtoEvidence parsedMessage = null;
+        sire.messages.Messages.ProtoEvidence parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Messages.ProtoEvidence) e.getUnfinishedMessage();
+          parsedMessage = (sire.messages.Messages.ProtoEvidence) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1475,16 +1475,16 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:sire.protos.ProtoEvidence)
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProtoEvidence)
     }
 
-    // @@protoc_insertion_point(class_scope:sire.protos.ProtoEvidence)
-    private static final Messages.ProtoEvidence DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:sire.messages.ProtoEvidence)
+    private static final sire.messages.Messages.ProtoEvidence DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Messages.ProtoEvidence();
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProtoEvidence();
     }
 
-    public static Messages.ProtoEvidence getDefaultInstance() {
+    public static sire.messages.Messages.ProtoEvidence getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1509,14 +1509,14 @@ public final class Messages {
     }
 
     @java.lang.Override
-    public Messages.ProtoEvidence getDefaultInstanceForType() {
+    public sire.messages.Messages.ProtoEvidence getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public interface ProtoMessage0OrBuilder extends
-      // @@protoc_insertion_point(interface_extends:sire.protos.ProtoMessage0)
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProtoMessage0)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -1549,24 +1549,24 @@ public final class Messages {
     com.google.protobuf.ByteString getAttesterPubSesKey();
 
     /**
-     * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+     * <code>.sire.messages.ProtoDeviceType type = 4;</code>
      */
     int getTypeValue();
     /**
-     * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+     * <code>.sire.messages.ProtoDeviceType type = 4;</code>
      */
-    Messages.ProtoDeviceType getType();
+    sire.messages.Messages.ProtoDeviceType getType();
   }
   /**
    * <pre>
    *=======Messages=======
    * </pre>
    *
-   * Protobuf type {@code sire.protos.ProtoMessage0}
+   * Protobuf type {@code sire.messages.ProtoMessage0}
    */
   public  static final class ProtoMessage0 extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:sire.protos.ProtoMessage0)
+      // @@protoc_insertion_point(message_implements:sire.messages.ProtoMessage0)
       ProtoMessage0OrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ProtoMessage0.newBuilder() to construct.
@@ -1648,15 +1648,15 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Messages.internal_static_sire_protos_ProtoMessage0_descriptor;
+      return sire.messages.Messages.internal_static_sire_messages_ProtoMessage0_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Messages.internal_static_sire_protos_ProtoMessage0_fieldAccessorTable
+      return sire.messages.Messages.internal_static_sire_messages_ProtoMessage0_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Messages.ProtoMessage0.class, Messages.ProtoMessage0.Builder.class);
+              sire.messages.Messages.ProtoMessage0.class, sire.messages.Messages.ProtoMessage0.Builder.class);
     }
 
     public static final int ATTESTERID_FIELD_NUMBER = 1;
@@ -1743,18 +1743,18 @@ public final class Messages {
     public static final int TYPE_FIELD_NUMBER = 4;
     private int type_;
     /**
-     * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+     * <code>.sire.messages.ProtoDeviceType type = 4;</code>
      */
     public int getTypeValue() {
       return type_;
     }
     /**
-     * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+     * <code>.sire.messages.ProtoDeviceType type = 4;</code>
      */
-    public Messages.ProtoDeviceType getType() {
+    public sire.messages.Messages.ProtoDeviceType getType() {
       @SuppressWarnings("deprecation")
-      Messages.ProtoDeviceType result = Messages.ProtoDeviceType.valueOf(type_);
-      return result == null ? Messages.ProtoDeviceType.UNRECOGNIZED : result;
+      sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(type_);
+      return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1780,7 +1780,7 @@ public final class Messages {
       if (!attesterPubSesKey_.isEmpty()) {
         output.writeBytes(3, attesterPubSesKey_);
       }
-      if (type_ != Messages.ProtoDeviceType.CAMERA.getNumber()) {
+      if (type_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
         output.writeEnum(4, type_);
       }
       unknownFields.writeTo(output);
@@ -1802,7 +1802,7 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, attesterPubSesKey_);
       }
-      if (type_ != Messages.ProtoDeviceType.CAMERA.getNumber()) {
+      if (type_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, type_);
       }
@@ -1816,10 +1816,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Messages.ProtoMessage0)) {
+      if (!(obj instanceof sire.messages.Messages.ProtoMessage0)) {
         return super.equals(obj);
       }
-      Messages.ProtoMessage0 other = (Messages.ProtoMessage0) obj;
+      sire.messages.Messages.ProtoMessage0 other = (sire.messages.Messages.ProtoMessage0) obj;
 
       boolean result = true;
       result = result && getAttesterId()
@@ -1853,69 +1853,69 @@ public final class Messages {
       return hash;
     }
 
-    public static Messages.ProtoMessage0 parseFrom(
+    public static sire.messages.Messages.ProtoMessage0 parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage0 parseFrom(
+    public static sire.messages.Messages.ProtoMessage0 parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage0 parseFrom(
+    public static sire.messages.Messages.ProtoMessage0 parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage0 parseFrom(
+    public static sire.messages.Messages.ProtoMessage0 parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage0 parseFrom(byte[] data)
+    public static sire.messages.Messages.ProtoMessage0 parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage0 parseFrom(
+    public static sire.messages.Messages.ProtoMessage0 parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage0 parseFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoMessage0 parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage0 parseFrom(
+    public static sire.messages.Messages.ProtoMessage0 parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoMessage0 parseDelimitedFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoMessage0 parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage0 parseDelimitedFrom(
+    public static sire.messages.Messages.ProtoMessage0 parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoMessage0 parseFrom(
+    public static sire.messages.Messages.ProtoMessage0 parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage0 parseFrom(
+    public static sire.messages.Messages.ProtoMessage0 parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1928,7 +1928,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Messages.ProtoMessage0 prototype) {
+    public static Builder newBuilder(sire.messages.Messages.ProtoMessage0 prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -1948,23 +1948,23 @@ public final class Messages {
      *=======Messages=======
      * </pre>
      *
-     * Protobuf type {@code sire.protos.ProtoMessage0}
+     * Protobuf type {@code sire.messages.ProtoMessage0}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:sire.protos.ProtoMessage0)
-        Messages.ProtoMessage0OrBuilder {
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProtoMessage0)
+        sire.messages.Messages.ProtoMessage0OrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProtoMessage0_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage0_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProtoMessage0_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage0_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProtoMessage0.class, Messages.ProtoMessage0.Builder.class);
+                sire.messages.Messages.ProtoMessage0.class, sire.messages.Messages.ProtoMessage0.Builder.class);
       }
 
       // Construct using sire.messages.Messages.ProtoMessage0.newBuilder()
@@ -1999,17 +1999,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Messages.internal_static_sire_protos_ProtoMessage0_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage0_descriptor;
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage0 getDefaultInstanceForType() {
-        return Messages.ProtoMessage0.getDefaultInstance();
+      public sire.messages.Messages.ProtoMessage0 getDefaultInstanceForType() {
+        return sire.messages.Messages.ProtoMessage0.getDefaultInstance();
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage0 build() {
-        Messages.ProtoMessage0 result = buildPartial();
+      public sire.messages.Messages.ProtoMessage0 build() {
+        sire.messages.Messages.ProtoMessage0 result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -2017,8 +2017,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage0 buildPartial() {
-        Messages.ProtoMessage0 result = new Messages.ProtoMessage0(this);
+      public sire.messages.Messages.ProtoMessage0 buildPartial() {
+        sire.messages.Messages.ProtoMessage0 result = new sire.messages.Messages.ProtoMessage0(this);
         result.attesterId_ = attesterId_;
         result.appId_ = appId_;
         result.attesterPubSesKey_ = attesterPubSesKey_;
@@ -2061,16 +2061,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Messages.ProtoMessage0) {
-          return mergeFrom((Messages.ProtoMessage0)other);
+        if (other instanceof sire.messages.Messages.ProtoMessage0) {
+          return mergeFrom((sire.messages.Messages.ProtoMessage0)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Messages.ProtoMessage0 other) {
-        if (other == Messages.ProtoMessage0.getDefaultInstance()) return this;
+      public Builder mergeFrom(sire.messages.Messages.ProtoMessage0 other) {
+        if (other == sire.messages.Messages.ProtoMessage0.getDefaultInstance()) return this;
         if (!other.getAttesterId().isEmpty()) {
           attesterId_ = other.attesterId_;
           onChanged();
@@ -2100,11 +2100,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Messages.ProtoMessage0 parsedMessage = null;
+        sire.messages.Messages.ProtoMessage0 parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Messages.ProtoMessage0) e.getUnfinishedMessage();
+          parsedMessage = (sire.messages.Messages.ProtoMessage0) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -2295,13 +2295,13 @@ public final class Messages {
 
       private int type_ = 0;
       /**
-       * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+       * <code>.sire.messages.ProtoDeviceType type = 4;</code>
        */
       public int getTypeValue() {
         return type_;
       }
       /**
-       * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+       * <code>.sire.messages.ProtoDeviceType type = 4;</code>
        */
       public Builder setTypeValue(int value) {
         type_ = value;
@@ -2309,17 +2309,17 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+       * <code>.sire.messages.ProtoDeviceType type = 4;</code>
        */
-      public Messages.ProtoDeviceType getType() {
+      public sire.messages.Messages.ProtoDeviceType getType() {
         @SuppressWarnings("deprecation")
-        Messages.ProtoDeviceType result = Messages.ProtoDeviceType.valueOf(type_);
-        return result == null ? Messages.ProtoDeviceType.UNRECOGNIZED : result;
+        sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(type_);
+        return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
       }
       /**
-       * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+       * <code>.sire.messages.ProtoDeviceType type = 4;</code>
        */
-      public Builder setType(Messages.ProtoDeviceType value) {
+      public Builder setType(sire.messages.Messages.ProtoDeviceType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2329,7 +2329,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoDeviceType type = 4;</code>
+       * <code>.sire.messages.ProtoDeviceType type = 4;</code>
        */
       public Builder clearType() {
         
@@ -2350,16 +2350,16 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:sire.protos.ProtoMessage0)
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProtoMessage0)
     }
 
-    // @@protoc_insertion_point(class_scope:sire.protos.ProtoMessage0)
-    private static final Messages.ProtoMessage0 DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:sire.messages.ProtoMessage0)
+    private static final sire.messages.Messages.ProtoMessage0 DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Messages.ProtoMessage0();
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProtoMessage0();
     }
 
-    public static Messages.ProtoMessage0 getDefaultInstance() {
+    public static sire.messages.Messages.ProtoMessage0 getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2384,14 +2384,14 @@ public final class Messages {
     }
 
     @java.lang.Override
-    public Messages.ProtoMessage0 getDefaultInstanceForType() {
+    public sire.messages.Messages.ProtoMessage0 getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public interface ProtoMessage1OrBuilder extends
-      // @@protoc_insertion_point(interface_extends:sire.protos.ProtoMessage1)
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProtoMessage1)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -2417,7 +2417,7 @@ public final class Messages {
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
     boolean hasSignatureSessionKeys();
     /**
@@ -2425,17 +2425,17 @@ public final class Messages {
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
-    Messages.ProtoSchnorr getSignatureSessionKeys();
+    sire.messages.Messages.ProtoSchnorr getSignatureSessionKeys();
     /**
      * <pre>
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
-    Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder();
+    sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder();
 
     /**
      * <pre>
@@ -2447,11 +2447,11 @@ public final class Messages {
     com.google.protobuf.ByteString getMac();
   }
   /**
-   * Protobuf type {@code sire.protos.ProtoMessage1}
+   * Protobuf type {@code sire.messages.ProtoMessage1}
    */
   public  static final class ProtoMessage1 extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:sire.protos.ProtoMessage1)
+      // @@protoc_insertion_point(message_implements:sire.messages.ProtoMessage1)
       ProtoMessage1OrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ProtoMessage1.newBuilder() to construct.
@@ -2499,11 +2499,11 @@ public final class Messages {
               break;
             }
             case 26: {
-              Messages.ProtoSchnorr.Builder subBuilder = null;
+              sire.messages.Messages.ProtoSchnorr.Builder subBuilder = null;
               if (signatureSessionKeys_ != null) {
                 subBuilder = signatureSessionKeys_.toBuilder();
               }
-              signatureSessionKeys_ = input.readMessage(Messages.ProtoSchnorr.parser(), extensionRegistry);
+              signatureSessionKeys_ = input.readMessage(sire.messages.Messages.ProtoSchnorr.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(signatureSessionKeys_);
                 signatureSessionKeys_ = subBuilder.buildPartial();
@@ -2537,15 +2537,15 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Messages.internal_static_sire_protos_ProtoMessage1_descriptor;
+      return sire.messages.Messages.internal_static_sire_messages_ProtoMessage1_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Messages.internal_static_sire_protos_ProtoMessage1_fieldAccessorTable
+      return sire.messages.Messages.internal_static_sire_messages_ProtoMessage1_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Messages.ProtoMessage1.class, Messages.ProtoMessage1.Builder.class);
+              sire.messages.Messages.ProtoMessage1.class, sire.messages.Messages.ProtoMessage1.Builder.class);
     }
 
     public static final int VERIFIERPUBSESKEY_FIELD_NUMBER = 1;
@@ -2575,13 +2575,13 @@ public final class Messages {
     }
 
     public static final int SIGNATURESESSIONKEYS_FIELD_NUMBER = 3;
-    private Messages.ProtoSchnorr signatureSessionKeys_;
+    private sire.messages.Messages.ProtoSchnorr signatureSessionKeys_;
     /**
      * <pre>
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
     public boolean hasSignatureSessionKeys() {
       return signatureSessionKeys_ != null;
@@ -2591,19 +2591,19 @@ public final class Messages {
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
-    public Messages.ProtoSchnorr getSignatureSessionKeys() {
-      return signatureSessionKeys_ == null ? Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
+    public sire.messages.Messages.ProtoSchnorr getSignatureSessionKeys() {
+      return signatureSessionKeys_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
     }
     /**
      * <pre>
      *Signv(Gv,Ga)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
      */
-    public Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder() {
+    public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder() {
       return getSignatureSessionKeys();
     }
 
@@ -2681,10 +2681,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Messages.ProtoMessage1)) {
+      if (!(obj instanceof sire.messages.Messages.ProtoMessage1)) {
         return super.equals(obj);
       }
-      Messages.ProtoMessage1 other = (Messages.ProtoMessage1) obj;
+      sire.messages.Messages.ProtoMessage1 other = (sire.messages.Messages.ProtoMessage1) obj;
 
       boolean result = true;
       result = result && getVerifierPubSesKey()
@@ -2724,69 +2724,69 @@ public final class Messages {
       return hash;
     }
 
-    public static Messages.ProtoMessage1 parseFrom(
+    public static sire.messages.Messages.ProtoMessage1 parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage1 parseFrom(
+    public static sire.messages.Messages.ProtoMessage1 parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage1 parseFrom(
+    public static sire.messages.Messages.ProtoMessage1 parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage1 parseFrom(
+    public static sire.messages.Messages.ProtoMessage1 parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage1 parseFrom(byte[] data)
+    public static sire.messages.Messages.ProtoMessage1 parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage1 parseFrom(
+    public static sire.messages.Messages.ProtoMessage1 parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage1 parseFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoMessage1 parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage1 parseFrom(
+    public static sire.messages.Messages.ProtoMessage1 parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoMessage1 parseDelimitedFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoMessage1 parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage1 parseDelimitedFrom(
+    public static sire.messages.Messages.ProtoMessage1 parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoMessage1 parseFrom(
+    public static sire.messages.Messages.ProtoMessage1 parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage1 parseFrom(
+    public static sire.messages.Messages.ProtoMessage1 parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2799,7 +2799,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Messages.ProtoMessage1 prototype) {
+    public static Builder newBuilder(sire.messages.Messages.ProtoMessage1 prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -2815,23 +2815,23 @@ public final class Messages {
       return builder;
     }
     /**
-     * Protobuf type {@code sire.protos.ProtoMessage1}
+     * Protobuf type {@code sire.messages.ProtoMessage1}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:sire.protos.ProtoMessage1)
-        Messages.ProtoMessage1OrBuilder {
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProtoMessage1)
+        sire.messages.Messages.ProtoMessage1OrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProtoMessage1_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage1_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProtoMessage1_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage1_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProtoMessage1.class, Messages.ProtoMessage1.Builder.class);
+                sire.messages.Messages.ProtoMessage1.class, sire.messages.Messages.ProtoMessage1.Builder.class);
       }
 
       // Construct using sire.messages.Messages.ProtoMessage1.newBuilder()
@@ -2870,17 +2870,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Messages.internal_static_sire_protos_ProtoMessage1_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage1_descriptor;
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage1 getDefaultInstanceForType() {
-        return Messages.ProtoMessage1.getDefaultInstance();
+      public sire.messages.Messages.ProtoMessage1 getDefaultInstanceForType() {
+        return sire.messages.Messages.ProtoMessage1.getDefaultInstance();
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage1 build() {
-        Messages.ProtoMessage1 result = buildPartial();
+      public sire.messages.Messages.ProtoMessage1 build() {
+        sire.messages.Messages.ProtoMessage1 result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -2888,8 +2888,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage1 buildPartial() {
-        Messages.ProtoMessage1 result = new Messages.ProtoMessage1(this);
+      public sire.messages.Messages.ProtoMessage1 buildPartial() {
+        sire.messages.Messages.ProtoMessage1 result = new sire.messages.Messages.ProtoMessage1(this);
         result.verifierPubSesKey_ = verifierPubSesKey_;
         result.verifierPubKey_ = verifierPubKey_;
         if (signatureSessionKeysBuilder_ == null) {
@@ -2936,16 +2936,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Messages.ProtoMessage1) {
-          return mergeFrom((Messages.ProtoMessage1)other);
+        if (other instanceof sire.messages.Messages.ProtoMessage1) {
+          return mergeFrom((sire.messages.Messages.ProtoMessage1)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Messages.ProtoMessage1 other) {
-        if (other == Messages.ProtoMessage1.getDefaultInstance()) return this;
+      public Builder mergeFrom(sire.messages.Messages.ProtoMessage1 other) {
+        if (other == sire.messages.Messages.ProtoMessage1.getDefaultInstance()) return this;
         if (other.getVerifierPubSesKey() != com.google.protobuf.ByteString.EMPTY) {
           setVerifierPubSesKey(other.getVerifierPubSesKey());
         }
@@ -2973,11 +2973,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Messages.ProtoMessage1 parsedMessage = null;
+        sire.messages.Messages.ProtoMessage1 parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Messages.ProtoMessage1) e.getUnfinishedMessage();
+          parsedMessage = (sire.messages.Messages.ProtoMessage1) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -3069,15 +3069,15 @@ public final class Messages {
         return this;
       }
 
-      private Messages.ProtoSchnorr signatureSessionKeys_ = null;
+      private sire.messages.Messages.ProtoSchnorr signatureSessionKeys_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder> signatureSessionKeysBuilder_;
+          sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> signatureSessionKeysBuilder_;
       /**
        * <pre>
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
       public boolean hasSignatureSessionKeys() {
         return signatureSessionKeysBuilder_ != null || signatureSessionKeys_ != null;
@@ -3087,11 +3087,11 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
-      public Messages.ProtoSchnorr getSignatureSessionKeys() {
+      public sire.messages.Messages.ProtoSchnorr getSignatureSessionKeys() {
         if (signatureSessionKeysBuilder_ == null) {
-          return signatureSessionKeys_ == null ? Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
+          return signatureSessionKeys_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
         } else {
           return signatureSessionKeysBuilder_.getMessage();
         }
@@ -3101,9 +3101,9 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
-      public Builder setSignatureSessionKeys(Messages.ProtoSchnorr value) {
+      public Builder setSignatureSessionKeys(sire.messages.Messages.ProtoSchnorr value) {
         if (signatureSessionKeysBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -3121,10 +3121,10 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
       public Builder setSignatureSessionKeys(
-          Messages.ProtoSchnorr.Builder builderForValue) {
+          sire.messages.Messages.ProtoSchnorr.Builder builderForValue) {
         if (signatureSessionKeysBuilder_ == null) {
           signatureSessionKeys_ = builderForValue.build();
           onChanged();
@@ -3139,13 +3139,13 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
-      public Builder mergeSignatureSessionKeys(Messages.ProtoSchnorr value) {
+      public Builder mergeSignatureSessionKeys(sire.messages.Messages.ProtoSchnorr value) {
         if (signatureSessionKeysBuilder_ == null) {
           if (signatureSessionKeys_ != null) {
             signatureSessionKeys_ =
-              Messages.ProtoSchnorr.newBuilder(signatureSessionKeys_).mergeFrom(value).buildPartial();
+              sire.messages.Messages.ProtoSchnorr.newBuilder(signatureSessionKeys_).mergeFrom(value).buildPartial();
           } else {
             signatureSessionKeys_ = value;
           }
@@ -3161,7 +3161,7 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
       public Builder clearSignatureSessionKeys() {
         if (signatureSessionKeysBuilder_ == null) {
@@ -3179,9 +3179,9 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
-      public Messages.ProtoSchnorr.Builder getSignatureSessionKeysBuilder() {
+      public sire.messages.Messages.ProtoSchnorr.Builder getSignatureSessionKeysBuilder() {
         
         onChanged();
         return getSignatureSessionKeysFieldBuilder().getBuilder();
@@ -3191,14 +3191,14 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
-      public Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder() {
+      public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder() {
         if (signatureSessionKeysBuilder_ != null) {
           return signatureSessionKeysBuilder_.getMessageOrBuilder();
         } else {
           return signatureSessionKeys_ == null ?
-              Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
+              sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
         }
       }
       /**
@@ -3206,14 +3206,14 @@ public final class Messages {
        *Signv(Gv,Ga)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureSessionKeys = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder>
+          sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> 
           getSignatureSessionKeysFieldBuilder() {
         if (signatureSessionKeysBuilder_ == null) {
           signatureSessionKeysBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder>(
+              sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder>(
                   getSignatureSessionKeys(),
                   getParentForChildren(),
                   isClean());
@@ -3275,16 +3275,16 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:sire.protos.ProtoMessage1)
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProtoMessage1)
     }
 
-    // @@protoc_insertion_point(class_scope:sire.protos.ProtoMessage1)
-    private static final Messages.ProtoMessage1 DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:sire.messages.ProtoMessage1)
+    private static final sire.messages.Messages.ProtoMessage1 DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Messages.ProtoMessage1();
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProtoMessage1();
     }
 
-    public static Messages.ProtoMessage1 getDefaultInstance() {
+    public static sire.messages.Messages.ProtoMessage1 getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -3309,14 +3309,14 @@ public final class Messages {
     }
 
     @java.lang.Override
-    public Messages.ProtoMessage1 getDefaultInstanceForType() {
+    public sire.messages.Messages.ProtoMessage1 getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public interface ProtoMessage2OrBuilder extends
-      // @@protoc_insertion_point(interface_extends:sire.protos.ProtoMessage2)
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProtoMessage2)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -3343,7 +3343,7 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
      */
     boolean hasEvidence();
     /**
@@ -3351,24 +3351,24 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
      */
-    Messages.ProtoEvidence getEvidence();
+    sire.messages.Messages.ProtoEvidence getEvidence();
     /**
      * <pre>
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
      */
-    Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
+    sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
 
     /**
      * <pre>
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
      */
     boolean hasSignatureEvidence();
     /**
@@ -3376,17 +3376,17 @@ public final class Messages {
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
      */
-    Messages.ProtoSchnorr getSignatureEvidence();
+    sire.messages.Messages.ProtoSchnorr getSignatureEvidence();
     /**
      * <pre>
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
      */
-    Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder();
+    sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder();
 
     /**
      * <pre>
@@ -3408,11 +3408,11 @@ public final class Messages {
         getAttesterIdBytes();
   }
   /**
-   * Protobuf type {@code sire.protos.ProtoMessage2}
+   * Protobuf type {@code sire.messages.ProtoMessage2}
    */
   public  static final class ProtoMessage2 extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:sire.protos.ProtoMessage2)
+      // @@protoc_insertion_point(message_implements:sire.messages.ProtoMessage2)
       ProtoMessage2OrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ProtoMessage2.newBuilder() to construct.
@@ -3462,11 +3462,11 @@ public final class Messages {
               break;
             }
             case 26: {
-              Messages.ProtoEvidence.Builder subBuilder = null;
+              sire.messages.Messages.ProtoEvidence.Builder subBuilder = null;
               if (evidence_ != null) {
                 subBuilder = evidence_.toBuilder();
               }
-              evidence_ = input.readMessage(Messages.ProtoEvidence.parser(), extensionRegistry);
+              evidence_ = input.readMessage(sire.messages.Messages.ProtoEvidence.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(evidence_);
                 evidence_ = subBuilder.buildPartial();
@@ -3475,11 +3475,11 @@ public final class Messages {
               break;
             }
             case 34: {
-              Messages.ProtoSchnorr.Builder subBuilder = null;
+              sire.messages.Messages.ProtoSchnorr.Builder subBuilder = null;
               if (signatureEvidence_ != null) {
                 subBuilder = signatureEvidence_.toBuilder();
               }
-              signatureEvidence_ = input.readMessage(Messages.ProtoSchnorr.parser(), extensionRegistry);
+              signatureEvidence_ = input.readMessage(sire.messages.Messages.ProtoSchnorr.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(signatureEvidence_);
                 signatureEvidence_ = subBuilder.buildPartial();
@@ -3519,15 +3519,15 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Messages.internal_static_sire_protos_ProtoMessage2_descriptor;
+      return sire.messages.Messages.internal_static_sire_messages_ProtoMessage2_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Messages.internal_static_sire_protos_ProtoMessage2_fieldAccessorTable
+      return sire.messages.Messages.internal_static_sire_messages_ProtoMessage2_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Messages.ProtoMessage2.class, Messages.ProtoMessage2.Builder.class);
+              sire.messages.Messages.ProtoMessage2.class, sire.messages.Messages.ProtoMessage2.Builder.class);
     }
 
     public static final int APPID_FIELD_NUMBER = 1;
@@ -3578,13 +3578,13 @@ public final class Messages {
     }
 
     public static final int EVIDENCE_FIELD_NUMBER = 3;
-    private Messages.ProtoEvidence evidence_;
+    private sire.messages.Messages.ProtoEvidence evidence_;
     /**
      * <pre>
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
      */
     public boolean hasEvidence() {
       return evidence_ != null;
@@ -3594,30 +3594,30 @@ public final class Messages {
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
      */
-    public Messages.ProtoEvidence getEvidence() {
-      return evidence_ == null ? Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+    public sire.messages.Messages.ProtoEvidence getEvidence() {
+      return evidence_ == null ? sire.messages.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
     }
     /**
      * <pre>
      *evidence
      * </pre>
      *
-     * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
      */
-    public Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
+    public sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
       return getEvidence();
     }
 
     public static final int SIGNATUREEVIDENCE_FIELD_NUMBER = 4;
-    private Messages.ProtoSchnorr signatureEvidence_;
+    private sire.messages.Messages.ProtoSchnorr signatureEvidence_;
     /**
      * <pre>
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
      */
     public boolean hasSignatureEvidence() {
       return signatureEvidence_ != null;
@@ -3627,19 +3627,19 @@ public final class Messages {
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
      */
-    public Messages.ProtoSchnorr getSignatureEvidence() {
-      return signatureEvidence_ == null ? Messages.ProtoSchnorr.getDefaultInstance() : signatureEvidence_;
+    public sire.messages.Messages.ProtoSchnorr getSignatureEvidence() {
+      return signatureEvidence_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signatureEvidence_;
     }
     /**
      * <pre>
      *Sign_A(Evidence)
      * </pre>
      *
-     * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+     * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
      */
-    public Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder() {
+    public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder() {
       return getSignatureEvidence();
     }
 
@@ -3763,10 +3763,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Messages.ProtoMessage2)) {
+      if (!(obj instanceof sire.messages.Messages.ProtoMessage2)) {
         return super.equals(obj);
       }
-      Messages.ProtoMessage2 other = (Messages.ProtoMessage2) obj;
+      sire.messages.Messages.ProtoMessage2 other = (sire.messages.Messages.ProtoMessage2) obj;
 
       boolean result = true;
       result = result && getAppId()
@@ -3819,69 +3819,69 @@ public final class Messages {
       return hash;
     }
 
-    public static Messages.ProtoMessage2 parseFrom(
+    public static sire.messages.Messages.ProtoMessage2 parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage2 parseFrom(
+    public static sire.messages.Messages.ProtoMessage2 parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage2 parseFrom(
+    public static sire.messages.Messages.ProtoMessage2 parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage2 parseFrom(
+    public static sire.messages.Messages.ProtoMessage2 parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage2 parseFrom(byte[] data)
+    public static sire.messages.Messages.ProtoMessage2 parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage2 parseFrom(
+    public static sire.messages.Messages.ProtoMessage2 parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage2 parseFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoMessage2 parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage2 parseFrom(
+    public static sire.messages.Messages.ProtoMessage2 parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoMessage2 parseDelimitedFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoMessage2 parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage2 parseDelimitedFrom(
+    public static sire.messages.Messages.ProtoMessage2 parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoMessage2 parseFrom(
+    public static sire.messages.Messages.ProtoMessage2 parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage2 parseFrom(
+    public static sire.messages.Messages.ProtoMessage2 parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3894,7 +3894,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Messages.ProtoMessage2 prototype) {
+    public static Builder newBuilder(sire.messages.Messages.ProtoMessage2 prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -3910,23 +3910,23 @@ public final class Messages {
       return builder;
     }
     /**
-     * Protobuf type {@code sire.protos.ProtoMessage2}
+     * Protobuf type {@code sire.messages.ProtoMessage2}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:sire.protos.ProtoMessage2)
-        Messages.ProtoMessage2OrBuilder {
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProtoMessage2)
+        sire.messages.Messages.ProtoMessage2OrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProtoMessage2_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage2_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProtoMessage2_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage2_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProtoMessage2.class, Messages.ProtoMessage2.Builder.class);
+                sire.messages.Messages.ProtoMessage2.class, sire.messages.Messages.ProtoMessage2.Builder.class);
       }
 
       // Construct using sire.messages.Messages.ProtoMessage2.newBuilder()
@@ -3973,17 +3973,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Messages.internal_static_sire_protos_ProtoMessage2_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage2_descriptor;
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage2 getDefaultInstanceForType() {
-        return Messages.ProtoMessage2.getDefaultInstance();
+      public sire.messages.Messages.ProtoMessage2 getDefaultInstanceForType() {
+        return sire.messages.Messages.ProtoMessage2.getDefaultInstance();
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage2 build() {
-        Messages.ProtoMessage2 result = buildPartial();
+      public sire.messages.Messages.ProtoMessage2 build() {
+        sire.messages.Messages.ProtoMessage2 result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -3991,8 +3991,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage2 buildPartial() {
-        Messages.ProtoMessage2 result = new Messages.ProtoMessage2(this);
+      public sire.messages.Messages.ProtoMessage2 buildPartial() {
+        sire.messages.Messages.ProtoMessage2 result = new sire.messages.Messages.ProtoMessage2(this);
         result.appId_ = appId_;
         result.attesterPubSesKey_ = attesterPubSesKey_;
         if (evidenceBuilder_ == null) {
@@ -4045,16 +4045,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Messages.ProtoMessage2) {
-          return mergeFrom((Messages.ProtoMessage2)other);
+        if (other instanceof sire.messages.Messages.ProtoMessage2) {
+          return mergeFrom((sire.messages.Messages.ProtoMessage2)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Messages.ProtoMessage2 other) {
-        if (other == Messages.ProtoMessage2.getDefaultInstance()) return this;
+      public Builder mergeFrom(sire.messages.Messages.ProtoMessage2 other) {
+        if (other == sire.messages.Messages.ProtoMessage2.getDefaultInstance()) return this;
         if (!other.getAppId().isEmpty()) {
           appId_ = other.appId_;
           onChanged();
@@ -4090,11 +4090,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Messages.ProtoMessage2 parsedMessage = null;
+        sire.messages.Messages.ProtoMessage2 parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Messages.ProtoMessage2) e.getUnfinishedMessage();
+          parsedMessage = (sire.messages.Messages.ProtoMessage2) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -4214,15 +4214,15 @@ public final class Messages {
         return this;
       }
 
-      private Messages.ProtoEvidence evidence_ = null;
+      private sire.messages.Messages.ProtoEvidence evidence_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoEvidence, Messages.ProtoEvidence.Builder, Messages.ProtoEvidenceOrBuilder> evidenceBuilder_;
+          sire.messages.Messages.ProtoEvidence, sire.messages.Messages.ProtoEvidence.Builder, sire.messages.Messages.ProtoEvidenceOrBuilder> evidenceBuilder_;
       /**
        * <pre>
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
        */
       public boolean hasEvidence() {
         return evidenceBuilder_ != null || evidence_ != null;
@@ -4232,11 +4232,11 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
        */
-      public Messages.ProtoEvidence getEvidence() {
+      public sire.messages.Messages.ProtoEvidence getEvidence() {
         if (evidenceBuilder_ == null) {
-          return evidence_ == null ? Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+          return evidence_ == null ? sire.messages.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
         } else {
           return evidenceBuilder_.getMessage();
         }
@@ -4246,9 +4246,9 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
        */
-      public Builder setEvidence(Messages.ProtoEvidence value) {
+      public Builder setEvidence(sire.messages.Messages.ProtoEvidence value) {
         if (evidenceBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -4266,10 +4266,10 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
        */
       public Builder setEvidence(
-          Messages.ProtoEvidence.Builder builderForValue) {
+          sire.messages.Messages.ProtoEvidence.Builder builderForValue) {
         if (evidenceBuilder_ == null) {
           evidence_ = builderForValue.build();
           onChanged();
@@ -4284,13 +4284,13 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
        */
-      public Builder mergeEvidence(Messages.ProtoEvidence value) {
+      public Builder mergeEvidence(sire.messages.Messages.ProtoEvidence value) {
         if (evidenceBuilder_ == null) {
           if (evidence_ != null) {
             evidence_ =
-              Messages.ProtoEvidence.newBuilder(evidence_).mergeFrom(value).buildPartial();
+              sire.messages.Messages.ProtoEvidence.newBuilder(evidence_).mergeFrom(value).buildPartial();
           } else {
             evidence_ = value;
           }
@@ -4306,7 +4306,7 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
        */
       public Builder clearEvidence() {
         if (evidenceBuilder_ == null) {
@@ -4324,9 +4324,9 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
        */
-      public Messages.ProtoEvidence.Builder getEvidenceBuilder() {
+      public sire.messages.Messages.ProtoEvidence.Builder getEvidenceBuilder() {
         
         onChanged();
         return getEvidenceFieldBuilder().getBuilder();
@@ -4336,14 +4336,14 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
        */
-      public Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
+      public sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
         if (evidenceBuilder_ != null) {
           return evidenceBuilder_.getMessageOrBuilder();
         } else {
           return evidence_ == null ?
-              Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+              sire.messages.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
         }
       }
       /**
@@ -4351,14 +4351,14 @@ public final class Messages {
        *evidence
        * </pre>
        *
-       * <code>.sire.protos.ProtoEvidence evidence = 3;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoEvidence, Messages.ProtoEvidence.Builder, Messages.ProtoEvidenceOrBuilder>
+          sire.messages.Messages.ProtoEvidence, sire.messages.Messages.ProtoEvidence.Builder, sire.messages.Messages.ProtoEvidenceOrBuilder> 
           getEvidenceFieldBuilder() {
         if (evidenceBuilder_ == null) {
           evidenceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              Messages.ProtoEvidence, Messages.ProtoEvidence.Builder, Messages.ProtoEvidenceOrBuilder>(
+              sire.messages.Messages.ProtoEvidence, sire.messages.Messages.ProtoEvidence.Builder, sire.messages.Messages.ProtoEvidenceOrBuilder>(
                   getEvidence(),
                   getParentForChildren(),
                   isClean());
@@ -4367,15 +4367,15 @@ public final class Messages {
         return evidenceBuilder_;
       }
 
-      private Messages.ProtoSchnorr signatureEvidence_ = null;
+      private sire.messages.Messages.ProtoSchnorr signatureEvidence_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder> signatureEvidenceBuilder_;
+          sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> signatureEvidenceBuilder_;
       /**
        * <pre>
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public boolean hasSignatureEvidence() {
         return signatureEvidenceBuilder_ != null || signatureEvidence_ != null;
@@ -4385,11 +4385,11 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
        */
-      public Messages.ProtoSchnorr getSignatureEvidence() {
+      public sire.messages.Messages.ProtoSchnorr getSignatureEvidence() {
         if (signatureEvidenceBuilder_ == null) {
-          return signatureEvidence_ == null ? Messages.ProtoSchnorr.getDefaultInstance() : signatureEvidence_;
+          return signatureEvidence_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signatureEvidence_;
         } else {
           return signatureEvidenceBuilder_.getMessage();
         }
@@ -4399,9 +4399,9 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
        */
-      public Builder setSignatureEvidence(Messages.ProtoSchnorr value) {
+      public Builder setSignatureEvidence(sire.messages.Messages.ProtoSchnorr value) {
         if (signatureEvidenceBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -4419,10 +4419,10 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public Builder setSignatureEvidence(
-          Messages.ProtoSchnorr.Builder builderForValue) {
+          sire.messages.Messages.ProtoSchnorr.Builder builderForValue) {
         if (signatureEvidenceBuilder_ == null) {
           signatureEvidence_ = builderForValue.build();
           onChanged();
@@ -4437,13 +4437,13 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
        */
-      public Builder mergeSignatureEvidence(Messages.ProtoSchnorr value) {
+      public Builder mergeSignatureEvidence(sire.messages.Messages.ProtoSchnorr value) {
         if (signatureEvidenceBuilder_ == null) {
           if (signatureEvidence_ != null) {
             signatureEvidence_ =
-              Messages.ProtoSchnorr.newBuilder(signatureEvidence_).mergeFrom(value).buildPartial();
+              sire.messages.Messages.ProtoSchnorr.newBuilder(signatureEvidence_).mergeFrom(value).buildPartial();
           } else {
             signatureEvidence_ = value;
           }
@@ -4459,7 +4459,7 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
        */
       public Builder clearSignatureEvidence() {
         if (signatureEvidenceBuilder_ == null) {
@@ -4477,9 +4477,9 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
        */
-      public Messages.ProtoSchnorr.Builder getSignatureEvidenceBuilder() {
+      public sire.messages.Messages.ProtoSchnorr.Builder getSignatureEvidenceBuilder() {
         
         onChanged();
         return getSignatureEvidenceFieldBuilder().getBuilder();
@@ -4489,14 +4489,14 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
        */
-      public Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder() {
+      public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureEvidenceOrBuilder() {
         if (signatureEvidenceBuilder_ != null) {
           return signatureEvidenceBuilder_.getMessageOrBuilder();
         } else {
           return signatureEvidence_ == null ?
-              Messages.ProtoSchnorr.getDefaultInstance() : signatureEvidence_;
+              sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signatureEvidence_;
         }
       }
       /**
@@ -4504,14 +4504,14 @@ public final class Messages {
        *Sign_A(Evidence)
        * </pre>
        *
-       * <code>.sire.protos.ProtoSchnorr signatureEvidence = 4;</code>
+       * <code>.sire.messages.ProtoSchnorr signatureEvidence = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder>
+          sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> 
           getSignatureEvidenceFieldBuilder() {
         if (signatureEvidenceBuilder_ == null) {
           signatureEvidenceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder>(
+              sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder>(
                   getSignatureEvidence(),
                   getParentForChildren(),
                   isClean());
@@ -4642,16 +4642,16 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:sire.protos.ProtoMessage2)
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProtoMessage2)
     }
 
-    // @@protoc_insertion_point(class_scope:sire.protos.ProtoMessage2)
-    private static final Messages.ProtoMessage2 DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:sire.messages.ProtoMessage2)
+    private static final sire.messages.Messages.ProtoMessage2 DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Messages.ProtoMessage2();
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProtoMessage2();
     }
 
-    public static Messages.ProtoMessage2 getDefaultInstance() {
+    public static sire.messages.Messages.ProtoMessage2 getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -4676,14 +4676,14 @@ public final class Messages {
     }
 
     @java.lang.Override
-    public Messages.ProtoMessage2 getDefaultInstanceForType() {
+    public sire.messages.Messages.ProtoMessage2 getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public interface ProtoMessage3OrBuilder extends
-      // @@protoc_insertion_point(interface_extends:sire.protos.ProtoMessage3)
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProtoMessage3)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -4705,11 +4705,11 @@ public final class Messages {
     com.google.protobuf.ByteString getEncryptedData();
   }
   /**
-   * Protobuf type {@code sire.protos.ProtoMessage3}
+   * Protobuf type {@code sire.messages.ProtoMessage3}
    */
   public  static final class ProtoMessage3 extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:sire.protos.ProtoMessage3)
+      // @@protoc_insertion_point(message_implements:sire.messages.ProtoMessage3)
       ProtoMessage3OrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ProtoMessage3.newBuilder() to construct.
@@ -4776,15 +4776,15 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Messages.internal_static_sire_protos_ProtoMessage3_descriptor;
+      return sire.messages.Messages.internal_static_sire_messages_ProtoMessage3_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Messages.internal_static_sire_protos_ProtoMessage3_fieldAccessorTable
+      return sire.messages.Messages.internal_static_sire_messages_ProtoMessage3_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Messages.ProtoMessage3.class, Messages.ProtoMessage3.Builder.class);
+              sire.messages.Messages.ProtoMessage3.class, sire.messages.Messages.ProtoMessage3.Builder.class);
     }
 
     public static final int IV_FIELD_NUMBER = 1;
@@ -4860,10 +4860,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Messages.ProtoMessage3)) {
+      if (!(obj instanceof sire.messages.Messages.ProtoMessage3)) {
         return super.equals(obj);
       }
-      Messages.ProtoMessage3 other = (Messages.ProtoMessage3) obj;
+      sire.messages.Messages.ProtoMessage3 other = (sire.messages.Messages.ProtoMessage3) obj;
 
       boolean result = true;
       result = result && getIv()
@@ -4890,69 +4890,69 @@ public final class Messages {
       return hash;
     }
 
-    public static Messages.ProtoMessage3 parseFrom(
+    public static sire.messages.Messages.ProtoMessage3 parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage3 parseFrom(
+    public static sire.messages.Messages.ProtoMessage3 parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage3 parseFrom(
+    public static sire.messages.Messages.ProtoMessage3 parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage3 parseFrom(
+    public static sire.messages.Messages.ProtoMessage3 parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage3 parseFrom(byte[] data)
+    public static sire.messages.Messages.ProtoMessage3 parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProtoMessage3 parseFrom(
+    public static sire.messages.Messages.ProtoMessage3 parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProtoMessage3 parseFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoMessage3 parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage3 parseFrom(
+    public static sire.messages.Messages.ProtoMessage3 parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoMessage3 parseDelimitedFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProtoMessage3 parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage3 parseDelimitedFrom(
+    public static sire.messages.Messages.ProtoMessage3 parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProtoMessage3 parseFrom(
+    public static sire.messages.Messages.ProtoMessage3 parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProtoMessage3 parseFrom(
+    public static sire.messages.Messages.ProtoMessage3 parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -4965,7 +4965,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Messages.ProtoMessage3 prototype) {
+    public static Builder newBuilder(sire.messages.Messages.ProtoMessage3 prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -4981,23 +4981,23 @@ public final class Messages {
       return builder;
     }
     /**
-     * Protobuf type {@code sire.protos.ProtoMessage3}
+     * Protobuf type {@code sire.messages.ProtoMessage3}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:sire.protos.ProtoMessage3)
-        Messages.ProtoMessage3OrBuilder {
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProtoMessage3)
+        sire.messages.Messages.ProtoMessage3OrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProtoMessage3_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage3_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProtoMessage3_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage3_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProtoMessage3.class, Messages.ProtoMessage3.Builder.class);
+                sire.messages.Messages.ProtoMessage3.class, sire.messages.Messages.ProtoMessage3.Builder.class);
       }
 
       // Construct using sire.messages.Messages.ProtoMessage3.newBuilder()
@@ -5028,17 +5028,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Messages.internal_static_sire_protos_ProtoMessage3_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMessage3_descriptor;
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage3 getDefaultInstanceForType() {
-        return Messages.ProtoMessage3.getDefaultInstance();
+      public sire.messages.Messages.ProtoMessage3 getDefaultInstanceForType() {
+        return sire.messages.Messages.ProtoMessage3.getDefaultInstance();
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage3 build() {
-        Messages.ProtoMessage3 result = buildPartial();
+      public sire.messages.Messages.ProtoMessage3 build() {
+        sire.messages.Messages.ProtoMessage3 result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -5046,8 +5046,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProtoMessage3 buildPartial() {
-        Messages.ProtoMessage3 result = new Messages.ProtoMessage3(this);
+      public sire.messages.Messages.ProtoMessage3 buildPartial() {
+        sire.messages.Messages.ProtoMessage3 result = new sire.messages.Messages.ProtoMessage3(this);
         result.iv_ = iv_;
         result.encryptedData_ = encryptedData_;
         onBuilt();
@@ -5088,16 +5088,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Messages.ProtoMessage3) {
-          return mergeFrom((Messages.ProtoMessage3)other);
+        if (other instanceof sire.messages.Messages.ProtoMessage3) {
+          return mergeFrom((sire.messages.Messages.ProtoMessage3)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Messages.ProtoMessage3 other) {
-        if (other == Messages.ProtoMessage3.getDefaultInstance()) return this;
+      public Builder mergeFrom(sire.messages.Messages.ProtoMessage3 other) {
+        if (other == sire.messages.Messages.ProtoMessage3.getDefaultInstance()) return this;
         if (other.getIv() != com.google.protobuf.ByteString.EMPTY) {
           setIv(other.getIv());
         }
@@ -5119,11 +5119,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Messages.ProtoMessage3 parsedMessage = null;
+        sire.messages.Messages.ProtoMessage3 parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Messages.ProtoMessage3) e.getUnfinishedMessage();
+          parsedMessage = (sire.messages.Messages.ProtoMessage3) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -5227,16 +5227,16 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:sire.protos.ProtoMessage3)
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProtoMessage3)
     }
 
-    // @@protoc_insertion_point(class_scope:sire.protos.ProtoMessage3)
-    private static final Messages.ProtoMessage3 DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:sire.messages.ProtoMessage3)
+    private static final sire.messages.Messages.ProtoMessage3 DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Messages.ProtoMessage3();
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProtoMessage3();
     }
 
-    public static Messages.ProtoMessage3 getDefaultInstance() {
+    public static sire.messages.Messages.ProtoMessage3 getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -5261,50 +5261,50 @@ public final class Messages {
     }
 
     @java.lang.Override
-    public Messages.ProtoMessage3 getDefaultInstanceForType() {
+    public sire.messages.Messages.ProtoMessage3 getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public interface ProxyAttestationMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:sire.protos.ProxyAttestationMessage)
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProxyAttestationMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+     * <code>.sire.messages.ProxyAttestationMessage.AttOperation operation = 1;</code>
      */
     int getOperationValue();
     /**
-     * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+     * <code>.sire.messages.ProxyAttestationMessage.AttOperation operation = 1;</code>
      */
-    Messages.ProxyAttestationMessage.AttOperation getOperation();
+    sire.messages.Messages.ProxyAttestationMessage.AttOperation getOperation();
 
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
     boolean hasEvidence();
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
-    Messages.ProtoEvidence getEvidence();
+    sire.messages.Messages.ProtoEvidence getEvidence();
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
-    Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
+    sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
 
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
     boolean hasSignature();
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
-    Messages.ProtoSchnorr getSignature();
+    sire.messages.Messages.ProtoSchnorr getSignature();
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
-    Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder();
+    sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder();
 
     /**
      * <code>bytes dataToSign = 4;</code>
@@ -5316,11 +5316,11 @@ public final class Messages {
    *=======ProxyMsg=======
    * </pre>
    *
-   * Protobuf type {@code sire.protos.ProxyAttestationMessage}
+   * Protobuf type {@code sire.messages.ProxyAttestationMessage}
    */
   public  static final class ProxyAttestationMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:sire.protos.ProxyAttestationMessage)
+      // @@protoc_insertion_point(message_implements:sire.messages.ProxyAttestationMessage)
       ProxyAttestationMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ProxyAttestationMessage.newBuilder() to construct.
@@ -5363,11 +5363,11 @@ public final class Messages {
               break;
             }
             case 18: {
-              Messages.ProtoEvidence.Builder subBuilder = null;
+              sire.messages.Messages.ProtoEvidence.Builder subBuilder = null;
               if (evidence_ != null) {
                 subBuilder = evidence_.toBuilder();
               }
-              evidence_ = input.readMessage(Messages.ProtoEvidence.parser(), extensionRegistry);
+              evidence_ = input.readMessage(sire.messages.Messages.ProtoEvidence.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(evidence_);
                 evidence_ = subBuilder.buildPartial();
@@ -5376,11 +5376,11 @@ public final class Messages {
               break;
             }
             case 26: {
-              Messages.ProtoSchnorr.Builder subBuilder = null;
+              sire.messages.Messages.ProtoSchnorr.Builder subBuilder = null;
               if (signature_ != null) {
                 subBuilder = signature_.toBuilder();
               }
-              signature_ = input.readMessage(Messages.ProtoSchnorr.parser(), extensionRegistry);
+              signature_ = input.readMessage(sire.messages.Messages.ProtoSchnorr.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(signature_);
                 signature_ = subBuilder.buildPartial();
@@ -5414,19 +5414,19 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Messages.internal_static_sire_protos_ProxyAttestationMessage_descriptor;
+      return sire.messages.Messages.internal_static_sire_messages_ProxyAttestationMessage_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Messages.internal_static_sire_protos_ProxyAttestationMessage_fieldAccessorTable
+      return sire.messages.Messages.internal_static_sire_messages_ProxyAttestationMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Messages.ProxyAttestationMessage.class, Messages.ProxyAttestationMessage.Builder.class);
+              sire.messages.Messages.ProxyAttestationMessage.class, sire.messages.Messages.ProxyAttestationMessage.Builder.class);
     }
 
     /**
-     * Protobuf enum {@code sire.protos.ProxyAttestationMessage.AttOperation}
+     * Protobuf enum {@code sire.messages.ProxyAttestationMessage.AttOperation}
      */
     public enum AttOperation
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -5443,9 +5443,9 @@ public final class Messages {
        */
       SIGN_DATA(2),
       /**
-       * <code>GET_DATA = 3;</code>
+       * <code>VERIFY = 3;</code>
        */
-      GET_DATA(3),
+      VERIFY(3),
       /**
        * <code>GET_RANDOM_NUMBER = 4;</code>
        */
@@ -5466,9 +5466,9 @@ public final class Messages {
        */
       public static final int SIGN_DATA_VALUE = 2;
       /**
-       * <code>GET_DATA = 3;</code>
+       * <code>VERIFY = 3;</code>
        */
-      public static final int GET_DATA_VALUE = 3;
+      public static final int VERIFY_VALUE = 3;
       /**
        * <code>GET_RANDOM_NUMBER = 4;</code>
        */
@@ -5496,7 +5496,7 @@ public final class Messages {
           case 0: return GENERATE_SIGNING_KEY;
           case 1: return GET_PUBLIC_KEY;
           case 2: return SIGN_DATA;
-          case 3: return GET_DATA;
+          case 3: return VERIFY;
           case 4: return GET_RANDOM_NUMBER;
           default: return null;
         }
@@ -5524,7 +5524,7 @@ public final class Messages {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return Messages.ProxyAttestationMessage.getDescriptor().getEnumTypes().get(0);
+        return sire.messages.Messages.ProxyAttestationMessage.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final AttOperation[] VALUES = values();
@@ -5547,65 +5547,65 @@ public final class Messages {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:sire.protos.ProxyAttestationMessage.AttOperation)
+      // @@protoc_insertion_point(enum_scope:sire.messages.ProxyAttestationMessage.AttOperation)
     }
 
     public static final int OPERATION_FIELD_NUMBER = 1;
     private int operation_;
     /**
-     * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+     * <code>.sire.messages.ProxyAttestationMessage.AttOperation operation = 1;</code>
      */
     public int getOperationValue() {
       return operation_;
     }
     /**
-     * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+     * <code>.sire.messages.ProxyAttestationMessage.AttOperation operation = 1;</code>
      */
-    public Messages.ProxyAttestationMessage.AttOperation getOperation() {
+    public sire.messages.Messages.ProxyAttestationMessage.AttOperation getOperation() {
       @SuppressWarnings("deprecation")
-      Messages.ProxyAttestationMessage.AttOperation result = Messages.ProxyAttestationMessage.AttOperation.valueOf(operation_);
-      return result == null ? Messages.ProxyAttestationMessage.AttOperation.UNRECOGNIZED : result;
+      sire.messages.Messages.ProxyAttestationMessage.AttOperation result = sire.messages.Messages.ProxyAttestationMessage.AttOperation.valueOf(operation_);
+      return result == null ? sire.messages.Messages.ProxyAttestationMessage.AttOperation.UNRECOGNIZED : result;
     }
 
     public static final int EVIDENCE_FIELD_NUMBER = 2;
-    private Messages.ProtoEvidence evidence_;
+    private sire.messages.Messages.ProtoEvidence evidence_;
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
     public boolean hasEvidence() {
       return evidence_ != null;
     }
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
-    public Messages.ProtoEvidence getEvidence() {
-      return evidence_ == null ? Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+    public sire.messages.Messages.ProtoEvidence getEvidence() {
+      return evidence_ == null ? sire.messages.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
     }
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
-    public Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
+    public sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
       return getEvidence();
     }
 
     public static final int SIGNATURE_FIELD_NUMBER = 3;
-    private Messages.ProtoSchnorr signature_;
+    private sire.messages.Messages.ProtoSchnorr signature_;
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
     public boolean hasSignature() {
       return signature_ != null;
     }
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
-    public Messages.ProtoSchnorr getSignature() {
-      return signature_ == null ? Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+    public sire.messages.Messages.ProtoSchnorr getSignature() {
+      return signature_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
     }
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
-    public Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
+    public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
       return getSignature();
     }
 
@@ -5632,7 +5632,7 @@ public final class Messages {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (operation_ != Messages.ProxyAttestationMessage.AttOperation.GENERATE_SIGNING_KEY.getNumber()) {
+      if (operation_ != sire.messages.Messages.ProxyAttestationMessage.AttOperation.GENERATE_SIGNING_KEY.getNumber()) {
         output.writeEnum(1, operation_);
       }
       if (evidence_ != null) {
@@ -5653,7 +5653,7 @@ public final class Messages {
       if (size != -1) return size;
 
       size = 0;
-      if (operation_ != Messages.ProxyAttestationMessage.AttOperation.GENERATE_SIGNING_KEY.getNumber()) {
+      if (operation_ != sire.messages.Messages.ProxyAttestationMessage.AttOperation.GENERATE_SIGNING_KEY.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, operation_);
       }
@@ -5679,10 +5679,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Messages.ProxyAttestationMessage)) {
+      if (!(obj instanceof sire.messages.Messages.ProxyAttestationMessage)) {
         return super.equals(obj);
       }
-      Messages.ProxyAttestationMessage other = (Messages.ProxyAttestationMessage) obj;
+      sire.messages.Messages.ProxyAttestationMessage other = (sire.messages.Messages.ProxyAttestationMessage) obj;
 
       boolean result = true;
       result = result && operation_ == other.operation_;
@@ -5726,69 +5726,69 @@ public final class Messages {
       return hash;
     }
 
-    public static Messages.ProxyAttestationMessage parseFrom(
+    public static sire.messages.Messages.ProxyAttestationMessage parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyAttestationMessage parseFrom(
+    public static sire.messages.Messages.ProxyAttestationMessage parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyAttestationMessage parseFrom(
+    public static sire.messages.Messages.ProxyAttestationMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyAttestationMessage parseFrom(
+    public static sire.messages.Messages.ProxyAttestationMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyAttestationMessage parseFrom(byte[] data)
+    public static sire.messages.Messages.ProxyAttestationMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyAttestationMessage parseFrom(
+    public static sire.messages.Messages.ProxyAttestationMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyAttestationMessage parseFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProxyAttestationMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProxyAttestationMessage parseFrom(
+    public static sire.messages.Messages.ProxyAttestationMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProxyAttestationMessage parseDelimitedFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProxyAttestationMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Messages.ProxyAttestationMessage parseDelimitedFrom(
+    public static sire.messages.Messages.ProxyAttestationMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProxyAttestationMessage parseFrom(
+    public static sire.messages.Messages.ProxyAttestationMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProxyAttestationMessage parseFrom(
+    public static sire.messages.Messages.ProxyAttestationMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -5801,7 +5801,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Messages.ProxyAttestationMessage prototype) {
+    public static Builder newBuilder(sire.messages.Messages.ProxyAttestationMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -5821,23 +5821,23 @@ public final class Messages {
      *=======ProxyMsg=======
      * </pre>
      *
-     * Protobuf type {@code sire.protos.ProxyAttestationMessage}
+     * Protobuf type {@code sire.messages.ProxyAttestationMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:sire.protos.ProxyAttestationMessage)
-        Messages.ProxyAttestationMessageOrBuilder {
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProxyAttestationMessage)
+        sire.messages.Messages.ProxyAttestationMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProxyAttestationMessage_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProxyAttestationMessage_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProxyAttestationMessage_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProxyAttestationMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProxyAttestationMessage.class, Messages.ProxyAttestationMessage.Builder.class);
+                sire.messages.Messages.ProxyAttestationMessage.class, sire.messages.Messages.ProxyAttestationMessage.Builder.class);
       }
 
       // Construct using sire.messages.Messages.ProxyAttestationMessage.newBuilder()
@@ -5880,17 +5880,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Messages.internal_static_sire_protos_ProxyAttestationMessage_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProxyAttestationMessage_descriptor;
       }
 
       @java.lang.Override
-      public Messages.ProxyAttestationMessage getDefaultInstanceForType() {
-        return Messages.ProxyAttestationMessage.getDefaultInstance();
+      public sire.messages.Messages.ProxyAttestationMessage getDefaultInstanceForType() {
+        return sire.messages.Messages.ProxyAttestationMessage.getDefaultInstance();
       }
 
       @java.lang.Override
-      public Messages.ProxyAttestationMessage build() {
-        Messages.ProxyAttestationMessage result = buildPartial();
+      public sire.messages.Messages.ProxyAttestationMessage build() {
+        sire.messages.Messages.ProxyAttestationMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -5898,8 +5898,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProxyAttestationMessage buildPartial() {
-        Messages.ProxyAttestationMessage result = new Messages.ProxyAttestationMessage(this);
+      public sire.messages.Messages.ProxyAttestationMessage buildPartial() {
+        sire.messages.Messages.ProxyAttestationMessage result = new sire.messages.Messages.ProxyAttestationMessage(this);
         result.operation_ = operation_;
         if (evidenceBuilder_ == null) {
           result.evidence_ = evidence_;
@@ -5950,16 +5950,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Messages.ProxyAttestationMessage) {
-          return mergeFrom((Messages.ProxyAttestationMessage)other);
+        if (other instanceof sire.messages.Messages.ProxyAttestationMessage) {
+          return mergeFrom((sire.messages.Messages.ProxyAttestationMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Messages.ProxyAttestationMessage other) {
-        if (other == Messages.ProxyAttestationMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(sire.messages.Messages.ProxyAttestationMessage other) {
+        if (other == sire.messages.Messages.ProxyAttestationMessage.getDefaultInstance()) return this;
         if (other.operation_ != 0) {
           setOperationValue(other.getOperationValue());
         }
@@ -5987,11 +5987,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Messages.ProxyAttestationMessage parsedMessage = null;
+        sire.messages.Messages.ProxyAttestationMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Messages.ProxyAttestationMessage) e.getUnfinishedMessage();
+          parsedMessage = (sire.messages.Messages.ProxyAttestationMessage) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -6003,13 +6003,13 @@ public final class Messages {
 
       private int operation_ = 0;
       /**
-       * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+       * <code>.sire.messages.ProxyAttestationMessage.AttOperation operation = 1;</code>
        */
       public int getOperationValue() {
         return operation_;
       }
       /**
-       * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+       * <code>.sire.messages.ProxyAttestationMessage.AttOperation operation = 1;</code>
        */
       public Builder setOperationValue(int value) {
         operation_ = value;
@@ -6017,17 +6017,17 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+       * <code>.sire.messages.ProxyAttestationMessage.AttOperation operation = 1;</code>
        */
-      public Messages.ProxyAttestationMessage.AttOperation getOperation() {
+      public sire.messages.Messages.ProxyAttestationMessage.AttOperation getOperation() {
         @SuppressWarnings("deprecation")
-        Messages.ProxyAttestationMessage.AttOperation result = Messages.ProxyAttestationMessage.AttOperation.valueOf(operation_);
-        return result == null ? Messages.ProxyAttestationMessage.AttOperation.UNRECOGNIZED : result;
+        sire.messages.Messages.ProxyAttestationMessage.AttOperation result = sire.messages.Messages.ProxyAttestationMessage.AttOperation.valueOf(operation_);
+        return result == null ? sire.messages.Messages.ProxyAttestationMessage.AttOperation.UNRECOGNIZED : result;
       }
       /**
-       * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+       * <code>.sire.messages.ProxyAttestationMessage.AttOperation operation = 1;</code>
        */
-      public Builder setOperation(Messages.ProxyAttestationMessage.AttOperation value) {
+      public Builder setOperation(sire.messages.Messages.ProxyAttestationMessage.AttOperation value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -6037,7 +6037,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyAttestationMessage.AttOperation operation = 1;</code>
+       * <code>.sire.messages.ProxyAttestationMessage.AttOperation operation = 1;</code>
        */
       public Builder clearOperation() {
         
@@ -6046,29 +6046,29 @@ public final class Messages {
         return this;
       }
 
-      private Messages.ProtoEvidence evidence_ = null;
+      private sire.messages.Messages.ProtoEvidence evidence_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoEvidence, Messages.ProtoEvidence.Builder, Messages.ProtoEvidenceOrBuilder> evidenceBuilder_;
+          sire.messages.Messages.ProtoEvidence, sire.messages.Messages.ProtoEvidence.Builder, sire.messages.Messages.ProtoEvidenceOrBuilder> evidenceBuilder_;
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public boolean hasEvidence() {
         return evidenceBuilder_ != null || evidence_ != null;
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
-      public Messages.ProtoEvidence getEvidence() {
+      public sire.messages.Messages.ProtoEvidence getEvidence() {
         if (evidenceBuilder_ == null) {
-          return evidence_ == null ? Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+          return evidence_ == null ? sire.messages.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
         } else {
           return evidenceBuilder_.getMessage();
         }
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
-      public Builder setEvidence(Messages.ProtoEvidence value) {
+      public Builder setEvidence(sire.messages.Messages.ProtoEvidence value) {
         if (evidenceBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -6082,10 +6082,10 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public Builder setEvidence(
-          Messages.ProtoEvidence.Builder builderForValue) {
+          sire.messages.Messages.ProtoEvidence.Builder builderForValue) {
         if (evidenceBuilder_ == null) {
           evidence_ = builderForValue.build();
           onChanged();
@@ -6096,13 +6096,13 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
-      public Builder mergeEvidence(Messages.ProtoEvidence value) {
+      public Builder mergeEvidence(sire.messages.Messages.ProtoEvidence value) {
         if (evidenceBuilder_ == null) {
           if (evidence_ != null) {
             evidence_ =
-              Messages.ProtoEvidence.newBuilder(evidence_).mergeFrom(value).buildPartial();
+              sire.messages.Messages.ProtoEvidence.newBuilder(evidence_).mergeFrom(value).buildPartial();
           } else {
             evidence_ = value;
           }
@@ -6114,7 +6114,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public Builder clearEvidence() {
         if (evidenceBuilder_ == null) {
@@ -6128,33 +6128,33 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
-      public Messages.ProtoEvidence.Builder getEvidenceBuilder() {
+      public sire.messages.Messages.ProtoEvidence.Builder getEvidenceBuilder() {
         
         onChanged();
         return getEvidenceFieldBuilder().getBuilder();
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
-      public Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
+      public sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
         if (evidenceBuilder_ != null) {
           return evidenceBuilder_.getMessageOrBuilder();
         } else {
           return evidence_ == null ?
-              Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+              sire.messages.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
         }
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoEvidence, Messages.ProtoEvidence.Builder, Messages.ProtoEvidenceOrBuilder>
+          sire.messages.Messages.ProtoEvidence, sire.messages.Messages.ProtoEvidence.Builder, sire.messages.Messages.ProtoEvidenceOrBuilder> 
           getEvidenceFieldBuilder() {
         if (evidenceBuilder_ == null) {
           evidenceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              Messages.ProtoEvidence, Messages.ProtoEvidence.Builder, Messages.ProtoEvidenceOrBuilder>(
+              sire.messages.Messages.ProtoEvidence, sire.messages.Messages.ProtoEvidence.Builder, sire.messages.Messages.ProtoEvidenceOrBuilder>(
                   getEvidence(),
                   getParentForChildren(),
                   isClean());
@@ -6163,29 +6163,29 @@ public final class Messages {
         return evidenceBuilder_;
       }
 
-      private Messages.ProtoSchnorr signature_ = null;
+      private sire.messages.Messages.ProtoSchnorr signature_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder> signatureBuilder_;
+          sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> signatureBuilder_;
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
       public boolean hasSignature() {
         return signatureBuilder_ != null || signature_ != null;
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
-      public Messages.ProtoSchnorr getSignature() {
+      public sire.messages.Messages.ProtoSchnorr getSignature() {
         if (signatureBuilder_ == null) {
-          return signature_ == null ? Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+          return signature_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
         } else {
           return signatureBuilder_.getMessage();
         }
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
-      public Builder setSignature(Messages.ProtoSchnorr value) {
+      public Builder setSignature(sire.messages.Messages.ProtoSchnorr value) {
         if (signatureBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -6199,10 +6199,10 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
       public Builder setSignature(
-          Messages.ProtoSchnorr.Builder builderForValue) {
+          sire.messages.Messages.ProtoSchnorr.Builder builderForValue) {
         if (signatureBuilder_ == null) {
           signature_ = builderForValue.build();
           onChanged();
@@ -6213,13 +6213,13 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
-      public Builder mergeSignature(Messages.ProtoSchnorr value) {
+      public Builder mergeSignature(sire.messages.Messages.ProtoSchnorr value) {
         if (signatureBuilder_ == null) {
           if (signature_ != null) {
             signature_ =
-              Messages.ProtoSchnorr.newBuilder(signature_).mergeFrom(value).buildPartial();
+              sire.messages.Messages.ProtoSchnorr.newBuilder(signature_).mergeFrom(value).buildPartial();
           } else {
             signature_ = value;
           }
@@ -6231,7 +6231,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
       public Builder clearSignature() {
         if (signatureBuilder_ == null) {
@@ -6245,33 +6245,33 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
-      public Messages.ProtoSchnorr.Builder getSignatureBuilder() {
+      public sire.messages.Messages.ProtoSchnorr.Builder getSignatureBuilder() {
         
         onChanged();
         return getSignatureFieldBuilder().getBuilder();
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
-      public Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
+      public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
         if (signatureBuilder_ != null) {
           return signatureBuilder_.getMessageOrBuilder();
         } else {
           return signature_ == null ?
-              Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+              sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
         }
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder>
+          sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> 
           getSignatureFieldBuilder() {
         if (signatureBuilder_ == null) {
           signatureBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder>(
+              sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder>(
                   getSignature(),
                   getParentForChildren(),
                   isClean());
@@ -6321,16 +6321,16 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:sire.protos.ProxyAttestationMessage)
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProxyAttestationMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:sire.protos.ProxyAttestationMessage)
-    private static final Messages.ProxyAttestationMessage DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:sire.messages.ProxyAttestationMessage)
+    private static final sire.messages.Messages.ProxyAttestationMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Messages.ProxyAttestationMessage();
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProxyAttestationMessage();
     }
 
-    public static Messages.ProxyAttestationMessage getDefaultInstance() {
+    public static sire.messages.Messages.ProxyAttestationMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -6355,24 +6355,24 @@ public final class Messages {
     }
 
     @java.lang.Override
-    public Messages.ProxyAttestationMessage getDefaultInstanceForType() {
+    public sire.messages.Messages.ProxyAttestationMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public interface ProxyMapMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:sire.protos.ProxyMapMessage)
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProxyMapMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+     * <code>.sire.messages.ProxyMapMessage.MapOperation operation = 1;</code>
      */
     int getOperationValue();
     /**
-     * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+     * <code>.sire.messages.ProxyMapMessage.MapOperation operation = 1;</code>
      */
-    Messages.ProxyMapMessage.MapOperation getOperation();
+    sire.messages.Messages.ProxyMapMessage.MapOperation getOperation();
 
     /**
      * <code>bytes key = 2;</code>
@@ -6394,11 +6394,11 @@ public final class Messages {
     com.google.protobuf.ByteString getOldData();
   }
   /**
-   * Protobuf type {@code sire.protos.ProxyMapMessage}
+   * Protobuf type {@code sire.messages.ProxyMapMessage}
    */
   public  static final class ProxyMapMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:sire.protos.ProxyMapMessage)
+      // @@protoc_insertion_point(message_implements:sire.messages.ProxyMapMessage)
       ProxyMapMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ProxyMapMessage.newBuilder() to construct.
@@ -6478,19 +6478,19 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Messages.internal_static_sire_protos_ProxyMapMessage_descriptor;
+      return sire.messages.Messages.internal_static_sire_messages_ProxyMapMessage_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Messages.internal_static_sire_protos_ProxyMapMessage_fieldAccessorTable
+      return sire.messages.Messages.internal_static_sire_messages_ProxyMapMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Messages.ProxyMapMessage.class, Messages.ProxyMapMessage.Builder.class);
+              sire.messages.Messages.ProxyMapMessage.class, sire.messages.Messages.ProxyMapMessage.Builder.class);
     }
 
     /**
-     * Protobuf enum {@code sire.protos.ProxyMapMessage.MapOperation}
+     * Protobuf enum {@code sire.messages.ProxyMapMessage.MapOperation}
      */
     public enum MapOperation
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -6588,7 +6588,7 @@ public final class Messages {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return Messages.ProxyMapMessage.getDescriptor().getEnumTypes().get(0);
+        return sire.messages.Messages.ProxyMapMessage.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final MapOperation[] VALUES = values();
@@ -6611,24 +6611,24 @@ public final class Messages {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:sire.protos.ProxyMapMessage.MapOperation)
+      // @@protoc_insertion_point(enum_scope:sire.messages.ProxyMapMessage.MapOperation)
     }
 
     public static final int OPERATION_FIELD_NUMBER = 1;
     private int operation_;
     /**
-     * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+     * <code>.sire.messages.ProxyMapMessage.MapOperation operation = 1;</code>
      */
     public int getOperationValue() {
       return operation_;
     }
     /**
-     * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+     * <code>.sire.messages.ProxyMapMessage.MapOperation operation = 1;</code>
      */
-    public Messages.ProxyMapMessage.MapOperation getOperation() {
+    public sire.messages.Messages.ProxyMapMessage.MapOperation getOperation() {
       @SuppressWarnings("deprecation")
-      Messages.ProxyMapMessage.MapOperation result = Messages.ProxyMapMessage.MapOperation.valueOf(operation_);
-      return result == null ? Messages.ProxyMapMessage.MapOperation.UNRECOGNIZED : result;
+      sire.messages.Messages.ProxyMapMessage.MapOperation result = sire.messages.Messages.ProxyMapMessage.MapOperation.valueOf(operation_);
+      return result == null ? sire.messages.Messages.ProxyMapMessage.MapOperation.UNRECOGNIZED : result;
     }
 
     public static final int KEY_FIELD_NUMBER = 2;
@@ -6676,7 +6676,7 @@ public final class Messages {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (operation_ != Messages.ProxyMapMessage.MapOperation.MAP_PUT.getNumber()) {
+      if (operation_ != sire.messages.Messages.ProxyMapMessage.MapOperation.MAP_PUT.getNumber()) {
         output.writeEnum(1, operation_);
       }
       if (!key_.isEmpty()) {
@@ -6697,7 +6697,7 @@ public final class Messages {
       if (size != -1) return size;
 
       size = 0;
-      if (operation_ != Messages.ProxyMapMessage.MapOperation.MAP_PUT.getNumber()) {
+      if (operation_ != sire.messages.Messages.ProxyMapMessage.MapOperation.MAP_PUT.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, operation_);
       }
@@ -6723,10 +6723,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Messages.ProxyMapMessage)) {
+      if (!(obj instanceof sire.messages.Messages.ProxyMapMessage)) {
         return super.equals(obj);
       }
-      Messages.ProxyMapMessage other = (Messages.ProxyMapMessage) obj;
+      sire.messages.Messages.ProxyMapMessage other = (sire.messages.Messages.ProxyMapMessage) obj;
 
       boolean result = true;
       result = result && operation_ == other.operation_;
@@ -6760,69 +6760,69 @@ public final class Messages {
       return hash;
     }
 
-    public static Messages.ProxyMapMessage parseFrom(
+    public static sire.messages.Messages.ProxyMapMessage parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyMapMessage parseFrom(
+    public static sire.messages.Messages.ProxyMapMessage parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyMapMessage parseFrom(
+    public static sire.messages.Messages.ProxyMapMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyMapMessage parseFrom(
+    public static sire.messages.Messages.ProxyMapMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyMapMessage parseFrom(byte[] data)
+    public static sire.messages.Messages.ProxyMapMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyMapMessage parseFrom(
+    public static sire.messages.Messages.ProxyMapMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyMapMessage parseFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProxyMapMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProxyMapMessage parseFrom(
+    public static sire.messages.Messages.ProxyMapMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProxyMapMessage parseDelimitedFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProxyMapMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Messages.ProxyMapMessage parseDelimitedFrom(
+    public static sire.messages.Messages.ProxyMapMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProxyMapMessage parseFrom(
+    public static sire.messages.Messages.ProxyMapMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProxyMapMessage parseFrom(
+    public static sire.messages.Messages.ProxyMapMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -6835,7 +6835,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Messages.ProxyMapMessage prototype) {
+    public static Builder newBuilder(sire.messages.Messages.ProxyMapMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -6851,23 +6851,23 @@ public final class Messages {
       return builder;
     }
     /**
-     * Protobuf type {@code sire.protos.ProxyMapMessage}
+     * Protobuf type {@code sire.messages.ProxyMapMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:sire.protos.ProxyMapMessage)
-        Messages.ProxyMapMessageOrBuilder {
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProxyMapMessage)
+        sire.messages.Messages.ProxyMapMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProxyMapMessage_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProxyMapMessage_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProxyMapMessage_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProxyMapMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProxyMapMessage.class, Messages.ProxyMapMessage.Builder.class);
+                sire.messages.Messages.ProxyMapMessage.class, sire.messages.Messages.ProxyMapMessage.Builder.class);
       }
 
       // Construct using sire.messages.Messages.ProxyMapMessage.newBuilder()
@@ -6902,17 +6902,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Messages.internal_static_sire_protos_ProxyMapMessage_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProxyMapMessage_descriptor;
       }
 
       @java.lang.Override
-      public Messages.ProxyMapMessage getDefaultInstanceForType() {
-        return Messages.ProxyMapMessage.getDefaultInstance();
+      public sire.messages.Messages.ProxyMapMessage getDefaultInstanceForType() {
+        return sire.messages.Messages.ProxyMapMessage.getDefaultInstance();
       }
 
       @java.lang.Override
-      public Messages.ProxyMapMessage build() {
-        Messages.ProxyMapMessage result = buildPartial();
+      public sire.messages.Messages.ProxyMapMessage build() {
+        sire.messages.Messages.ProxyMapMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -6920,8 +6920,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProxyMapMessage buildPartial() {
-        Messages.ProxyMapMessage result = new Messages.ProxyMapMessage(this);
+      public sire.messages.Messages.ProxyMapMessage buildPartial() {
+        sire.messages.Messages.ProxyMapMessage result = new sire.messages.Messages.ProxyMapMessage(this);
         result.operation_ = operation_;
         result.key_ = key_;
         result.value_ = value_;
@@ -6964,16 +6964,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Messages.ProxyMapMessage) {
-          return mergeFrom((Messages.ProxyMapMessage)other);
+        if (other instanceof sire.messages.Messages.ProxyMapMessage) {
+          return mergeFrom((sire.messages.Messages.ProxyMapMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Messages.ProxyMapMessage other) {
-        if (other == Messages.ProxyMapMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(sire.messages.Messages.ProxyMapMessage other) {
+        if (other == sire.messages.Messages.ProxyMapMessage.getDefaultInstance()) return this;
         if (other.operation_ != 0) {
           setOperationValue(other.getOperationValue());
         }
@@ -7001,11 +7001,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Messages.ProxyMapMessage parsedMessage = null;
+        sire.messages.Messages.ProxyMapMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Messages.ProxyMapMessage) e.getUnfinishedMessage();
+          parsedMessage = (sire.messages.Messages.ProxyMapMessage) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -7017,13 +7017,13 @@ public final class Messages {
 
       private int operation_ = 0;
       /**
-       * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+       * <code>.sire.messages.ProxyMapMessage.MapOperation operation = 1;</code>
        */
       public int getOperationValue() {
         return operation_;
       }
       /**
-       * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+       * <code>.sire.messages.ProxyMapMessage.MapOperation operation = 1;</code>
        */
       public Builder setOperationValue(int value) {
         operation_ = value;
@@ -7031,17 +7031,17 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+       * <code>.sire.messages.ProxyMapMessage.MapOperation operation = 1;</code>
        */
-      public Messages.ProxyMapMessage.MapOperation getOperation() {
+      public sire.messages.Messages.ProxyMapMessage.MapOperation getOperation() {
         @SuppressWarnings("deprecation")
-        Messages.ProxyMapMessage.MapOperation result = Messages.ProxyMapMessage.MapOperation.valueOf(operation_);
-        return result == null ? Messages.ProxyMapMessage.MapOperation.UNRECOGNIZED : result;
+        sire.messages.Messages.ProxyMapMessage.MapOperation result = sire.messages.Messages.ProxyMapMessage.MapOperation.valueOf(operation_);
+        return result == null ? sire.messages.Messages.ProxyMapMessage.MapOperation.UNRECOGNIZED : result;
       }
       /**
-       * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+       * <code>.sire.messages.ProxyMapMessage.MapOperation operation = 1;</code>
        */
-      public Builder setOperation(Messages.ProxyMapMessage.MapOperation value) {
+      public Builder setOperation(sire.messages.Messages.ProxyMapMessage.MapOperation value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -7051,7 +7051,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMapMessage.MapOperation operation = 1;</code>
+       * <code>.sire.messages.ProxyMapMessage.MapOperation operation = 1;</code>
        */
       public Builder clearOperation() {
         
@@ -7171,16 +7171,16 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:sire.protos.ProxyMapMessage)
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProxyMapMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:sire.protos.ProxyMapMessage)
-    private static final Messages.ProxyMapMessage DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:sire.messages.ProxyMapMessage)
+    private static final sire.messages.Messages.ProxyMapMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Messages.ProxyMapMessage();
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProxyMapMessage();
     }
 
-    public static Messages.ProxyMapMessage getDefaultInstance() {
+    public static sire.messages.Messages.ProxyMapMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -7205,50 +7205,50 @@ public final class Messages {
     }
 
     @java.lang.Override
-    public Messages.ProxyMapMessage getDefaultInstanceForType() {
+    public sire.messages.Messages.ProxyMapMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public interface ProxyMessageOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:sire.protos.ProxyMessage)
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProxyMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+     * <code>.sire.messages.ProxyMessage.Operation operation = 1;</code>
      */
     int getOperationValue();
     /**
-     * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+     * <code>.sire.messages.ProxyMessage.Operation operation = 1;</code>
      */
-    Messages.ProxyMessage.Operation getOperation();
+    sire.messages.Messages.ProxyMessage.Operation getOperation();
 
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
     boolean hasEvidence();
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
-    Messages.ProtoEvidence getEvidence();
+    sire.messages.Messages.ProtoEvidence getEvidence();
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
-    Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
+    sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
 
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
     boolean hasSignature();
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
-    Messages.ProtoSchnorr getSignature();
+    sire.messages.Messages.ProtoSchnorr getSignature();
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
-    Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder();
+    sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder();
 
     /**
      * <code>bytes dataToSign = 4;</code>
@@ -7310,33 +7310,33 @@ public final class Messages {
         getCodeBytes();
 
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
     boolean hasPolicy();
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
-    Messages.ProxyMessage.ProtoPolicy getPolicy();
+    sire.messages.Messages.ProxyMessage.ProtoPolicy getPolicy();
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
-    Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder();
+    sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder();
 
     /**
-     * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+     * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
      */
     int getDeviceTypeValue();
     /**
-     * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+     * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
      */
-    Messages.ProtoDeviceType getDeviceType();
+    sire.messages.Messages.ProtoDeviceType getDeviceType();
   }
   /**
-   * Protobuf type {@code sire.protos.ProxyMessage}
+   * Protobuf type {@code sire.messages.ProxyMessage}
    */
   public  static final class ProxyMessage extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:sire.protos.ProxyMessage)
+      // @@protoc_insertion_point(message_implements:sire.messages.ProxyMessage)
       ProxyMessageOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ProxyMessage.newBuilder() to construct.
@@ -7386,11 +7386,11 @@ public final class Messages {
               break;
             }
             case 18: {
-              Messages.ProtoEvidence.Builder subBuilder = null;
+              sire.messages.Messages.ProtoEvidence.Builder subBuilder = null;
               if (evidence_ != null) {
                 subBuilder = evidence_.toBuilder();
               }
-              evidence_ = input.readMessage(Messages.ProtoEvidence.parser(), extensionRegistry);
+              evidence_ = input.readMessage(sire.messages.Messages.ProtoEvidence.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(evidence_);
                 evidence_ = subBuilder.buildPartial();
@@ -7399,11 +7399,11 @@ public final class Messages {
               break;
             }
             case 26: {
-              Messages.ProtoSchnorr.Builder subBuilder = null;
+              sire.messages.Messages.ProtoSchnorr.Builder subBuilder = null;
               if (signature_ != null) {
                 subBuilder = signature_.toBuilder();
               }
-              signature_ = input.readMessage(Messages.ProtoSchnorr.parser(), extensionRegistry);
+              signature_ = input.readMessage(sire.messages.Messages.ProtoSchnorr.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(signature_);
                 signature_ = subBuilder.buildPartial();
@@ -7451,11 +7451,11 @@ public final class Messages {
               break;
             }
             case 90: {
-              Messages.ProxyMessage.ProtoPolicy.Builder subBuilder = null;
+              sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder subBuilder = null;
               if (policy_ != null) {
                 subBuilder = policy_.toBuilder();
               }
-              policy_ = input.readMessage(Messages.ProxyMessage.ProtoPolicy.parser(), extensionRegistry);
+              policy_ = input.readMessage(sire.messages.Messages.ProxyMessage.ProtoPolicy.parser(), extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(policy_);
                 policy_ = subBuilder.buildPartial();
@@ -7490,19 +7490,19 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Messages.internal_static_sire_protos_ProxyMessage_descriptor;
+      return sire.messages.Messages.internal_static_sire_messages_ProxyMessage_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Messages.internal_static_sire_protos_ProxyMessage_fieldAccessorTable
+      return sire.messages.Messages.internal_static_sire_messages_ProxyMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Messages.ProxyMessage.class, Messages.ProxyMessage.Builder.class);
+              sire.messages.Messages.ProxyMessage.class, sire.messages.Messages.ProxyMessage.Builder.class);
     }
 
     /**
-     * Protobuf enum {@code sire.protos.ProxyMessage.Operation}
+     * Protobuf enum {@code sire.messages.ProxyMessage.Operation}
      */
     public enum Operation
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -7519,9 +7519,9 @@ public final class Messages {
        */
       SIGN_DATA(2),
       /**
-       * <code>GET_DATA = 3;</code>
+       * <code>VERIFY = 3;</code>
        */
-      GET_DATA(3),
+      VERIFY(3),
       /**
        * <code>GET_RANDOM_NUMBER = 4;</code>
        */
@@ -7606,9 +7606,9 @@ public final class Messages {
        */
       public static final int SIGN_DATA_VALUE = 2;
       /**
-       * <code>GET_DATA = 3;</code>
+       * <code>VERIFY = 3;</code>
        */
-      public static final int GET_DATA_VALUE = 3;
+      public static final int VERIFY_VALUE = 3;
       /**
        * <code>GET_RANDOM_NUMBER = 4;</code>
        */
@@ -7700,7 +7700,7 @@ public final class Messages {
           case 0: return GENERATE_SIGNING_KEY;
           case 1: return GET_PUBLIC_KEY;
           case 2: return SIGN_DATA;
-          case 3: return GET_DATA;
+          case 3: return VERIFY;
           case 4: return GET_RANDOM_NUMBER;
           case 5: return MAP_PUT;
           case 6: return MAP_DELETE;
@@ -7744,7 +7744,7 @@ public final class Messages {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return Messages.ProxyMessage.getDescriptor().getEnumTypes().get(0);
+        return sire.messages.Messages.ProxyMessage.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final Operation[] VALUES = values();
@@ -7767,11 +7767,11 @@ public final class Messages {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:sire.protos.ProxyMessage.Operation)
+      // @@protoc_insertion_point(enum_scope:sire.messages.ProxyMessage.Operation)
     }
 
     public interface ProtoPolicyOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:sire.protos.ProxyMessage.ProtoPolicy)
+        // @@protoc_insertion_point(interface_extends:sire.messages.ProxyMessage.ProtoPolicy)
         com.google.protobuf.MessageOrBuilder {
 
       /**
@@ -7794,11 +7794,11 @@ public final class Messages {
       boolean getType();
     }
     /**
-     * Protobuf type {@code sire.protos.ProxyMessage.ProtoPolicy}
+     * Protobuf type {@code sire.messages.ProxyMessage.ProtoPolicy}
      */
     public  static final class ProtoPolicy extends
         com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:sire.protos.ProxyMessage.ProtoPolicy)
+        // @@protoc_insertion_point(message_implements:sire.messages.ProxyMessage.ProtoPolicy)
         ProtoPolicyOrBuilder {
     private static final long serialVersionUID = 0L;
       // Use ProtoPolicy.newBuilder() to construct.
@@ -7866,15 +7866,15 @@ public final class Messages {
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProxyMessage_ProtoPolicy_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProxyMessage_ProtoPolicy_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProxyMessage_ProtoPolicy_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProxyMessage_ProtoPolicy_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProxyMessage.ProtoPolicy.class, Messages.ProxyMessage.ProtoPolicy.Builder.class);
+                sire.messages.Messages.ProxyMessage.ProtoPolicy.class, sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder.class);
       }
 
       public static final int POLICY_FIELD_NUMBER = 1;
@@ -7970,10 +7970,10 @@ public final class Messages {
         if (obj == this) {
          return true;
         }
-        if (!(obj instanceof Messages.ProxyMessage.ProtoPolicy)) {
+        if (!(obj instanceof sire.messages.Messages.ProxyMessage.ProtoPolicy)) {
           return super.equals(obj);
         }
-        Messages.ProxyMessage.ProtoPolicy other = (Messages.ProxyMessage.ProtoPolicy) obj;
+        sire.messages.Messages.ProxyMessage.ProtoPolicy other = (sire.messages.Messages.ProxyMessage.ProtoPolicy) obj;
 
         boolean result = true;
         result = result && getPolicy()
@@ -8001,69 +8001,69 @@ public final class Messages {
         return hash;
       }
 
-      public static Messages.ProxyMessage.ProtoPolicy parseFrom(
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseFrom(
           java.nio.ByteBuffer data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseFrom(
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseFrom(
           java.nio.ByteBuffer data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseFrom(
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseFrom(
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseFrom(byte[] data)
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseFrom(
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseFrom(java.io.InputStream input)
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseFrom(
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseDelimitedFrom(java.io.InputStream input)
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseDelimitedFrom(
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseFrom(
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
-      public static Messages.ProxyMessage.ProtoPolicy parseFrom(
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -8076,7 +8076,7 @@ public final class Messages {
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
-      public static Builder newBuilder(Messages.ProxyMessage.ProtoPolicy prototype) {
+      public static Builder newBuilder(sire.messages.Messages.ProxyMessage.ProtoPolicy prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
       @java.lang.Override
@@ -8092,23 +8092,23 @@ public final class Messages {
         return builder;
       }
       /**
-       * Protobuf type {@code sire.protos.ProxyMessage.ProtoPolicy}
+       * Protobuf type {@code sire.messages.ProxyMessage.ProtoPolicy}
        */
       public static final class Builder extends
           com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-          // @@protoc_insertion_point(builder_implements:sire.protos.ProxyMessage.ProtoPolicy)
-          Messages.ProxyMessage.ProtoPolicyOrBuilder {
+          // @@protoc_insertion_point(builder_implements:sire.messages.ProxyMessage.ProtoPolicy)
+          sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return Messages.internal_static_sire_protos_ProxyMessage_ProtoPolicy_descriptor;
+          return sire.messages.Messages.internal_static_sire_messages_ProxyMessage_ProtoPolicy_descriptor;
         }
 
         @java.lang.Override
         protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return Messages.internal_static_sire_protos_ProxyMessage_ProtoPolicy_fieldAccessorTable
+          return sire.messages.Messages.internal_static_sire_messages_ProxyMessage_ProtoPolicy_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
-                  Messages.ProxyMessage.ProtoPolicy.class, Messages.ProxyMessage.ProtoPolicy.Builder.class);
+                  sire.messages.Messages.ProxyMessage.ProtoPolicy.class, sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder.class);
         }
 
         // Construct using sire.messages.Messages.ProxyMessage.ProtoPolicy.newBuilder()
@@ -8139,17 +8139,17 @@ public final class Messages {
         @java.lang.Override
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return Messages.internal_static_sire_protos_ProxyMessage_ProtoPolicy_descriptor;
+          return sire.messages.Messages.internal_static_sire_messages_ProxyMessage_ProtoPolicy_descriptor;
         }
 
         @java.lang.Override
-        public Messages.ProxyMessage.ProtoPolicy getDefaultInstanceForType() {
-          return Messages.ProxyMessage.ProtoPolicy.getDefaultInstance();
+        public sire.messages.Messages.ProxyMessage.ProtoPolicy getDefaultInstanceForType() {
+          return sire.messages.Messages.ProxyMessage.ProtoPolicy.getDefaultInstance();
         }
 
         @java.lang.Override
-        public Messages.ProxyMessage.ProtoPolicy build() {
-          Messages.ProxyMessage.ProtoPolicy result = buildPartial();
+        public sire.messages.Messages.ProxyMessage.ProtoPolicy build() {
+          sire.messages.Messages.ProxyMessage.ProtoPolicy result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
@@ -8157,8 +8157,8 @@ public final class Messages {
         }
 
         @java.lang.Override
-        public Messages.ProxyMessage.ProtoPolicy buildPartial() {
-          Messages.ProxyMessage.ProtoPolicy result = new Messages.ProxyMessage.ProtoPolicy(this);
+        public sire.messages.Messages.ProxyMessage.ProtoPolicy buildPartial() {
+          sire.messages.Messages.ProxyMessage.ProtoPolicy result = new sire.messages.Messages.ProxyMessage.ProtoPolicy(this);
           result.policy_ = policy_;
           result.type_ = type_;
           onBuilt();
@@ -8199,16 +8199,16 @@ public final class Messages {
         }
         @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof Messages.ProxyMessage.ProtoPolicy) {
-            return mergeFrom((Messages.ProxyMessage.ProtoPolicy)other);
+          if (other instanceof sire.messages.Messages.ProxyMessage.ProtoPolicy) {
+            return mergeFrom((sire.messages.Messages.ProxyMessage.ProtoPolicy)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
 
-        public Builder mergeFrom(Messages.ProxyMessage.ProtoPolicy other) {
-          if (other == Messages.ProxyMessage.ProtoPolicy.getDefaultInstance()) return this;
+        public Builder mergeFrom(sire.messages.Messages.ProxyMessage.ProtoPolicy other) {
+          if (other == sire.messages.Messages.ProxyMessage.ProtoPolicy.getDefaultInstance()) return this;
           if (!other.getPolicy().isEmpty()) {
             policy_ = other.policy_;
             onChanged();
@@ -8231,11 +8231,11 @@ public final class Messages {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          Messages.ProxyMessage.ProtoPolicy parsedMessage = null;
+          sire.messages.Messages.ProxyMessage.ProtoPolicy parsedMessage = null;
           try {
             parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (Messages.ProxyMessage.ProtoPolicy) e.getUnfinishedMessage();
+            parsedMessage = (sire.messages.Messages.ProxyMessage.ProtoPolicy) e.getUnfinishedMessage();
             throw e.unwrapIOException();
           } finally {
             if (parsedMessage != null) {
@@ -8364,16 +8364,16 @@ public final class Messages {
         }
 
 
-        // @@protoc_insertion_point(builder_scope:sire.protos.ProxyMessage.ProtoPolicy)
+        // @@protoc_insertion_point(builder_scope:sire.messages.ProxyMessage.ProtoPolicy)
       }
 
-      // @@protoc_insertion_point(class_scope:sire.protos.ProxyMessage.ProtoPolicy)
-      private static final Messages.ProxyMessage.ProtoPolicy DEFAULT_INSTANCE;
+      // @@protoc_insertion_point(class_scope:sire.messages.ProxyMessage.ProtoPolicy)
+      private static final sire.messages.Messages.ProxyMessage.ProtoPolicy DEFAULT_INSTANCE;
       static {
-        DEFAULT_INSTANCE = new Messages.ProxyMessage.ProtoPolicy();
+        DEFAULT_INSTANCE = new sire.messages.Messages.ProxyMessage.ProtoPolicy();
       }
 
-      public static Messages.ProxyMessage.ProtoPolicy getDefaultInstance() {
+      public static sire.messages.Messages.ProxyMessage.ProtoPolicy getDefaultInstance() {
         return DEFAULT_INSTANCE;
       }
 
@@ -8398,7 +8398,7 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProxyMessage.ProtoPolicy getDefaultInstanceForType() {
+      public sire.messages.Messages.ProxyMessage.ProtoPolicy getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
       }
 
@@ -8407,59 +8407,59 @@ public final class Messages {
     public static final int OPERATION_FIELD_NUMBER = 1;
     private int operation_;
     /**
-     * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+     * <code>.sire.messages.ProxyMessage.Operation operation = 1;</code>
      */
     public int getOperationValue() {
       return operation_;
     }
     /**
-     * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+     * <code>.sire.messages.ProxyMessage.Operation operation = 1;</code>
      */
-    public Messages.ProxyMessage.Operation getOperation() {
+    public sire.messages.Messages.ProxyMessage.Operation getOperation() {
       @SuppressWarnings("deprecation")
-      Messages.ProxyMessage.Operation result = Messages.ProxyMessage.Operation.valueOf(operation_);
-      return result == null ? Messages.ProxyMessage.Operation.UNRECOGNIZED : result;
+      sire.messages.Messages.ProxyMessage.Operation result = sire.messages.Messages.ProxyMessage.Operation.valueOf(operation_);
+      return result == null ? sire.messages.Messages.ProxyMessage.Operation.UNRECOGNIZED : result;
     }
 
     public static final int EVIDENCE_FIELD_NUMBER = 2;
-    private Messages.ProtoEvidence evidence_;
+    private sire.messages.Messages.ProtoEvidence evidence_;
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
     public boolean hasEvidence() {
       return evidence_ != null;
     }
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
-    public Messages.ProtoEvidence getEvidence() {
-      return evidence_ == null ? Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+    public sire.messages.Messages.ProtoEvidence getEvidence() {
+      return evidence_ == null ? sire.messages.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
     }
     /**
-     * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+     * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
-    public Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
+    public sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
       return getEvidence();
     }
 
     public static final int SIGNATURE_FIELD_NUMBER = 3;
-    private Messages.ProtoSchnorr signature_;
+    private sire.messages.Messages.ProtoSchnorr signature_;
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
     public boolean hasSignature() {
       return signature_ != null;
     }
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
-    public Messages.ProtoSchnorr getSignature() {
-      return signature_ == null ? Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+    public sire.messages.Messages.ProtoSchnorr getSignature() {
+      return signature_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
     }
     /**
-     * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
      */
-    public Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
+    public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
       return getSignature();
     }
 
@@ -8631,41 +8631,41 @@ public final class Messages {
     }
 
     public static final int POLICY_FIELD_NUMBER = 11;
-    private Messages.ProxyMessage.ProtoPolicy policy_;
+    private sire.messages.Messages.ProxyMessage.ProtoPolicy policy_;
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
     public boolean hasPolicy() {
       return policy_ != null;
     }
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
-    public Messages.ProxyMessage.ProtoPolicy getPolicy() {
-      return policy_ == null ? Messages.ProxyMessage.ProtoPolicy.getDefaultInstance() : policy_;
+    public sire.messages.Messages.ProxyMessage.ProtoPolicy getPolicy() {
+      return policy_ == null ? sire.messages.Messages.ProxyMessage.ProtoPolicy.getDefaultInstance() : policy_;
     }
     /**
-     * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
      */
-    public Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder() {
+    public sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder() {
       return getPolicy();
     }
 
     public static final int DEVICETYPE_FIELD_NUMBER = 12;
     private int deviceType_;
     /**
-     * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+     * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
      */
     public int getDeviceTypeValue() {
       return deviceType_;
     }
     /**
-     * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+     * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
      */
-    public Messages.ProtoDeviceType getDeviceType() {
+    public sire.messages.Messages.ProtoDeviceType getDeviceType() {
       @SuppressWarnings("deprecation")
-      Messages.ProtoDeviceType result = Messages.ProtoDeviceType.valueOf(deviceType_);
-      return result == null ? Messages.ProtoDeviceType.UNRECOGNIZED : result;
+      sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(deviceType_);
+      return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -8682,7 +8682,7 @@ public final class Messages {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (operation_ != Messages.ProxyMessage.Operation.GENERATE_SIGNING_KEY.getNumber()) {
+      if (operation_ != sire.messages.Messages.ProxyMessage.Operation.GENERATE_SIGNING_KEY.getNumber()) {
         output.writeEnum(1, operation_);
       }
       if (evidence_ != null) {
@@ -8715,7 +8715,7 @@ public final class Messages {
       if (policy_ != null) {
         output.writeMessage(11, getPolicy());
       }
-      if (deviceType_ != Messages.ProtoDeviceType.CAMERA.getNumber()) {
+      if (deviceType_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
         output.writeEnum(12, deviceType_);
       }
       unknownFields.writeTo(output);
@@ -8727,7 +8727,7 @@ public final class Messages {
       if (size != -1) return size;
 
       size = 0;
-      if (operation_ != Messages.ProxyMessage.Operation.GENERATE_SIGNING_KEY.getNumber()) {
+      if (operation_ != sire.messages.Messages.ProxyMessage.Operation.GENERATE_SIGNING_KEY.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, operation_);
       }
@@ -8767,7 +8767,7 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(11, getPolicy());
       }
-      if (deviceType_ != Messages.ProtoDeviceType.CAMERA.getNumber()) {
+      if (deviceType_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(12, deviceType_);
       }
@@ -8781,10 +8781,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Messages.ProxyMessage)) {
+      if (!(obj instanceof sire.messages.Messages.ProxyMessage)) {
         return super.equals(obj);
       }
-      Messages.ProxyMessage other = (Messages.ProxyMessage) obj;
+      sire.messages.Messages.ProxyMessage other = (sire.messages.Messages.ProxyMessage) obj;
 
       boolean result = true;
       result = result && operation_ == other.operation_;
@@ -8864,69 +8864,69 @@ public final class Messages {
       return hash;
     }
 
-    public static Messages.ProxyMessage parseFrom(
+    public static sire.messages.Messages.ProxyMessage parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyMessage parseFrom(
+    public static sire.messages.Messages.ProxyMessage parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyMessage parseFrom(
+    public static sire.messages.Messages.ProxyMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyMessage parseFrom(
+    public static sire.messages.Messages.ProxyMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyMessage parseFrom(byte[] data)
+    public static sire.messages.Messages.ProxyMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyMessage parseFrom(
+    public static sire.messages.Messages.ProxyMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyMessage parseFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProxyMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProxyMessage parseFrom(
+    public static sire.messages.Messages.ProxyMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProxyMessage parseDelimitedFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProxyMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Messages.ProxyMessage parseDelimitedFrom(
+    public static sire.messages.Messages.ProxyMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProxyMessage parseFrom(
+    public static sire.messages.Messages.ProxyMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProxyMessage parseFrom(
+    public static sire.messages.Messages.ProxyMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -8939,7 +8939,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Messages.ProxyMessage prototype) {
+    public static Builder newBuilder(sire.messages.Messages.ProxyMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -8955,23 +8955,23 @@ public final class Messages {
       return builder;
     }
     /**
-     * Protobuf type {@code sire.protos.ProxyMessage}
+     * Protobuf type {@code sire.messages.ProxyMessage}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:sire.protos.ProxyMessage)
-        Messages.ProxyMessageOrBuilder {
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProxyMessage)
+        sire.messages.Messages.ProxyMessageOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProxyMessage_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProxyMessage_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProxyMessage_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProxyMessage_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProxyMessage.class, Messages.ProxyMessage.Builder.class);
+                sire.messages.Messages.ProxyMessage.class, sire.messages.Messages.ProxyMessage.Builder.class);
       }
 
       // Construct using sire.messages.Messages.ProxyMessage.newBuilder()
@@ -9034,17 +9034,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Messages.internal_static_sire_protos_ProxyMessage_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProxyMessage_descriptor;
       }
 
       @java.lang.Override
-      public Messages.ProxyMessage getDefaultInstanceForType() {
-        return Messages.ProxyMessage.getDefaultInstance();
+      public sire.messages.Messages.ProxyMessage getDefaultInstanceForType() {
+        return sire.messages.Messages.ProxyMessage.getDefaultInstance();
       }
 
       @java.lang.Override
-      public Messages.ProxyMessage build() {
-        Messages.ProxyMessage result = buildPartial();
+      public sire.messages.Messages.ProxyMessage build() {
+        sire.messages.Messages.ProxyMessage result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -9052,8 +9052,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProxyMessage buildPartial() {
-        Messages.ProxyMessage result = new Messages.ProxyMessage(this);
+      public sire.messages.Messages.ProxyMessage buildPartial() {
+        sire.messages.Messages.ProxyMessage result = new sire.messages.Messages.ProxyMessage(this);
         result.operation_ = operation_;
         if (evidenceBuilder_ == null) {
           result.evidence_ = evidence_;
@@ -9116,16 +9116,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Messages.ProxyMessage) {
-          return mergeFrom((Messages.ProxyMessage)other);
+        if (other instanceof sire.messages.Messages.ProxyMessage) {
+          return mergeFrom((sire.messages.Messages.ProxyMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Messages.ProxyMessage other) {
-        if (other == Messages.ProxyMessage.getDefaultInstance()) return this;
+      public Builder mergeFrom(sire.messages.Messages.ProxyMessage other) {
+        if (other == sire.messages.Messages.ProxyMessage.getDefaultInstance()) return this;
         if (other.operation_ != 0) {
           setOperationValue(other.getOperationValue());
         }
@@ -9181,11 +9181,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Messages.ProxyMessage parsedMessage = null;
+        sire.messages.Messages.ProxyMessage parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Messages.ProxyMessage) e.getUnfinishedMessage();
+          parsedMessage = (sire.messages.Messages.ProxyMessage) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -9197,13 +9197,13 @@ public final class Messages {
 
       private int operation_ = 0;
       /**
-       * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+       * <code>.sire.messages.ProxyMessage.Operation operation = 1;</code>
        */
       public int getOperationValue() {
         return operation_;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+       * <code>.sire.messages.ProxyMessage.Operation operation = 1;</code>
        */
       public Builder setOperationValue(int value) {
         operation_ = value;
@@ -9211,17 +9211,17 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+       * <code>.sire.messages.ProxyMessage.Operation operation = 1;</code>
        */
-      public Messages.ProxyMessage.Operation getOperation() {
+      public sire.messages.Messages.ProxyMessage.Operation getOperation() {
         @SuppressWarnings("deprecation")
-        Messages.ProxyMessage.Operation result = Messages.ProxyMessage.Operation.valueOf(operation_);
-        return result == null ? Messages.ProxyMessage.Operation.UNRECOGNIZED : result;
+        sire.messages.Messages.ProxyMessage.Operation result = sire.messages.Messages.ProxyMessage.Operation.valueOf(operation_);
+        return result == null ? sire.messages.Messages.ProxyMessage.Operation.UNRECOGNIZED : result;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+       * <code>.sire.messages.ProxyMessage.Operation operation = 1;</code>
        */
-      public Builder setOperation(Messages.ProxyMessage.Operation value) {
+      public Builder setOperation(sire.messages.Messages.ProxyMessage.Operation value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -9231,7 +9231,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.Operation operation = 1;</code>
+       * <code>.sire.messages.ProxyMessage.Operation operation = 1;</code>
        */
       public Builder clearOperation() {
         
@@ -9240,29 +9240,29 @@ public final class Messages {
         return this;
       }
 
-      private Messages.ProtoEvidence evidence_ = null;
+      private sire.messages.Messages.ProtoEvidence evidence_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoEvidence, Messages.ProtoEvidence.Builder, Messages.ProtoEvidenceOrBuilder> evidenceBuilder_;
+          sire.messages.Messages.ProtoEvidence, sire.messages.Messages.ProtoEvidence.Builder, sire.messages.Messages.ProtoEvidenceOrBuilder> evidenceBuilder_;
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public boolean hasEvidence() {
         return evidenceBuilder_ != null || evidence_ != null;
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
-      public Messages.ProtoEvidence getEvidence() {
+      public sire.messages.Messages.ProtoEvidence getEvidence() {
         if (evidenceBuilder_ == null) {
-          return evidence_ == null ? Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+          return evidence_ == null ? sire.messages.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
         } else {
           return evidenceBuilder_.getMessage();
         }
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
-      public Builder setEvidence(Messages.ProtoEvidence value) {
+      public Builder setEvidence(sire.messages.Messages.ProtoEvidence value) {
         if (evidenceBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9276,10 +9276,10 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public Builder setEvidence(
-          Messages.ProtoEvidence.Builder builderForValue) {
+          sire.messages.Messages.ProtoEvidence.Builder builderForValue) {
         if (evidenceBuilder_ == null) {
           evidence_ = builderForValue.build();
           onChanged();
@@ -9290,13 +9290,13 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
-      public Builder mergeEvidence(Messages.ProtoEvidence value) {
+      public Builder mergeEvidence(sire.messages.Messages.ProtoEvidence value) {
         if (evidenceBuilder_ == null) {
           if (evidence_ != null) {
             evidence_ =
-              Messages.ProtoEvidence.newBuilder(evidence_).mergeFrom(value).buildPartial();
+              sire.messages.Messages.ProtoEvidence.newBuilder(evidence_).mergeFrom(value).buildPartial();
           } else {
             evidence_ = value;
           }
@@ -9308,7 +9308,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public Builder clearEvidence() {
         if (evidenceBuilder_ == null) {
@@ -9322,33 +9322,33 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
-      public Messages.ProtoEvidence.Builder getEvidenceBuilder() {
+      public sire.messages.Messages.ProtoEvidence.Builder getEvidenceBuilder() {
         
         onChanged();
         return getEvidenceFieldBuilder().getBuilder();
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
-      public Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
+      public sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
         if (evidenceBuilder_ != null) {
           return evidenceBuilder_.getMessageOrBuilder();
         } else {
           return evidence_ == null ?
-              Messages.ProtoEvidence.getDefaultInstance() : evidence_;
+              sire.messages.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
         }
       }
       /**
-       * <code>.sire.protos.ProtoEvidence evidence = 2;</code>
+       * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoEvidence, Messages.ProtoEvidence.Builder, Messages.ProtoEvidenceOrBuilder>
+          sire.messages.Messages.ProtoEvidence, sire.messages.Messages.ProtoEvidence.Builder, sire.messages.Messages.ProtoEvidenceOrBuilder> 
           getEvidenceFieldBuilder() {
         if (evidenceBuilder_ == null) {
           evidenceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              Messages.ProtoEvidence, Messages.ProtoEvidence.Builder, Messages.ProtoEvidenceOrBuilder>(
+              sire.messages.Messages.ProtoEvidence, sire.messages.Messages.ProtoEvidence.Builder, sire.messages.Messages.ProtoEvidenceOrBuilder>(
                   getEvidence(),
                   getParentForChildren(),
                   isClean());
@@ -9357,29 +9357,29 @@ public final class Messages {
         return evidenceBuilder_;
       }
 
-      private Messages.ProtoSchnorr signature_ = null;
+      private sire.messages.Messages.ProtoSchnorr signature_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder> signatureBuilder_;
+          sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> signatureBuilder_;
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
       public boolean hasSignature() {
         return signatureBuilder_ != null || signature_ != null;
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
-      public Messages.ProtoSchnorr getSignature() {
+      public sire.messages.Messages.ProtoSchnorr getSignature() {
         if (signatureBuilder_ == null) {
-          return signature_ == null ? Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+          return signature_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
         } else {
           return signatureBuilder_.getMessage();
         }
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
-      public Builder setSignature(Messages.ProtoSchnorr value) {
+      public Builder setSignature(sire.messages.Messages.ProtoSchnorr value) {
         if (signatureBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9393,10 +9393,10 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
       public Builder setSignature(
-          Messages.ProtoSchnorr.Builder builderForValue) {
+          sire.messages.Messages.ProtoSchnorr.Builder builderForValue) {
         if (signatureBuilder_ == null) {
           signature_ = builderForValue.build();
           onChanged();
@@ -9407,13 +9407,13 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
-      public Builder mergeSignature(Messages.ProtoSchnorr value) {
+      public Builder mergeSignature(sire.messages.Messages.ProtoSchnorr value) {
         if (signatureBuilder_ == null) {
           if (signature_ != null) {
             signature_ =
-              Messages.ProtoSchnorr.newBuilder(signature_).mergeFrom(value).buildPartial();
+              sire.messages.Messages.ProtoSchnorr.newBuilder(signature_).mergeFrom(value).buildPartial();
           } else {
             signature_ = value;
           }
@@ -9425,7 +9425,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
       public Builder clearSignature() {
         if (signatureBuilder_ == null) {
@@ -9439,33 +9439,33 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
-      public Messages.ProtoSchnorr.Builder getSignatureBuilder() {
+      public sire.messages.Messages.ProtoSchnorr.Builder getSignatureBuilder() {
         
         onChanged();
         return getSignatureFieldBuilder().getBuilder();
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
-      public Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
+      public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
         if (signatureBuilder_ != null) {
           return signatureBuilder_.getMessageOrBuilder();
         } else {
           return signature_ == null ?
-              Messages.ProtoSchnorr.getDefaultInstance() : signature_;
+              sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
         }
       }
       /**
-       * <code>.sire.protos.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder>
+          sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> 
           getSignatureFieldBuilder() {
         if (signatureBuilder_ == null) {
           signatureBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              Messages.ProtoSchnorr, Messages.ProtoSchnorr.Builder, Messages.ProtoSchnorrOrBuilder>(
+              sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder>(
                   getSignature(),
                   getParentForChildren(),
                   isClean());
@@ -9849,29 +9849,29 @@ public final class Messages {
         return this;
       }
 
-      private Messages.ProxyMessage.ProtoPolicy policy_ = null;
+      private sire.messages.Messages.ProxyMessage.ProtoPolicy policy_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProxyMessage.ProtoPolicy, Messages.ProxyMessage.ProtoPolicy.Builder, Messages.ProxyMessage.ProtoPolicyOrBuilder> policyBuilder_;
+          sire.messages.Messages.ProxyMessage.ProtoPolicy, sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder, sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder> policyBuilder_;
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public boolean hasPolicy() {
         return policyBuilder_ != null || policy_ != null;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
-      public Messages.ProxyMessage.ProtoPolicy getPolicy() {
+      public sire.messages.Messages.ProxyMessage.ProtoPolicy getPolicy() {
         if (policyBuilder_ == null) {
-          return policy_ == null ? Messages.ProxyMessage.ProtoPolicy.getDefaultInstance() : policy_;
+          return policy_ == null ? sire.messages.Messages.ProxyMessage.ProtoPolicy.getDefaultInstance() : policy_;
         } else {
           return policyBuilder_.getMessage();
         }
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
-      public Builder setPolicy(Messages.ProxyMessage.ProtoPolicy value) {
+      public Builder setPolicy(sire.messages.Messages.ProxyMessage.ProtoPolicy value) {
         if (policyBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9885,10 +9885,10 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public Builder setPolicy(
-          Messages.ProxyMessage.ProtoPolicy.Builder builderForValue) {
+          sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder builderForValue) {
         if (policyBuilder_ == null) {
           policy_ = builderForValue.build();
           onChanged();
@@ -9899,13 +9899,13 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
-      public Builder mergePolicy(Messages.ProxyMessage.ProtoPolicy value) {
+      public Builder mergePolicy(sire.messages.Messages.ProxyMessage.ProtoPolicy value) {
         if (policyBuilder_ == null) {
           if (policy_ != null) {
             policy_ =
-              Messages.ProxyMessage.ProtoPolicy.newBuilder(policy_).mergeFrom(value).buildPartial();
+              sire.messages.Messages.ProxyMessage.ProtoPolicy.newBuilder(policy_).mergeFrom(value).buildPartial();
           } else {
             policy_ = value;
           }
@@ -9917,7 +9917,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       public Builder clearPolicy() {
         if (policyBuilder_ == null) {
@@ -9931,33 +9931,33 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
-      public Messages.ProxyMessage.ProtoPolicy.Builder getPolicyBuilder() {
+      public sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder getPolicyBuilder() {
         
         onChanged();
         return getPolicyFieldBuilder().getBuilder();
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
-      public Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder() {
+      public sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder() {
         if (policyBuilder_ != null) {
           return policyBuilder_.getMessageOrBuilder();
         } else {
           return policy_ == null ?
-              Messages.ProxyMessage.ProtoPolicy.getDefaultInstance() : policy_;
+              sire.messages.Messages.ProxyMessage.ProtoPolicy.getDefaultInstance() : policy_;
         }
       }
       /**
-       * <code>.sire.protos.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          Messages.ProxyMessage.ProtoPolicy, Messages.ProxyMessage.ProtoPolicy.Builder, Messages.ProxyMessage.ProtoPolicyOrBuilder>
+          sire.messages.Messages.ProxyMessage.ProtoPolicy, sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder, sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder> 
           getPolicyFieldBuilder() {
         if (policyBuilder_ == null) {
           policyBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              Messages.ProxyMessage.ProtoPolicy, Messages.ProxyMessage.ProtoPolicy.Builder, Messages.ProxyMessage.ProtoPolicyOrBuilder>(
+              sire.messages.Messages.ProxyMessage.ProtoPolicy, sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder, sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder>(
                   getPolicy(),
                   getParentForChildren(),
                   isClean());
@@ -9968,13 +9968,13 @@ public final class Messages {
 
       private int deviceType_ = 0;
       /**
-       * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
        */
       public int getDeviceTypeValue() {
         return deviceType_;
       }
       /**
-       * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
        */
       public Builder setDeviceTypeValue(int value) {
         deviceType_ = value;
@@ -9982,17 +9982,17 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
        */
-      public Messages.ProtoDeviceType getDeviceType() {
+      public sire.messages.Messages.ProtoDeviceType getDeviceType() {
         @SuppressWarnings("deprecation")
-        Messages.ProtoDeviceType result = Messages.ProtoDeviceType.valueOf(deviceType_);
-        return result == null ? Messages.ProtoDeviceType.UNRECOGNIZED : result;
+        sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(deviceType_);
+        return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
       }
       /**
-       * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
        */
-      public Builder setDeviceType(Messages.ProtoDeviceType value) {
+      public Builder setDeviceType(sire.messages.Messages.ProtoDeviceType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -10002,7 +10002,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProtoDeviceType deviceType = 12;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
        */
       public Builder clearDeviceType() {
         
@@ -10023,16 +10023,16 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:sire.protos.ProxyMessage)
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProxyMessage)
     }
 
-    // @@protoc_insertion_point(class_scope:sire.protos.ProxyMessage)
-    private static final Messages.ProxyMessage DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:sire.messages.ProxyMessage)
+    private static final sire.messages.Messages.ProxyMessage DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Messages.ProxyMessage();
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProxyMessage();
     }
 
-    public static Messages.ProxyMessage getDefaultInstance() {
+    public static sire.messages.Messages.ProxyMessage getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -10057,24 +10057,24 @@ public final class Messages {
     }
 
     @java.lang.Override
-    public Messages.ProxyMessage getDefaultInstanceForType() {
+    public sire.messages.Messages.ProxyMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public interface ProxyResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:sire.protos.ProxyResponse)
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProxyResponse)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+     * <code>.sire.messages.ProxyResponse.ResponseType type = 1;</code>
      */
     int getTypeValue();
     /**
-     * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+     * <code>.sire.messages.ProxyResponse.ResponseType type = 1;</code>
      */
-    Messages.ProxyResponse.ResponseType getType();
+    sire.messages.Messages.ProxyResponse.ResponseType getType();
 
     /**
      * <code>repeated bytes list = 2;</code>
@@ -10095,27 +10095,27 @@ public final class Messages {
     com.google.protobuf.ByteString getValue();
 
     /**
-     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
      */
-    java.util.List<Messages.ProxyResponse.ProtoDeviceContext>
+    java.util.List<sire.messages.Messages.ProxyResponse.ProtoDeviceContext> 
         getMembersList();
     /**
-     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
      */
-    Messages.ProxyResponse.ProtoDeviceContext getMembers(int index);
+    sire.messages.Messages.ProxyResponse.ProtoDeviceContext getMembers(int index);
     /**
-     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
      */
     int getMembersCount();
     /**
-     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
      */
-    java.util.List<? extends Messages.ProxyResponse.ProtoDeviceContextOrBuilder>
+    java.util.List<? extends sire.messages.Messages.ProxyResponse.ProtoDeviceContextOrBuilder> 
         getMembersOrBuilderList();
     /**
-     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
      */
-    Messages.ProxyResponse.ProtoDeviceContextOrBuilder getMembersOrBuilder(
+    sire.messages.Messages.ProxyResponse.ProtoDeviceContextOrBuilder getMembersOrBuilder(
         int index);
 
     /**
@@ -10139,11 +10139,11 @@ public final class Messages {
         getPolicyBytes();
   }
   /**
-   * Protobuf type {@code sire.protos.ProxyResponse}
+   * Protobuf type {@code sire.messages.ProxyResponse}
    */
   public  static final class ProxyResponse extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:sire.protos.ProxyResponse)
+      // @@protoc_insertion_point(message_implements:sire.messages.ProxyResponse)
       ProxyResponseOrBuilder {
   private static final long serialVersionUID = 0L;
     // Use ProxyResponse.newBuilder() to construct.
@@ -10204,11 +10204,11 @@ public final class Messages {
             }
             case 34: {
               if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                members_ = new java.util.ArrayList<Messages.ProxyResponse.ProtoDeviceContext>();
+                members_ = new java.util.ArrayList<sire.messages.Messages.ProxyResponse.ProtoDeviceContext>();
                 mutable_bitField0_ |= 0x00000008;
               }
               members_.add(
-                  input.readMessage(Messages.ProxyResponse.ProtoDeviceContext.parser(), extensionRegistry));
+                  input.readMessage(sire.messages.Messages.ProxyResponse.ProtoDeviceContext.parser(), extensionRegistry));
               break;
             }
             case 42: {
@@ -10250,19 +10250,19 @@ public final class Messages {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Messages.internal_static_sire_protos_ProxyResponse_descriptor;
+      return sire.messages.Messages.internal_static_sire_messages_ProxyResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Messages.internal_static_sire_protos_ProxyResponse_fieldAccessorTable
+      return sire.messages.Messages.internal_static_sire_messages_ProxyResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Messages.ProxyResponse.class, Messages.ProxyResponse.Builder.class);
+              sire.messages.Messages.ProxyResponse.class, sire.messages.Messages.ProxyResponse.Builder.class);
     }
 
     /**
-     * Protobuf enum {@code sire.protos.ProxyResponse.ResponseType}
+     * Protobuf enum {@code sire.messages.ProxyResponse.ResponseType}
      */
     public enum ResponseType
         implements com.google.protobuf.ProtocolMessageEnum {
@@ -10360,7 +10360,7 @@ public final class Messages {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return Messages.ProxyResponse.getDescriptor().getEnumTypes().get(0);
+        return sire.messages.Messages.ProxyResponse.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final ResponseType[] VALUES = values();
@@ -10383,11 +10383,11 @@ public final class Messages {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:sire.protos.ProxyResponse.ResponseType)
+      // @@protoc_insertion_point(enum_scope:sire.messages.ProxyResponse.ResponseType)
     }
 
     public interface ProtoDeviceContextOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:sire.protos.ProxyResponse.ProtoDeviceContext)
+        // @@protoc_insertion_point(interface_extends:sire.messages.ProxyResponse.ProtoDeviceContext)
         com.google.protobuf.MessageOrBuilder {
 
       /**
@@ -10414,20 +10414,20 @@ public final class Messages {
       com.google.protobuf.TimestampOrBuilder getTimeOrBuilder();
 
       /**
-       * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
        */
       int getDeviceTypeValue();
       /**
-       * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
        */
-      Messages.ProtoDeviceType getDeviceType();
+      sire.messages.Messages.ProtoDeviceType getDeviceType();
     }
     /**
-     * Protobuf type {@code sire.protos.ProxyResponse.ProtoDeviceContext}
+     * Protobuf type {@code sire.messages.ProxyResponse.ProtoDeviceContext}
      */
     public  static final class ProtoDeviceContext extends
         com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:sire.protos.ProxyResponse.ProtoDeviceContext)
+        // @@protoc_insertion_point(message_implements:sire.messages.ProxyResponse.ProtoDeviceContext)
         ProtoDeviceContextOrBuilder {
     private static final long serialVersionUID = 0L;
       // Use ProtoDeviceContext.newBuilder() to construct.
@@ -10509,15 +10509,15 @@ public final class Messages {
       }
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProxyResponse.ProtoDeviceContext.class, Messages.ProxyResponse.ProtoDeviceContext.Builder.class);
+                sire.messages.Messages.ProxyResponse.ProtoDeviceContext.class, sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder.class);
       }
 
       public static final int DEVICEID_FIELD_NUMBER = 1;
@@ -10578,18 +10578,18 @@ public final class Messages {
       public static final int DEVICETYPE_FIELD_NUMBER = 3;
       private int deviceType_;
       /**
-       * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
        */
       public int getDeviceTypeValue() {
         return deviceType_;
       }
       /**
-       * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
        */
-      public Messages.ProtoDeviceType getDeviceType() {
+      public sire.messages.Messages.ProtoDeviceType getDeviceType() {
         @SuppressWarnings("deprecation")
-        Messages.ProtoDeviceType result = Messages.ProtoDeviceType.valueOf(deviceType_);
-        return result == null ? Messages.ProtoDeviceType.UNRECOGNIZED : result;
+        sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(deviceType_);
+        return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
       }
 
       private byte memoizedIsInitialized = -1;
@@ -10612,7 +10612,7 @@ public final class Messages {
         if (time_ != null) {
           output.writeMessage(2, getTime());
         }
-        if (deviceType_ != Messages.ProtoDeviceType.CAMERA.getNumber()) {
+        if (deviceType_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
           output.writeEnum(3, deviceType_);
         }
         unknownFields.writeTo(output);
@@ -10631,7 +10631,7 @@ public final class Messages {
           size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(2, getTime());
         }
-        if (deviceType_ != Messages.ProtoDeviceType.CAMERA.getNumber()) {
+        if (deviceType_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
           size += com.google.protobuf.CodedOutputStream
             .computeEnumSize(3, deviceType_);
         }
@@ -10645,10 +10645,10 @@ public final class Messages {
         if (obj == this) {
          return true;
         }
-        if (!(obj instanceof Messages.ProxyResponse.ProtoDeviceContext)) {
+        if (!(obj instanceof sire.messages.Messages.ProxyResponse.ProtoDeviceContext)) {
           return super.equals(obj);
         }
-        Messages.ProxyResponse.ProtoDeviceContext other = (Messages.ProxyResponse.ProtoDeviceContext) obj;
+        sire.messages.Messages.ProxyResponse.ProtoDeviceContext other = (sire.messages.Messages.ProxyResponse.ProtoDeviceContext) obj;
 
         boolean result = true;
         result = result && getDeviceId()
@@ -10683,69 +10683,69 @@ public final class Messages {
         return hash;
       }
 
-      public static Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
           java.nio.ByteBuffer data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
           java.nio.ByteBuffer data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseFrom(byte[] data)
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseFrom(java.io.InputStream input)
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input, extensionRegistry);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseDelimitedFrom(java.io.InputStream input)
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseDelimitedFrom(
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
             .parseWithIOException(PARSER, input);
       }
-      public static Messages.ProxyResponse.ProtoDeviceContext parseFrom(
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -10758,7 +10758,7 @@ public final class Messages {
       public static Builder newBuilder() {
         return DEFAULT_INSTANCE.toBuilder();
       }
-      public static Builder newBuilder(Messages.ProxyResponse.ProtoDeviceContext prototype) {
+      public static Builder newBuilder(sire.messages.Messages.ProxyResponse.ProtoDeviceContext prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
       }
       @java.lang.Override
@@ -10774,23 +10774,23 @@ public final class Messages {
         return builder;
       }
       /**
-       * Protobuf type {@code sire.protos.ProxyResponse.ProtoDeviceContext}
+       * Protobuf type {@code sire.messages.ProxyResponse.ProtoDeviceContext}
        */
       public static final class Builder extends
           com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-          // @@protoc_insertion_point(builder_implements:sire.protos.ProxyResponse.ProtoDeviceContext)
-          Messages.ProxyResponse.ProtoDeviceContextOrBuilder {
+          // @@protoc_insertion_point(builder_implements:sire.messages.ProxyResponse.ProtoDeviceContext)
+          sire.messages.Messages.ProxyResponse.ProtoDeviceContextOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return Messages.internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor;
+          return sire.messages.Messages.internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor;
         }
 
         @java.lang.Override
         protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return Messages.internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_fieldAccessorTable
+          return sire.messages.Messages.internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_fieldAccessorTable
               .ensureFieldAccessorsInitialized(
-                  Messages.ProxyResponse.ProtoDeviceContext.class, Messages.ProxyResponse.ProtoDeviceContext.Builder.class);
+                  sire.messages.Messages.ProxyResponse.ProtoDeviceContext.class, sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder.class);
         }
 
         // Construct using sire.messages.Messages.ProxyResponse.ProtoDeviceContext.newBuilder()
@@ -10827,17 +10827,17 @@ public final class Messages {
         @java.lang.Override
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return Messages.internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor;
+          return sire.messages.Messages.internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor;
         }
 
         @java.lang.Override
-        public Messages.ProxyResponse.ProtoDeviceContext getDefaultInstanceForType() {
-          return Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance();
+        public sire.messages.Messages.ProxyResponse.ProtoDeviceContext getDefaultInstanceForType() {
+          return sire.messages.Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance();
         }
 
         @java.lang.Override
-        public Messages.ProxyResponse.ProtoDeviceContext build() {
-          Messages.ProxyResponse.ProtoDeviceContext result = buildPartial();
+        public sire.messages.Messages.ProxyResponse.ProtoDeviceContext build() {
+          sire.messages.Messages.ProxyResponse.ProtoDeviceContext result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
@@ -10845,8 +10845,8 @@ public final class Messages {
         }
 
         @java.lang.Override
-        public Messages.ProxyResponse.ProtoDeviceContext buildPartial() {
-          Messages.ProxyResponse.ProtoDeviceContext result = new Messages.ProxyResponse.ProtoDeviceContext(this);
+        public sire.messages.Messages.ProxyResponse.ProtoDeviceContext buildPartial() {
+          sire.messages.Messages.ProxyResponse.ProtoDeviceContext result = new sire.messages.Messages.ProxyResponse.ProtoDeviceContext(this);
           result.deviceId_ = deviceId_;
           if (timeBuilder_ == null) {
             result.time_ = time_;
@@ -10892,16 +10892,16 @@ public final class Messages {
         }
         @java.lang.Override
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof Messages.ProxyResponse.ProtoDeviceContext) {
-            return mergeFrom((Messages.ProxyResponse.ProtoDeviceContext)other);
+          if (other instanceof sire.messages.Messages.ProxyResponse.ProtoDeviceContext) {
+            return mergeFrom((sire.messages.Messages.ProxyResponse.ProtoDeviceContext)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
 
-        public Builder mergeFrom(Messages.ProxyResponse.ProtoDeviceContext other) {
-          if (other == Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance()) return this;
+        public Builder mergeFrom(sire.messages.Messages.ProxyResponse.ProtoDeviceContext other) {
+          if (other == sire.messages.Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance()) return this;
           if (!other.getDeviceId().isEmpty()) {
             deviceId_ = other.deviceId_;
             onChanged();
@@ -10927,11 +10927,11 @@ public final class Messages {
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
-          Messages.ProxyResponse.ProtoDeviceContext parsedMessage = null;
+          sire.messages.Messages.ProxyResponse.ProtoDeviceContext parsedMessage = null;
           try {
             parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (Messages.ProxyResponse.ProtoDeviceContext) e.getUnfinishedMessage();
+            parsedMessage = (sire.messages.Messages.ProxyResponse.ProtoDeviceContext) e.getUnfinishedMessage();
             throw e.unwrapIOException();
           } finally {
             if (parsedMessage != null) {
@@ -11129,13 +11129,13 @@ public final class Messages {
 
         private int deviceType_ = 0;
         /**
-         * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+         * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
          */
         public int getDeviceTypeValue() {
           return deviceType_;
         }
         /**
-         * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+         * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
          */
         public Builder setDeviceTypeValue(int value) {
           deviceType_ = value;
@@ -11143,17 +11143,17 @@ public final class Messages {
           return this;
         }
         /**
-         * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+         * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
          */
-        public Messages.ProtoDeviceType getDeviceType() {
+        public sire.messages.Messages.ProtoDeviceType getDeviceType() {
           @SuppressWarnings("deprecation")
-          Messages.ProtoDeviceType result = Messages.ProtoDeviceType.valueOf(deviceType_);
-          return result == null ? Messages.ProtoDeviceType.UNRECOGNIZED : result;
+          sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(deviceType_);
+          return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
         }
         /**
-         * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+         * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
          */
-        public Builder setDeviceType(Messages.ProtoDeviceType value) {
+        public Builder setDeviceType(sire.messages.Messages.ProtoDeviceType value) {
           if (value == null) {
             throw new NullPointerException();
           }
@@ -11163,7 +11163,7 @@ public final class Messages {
           return this;
         }
         /**
-         * <code>.sire.protos.ProtoDeviceType deviceType = 3;</code>
+         * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
          */
         public Builder clearDeviceType() {
           
@@ -11184,16 +11184,16 @@ public final class Messages {
         }
 
 
-        // @@protoc_insertion_point(builder_scope:sire.protos.ProxyResponse.ProtoDeviceContext)
+        // @@protoc_insertion_point(builder_scope:sire.messages.ProxyResponse.ProtoDeviceContext)
       }
 
-      // @@protoc_insertion_point(class_scope:sire.protos.ProxyResponse.ProtoDeviceContext)
-      private static final Messages.ProxyResponse.ProtoDeviceContext DEFAULT_INSTANCE;
+      // @@protoc_insertion_point(class_scope:sire.messages.ProxyResponse.ProtoDeviceContext)
+      private static final sire.messages.Messages.ProxyResponse.ProtoDeviceContext DEFAULT_INSTANCE;
       static {
-        DEFAULT_INSTANCE = new Messages.ProxyResponse.ProtoDeviceContext();
+        DEFAULT_INSTANCE = new sire.messages.Messages.ProxyResponse.ProtoDeviceContext();
       }
 
-      public static Messages.ProxyResponse.ProtoDeviceContext getDefaultInstance() {
+      public static sire.messages.Messages.ProxyResponse.ProtoDeviceContext getDefaultInstance() {
         return DEFAULT_INSTANCE;
       }
 
@@ -11218,7 +11218,7 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProxyResponse.ProtoDeviceContext getDefaultInstanceForType() {
+      public sire.messages.Messages.ProxyResponse.ProtoDeviceContext getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
       }
 
@@ -11228,18 +11228,18 @@ public final class Messages {
     public static final int TYPE_FIELD_NUMBER = 1;
     private int type_;
     /**
-     * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+     * <code>.sire.messages.ProxyResponse.ResponseType type = 1;</code>
      */
     public int getTypeValue() {
       return type_;
     }
     /**
-     * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+     * <code>.sire.messages.ProxyResponse.ResponseType type = 1;</code>
      */
-    public Messages.ProxyResponse.ResponseType getType() {
+    public sire.messages.Messages.ProxyResponse.ResponseType getType() {
       @SuppressWarnings("deprecation")
-      Messages.ProxyResponse.ResponseType result = Messages.ProxyResponse.ResponseType.valueOf(type_);
-      return result == null ? Messages.ProxyResponse.ResponseType.UNRECOGNIZED : result;
+      sire.messages.Messages.ProxyResponse.ResponseType result = sire.messages.Messages.ProxyResponse.ResponseType.valueOf(type_);
+      return result == null ? sire.messages.Messages.ProxyResponse.ResponseType.UNRECOGNIZED : result;
     }
 
     public static final int LIST_FIELD_NUMBER = 2;
@@ -11274,36 +11274,36 @@ public final class Messages {
     }
 
     public static final int MEMBERS_FIELD_NUMBER = 4;
-    private java.util.List<Messages.ProxyResponse.ProtoDeviceContext> members_;
+    private java.util.List<sire.messages.Messages.ProxyResponse.ProtoDeviceContext> members_;
     /**
-     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
      */
-    public java.util.List<Messages.ProxyResponse.ProtoDeviceContext> getMembersList() {
+    public java.util.List<sire.messages.Messages.ProxyResponse.ProtoDeviceContext> getMembersList() {
       return members_;
     }
     /**
-     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
      */
-    public java.util.List<? extends Messages.ProxyResponse.ProtoDeviceContextOrBuilder>
+    public java.util.List<? extends sire.messages.Messages.ProxyResponse.ProtoDeviceContextOrBuilder> 
         getMembersOrBuilderList() {
       return members_;
     }
     /**
-     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
      */
     public int getMembersCount() {
       return members_.size();
     }
     /**
-     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
      */
-    public Messages.ProxyResponse.ProtoDeviceContext getMembers(int index) {
+    public sire.messages.Messages.ProxyResponse.ProtoDeviceContext getMembers(int index) {
       return members_.get(index);
     }
     /**
-     * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+     * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
      */
-    public Messages.ProxyResponse.ProtoDeviceContextOrBuilder getMembersOrBuilder(
+    public sire.messages.Messages.ProxyResponse.ProtoDeviceContextOrBuilder getMembersOrBuilder(
         int index) {
       return members_.get(index);
     }
@@ -11390,7 +11390,7 @@ public final class Messages {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (type_ != Messages.ProxyResponse.ResponseType.MAP_GET.getNumber()) {
+      if (type_ != sire.messages.Messages.ProxyResponse.ResponseType.MAP_GET.getNumber()) {
         output.writeEnum(1, type_);
       }
       for (int i = 0; i < list_.size(); i++) {
@@ -11417,7 +11417,7 @@ public final class Messages {
       if (size != -1) return size;
 
       size = 0;
-      if (type_ != Messages.ProxyResponse.ResponseType.MAP_GET.getNumber()) {
+      if (type_ != sire.messages.Messages.ProxyResponse.ResponseType.MAP_GET.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, type_);
       }
@@ -11454,10 +11454,10 @@ public final class Messages {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof Messages.ProxyResponse)) {
+      if (!(obj instanceof sire.messages.Messages.ProxyResponse)) {
         return super.equals(obj);
       }
-      Messages.ProxyResponse other = (Messages.ProxyResponse) obj;
+      sire.messages.Messages.ProxyResponse other = (sire.messages.Messages.ProxyResponse) obj;
 
       boolean result = true;
       result = result && type_ == other.type_;
@@ -11503,69 +11503,69 @@ public final class Messages {
       return hash;
     }
 
-    public static Messages.ProxyResponse parseFrom(
+    public static sire.messages.Messages.ProxyResponse parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyResponse parseFrom(
+    public static sire.messages.Messages.ProxyResponse parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyResponse parseFrom(
+    public static sire.messages.Messages.ProxyResponse parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyResponse parseFrom(
+    public static sire.messages.Messages.ProxyResponse parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyResponse parseFrom(byte[] data)
+    public static sire.messages.Messages.ProxyResponse parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static Messages.ProxyResponse parseFrom(
+    public static sire.messages.Messages.ProxyResponse parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static Messages.ProxyResponse parseFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProxyResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProxyResponse parseFrom(
+    public static sire.messages.Messages.ProxyResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProxyResponse parseDelimitedFrom(java.io.InputStream input)
+    public static sire.messages.Messages.ProxyResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static Messages.ProxyResponse parseDelimitedFrom(
+    public static sire.messages.Messages.ProxyResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static Messages.ProxyResponse parseFrom(
+    public static sire.messages.Messages.ProxyResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static Messages.ProxyResponse parseFrom(
+    public static sire.messages.Messages.ProxyResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -11578,7 +11578,7 @@ public final class Messages {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(Messages.ProxyResponse prototype) {
+    public static Builder newBuilder(sire.messages.Messages.ProxyResponse prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -11594,23 +11594,23 @@ public final class Messages {
       return builder;
     }
     /**
-     * Protobuf type {@code sire.protos.ProxyResponse}
+     * Protobuf type {@code sire.messages.ProxyResponse}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:sire.protos.ProxyResponse)
-        Messages.ProxyResponseOrBuilder {
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProxyResponse)
+        sire.messages.Messages.ProxyResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Messages.internal_static_sire_protos_ProxyResponse_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProxyResponse_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Messages.internal_static_sire_protos_ProxyResponse_fieldAccessorTable
+        return sire.messages.Messages.internal_static_sire_messages_ProxyResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                Messages.ProxyResponse.class, Messages.ProxyResponse.Builder.class);
+                sire.messages.Messages.ProxyResponse.class, sire.messages.Messages.ProxyResponse.Builder.class);
       }
 
       // Construct using sire.messages.Messages.ProxyResponse.newBuilder()
@@ -11654,17 +11654,17 @@ public final class Messages {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Messages.internal_static_sire_protos_ProxyResponse_descriptor;
+        return sire.messages.Messages.internal_static_sire_messages_ProxyResponse_descriptor;
       }
 
       @java.lang.Override
-      public Messages.ProxyResponse getDefaultInstanceForType() {
-        return Messages.ProxyResponse.getDefaultInstance();
+      public sire.messages.Messages.ProxyResponse getDefaultInstanceForType() {
+        return sire.messages.Messages.ProxyResponse.getDefaultInstance();
       }
 
       @java.lang.Override
-      public Messages.ProxyResponse build() {
-        Messages.ProxyResponse result = buildPartial();
+      public sire.messages.Messages.ProxyResponse build() {
+        sire.messages.Messages.ProxyResponse result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -11672,8 +11672,8 @@ public final class Messages {
       }
 
       @java.lang.Override
-      public Messages.ProxyResponse buildPartial() {
-        Messages.ProxyResponse result = new Messages.ProxyResponse(this);
+      public sire.messages.Messages.ProxyResponse buildPartial() {
+        sire.messages.Messages.ProxyResponse result = new sire.messages.Messages.ProxyResponse(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         result.type_ = type_;
@@ -11733,16 +11733,16 @@ public final class Messages {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Messages.ProxyResponse) {
-          return mergeFrom((Messages.ProxyResponse)other);
+        if (other instanceof sire.messages.Messages.ProxyResponse) {
+          return mergeFrom((sire.messages.Messages.ProxyResponse)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(Messages.ProxyResponse other) {
-        if (other == Messages.ProxyResponse.getDefaultInstance()) return this;
+      public Builder mergeFrom(sire.messages.Messages.ProxyResponse other) {
+        if (other == sire.messages.Messages.ProxyResponse.getDefaultInstance()) return this;
         if (other.type_ != 0) {
           setTypeValue(other.getTypeValue());
         }
@@ -11808,11 +11808,11 @@ public final class Messages {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        Messages.ProxyResponse parsedMessage = null;
+        sire.messages.Messages.ProxyResponse parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (Messages.ProxyResponse) e.getUnfinishedMessage();
+          parsedMessage = (sire.messages.Messages.ProxyResponse) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -11825,13 +11825,13 @@ public final class Messages {
 
       private int type_ = 0;
       /**
-       * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+       * <code>.sire.messages.ProxyResponse.ResponseType type = 1;</code>
        */
       public int getTypeValue() {
         return type_;
       }
       /**
-       * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+       * <code>.sire.messages.ProxyResponse.ResponseType type = 1;</code>
        */
       public Builder setTypeValue(int value) {
         type_ = value;
@@ -11839,17 +11839,17 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+       * <code>.sire.messages.ProxyResponse.ResponseType type = 1;</code>
        */
-      public Messages.ProxyResponse.ResponseType getType() {
+      public sire.messages.Messages.ProxyResponse.ResponseType getType() {
         @SuppressWarnings("deprecation")
-        Messages.ProxyResponse.ResponseType result = Messages.ProxyResponse.ResponseType.valueOf(type_);
-        return result == null ? Messages.ProxyResponse.ResponseType.UNRECOGNIZED : result;
+        sire.messages.Messages.ProxyResponse.ResponseType result = sire.messages.Messages.ProxyResponse.ResponseType.valueOf(type_);
+        return result == null ? sire.messages.Messages.ProxyResponse.ResponseType.UNRECOGNIZED : result;
       }
       /**
-       * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+       * <code>.sire.messages.ProxyResponse.ResponseType type = 1;</code>
        */
-      public Builder setType(Messages.ProxyResponse.ResponseType value) {
+      public Builder setType(sire.messages.Messages.ProxyResponse.ResponseType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -11859,7 +11859,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.protos.ProxyResponse.ResponseType type = 1;</code>
+       * <code>.sire.messages.ProxyResponse.ResponseType type = 1;</code>
        */
       public Builder clearType() {
         
@@ -11969,22 +11969,22 @@ public final class Messages {
         return this;
       }
 
-      private java.util.List<Messages.ProxyResponse.ProtoDeviceContext> members_ =
+      private java.util.List<sire.messages.Messages.ProxyResponse.ProtoDeviceContext> members_ =
         java.util.Collections.emptyList();
       private void ensureMembersIsMutable() {
         if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-          members_ = new java.util.ArrayList<Messages.ProxyResponse.ProtoDeviceContext>(members_);
+          members_ = new java.util.ArrayList<sire.messages.Messages.ProxyResponse.ProtoDeviceContext>(members_);
           bitField0_ |= 0x00000008;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          Messages.ProxyResponse.ProtoDeviceContext, Messages.ProxyResponse.ProtoDeviceContext.Builder, Messages.ProxyResponse.ProtoDeviceContextOrBuilder> membersBuilder_;
+          sire.messages.Messages.ProxyResponse.ProtoDeviceContext, sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder, sire.messages.Messages.ProxyResponse.ProtoDeviceContextOrBuilder> membersBuilder_;
 
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
-      public java.util.List<Messages.ProxyResponse.ProtoDeviceContext> getMembersList() {
+      public java.util.List<sire.messages.Messages.ProxyResponse.ProtoDeviceContext> getMembersList() {
         if (membersBuilder_ == null) {
           return java.util.Collections.unmodifiableList(members_);
         } else {
@@ -11992,7 +11992,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
       public int getMembersCount() {
         if (membersBuilder_ == null) {
@@ -12002,9 +12002,9 @@ public final class Messages {
         }
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
-      public Messages.ProxyResponse.ProtoDeviceContext getMembers(int index) {
+      public sire.messages.Messages.ProxyResponse.ProtoDeviceContext getMembers(int index) {
         if (membersBuilder_ == null) {
           return members_.get(index);
         } else {
@@ -12012,10 +12012,10 @@ public final class Messages {
         }
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
       public Builder setMembers(
-          int index, Messages.ProxyResponse.ProtoDeviceContext value) {
+          int index, sire.messages.Messages.ProxyResponse.ProtoDeviceContext value) {
         if (membersBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -12029,10 +12029,10 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
       public Builder setMembers(
-          int index, Messages.ProxyResponse.ProtoDeviceContext.Builder builderForValue) {
+          int index, sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder builderForValue) {
         if (membersBuilder_ == null) {
           ensureMembersIsMutable();
           members_.set(index, builderForValue.build());
@@ -12043,9 +12043,9 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
-      public Builder addMembers(Messages.ProxyResponse.ProtoDeviceContext value) {
+      public Builder addMembers(sire.messages.Messages.ProxyResponse.ProtoDeviceContext value) {
         if (membersBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -12059,10 +12059,10 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
       public Builder addMembers(
-          int index, Messages.ProxyResponse.ProtoDeviceContext value) {
+          int index, sire.messages.Messages.ProxyResponse.ProtoDeviceContext value) {
         if (membersBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -12076,10 +12076,10 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
       public Builder addMembers(
-          Messages.ProxyResponse.ProtoDeviceContext.Builder builderForValue) {
+          sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder builderForValue) {
         if (membersBuilder_ == null) {
           ensureMembersIsMutable();
           members_.add(builderForValue.build());
@@ -12090,10 +12090,10 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
       public Builder addMembers(
-          int index, Messages.ProxyResponse.ProtoDeviceContext.Builder builderForValue) {
+          int index, sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder builderForValue) {
         if (membersBuilder_ == null) {
           ensureMembersIsMutable();
           members_.add(index, builderForValue.build());
@@ -12104,10 +12104,10 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
       public Builder addAllMembers(
-          java.lang.Iterable<? extends Messages.ProxyResponse.ProtoDeviceContext> values) {
+          java.lang.Iterable<? extends sire.messages.Messages.ProxyResponse.ProtoDeviceContext> values) {
         if (membersBuilder_ == null) {
           ensureMembersIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -12119,7 +12119,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
       public Builder clearMembers() {
         if (membersBuilder_ == null) {
@@ -12132,7 +12132,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
       public Builder removeMembers(int index) {
         if (membersBuilder_ == null) {
@@ -12145,16 +12145,16 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
-      public Messages.ProxyResponse.ProtoDeviceContext.Builder getMembersBuilder(
+      public sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder getMembersBuilder(
           int index) {
         return getMembersFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
-      public Messages.ProxyResponse.ProtoDeviceContextOrBuilder getMembersOrBuilder(
+      public sire.messages.Messages.ProxyResponse.ProtoDeviceContextOrBuilder getMembersOrBuilder(
           int index) {
         if (membersBuilder_ == null) {
           return members_.get(index);  } else {
@@ -12162,9 +12162,9 @@ public final class Messages {
         }
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
-      public java.util.List<? extends Messages.ProxyResponse.ProtoDeviceContextOrBuilder>
+      public java.util.List<? extends sire.messages.Messages.ProxyResponse.ProtoDeviceContextOrBuilder> 
            getMembersOrBuilderList() {
         if (membersBuilder_ != null) {
           return membersBuilder_.getMessageOrBuilderList();
@@ -12173,33 +12173,33 @@ public final class Messages {
         }
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
-      public Messages.ProxyResponse.ProtoDeviceContext.Builder addMembersBuilder() {
+      public sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder addMembersBuilder() {
         return getMembersFieldBuilder().addBuilder(
-            Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance());
+            sire.messages.Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance());
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
-      public Messages.ProxyResponse.ProtoDeviceContext.Builder addMembersBuilder(
+      public sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder addMembersBuilder(
           int index) {
         return getMembersFieldBuilder().addBuilder(
-            index, Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance());
+            index, sire.messages.Messages.ProxyResponse.ProtoDeviceContext.getDefaultInstance());
       }
       /**
-       * <code>repeated .sire.protos.ProxyResponse.ProtoDeviceContext members = 4;</code>
+       * <code>repeated .sire.messages.ProxyResponse.ProtoDeviceContext members = 4;</code>
        */
-      public java.util.List<Messages.ProxyResponse.ProtoDeviceContext.Builder>
+      public java.util.List<sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder> 
            getMembersBuilderList() {
         return getMembersFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          Messages.ProxyResponse.ProtoDeviceContext, Messages.ProxyResponse.ProtoDeviceContext.Builder, Messages.ProxyResponse.ProtoDeviceContextOrBuilder>
+          sire.messages.Messages.ProxyResponse.ProtoDeviceContext, sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder, sire.messages.Messages.ProxyResponse.ProtoDeviceContextOrBuilder> 
           getMembersFieldBuilder() {
         if (membersBuilder_ == null) {
           membersBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              Messages.ProxyResponse.ProtoDeviceContext, Messages.ProxyResponse.ProtoDeviceContext.Builder, Messages.ProxyResponse.ProtoDeviceContextOrBuilder>(
+              sire.messages.Messages.ProxyResponse.ProtoDeviceContext, sire.messages.Messages.ProxyResponse.ProtoDeviceContext.Builder, sire.messages.Messages.ProxyResponse.ProtoDeviceContextOrBuilder>(
                   members_,
                   ((bitField0_ & 0x00000008) == 0x00000008),
                   getParentForChildren(),
@@ -12359,16 +12359,16 @@ public final class Messages {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:sire.protos.ProxyResponse)
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProxyResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:sire.protos.ProxyResponse)
-    private static final Messages.ProxyResponse DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:sire.messages.ProxyResponse)
+    private static final sire.messages.Messages.ProxyResponse DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new Messages.ProxyResponse();
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProxyResponse();
     }
 
-    public static Messages.ProxyResponse getDefaultInstance() {
+    public static sire.messages.Messages.ProxyResponse getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -12393,72 +12393,72 @@ public final class Messages {
     }
 
     @java.lang.Override
-    public Messages.ProxyResponse getDefaultInstanceForType() {
+    public sire.messages.Messages.ProxyResponse getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProtoSchnorr_descriptor;
+    internal_static_sire_messages_ProtoSchnorr_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProtoSchnorr_fieldAccessorTable;
+      internal_static_sire_messages_ProtoSchnorr_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProtoEvidence_descriptor;
+    internal_static_sire_messages_ProtoEvidence_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProtoEvidence_fieldAccessorTable;
+      internal_static_sire_messages_ProtoEvidence_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProtoMessage0_descriptor;
+    internal_static_sire_messages_ProtoMessage0_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProtoMessage0_fieldAccessorTable;
+      internal_static_sire_messages_ProtoMessage0_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProtoMessage1_descriptor;
+    internal_static_sire_messages_ProtoMessage1_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProtoMessage1_fieldAccessorTable;
+      internal_static_sire_messages_ProtoMessage1_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProtoMessage2_descriptor;
+    internal_static_sire_messages_ProtoMessage2_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProtoMessage2_fieldAccessorTable;
+      internal_static_sire_messages_ProtoMessage2_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProtoMessage3_descriptor;
+    internal_static_sire_messages_ProtoMessage3_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProtoMessage3_fieldAccessorTable;
+      internal_static_sire_messages_ProtoMessage3_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProxyAttestationMessage_descriptor;
+    internal_static_sire_messages_ProxyAttestationMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProxyAttestationMessage_fieldAccessorTable;
+      internal_static_sire_messages_ProxyAttestationMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProxyMapMessage_descriptor;
+    internal_static_sire_messages_ProxyMapMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProxyMapMessage_fieldAccessorTable;
+      internal_static_sire_messages_ProxyMapMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProxyMessage_descriptor;
+    internal_static_sire_messages_ProxyMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProxyMessage_fieldAccessorTable;
+      internal_static_sire_messages_ProxyMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProxyMessage_ProtoPolicy_descriptor;
+    internal_static_sire_messages_ProxyMessage_ProtoPolicy_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProxyMessage_ProtoPolicy_fieldAccessorTable;
+      internal_static_sire_messages_ProxyMessage_ProtoPolicy_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProxyResponse_descriptor;
+    internal_static_sire_messages_ProxyResponse_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProxyResponse_fieldAccessorTable;
+      internal_static_sire_messages_ProxyResponse_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor;
+    internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_fieldAccessorTable;
+      internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -12468,71 +12468,72 @@ public final class Messages {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016messages.proto\022\013sire.protos\032\037google/pr" +
-      "otobuf/timestamp.proto\"G\n\014ProtoSchnorr\022\r" +
-      "\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014\022\024\n\014ran" +
-      "domPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022\016\n\006anch" +
-      "or\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005claim\030\003" +
-      " \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"y\n\rProtoMess" +
-      "age0\022\022\n\nattesterId\030\001 \001(\t\022\r\n\005appId\030\002 \001(\t\022" +
-      "\031\n\021attesterPubSesKey\030\003 \001(\014\022*\n\004type\030\004 \001(\016" +
-      "2\034.sire.protos.ProtoDeviceType\"\210\001\n\rProto" +
-      "Message1\022\031\n\021verifierPubSesKey\030\001 \001(\014\022\026\n\016v" +
-      "erifierPubKey\030\002 \001(\014\0227\n\024signatureSessionK" +
-      "eys\030\003 \001(\0132\031.sire.protos.ProtoSchnorr\022\013\n\003" +
-      "mac\030\004 \001(\014\"\276\001\n\rProtoMessage2\022\r\n\005appId\030\001 \001" +
-      "(\t\022\031\n\021attesterPubSesKey\030\002 \001(\014\022,\n\010evidenc" +
-      "e\030\003 \001(\0132\032.sire.protos.ProtoEvidence\0224\n\021s" +
-      "ignatureEvidence\030\004 \001(\0132\031.sire.protos.Pro" +
-      "toSchnorr\022\013\n\003mac\030\005 \001(\014\022\022\n\nattesterId\030\006 \001" +
-      "(\t\"2\n\rProtoMessage3\022\n\n\002iv\030\001 \001(\014\022\025\n\rencry" +
-      "ptedData\030\002 \001(\014\"\301\002\n\027ProxyAttestationMessa" +
-      "ge\022D\n\toperation\030\001 \001(\01621.sire.protos.Prox" +
-      "yAttestationMessage.AttOperation\022,\n\010evid" +
-      "ence\030\002 \001(\0132\032.sire.protos.ProtoEvidence\022," +
-      "\n\tsignature\030\003 \001(\0132\031.sire.protos.ProtoSch" +
-      "norr\022\022\n\ndataToSign\030\004 \001(\014\"p\n\014AttOperation" +
-      "\022\030\n\024GENERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC" +
-      "_KEY\020\001\022\r\n\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021G" +
-      "ET_RANDOM_NUMBER\020\004\"\321\001\n\017ProxyMapMessage\022<" +
-      "\n\toperation\030\001 \001(\0162).sire.protos.ProxyMap" +
-      "Message.MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005val" +
-      "ue\030\003 \001(\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOperatio" +
-      "n\022\013\n\007MAP_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP_GE" +
-      "T\020\002\022\014\n\010MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\222\006\n\014Proxy" +
-      "Message\0226\n\toperation\030\001 \001(\0162#.sire.protos" +
-      ".ProxyMessage.Operation\022,\n\010evidence\030\002 \001(" +
-      "\0132\032.sire.protos.ProtoEvidence\022,\n\tsignatu" +
-      "re\030\003 \001(\0132\031.sire.protos.ProtoSchnorr\022\022\n\nd" +
-      "ataToSign\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value\030\006 " +
-      "\001(\014\022\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(\t\022\r" +
-      "\n\005appId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0225\n\006policy\030\013 " +
-      "\001(\0132%.sire.protos.ProxyMessage.ProtoPoli" +
-      "cy\0220\n\ndeviceType\030\014 \001(\0162\034.sire.protos.Pro" +
-      "toDeviceType\032+\n\013ProtoPolicy\022\016\n\006policy\030\001 " +
-      "\001(\t\022\014\n\004type\030\002 \001(\010\"\347\002\n\tOperation\022\030\n\024GENER" +
-      "ATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n" +
-      "\tSIGN_DATA\020\002\022\014\n\010GET_DATA\020\003\022\025\n\021GET_RANDOM" +
-      "_NUMBER\020\004\022\013\n\007MAP_PUT\020\005\022\016\n\nMAP_DELETE\020\006\022\013" +
-      "\n\007MAP_GET\020\007\022\014\n\010MAP_LIST\020\010\022\013\n\007MAP_CAS\020\t\022\010" +
-      "\n\004JOIN\020\n\022\t\n\005LEAVE\020\013\022\010\n\004VIEW\020\014\022\010\n\004PING\020\r\022" +
-      "\021\n\rEXTENSION_ADD\020\016\022\024\n\020EXTENSION_REMOVE\020\017" +
-      "\022\021\n\rEXTENSION_GET\020\020\022\016\n\nPOLICY_ADD\020\021\022\021\n\rP" +
-      "OLICY_REMOVE\020\022\022\016\n\nPOLICY_GET\020\023\022\033\n\027GET_VE" +
-      "RIFIER_PUBLIC_KEY\020\024\"\243\003\n\rProxyResponse\0225\n" +
-      "\004type\030\001 \001(\0162\'.sire.protos.ProxyResponse." +
-      "ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(" +
-      "\014\022>\n\007members\030\004 \003(\0132-.sire.protos.ProxyRe" +
-      "sponse.ProtoDeviceContext\022\021\n\textension\030\005" +
-      " \001(\t\022\016\n\006policy\030\006 \001(\t\032\202\001\n\022ProtoDeviceCont" +
-      "ext\022\020\n\010deviceId\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.go" +
-      "ogle.protobuf.Timestamp\0220\n\ndeviceType\030\003 " +
-      "\001(\0162\034.sire.protos.ProtoDeviceType\"V\n\014Res" +
-      "ponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004" +
-      "VIEW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n\nPOLICY_GET\020" +
-      "\004*g\n\017ProtoDeviceType\022\n\n\006CAMERA\020\000\022\017\n\013THER" +
-      "MOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTIO" +
-      "NSENSOR\020\004\022\017\n\013LIGHTSENSOR\020\005b\006proto3"
+      "\n\016messages.proto\022\rsire.messages\032\037google/" +
+      "protobuf/timestamp.proto\"G\n\014ProtoSchnorr" +
+      "\022\r\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014\022\024\n\014r" +
+      "andomPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022\016\n\006an" +
+      "chor\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005claim" +
+      "\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"{\n\rProtoMe" +
+      "ssage0\022\022\n\nattesterId\030\001 \001(\t\022\r\n\005appId\030\002 \001(" +
+      "\t\022\031\n\021attesterPubSesKey\030\003 \001(\014\022,\n\004type\030\004 \001" +
+      "(\0162\036.sire.messages.ProtoDeviceType\"\212\001\n\rP" +
+      "rotoMessage1\022\031\n\021verifierPubSesKey\030\001 \001(\014\022" +
+      "\026\n\016verifierPubKey\030\002 \001(\014\0229\n\024signatureSess" +
+      "ionKeys\030\003 \001(\0132\033.sire.messages.ProtoSchno" +
+      "rr\022\013\n\003mac\030\004 \001(\014\"\302\001\n\rProtoMessage2\022\r\n\005app" +
+      "Id\030\001 \001(\t\022\031\n\021attesterPubSesKey\030\002 \001(\014\022.\n\010e" +
+      "vidence\030\003 \001(\0132\034.sire.messages.ProtoEvide" +
+      "nce\0226\n\021signatureEvidence\030\004 \001(\0132\033.sire.me" +
+      "ssages.ProtoSchnorr\022\013\n\003mac\030\005 \001(\014\022\022\n\natte" +
+      "sterId\030\006 \001(\t\"2\n\rProtoMessage3\022\n\n\002iv\030\001 \001(" +
+      "\014\022\025\n\rencryptedData\030\002 \001(\014\"\305\002\n\027ProxyAttest" +
+      "ationMessage\022F\n\toperation\030\001 \001(\01623.sire.m" +
+      "essages.ProxyAttestationMessage.AttOpera" +
+      "tion\022.\n\010evidence\030\002 \001(\0132\034.sire.messages.P" +
+      "rotoEvidence\022.\n\tsignature\030\003 \001(\0132\033.sire.m" +
+      "essages.ProtoSchnorr\022\022\n\ndataToSign\030\004 \001(\014" +
+      "\"n\n\014AttOperation\022\030\n\024GENERATE_SIGNING_KEY" +
+      "\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIGN_DATA\020\002\022\n\n" +
+      "\006VERIFY\020\003\022\025\n\021GET_RANDOM_NUMBER\020\004\"\323\001\n\017Pro" +
+      "xyMapMessage\022>\n\toperation\030\001 \001(\0162+.sire.m" +
+      "essages.ProxyMapMessage.MapOperation\022\013\n\003" +
+      "key\030\002 \001(\014\022\r\n\005value\030\003 \001(\014\022\017\n\007oldData\030\004 \001(" +
+      "\014\"S\n\014MapOperation\022\013\n\007MAP_PUT\020\000\022\016\n\nMAP_DE" +
+      "LETE\020\001\022\013\n\007MAP_GET\020\002\022\014\n\010MAP_LIST\020\003\022\013\n\007MAP" +
+      "_CAS\020\004\"\232\006\n\014ProxyMessage\0228\n\toperation\030\001 \001" +
+      "(\0162%.sire.messages.ProxyMessage.Operatio" +
+      "n\022.\n\010evidence\030\002 \001(\0132\034.sire.messages.Prot" +
+      "oEvidence\022.\n\tsignature\030\003 \001(\0132\033.sire.mess" +
+      "ages.ProtoSchnorr\022\022\n\ndataToSign\030\004 \001(\014\022\013\n" +
+      "\003key\030\005 \001(\t\022\r\n\005value\030\006 \001(\014\022\017\n\007oldData\030\007 \001" +
+      "(\014\022\020\n\010deviceId\030\010 \001(\t\022\r\n\005appId\030\t \001(\t\022\014\n\004c" +
+      "ode\030\n \001(\t\0227\n\006policy\030\013 \001(\0132\'.sire.message" +
+      "s.ProxyMessage.ProtoPolicy\0222\n\ndeviceType" +
+      "\030\014 \001(\0162\036.sire.messages.ProtoDeviceType\032+" +
+      "\n\013ProtoPolicy\022\016\n\006policy\030\001 \001(\t\022\014\n\004type\030\002 " +
+      "\001(\010\"\345\002\n\tOperation\022\030\n\024GENERATE_SIGNING_KE" +
+      "Y\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIGN_DATA\020\002\022\n" +
+      "\n\006VERIFY\020\003\022\025\n\021GET_RANDOM_NUMBER\020\004\022\013\n\007MAP" +
+      "_PUT\020\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MAP_GET\020\007\022\014\n\010M" +
+      "AP_LIST\020\010\022\013\n\007MAP_CAS\020\t\022\010\n\004JOIN\020\n\022\t\n\005LEAV" +
+      "E\020\013\022\010\n\004VIEW\020\014\022\010\n\004PING\020\r\022\021\n\rEXTENSION_ADD" +
+      "\020\016\022\024\n\020EXTENSION_REMOVE\020\017\022\021\n\rEXTENSION_GE" +
+      "T\020\020\022\016\n\nPOLICY_ADD\020\021\022\021\n\rPOLICY_REMOVE\020\022\022\016" +
+      "\n\nPOLICY_GET\020\023\022\033\n\027GET_VERIFIER_PUBLIC_KE" +
+      "Y\020\024\"\251\003\n\rProxyResponse\0227\n\004type\030\001 \001(\0162).si" +
+      "re.messages.ProxyResponse.ResponseType\022\014" +
+      "\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022@\n\007members\030\004" +
+      " \003(\0132/.sire.messages.ProxyResponse.Proto" +
+      "DeviceContext\022\021\n\textension\030\005 \001(\t\022\016\n\006poli" +
+      "cy\030\006 \001(\t\032\204\001\n\022ProtoDeviceContext\022\020\n\010devic" +
+      "eId\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.google.protobu" +
+      "f.Timestamp\0222\n\ndeviceType\030\003 \001(\0162\036.sire.m" +
+      "essages.ProtoDeviceType\"V\n\014ResponseType\022" +
+      "\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\r" +
+      "EXTENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004*g\n\017Proto" +
+      "DeviceType\022\n\n\006CAMERA\020\000\022\017\n\013THERMOMETER\020\001\022" +
+      "\t\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTIONSENSOR\020\004\022" +
+      "\017\n\013LIGHTSENSOR\020\005b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -12547,77 +12548,77 @@ public final class Messages {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.TimestampProto.getDescriptor(),
         }, assigner);
-    internal_static_sire_protos_ProtoSchnorr_descriptor =
+    internal_static_sire_messages_ProtoSchnorr_descriptor =
       getDescriptor().getMessageTypes().get(0);
-    internal_static_sire_protos_ProtoSchnorr_fieldAccessorTable = new
+    internal_static_sire_messages_ProtoSchnorr_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProtoSchnorr_descriptor,
+        internal_static_sire_messages_ProtoSchnorr_descriptor,
         new java.lang.String[] { "Sigma", "SignPubKey", "RandomPubKey", });
-    internal_static_sire_protos_ProtoEvidence_descriptor =
+    internal_static_sire_messages_ProtoEvidence_descriptor =
       getDescriptor().getMessageTypes().get(1);
-    internal_static_sire_protos_ProtoEvidence_fieldAccessorTable = new
+    internal_static_sire_messages_ProtoEvidence_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProtoEvidence_descriptor,
+        internal_static_sire_messages_ProtoEvidence_descriptor,
         new java.lang.String[] { "Anchor", "WatzVersion", "Claim", "ServicePubKey", });
-    internal_static_sire_protos_ProtoMessage0_descriptor =
+    internal_static_sire_messages_ProtoMessage0_descriptor =
       getDescriptor().getMessageTypes().get(2);
-    internal_static_sire_protos_ProtoMessage0_fieldAccessorTable = new
+    internal_static_sire_messages_ProtoMessage0_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProtoMessage0_descriptor,
+        internal_static_sire_messages_ProtoMessage0_descriptor,
         new java.lang.String[] { "AttesterId", "AppId", "AttesterPubSesKey", "Type", });
-    internal_static_sire_protos_ProtoMessage1_descriptor =
+    internal_static_sire_messages_ProtoMessage1_descriptor =
       getDescriptor().getMessageTypes().get(3);
-    internal_static_sire_protos_ProtoMessage1_fieldAccessorTable = new
+    internal_static_sire_messages_ProtoMessage1_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProtoMessage1_descriptor,
+        internal_static_sire_messages_ProtoMessage1_descriptor,
         new java.lang.String[] { "VerifierPubSesKey", "VerifierPubKey", "SignatureSessionKeys", "Mac", });
-    internal_static_sire_protos_ProtoMessage2_descriptor =
+    internal_static_sire_messages_ProtoMessage2_descriptor =
       getDescriptor().getMessageTypes().get(4);
-    internal_static_sire_protos_ProtoMessage2_fieldAccessorTable = new
+    internal_static_sire_messages_ProtoMessage2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProtoMessage2_descriptor,
+        internal_static_sire_messages_ProtoMessage2_descriptor,
         new java.lang.String[] { "AppId", "AttesterPubSesKey", "Evidence", "SignatureEvidence", "Mac", "AttesterId", });
-    internal_static_sire_protos_ProtoMessage3_descriptor =
+    internal_static_sire_messages_ProtoMessage3_descriptor =
       getDescriptor().getMessageTypes().get(5);
-    internal_static_sire_protos_ProtoMessage3_fieldAccessorTable = new
+    internal_static_sire_messages_ProtoMessage3_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProtoMessage3_descriptor,
+        internal_static_sire_messages_ProtoMessage3_descriptor,
         new java.lang.String[] { "Iv", "EncryptedData", });
-    internal_static_sire_protos_ProxyAttestationMessage_descriptor =
+    internal_static_sire_messages_ProxyAttestationMessage_descriptor =
       getDescriptor().getMessageTypes().get(6);
-    internal_static_sire_protos_ProxyAttestationMessage_fieldAccessorTable = new
+    internal_static_sire_messages_ProxyAttestationMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProxyAttestationMessage_descriptor,
+        internal_static_sire_messages_ProxyAttestationMessage_descriptor,
         new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", });
-    internal_static_sire_protos_ProxyMapMessage_descriptor =
+    internal_static_sire_messages_ProxyMapMessage_descriptor =
       getDescriptor().getMessageTypes().get(7);
-    internal_static_sire_protos_ProxyMapMessage_fieldAccessorTable = new
+    internal_static_sire_messages_ProxyMapMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProxyMapMessage_descriptor,
+        internal_static_sire_messages_ProxyMapMessage_descriptor,
         new java.lang.String[] { "Operation", "Key", "Value", "OldData", });
-    internal_static_sire_protos_ProxyMessage_descriptor =
+    internal_static_sire_messages_ProxyMessage_descriptor =
       getDescriptor().getMessageTypes().get(8);
-    internal_static_sire_protos_ProxyMessage_fieldAccessorTable = new
+    internal_static_sire_messages_ProxyMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProxyMessage_descriptor,
+        internal_static_sire_messages_ProxyMessage_descriptor,
         new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", "Key", "Value", "OldData", "DeviceId", "AppId", "Code", "Policy", "DeviceType", });
-    internal_static_sire_protos_ProxyMessage_ProtoPolicy_descriptor =
-      internal_static_sire_protos_ProxyMessage_descriptor.getNestedTypes().get(0);
-    internal_static_sire_protos_ProxyMessage_ProtoPolicy_fieldAccessorTable = new
+    internal_static_sire_messages_ProxyMessage_ProtoPolicy_descriptor =
+      internal_static_sire_messages_ProxyMessage_descriptor.getNestedTypes().get(0);
+    internal_static_sire_messages_ProxyMessage_ProtoPolicy_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProxyMessage_ProtoPolicy_descriptor,
+        internal_static_sire_messages_ProxyMessage_ProtoPolicy_descriptor,
         new java.lang.String[] { "Policy", "Type", });
-    internal_static_sire_protos_ProxyResponse_descriptor =
+    internal_static_sire_messages_ProxyResponse_descriptor =
       getDescriptor().getMessageTypes().get(9);
-    internal_static_sire_protos_ProxyResponse_fieldAccessorTable = new
+    internal_static_sire_messages_ProxyResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProxyResponse_descriptor,
+        internal_static_sire_messages_ProxyResponse_descriptor,
         new java.lang.String[] { "Type", "List", "Value", "Members", "Extension", "Policy", });
-    internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor =
-      internal_static_sire_protos_ProxyResponse_descriptor.getNestedTypes().get(0);
-    internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_fieldAccessorTable = new
+    internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor =
+      internal_static_sire_messages_ProxyResponse_descriptor.getNestedTypes().get(0);
+    internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_sire_protos_ProxyResponse_ProtoDeviceContext_descriptor,
+        internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor,
         new java.lang.String[] { "DeviceId", "Time", "DeviceType", });
     com.google.protobuf.TimestampProto.getDescriptor();
   }

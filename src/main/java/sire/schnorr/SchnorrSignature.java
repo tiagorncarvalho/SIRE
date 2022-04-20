@@ -1,6 +1,6 @@
 package sire.schnorr;
 
-import sire.utils.ProtoUtils;
+import sire.messages.ProtoUtils;
 
 import java.io.Externalizable;
 import java.io.IOException;

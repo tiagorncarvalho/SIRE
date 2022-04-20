@@ -1,4 +1,4 @@
-package sire.attester;
+package sire.device;
 
 import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.DeviceContext.DeviceType;
@@ -9,13 +9,13 @@ import java.io.IOException;
 import java.security.*;
 import java.util.List;
 
-import static sire.utils.ProtoUtils.deserialize;
-import static sire.utils.ProtoUtils.serialize;
+import static sire.messages.ProtoUtils.deserialize;
+import static sire.messages.ProtoUtils.serialize;
 
 /**
  * @author robin
  */
-public class AttesterClient {
+public class DeviceClient {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException,
 			ClassNotFoundException {
@@ -28,7 +28,7 @@ public class AttesterClient {
 		String appId = "app1";
 		String waTZVersion = "1.0";
 		DeviceType type = DeviceType.MOTIONSENSOR;
-		AttesterStub dummy = new AttesterStub(attesterId, type, proxyId, appId, waTZVersion);
+		DeviceStub dummy = new DeviceStub(attesterId, type, proxyId, appId, waTZVersion);
 
 		try {
 			String key = "exampleKey" + attesterId;

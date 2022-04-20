@@ -2,7 +2,7 @@ syntax= "proto3";
 
 import "google/protobuf/timestamp.proto";
 
-package sire.protos;
+package sire.messages;
 
 //Complementary
 message ProtoSchnorr {
@@ -53,7 +53,7 @@ message ProxyAttestationMessage {
       GENERATE_SIGNING_KEY = 0;
       GET_PUBLIC_KEY = 1;
       SIGN_DATA = 2;
-      GET_DATA = 3;
+      VERIFY = 3;
       GET_RANDOM_NUMBER = 4;
   }
   AttOperation operation = 1;
@@ -90,7 +90,7 @@ message ProxyMessage {
     GENERATE_SIGNING_KEY = 0;
     GET_PUBLIC_KEY = 1;
     SIGN_DATA = 2;
-    GET_DATA = 3;
+    VERIFY = 3;
     GET_RANDOM_NUMBER = 4;
     MAP_PUT = 5;
     MAP_DELETE = 6;

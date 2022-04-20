@@ -1,4 +1,4 @@
-package sire.attester;
+package sire.device;
 
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
@@ -8,14 +8,14 @@ import org.bouncycastle.math.ec.ECPoint;
 import sire.messages.Messages.*;
 import sire.messages.Message1;
 import sire.messages.Message3;
-import static sire.utils.ProtoUtils.*;
+import static sire.messages.ProtoUtils.*;
 import com.google.protobuf.ByteString;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.DeviceContext.DeviceType;
 import sire.serverProxyUtils.SireException;
-import sire.utils.Evidence;
+import sire.attestation.Evidence;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AttesterStub {
+public class DeviceStub {
     String attesterId;
     DeviceType type;
     int proxyId;
@@ -51,7 +51,7 @@ public class AttesterStub {
     private static MessageDigest messageDigest;
     private static Cipher symmetricCipher;
 
-    public AttesterStub(String attesterId, DeviceType type, int proxyId, String appId, String waTZVersion)
+    public DeviceStub(String attesterId, DeviceType type, int proxyId, String appId, String waTZVersion)
             throws NoSuchAlgorithmException, NoSuchPaddingException, ClassNotFoundException {
         this.attesterId = attesterId;
         this.type = type;
