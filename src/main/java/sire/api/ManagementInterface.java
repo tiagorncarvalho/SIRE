@@ -1,6 +1,5 @@
 package sire.api;
 
-import sire.configuration.ExtensionType;
 import sire.configuration.Policy;
 
 /**

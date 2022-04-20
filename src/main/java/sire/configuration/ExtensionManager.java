@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ExtensionManager {
-    Map<String, Extension> extensions;
-    GroovyShell sh;
+    final Map<String, Extension> extensions;
+    final GroovyShell sh;
     public ExtensionManager() {
         this.sh = new GroovyShell();
         this.extensions = new TreeMap<>();

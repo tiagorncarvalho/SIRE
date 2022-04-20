@@ -76,18 +76,18 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	//private final ECPoint dummyAttesterPublicKey;
 
 	//key value store for information concerning devices, applications and more
-	private Map<String, byte[]> storage;
+	private final Map<String, byte[]> storage;
 
 	//key value store for membership state, key = appId
-	private Map<String, AppContext> membership;
+	private final Map<String, AppContext> membership;
 
 	//runs and stores extensions
-	private ExtensionManager extensionManager = new ExtensionManager();
+	private final ExtensionManager extensionManager = new ExtensionManager();
 
 	//timeout for devices, in seconds
 	private final int timeout = 20;
 
-	private VerifierManager verifierManager;
+	private final VerifierManager verifierManager;
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {

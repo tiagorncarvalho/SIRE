@@ -11,7 +11,7 @@ public enum ExtensionType {
     EXT_CAS,
     EXT_LIST;
 
-    public static ExtensionType[] values = values();
+    public static final ExtensionType[] values = values();
 
     public static ExtensionType getExtensionType(int ordinal) {
         return values[ordinal];

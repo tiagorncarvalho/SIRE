@@ -29,7 +29,7 @@ public class ProxyMain {
     //TODO security issues (no appId)
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RestController
-    public class ProxyController {
+    public static class ProxyController {
 
         @PostMapping("/extension")
         public void addExtension(@RequestParam(value = "key") String key, @RequestBody String code) throws SireException {

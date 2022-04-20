@@ -11,8 +11,8 @@ import java.net.Socket;
 
 public class ManagementStub implements ManagementInterface {
 
-    int proxyId;
-    int port;
+    final int proxyId;
+    final int port;
     Socket s;
     ObjectOutputStream oos;
     ObjectInputStream ois;

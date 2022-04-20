@@ -33,12 +33,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DeviceStub {
-    String attesterId;
-    DeviceType type;
-    int proxyId;
-    String appId;
-    String waTZVersion;
-    int port;
+    final String attesterId;
+    final DeviceType type;
+    final int proxyId;
+    final String appId;
+    final String waTZVersion;
+    final int port;
     Socket s;
     ObjectOutputStream oos;
     ObjectInputStream ois;
@@ -219,7 +219,7 @@ public class DeviceStub {
     }
 
     //TODO turn attesterId into hash of Ga
-    public Message1 join(String appId, String attesterId, DeviceType type, byte[] attesterSessionPubKey) throws SireException, IOException, ClassNotFoundException {
+    public Message1 join(String appId, String attesterId, DeviceType type, byte[] attesterSessionPubKey) throws IOException, ClassNotFoundException {
         ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
                 .setAttesterId(attesterId)
                 .setType(ProtoDeviceType.forNumber(type.ordinal()))
@@ -261,8 +261,6 @@ public class DeviceStub {
                 .setAttesterId(attesterId)
                 .build();
 
-/*        this.dos.write(msg2.toByteArray());
-        byte[] b = this.dis.readAllBytes();*/
         this.oos.writeObject(msg2);
         Object o = this.ois.readObject();//deserialize(b);
         ProtoMessage3 msg3 = null;
@@ -375,7 +373,7 @@ public class DeviceStub {
         this.oos.writeObject(msg);
     }
 
-    public void leave(String appId, String deviceId) throws IOException, InterruptedException {
+    public void leave(String appId, String deviceId) throws IOException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.LEAVE)
                 .setAppId(appId)

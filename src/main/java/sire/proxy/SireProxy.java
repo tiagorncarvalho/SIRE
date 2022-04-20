@@ -108,42 +108,37 @@ public class SireProxy implements Runnable, ManagementInterface {
 				new SireProxyThread(s).start();
 				System.out.println("Connection accepted");
 			}
-		} catch (IOException | SireException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private class SireProxyThread extends Thread {
 
-		private Socket s;
-		private ObjectOutputStream oos;
-		private ObjectInputStream ois;
+		private final Socket s;
 
-		public SireProxyThread(Socket s) throws SireException {
+		public SireProxyThread(Socket s) {
 			this.s = s;
 			System.out.println("Proxy Thread started!");
 		}
 		@Override
 		public void run() {
 			try {
-				oos = new ObjectOutputStream(s.getOutputStream());
-				ois = new ObjectInputStream(s.getInputStream());
+				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 
 				while (!s.isClosed()) {
 					//System.out.println("Running!");
 					Object o;
 					while ((o = ois.readObject()) != null) {
 						System.out.println("Object received! " + o);
-						if (o instanceof ProtoMessage0) {
-							ProtoMessage0 msg0 = (ProtoMessage0) o;
+						if (o instanceof ProtoMessage0 msg0) {
 							ProtoMessage1 msg1 = joins(msg0);
 							oos.writeObject(msg1);
-						} else if (o instanceof ProtoMessage2) {
-							ProtoMessage2 msg2 = (ProtoMessage2) o;
+						} else if (o instanceof ProtoMessage2 msg2) {
 							ProtoMessage3 msg3 = processMessage2(msg2);
 							oos.writeObject(msg3);
-						} else if (o instanceof ProxyMessage) {
-							ProxyMessage msg = (ProxyMessage) o;
+						} else if (o instanceof ProxyMessage msg) {
 							if (msg.getOperation() == ProxyMessage.Operation.GET_VERIFIER_PUBLIC_KEY) {
 								//System.out.println("Getting key");
 								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
@@ -171,10 +166,8 @@ public class SireProxy implements Runnable, ManagementInterface {
 										//System.out.println("List size: " + lst.size());
 										for (byte[] b : lst)
 											prBuilder.addList(ByteString.copyFrom(b));
-										result = prBuilder.build();
-									} else {
-										result = prBuilder.build();
 									}
+									result = prBuilder.build();
 									oos.writeObject(result);
 								} else if (msg.getOperation() == ProxyMessage.Operation.VIEW) {
 									byte[] tmp = res.getPainData();
@@ -192,10 +185,8 @@ public class SireProxy implements Runnable, ManagementInterface {
 															.setSeconds(d.getLastPing().getTime() / 1000)
 															.build())
 													.build());
-										result = prBuilder.build();
-									} else {
-										result = prBuilder.build();
 									}
+									result = prBuilder.build();
 									oos.writeObject(result);
 								} else if (msg.getOperation() == ProxyMessage.Operation.EXTENSION_GET) {
 									byte[] tmp = res.getPainData();

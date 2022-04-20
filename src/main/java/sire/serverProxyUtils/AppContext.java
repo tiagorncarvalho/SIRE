@@ -10,9 +10,9 @@ import java.util.TreeMap;
 
 public class AppContext implements Serializable {
     final String id;
-    TreeMap<String, DeviceContext> devices;
+    final TreeMap<String, DeviceContext> devices;
     Policy policy;
-    int timeout;
+    final int timeout;
 
     public AppContext(String id, int timeout) {
         this.id = id;

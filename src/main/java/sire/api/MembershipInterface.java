@@ -14,7 +14,7 @@ public interface MembershipInterface {
      * Join the system and start the attestation protocol.
      * @param msg
      */
-    ProtoMessage1 join(ProtoMessage0 msg) throws SireException;
+    ProtoMessage1 join(ProtoMessage0 msg);
 
     /**
      * Leave the system.

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class ExampleObject implements Serializable {
-    String value;
+    final String value;
 
     public ExampleObject(String value) {
         this.value = value;
