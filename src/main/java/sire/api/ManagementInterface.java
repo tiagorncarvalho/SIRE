@@ -1,6 +1,9 @@
 package sire.api;
 
 import sire.configuration.Policy;
+import sire.serverProxyUtils.DeviceContext;
+
+import java.util.List;
 
 /**
  *
@@ -45,4 +48,11 @@ public interface ManagementInterface {
      * @return
      */
     Policy getPolicy(String appId);
+
+    /**
+     *
+     * @param appId
+     * @return
+     */
+    List<DeviceContext> getView(String appId);
 }

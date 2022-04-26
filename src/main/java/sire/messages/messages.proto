@@ -87,27 +87,32 @@ enum ProtoDeviceType {
 
 message ProxyMessage {
   enum Operation {
-    GENERATE_SIGNING_KEY = 0;
-    GET_PUBLIC_KEY = 1;
-    SIGN_DATA = 2;
-    VERIFY = 3;
-    GET_RANDOM_NUMBER = 4;
-    MAP_PUT = 5;
-    MAP_DELETE = 6;
-    MAP_GET = 7;
-    MAP_LIST = 8;
-    MAP_CAS = 9;
-    JOIN = 10;
-    LEAVE = 11;
-    VIEW = 12;
-    PING = 13;
-    EXTENSION_ADD = 14;
-    EXTENSION_REMOVE = 15;
-    EXTENSION_GET = 16;
-    POLICY_ADD = 17;
-    POLICY_REMOVE = 18;
-    POLICY_GET = 19;
-    GET_VERIFIER_PUBLIC_KEY = 20;
+    //----------ATTESTATION-----------
+    ATTEST_GENERATE_SIGNING_KEY = 0;
+    ATTEST_GET_VERIFIER_PUBLIC_KEY = 1;
+    ATTEST_GET_PUBLIC_KEY = 2;
+    ATTEST_SIGN_DATA = 3;
+    ATTEST_VERIFY = 4;
+    ATTEST_GET_RANDOM_NUMBER = 5;
+    //--------------MAP--------------
+    MAP_PUT = 6;
+    MAP_DELETE = 7;
+    MAP_GET = 8;
+    MAP_LIST = 9;
+    MAP_CAS = 10;
+    //-----------MEMBERSHIP-----------
+    MEMBERSHIP_JOIN = 11;
+    MEMBERSHIP_LEAVE = 12;
+    MEMBERSHIP_VIEW = 13;
+    MEMBERSHIP_PING = 14;
+    //-----------EXTENSION------------
+    EXTENSION_ADD = 15;
+    EXTENSION_REMOVE = 16;
+    EXTENSION_GET = 17;
+    //-------------POLICY-------------
+    POLICY_ADD = 18;
+    POLICY_REMOVE = 19;
+    POLICY_GET = 20;
   }
   Operation operation = 1;
   ProtoEvidence evidence = 2;

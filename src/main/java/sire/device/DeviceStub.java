@@ -85,8 +85,6 @@ public class DeviceStub {
             BigInteger attesterSessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
             ECPoint attesterSessionPublicKey = curveGenerator.multiply(attesterSessionPrivateKey);
 
-            //Message0 message0 = new Message0(attesterId, attesterSessionPublicKey.getEncoded(true));
-
             Message1 message1 = join(appId, attesterId, type, attesterSessionPublicKey.getEncoded(true));
 
             byte[] sessionPublicKeysHash = computeHash(message1.getVerifierPublicSessionKey(),
@@ -109,7 +107,6 @@ public class DeviceStub {
                 throw new IllegalStateException("Session keys signature is invalid");
             }
 
-            System.out.println();
             boolean isValidMac = verifyMac(macKey, message1.getMac(), verifierSessionPublicKey.getEncoded(true),
                     verifierPublicKey.getEncoded(true), signatureOfSessionKeys.getRandomPublicKey(),
                     verifierPublicKey.getEncoded(true), signatureOfSessionKeys.getSigma());
@@ -193,8 +190,6 @@ public class DeviceStub {
         return new SecretKeySpec(secretKeyFactory.generateSecret(spec).getEncoded(), "AES");
     }
 
-
-
     private static boolean verifyMac(byte[] secretKey, byte[] mac, byte[]... contents) {
         return Arrays.equals(computeMac(secretKey, contents), mac);
     }
@@ -229,15 +224,12 @@ public class DeviceStub {
 
         System.out.println("Joining!");
 
-
-        //this.dos.write(msg0.toByteArray());
         this.oos.writeObject(msg0);
         Object o = this.ois.readObject();
         ProtoMessage1 msg1 = null;
         if(o instanceof ProtoMessage1)
             msg1 = (ProtoMessage1) o;
 
-        //ProtoMessage1 msg1 = proxy.join(appId, attesterId, msg0);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         Message1 result = new Message1(byteStringToByteArray(out, msg1.getVerifierPubSesKey()),
@@ -262,14 +254,13 @@ public class DeviceStub {
                 .build();
 
         this.oos.writeObject(msg2);
-        Object o = this.ois.readObject();//deserialize(b);
+        Object o = this.ois.readObject();
         ProtoMessage3 msg3 = null;
         if(o instanceof ProtoMessage3)
             msg3 = (ProtoMessage3) o;
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        //ProtoMessage3 msg3 = proxy.processMessage2(attesterId, msg2);
 
         Message3 result = new Message3(byteStringToByteArray(out, msg3.getIv()),
                 byteStringToByteArray(out, msg3.getEncryptedData()));
@@ -284,13 +275,11 @@ public class DeviceStub {
 
     public void close() throws IOException {
         this.s.close();
-        //this.proxy.close();
     }
 
 
 
     public void put(String appId, String key, byte[] value) throws IOException {
-        //proxy.put(appId, key, value);
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_PUT)
                 .setAppId(appId)
@@ -298,35 +287,28 @@ public class DeviceStub {
                 .setValue(ByteString.copyFrom(value))
                 .build();
         this.oos.writeObject(msg);
-        //this.dos.write(serialize(msg));
     }
 
 
     public void delete(String appId, String key) throws IOException {
-        //proxy.delete(appId, key);
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_DELETE)
                 .setAppId(appId)
                 .setKey(key)
                 .build();
         this.oos.writeObject(msg);
-        //this.dos.write(serialize(msg));
     }
 
 
     public byte[] getData(String appId, String key) throws IOException, ClassNotFoundException {
-        //return proxy.getData(appId, key);
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_GET)
                 .setAppId(appId)
                 .setKey(key)
                 .build();
-        //this.dos.write(serialize(msg));
         this.oos.writeObject(msg);
-        //byte[] b = this.dis.readAllBytes();
-        Object o = this.ois.readObject();//deserialize(b);
+        Object o = this.ois.readObject();
         if(o instanceof ProxyResponse pr) {
-            //System.out.println("I'm in!");
             if(pr.getValue().equals(ByteString.EMPTY))
                 return null;
             else {
@@ -343,19 +325,15 @@ public class DeviceStub {
                 .setOperation(ProxyMessage.Operation.MAP_LIST)
                 .setAppId(appId)
                 .build();
-        //this.dos.write(serialize(msg));
         this.oos.writeObject(msg);
-        //byte[] b = this.dis.readAllBytes();
-        Object o = this.ois.readObject();//deserialize(b);
+        Object o = this.ois.readObject();
         if(o instanceof ProxyResponse) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             List<ByteString> res = ((ProxyResponse) o).getListList();
             ArrayList<byte[]> tmp = new ArrayList<>();
-            //System.out.println("List size: " + res.size());
             for(ByteString b : res)
                 tmp.add(byteStringToByteArray(out, b));
             return tmp;
-            //return byteStringToByteArray(out,((ProxyResponse) o).getValue());
         }
         return null;
     }
@@ -369,49 +347,42 @@ public class DeviceStub {
                 .setValue(ByteString.copyFrom(newData))
                 .setOldData(ByteString.copyFrom(oldData))
                 .build();
-        //this.dos.write(serialize(msg));
         this.oos.writeObject(msg);
     }
 
     public void leave(String appId, String deviceId) throws IOException {
         ProxyMessage msg = ProxyMessage.newBuilder()
-                .setOperation(ProxyMessage.Operation.LEAVE)
+                .setOperation(ProxyMessage.Operation.MEMBERSHIP_LEAVE)
                 .setAppId(appId)
                 .setDeviceId(deviceId)
                 .build();
-        //this.dos.write(serialize(msg));
         this.oos.writeObject(msg);
     }
 
     public void ping(String appId, String deviceId) throws IOException {
         ProxyMessage msg = ProxyMessage.newBuilder()
-                .setOperation(ProxyMessage.Operation.PING)
+                .setOperation(ProxyMessage.Operation.MEMBERSHIP_PING)
                 .setAppId(appId)
                 .setDeviceId(deviceId)
                 .build();
-        //this.dos.write(serialize(msg));
         this.oos.writeObject(msg);
     }
 
     public List<DeviceContext> getView(String appId) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
-                .setOperation(ProxyMessage.Operation.VIEW)
+                .setOperation(ProxyMessage.Operation.MEMBERSHIP_VIEW)
                 .setAppId(appId)
                 .build();
-        //this.dos.write(serialize(msg));
         this.oos.writeObject(msg);
 
-        Object o = this.ois.readObject();//deserialize(b);
+        Object o = this.ois.readObject();
         if(o instanceof ProxyResponse) {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
             List<ProxyResponse.ProtoDeviceContext> res = ((ProxyResponse) o).getMembersList();
             ArrayList<DeviceContext> tmp = new ArrayList<>();
-            //System.out.println("List size: " + res.size());
             for(ProxyResponse.ProtoDeviceContext d : res)
                 tmp.add(new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000),
                         protoDevToDev(d.getDeviceType())));
             return tmp;
-            //return byteStringToByteArray(out,((ProxyResponse) o).getValue());
         }
         return null;
     }

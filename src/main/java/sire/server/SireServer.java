@@ -13,6 +13,8 @@ import confidential.polynomial.RandomPolynomialListener;
 import confidential.server.ConfidentialRecoverable;
 import confidential.statemanagement.ConfidentialSnapshot;
 import org.bouncycastle.math.ec.ECPoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sire.attestation.VerifierManager;
 import sire.configuration.Policy;
 import sire.attestation.DeviceEvidence;
@@ -42,12 +44,11 @@ import static sire.messages.ProtoUtils.*;
  * @author robin
  */
 public class SireServer implements ConfidentialSingleExecutable, RandomPolynomialListener, RandomKeyPolynomialListener {
-	//private final Logger logger = LoggerFactory.getLogger("sire");
+	private final Logger logger = LoggerFactory.getLogger("sire");
 	private final ServerCommunicationSystem serverCommunicationSystem;
 	private final DistributedPolynomialManager distributedPolynomialManager;
 	private final ServiceReplica serviceReplica;
 	private final ConfidentialRecoverable cr;
-	//private final MessageDigest messageDigest;
 
 	//used during requests and data map access
 	private final Lock lock;
@@ -100,11 +101,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public SireServer(int id) throws NoSuchAlgorithmException {
 		this.id = id;
 		lock = new ReentrantLock(true);
-		//messageDigest = MessageDigest.getInstance("SHA256");
 		requests = new TreeMap<>();
 		data = new TreeMap<>();
 		storage = new TreeMap<>();
-		//storage.put("sire_members", new TreeMap<String, AppContext>());
 		membership = new TreeMap<>();
 		signingKeyRequests = new LinkedList<>();
 		signingRequestContexts = new TreeMap<>();
@@ -123,234 +122,258 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
 		try {
-			//System.out.println(bytes);
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
 			ProxyMessage.Operation op = msg.getOperation();
-			switch(op) {
-				case GENERATE_SIGNING_KEY -> {
-					try {
-						lock.lock();
-						if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
-							signingKeyRequests.add(messageContext);
-							generateSigningKey();
-						} else if (verifierSigningPrivateKeyShare != null) {
-//						logger.warn("I already have a signing key.");
-							System.out.println("Signing key already created...");
-							return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
-						} else {
-//						logger.warn("Signing key is being created.");
-						}
-					} finally {
-						lock.unlock();
-					}
-				}
-				case GET_PUBLIC_KEY -> {
-					try {
-						lock.lock();
-						if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
-							signingKeyRequests.add(messageContext);
-							generateSigningKey();
-						} else if (verifierSigningPrivateKeyShare != null){
-							return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
-						}
-					} finally {
-						lock.unlock();
-					}
-				}
-				case SIGN_DATA -> {
-					lock.lock();
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					byte[] data = byteStringToByteArray(out, msg.getDataToSign());
-					signingData.put(messageContext.getSender(), data);
-					generateRandomKey(messageContext);
-					out.close();
-					lock.unlock();
-				}
-				case VERIFY -> {
-					DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
-							protoToSchnorr(msg.getSignature()));
-					boolean isValidEvidence = verifierManager.verifyEvidence(deviceEvidence);
-					byte[] plainData;
-					if (isValidEvidence) {
-						plainData = new byte[dummyDataForAttester.length + 1];
-						plainData[0] = 1;
-						System.arraycopy(dummyDataForAttester, 0, plainData, 1,
-								dummyDataForAttester.length);
-					} else {
-						plainData = new byte[] {0};
-					}
-
-					return new ConfidentialMessage(plainData);
-				}
-				case GET_RANDOM_NUMBER -> {
-					lock.lock();
-					VerifiableShare	share = data.get(messageContext.getSender());
-					if (share == null)
-						generateRandomNumberFor(messageContext);
-					else {
-//					logger.debug("Sending existing random number share to {}", messageContext.getSender());
-						sendRandomNumberShareTo(messageContext, share);
-					}
-					lock.unlock();
-				}
-				case MAP_PUT -> {
-					lock.lock();
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					byte[] value = byteStringToByteArray(out, msg.getValue());
-					out.close();
-					storage.put(msg.getKey(), value);
-					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PUT, msg.getKey());
-					lock.unlock();
-
-					return new ConfidentialMessage();
-				}
-				case MAP_DELETE -> {
-					lock.lock();
-					storage.remove(msg.getKey());
-					lock.unlock();
-					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_DEL, msg.getKey());
-					return new ConfidentialMessage();
-				}
-				case MAP_GET -> {
-					System.out.println(msg.getAppId() + ExtensionType.EXT_GET + msg.getKey());
-					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey());
-					return new ConfidentialMessage(storage.get(msg.getKey()));
-				}
-				case MAP_LIST -> {
-					ArrayList<byte []> lista = new ArrayList<>(storage.values());
-					ByteArrayOutputStream bout = new ByteArrayOutputStream();
-					ObjectOutputStream out = new ObjectOutputStream(bout);
-					out.writeObject(lista);
-					out.close();
-					byte[] result = bout.toByteArray();
-					bout.close();
-
-					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LIST, "");
-
-					return new ConfidentialMessage(result);
-				}
-				case MAP_CAS -> {
-					lock.lock();
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					String key = msg.getKey();
-					byte[] oldValue = byteStringToByteArray(out, msg.getOldData());
-					byte[] newValue = byteStringToByteArray(out, msg.getValue());
-					out.close();
-					if(Arrays.equals(storage.get(key), oldValue)) {
-						storage.put(key, newValue);
-					}
-					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_CAS, msg.getKey());
-					lock.unlock();
-					return new ConfidentialMessage();
-				}
-				case JOIN -> {
-
-					lock.lock();
-					if(!membership.containsKey(msg.getAppId()))
-						membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout));
-
-					membership.get(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
-							new Timestamp(messageContext.getTimestamp()), protoDevToDev(msg.getDeviceType())));
-
-/*					System.out.println("Type: " + protoDevToDev(msg.getDeviceType()));
-
-					System.out.println("Timestamp: " + messageContext.getTimestamp() + " " +
-							new Timestamp(messageContext.getTimestamp()));*/
-
-					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_JOIN, msg.getDeviceId());
-
-					lock.unlock();
-					return new ConfidentialMessage();
-				}
-				case LEAVE -> {
-					lock.lock();
-					membership.get(msg.getAppId()).removeDevice(msg.getDeviceId());
-
-					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LEAVE, msg.getDeviceId());
-
-					lock.unlock();
-					return new ConfidentialMessage();
-				}
-				case PING -> {
-					lock.lock();
-					membership.get(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(),
-							new Timestamp(messageContext.getTimestamp()));
-
-					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PING, msg.getDeviceId());
-
-					lock.unlock();
-					return new ConfidentialMessage();
-				}
-				case VIEW -> {
-					List<DeviceContext> members = membership.get(msg.getAppId()).getMembership();
-					ByteArrayOutputStream bout = new ByteArrayOutputStream();
-					ObjectOutputStream out = new ObjectOutputStream(bout);
-					out.writeObject(members);
-					out.close();
-					byte[] res = bout.toByteArray();
-					bout.close();
-
-					extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_VIEW, "");
-
-					return new ConfidentialMessage(res);
-				}
-				case EXTENSION_ADD -> {
-					lock.lock();
-					extensionManager.addExtension(msg.getKey(), msg.getCode());
-					lock.unlock();
-					System.out.println("Code: " + msg.getCode());
-					return new ConfidentialMessage();
-				}
-				case EXTENSION_REMOVE -> {
-					lock.lock();
-					extensionManager.removeExtension(msg.getKey());
-					lock.unlock();
-					return new ConfidentialMessage();
-				}
-				case EXTENSION_GET -> {
-					String code = extensionManager.getExtensionCode(msg.getKey());
-					return new ConfidentialMessage(serialize(code != null ? code : "NOT FOUND"));
-				}
-				case POLICY_ADD -> {
-					lock.lock();
-					if(membership.containsKey(msg.getAppId()))
-						membership.get(msg.getAppId()).setPolicy(msg.getPolicy().getPolicy(), msg.getPolicy().getType());
-					else
-						membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout,
-								new Policy(msg.getPolicy().getPolicy(), msg.getPolicy().getType())));
-					lock.unlock();
-					return new ConfidentialMessage();
-				}
-				case POLICY_REMOVE -> {
-					if(!membership.containsKey(msg.getAppId()))
-						return new ConfidentialMessage(serialize("NOT FOUND"));
-					lock.lock();
-					membership.get(msg.getAppId()).removePolicy();
-					lock.unlock();
-					return new ConfidentialMessage();
-				}
-				case POLICY_GET -> {
-					if(!membership.containsKey(msg.getAppId()))
-						return new ConfidentialMessage(serialize("NOT FOUND"));
-					else
-						return new ConfidentialMessage(serialize(membership.get(msg.getAppId()).getPolicy().getPolicy()));
-				}
-			}
+			if(op.toString().startsWith("MAP"))
+				return executeOrderedMap(msg);
+			else if(op.toString().startsWith("EXTENSION") || op.toString().startsWith("POLICY"))
+				return executeOrderedManagement(msg);
+			else if(op.toString().startsWith("MEMBERSHIP"))
+				return executeOrderedMembership(msg, messageContext);
+			else if(op.toString().startsWith("ATTEST"))
+				return executeOrderedAttestation(msg, messageContext);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
+	private ConfidentialMessage executeOrderedAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException {
+		ProxyMessage.Operation op = msg.getOperation();
+		switch(op) {
+			case ATTEST_GENERATE_SIGNING_KEY -> {
+				try {
+					lock.lock();
+					if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
+						signingKeyRequests.add(messageContext);
+						generateSigningKey();
+					} else if (verifierSigningPrivateKeyShare != null) {
+						logger.warn("I already have a signing key.");
+						System.out.println("Signing key already created...");
+						return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
+					} else {
+						logger.warn("Signing key is being created.");
+					}
+				} finally {
+					lock.unlock();
+				}
+			}
+			case ATTEST_GET_PUBLIC_KEY -> {
+				try {
+					lock.lock();
+					if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
+						signingKeyRequests.add(messageContext);
+						generateSigningKey();
+					} else if (verifierSigningPrivateKeyShare != null){
+						return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
+					}
+				} finally {
+					lock.unlock();
+				}
+			}
+			case ATTEST_SIGN_DATA -> {
+				lock.lock();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				byte[] data = byteStringToByteArray(out, msg.getDataToSign());
+				signingData.put(messageContext.getSender(), data);
+				generateRandomKey(messageContext);
+				out.close();
+				lock.unlock();
+			}
+			case ATTEST_VERIFY -> {
+				DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
+						protoToSchnorr(msg.getSignature()));
+				boolean isValidEvidence = verifierManager.verifyEvidence(deviceEvidence);
+				byte[] plainData;
+				if (isValidEvidence) {
+					plainData = new byte[dummyDataForAttester.length + 1];
+					plainData[0] = 1;
+					System.arraycopy(dummyDataForAttester, 0, plainData, 1,
+							dummyDataForAttester.length);
+				} else {
+					plainData = new byte[] {0};
+				}
 
-
-	/*private byte[] computeHash(byte[]... contents) {
-		for (byte[] content : contents) {
-			messageDigest.update(content);
+				return new ConfidentialMessage(plainData);
+			}
+			case ATTEST_GET_RANDOM_NUMBER -> {
+				lock.lock();
+				VerifiableShare	share = data.get(messageContext.getSender());
+				if (share == null)
+					generateRandomNumberFor(messageContext);
+				else {
+//					logger.debug("Sending existing random number share to {}", messageContext.getSender());
+					sendRandomNumberShareTo(messageContext, share);
+				}
+				lock.unlock();
+			}
 		}
-		return messageDigest.digest();
+		return null;
 	}
-*/
+
+	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException {
+		ProxyMessage.Operation op = msg.getOperation();
+		switch(op) {
+			case MEMBERSHIP_JOIN -> {
+
+				lock.lock();
+				if(!membership.containsKey(msg.getAppId()))
+					membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout));
+
+				membership.get(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
+						new Timestamp(messageContext.getTimestamp()), protoDevToDev(msg.getDeviceType())));
+
+/*					System.out.println("Type: " + protoDevToDev(msg.getDeviceType()));
+
+					System.out.println("Timestamp: " + messageContext.getTimestamp() + " " +
+							new Timestamp(messageContext.getTimestamp()));*/
+
+				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_JOIN, msg.getDeviceId());
+
+				lock.unlock();
+				return new ConfidentialMessage();
+			}
+			case MEMBERSHIP_LEAVE -> {
+				lock.lock();
+				membership.get(msg.getAppId()).removeDevice(msg.getDeviceId());
+
+				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LEAVE, msg.getDeviceId());
+
+				lock.unlock();
+				return new ConfidentialMessage();
+			}
+			case MEMBERSHIP_PING -> {
+				lock.lock();
+				membership.get(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(),
+						new Timestamp(messageContext.getTimestamp()));
+
+				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PING, msg.getDeviceId());
+
+				lock.unlock();
+				return new ConfidentialMessage();
+			}
+			case MEMBERSHIP_VIEW -> {
+				List<DeviceContext> members = membership.get(msg.getAppId()).getMembership();
+				ByteArrayOutputStream bout = new ByteArrayOutputStream();
+				ObjectOutputStream out = new ObjectOutputStream(bout);
+				out.writeObject(members);
+				out.close();
+				byte[] res = bout.toByteArray();
+				bout.close();
+
+				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_VIEW, "");
+
+				return new ConfidentialMessage(res);
+			}
+		}
+		return null;
+	}
+
+	private ConfidentialMessage executeOrderedManagement(ProxyMessage msg) throws IOException {
+		ProxyMessage.Operation op = msg.getOperation();
+		switch(op) {
+			case EXTENSION_ADD -> {
+				lock.lock();
+				extensionManager.addExtension(msg.getKey(), msg.getCode());
+				lock.unlock();
+				System.out.println("Code: " + msg.getCode());
+				return new ConfidentialMessage();
+			}
+			case EXTENSION_REMOVE -> {
+				lock.lock();
+				extensionManager.removeExtension(msg.getKey());
+				lock.unlock();
+				return new ConfidentialMessage();
+			}
+			case EXTENSION_GET -> {
+				String code = extensionManager.getExtensionCode(msg.getKey());
+				return new ConfidentialMessage(serialize(code != null ? code : "NOT FOUND"));
+			}
+			case POLICY_ADD -> {
+				lock.lock();
+				if(membership.containsKey(msg.getAppId()))
+					membership.get(msg.getAppId()).setPolicy(msg.getPolicy().getPolicy(), msg.getPolicy().getType());
+				else
+					membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout,
+							new Policy(msg.getPolicy().getPolicy(), msg.getPolicy().getType())));
+				lock.unlock();
+				return new ConfidentialMessage();
+			}
+			case POLICY_REMOVE -> {
+				if(!membership.containsKey(msg.getAppId()))
+					return new ConfidentialMessage(serialize("NOT FOUND"));
+				lock.lock();
+				membership.get(msg.getAppId()).removePolicy();
+				lock.unlock();
+				return new ConfidentialMessage();
+			}
+			case POLICY_GET -> {
+				if(!membership.containsKey(msg.getAppId()))
+					return new ConfidentialMessage(serialize("NOT FOUND"));
+				else
+					return new ConfidentialMessage(serialize(membership.get(msg.getAppId()).getPolicy().getPolicy()));
+			}
+		}
+		return null;
+	}
+
+	private ConfidentialMessage executeOrderedMap(ProxyMessage msg) throws IOException {
+		ProxyMessage.Operation op = msg.getOperation();
+		switch(op) {
+			case MAP_PUT -> {
+				lock.lock();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				byte[] value = byteStringToByteArray(out, msg.getValue());
+				out.close();
+				storage.put(msg.getKey(), value);
+				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PUT, msg.getKey());
+				lock.unlock();
+
+				return new ConfidentialMessage();
+			}
+			case MAP_DELETE -> {
+				lock.lock();
+				storage.remove(msg.getKey());
+				lock.unlock();
+				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_DEL, msg.getKey());
+				return new ConfidentialMessage();
+			}
+			case MAP_GET -> {
+				System.out.println(msg.getAppId() + ExtensionType.EXT_GET + msg.getKey());
+				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey());
+				return new ConfidentialMessage(storage.get(msg.getKey()));
+			}
+			case MAP_LIST -> {
+				ArrayList<byte []> lista = new ArrayList<>(storage.values());
+				ByteArrayOutputStream bout = new ByteArrayOutputStream();
+				ObjectOutputStream out = new ObjectOutputStream(bout);
+				out.writeObject(lista);
+				out.close();
+				byte[] result = bout.toByteArray();
+				bout.close();
+
+				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LIST, "");
+
+				return new ConfidentialMessage(result);
+			}
+			case MAP_CAS -> {
+				lock.lock();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				String key = msg.getKey();
+				byte[] oldValue = byteStringToByteArray(out, msg.getOldData());
+				byte[] newValue = byteStringToByteArray(out, msg.getValue());
+				out.close();
+				if(Arrays.equals(storage.get(key), oldValue)) {
+					storage.put(key, newValue);
+				}
+				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_CAS, msg.getKey());
+				lock.unlock();
+				return new ConfidentialMessage();
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Method used to generate a random number
 	 * @param messageContext Message context of the client requesting the generation of a random number
@@ -419,22 +442,22 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public void onRandomPolynomialsCreation(RandomPolynomialContext context) {
 		lock.lock();
 		double delta = context.getTime() / 1_000_000.0;
-//		logger.debug("Received random number polynomial with id {} in {} ms", context.getId(), delta);
+		logger.debug("Received random number polynomial with id {} in {} ms", context.getId(), delta);
 		MessageContext messageContext = requests.remove(context.getId());
 		data.put(messageContext.getSender(), context.getPoint());
-//		logger.debug("Sending random number share to {}", messageContext.getSender());
+		logger.debug("Sending random number share to {}", messageContext.getSender());
 		sendRandomNumberShareTo(messageContext, context.getPoint());
 		lock.unlock();
 	}
 
 	private void onRandomKey(int id, VerifiableShare privateKeyShare, ECPoint publicKey) {
 		if (signingRequestContexts.containsKey(id)) {
-//			logger.info("Received random signing key");
+			logger.info("Received random signing key");
 			MessageContext messageContext = signingRequestContexts.remove(id);
 			signAndSend(messageContext, signingData.remove(messageContext.getSender()), verifierSigningPrivateKeyShare,
 					privateKeyShare, publicKey);
 		} else if (signingKeyGenerationId == id) {
-//			logger.info("Received service signing key");
+			logger.info("Received service signing key");
 			verifierSigningPrivateKeyShare = privateKeyShare;
 			verifierSigningPublicKey = publicKey;
 			for (MessageContext messageContext : signingKeyRequests) {
@@ -442,7 +465,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			}
 			signingKeyRequests.clear();
 		} else {
-//			logger.warn("Received an unknown polynomial id {}", id);
+			logger.warn("Received an unknown polynomial id {}", id);
 		}
 	}
 
@@ -519,7 +542,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			bout.flush();
 			return new ConfidentialSnapshot(bout.toByteArray(), shares);
 		} catch (IOException e) {
-//			logger.error("Error while taking snapshot", e);
+			logger.error("Error while taking snapshot", e);
 		}
 		return null;
 	}
@@ -545,7 +568,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				data.put(key, value);
 			}
 		} catch (IOException | ClassCastException | ClassNotFoundException e) {
-//			logger.error("Error while installing snapshot", e);
+			logger.error("Error while installing snapshot", e);
 		}
 	}
 }

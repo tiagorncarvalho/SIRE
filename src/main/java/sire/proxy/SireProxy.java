@@ -44,7 +44,7 @@ import java.util.*;
  * @author robin
  */
 
-public class SireProxy implements Runnable, ManagementInterface {
+public class SireProxy implements Runnable {
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
 	private final MessageDigest messageDigest;
@@ -82,7 +82,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 		Response response;
 		try {
 			ProxyMessage msg = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.GENERATE_SIGNING_KEY)
+					.setOperation(ProxyMessage.Operation.ATTEST_GENERATE_SIGNING_KEY)
 					.build();
 			byte[] b = msg.toByteArray();
 			response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
@@ -140,91 +140,112 @@ public class SireProxy implements Runnable, ManagementInterface {
 							oos.writeObject(msg3);
 						} else if (o instanceof ProxyMessage msg) {
 							if (msg.getOperation() == ProxyMessage.Operation.GET_VERIFIER_PUBLIC_KEY) {
-								//System.out.println("Getting key");
 								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
-							} else {
-								Response res = serviceProxy.invokeOrdered(msg.toByteArray());
-								if (msg.getOperation() == ProxyMessage.Operation.MAP_GET) {
-									byte[] tmp = res.getPainData();
-									ProxyResponse result;
-									if (tmp != null) {
-										result = ProxyResponse.newBuilder()
-												.setValue(ByteString.copyFrom(tmp))
-												.build();
-									} else {
-										result = ProxyResponse.newBuilder().build();
-									}
-									oos.writeObject(result);
-								} else if (msg.getOperation() == ProxyMessage.Operation.MAP_LIST) {
-									byte[] tmp = res.getPainData();
-									ProxyResponse result;
-									ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
-									if (tmp != null) {
-										ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
-										ObjectInputStream oin = new ObjectInputStream(bin);
-										ArrayList<byte[]> lst = (ArrayList<byte[]>) oin.readObject();
-										//System.out.println("List size: " + lst.size());
-										for (byte[] b : lst)
-											prBuilder.addList(ByteString.copyFrom(b));
-									}
-									result = prBuilder.build();
-									oos.writeObject(result);
-								} else if (msg.getOperation() == ProxyMessage.Operation.VIEW) {
-									byte[] tmp = res.getPainData();
-									ProxyResponse result;
-									ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
-									if (tmp != null) {
-										ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
-										ObjectInputStream oin = new ObjectInputStream(bin);
-										List<DeviceContext> members = (List<DeviceContext>) oin.readObject();
-										//System.out.println("List size: " + members.size());
-										for (DeviceContext d : members)
-											prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
-													.setDeviceId(d.getDeviceId())
-													.setTime(Timestamp.newBuilder()
-															.setSeconds(d.getLastPing().getTime() / 1000)
-															.build())
-													.build());
-									}
-									result = prBuilder.build();
-									oos.writeObject(result);
-								} else if (msg.getOperation() == ProxyMessage.Operation.EXTENSION_GET) {
-									byte[] tmp = res.getPainData();
-									ProxyResponse result;
-									if (tmp != null) {
-										result = ProxyResponse.newBuilder()
-												.setType(ProxyResponse.ResponseType.EXTENSION_GET)
-												.setExtension((String) deserialize(tmp))
-												.build();
-									} else {
-										result = ProxyResponse.newBuilder().build();
-									}
-									oos.writeObject(result);
-								} else if(msg.getOperation() == ProxyMessage.Operation.POLICY_GET) {
-									byte[] tmp = res.getPainData();
-									ProxyResponse result;
-									if (tmp != null) {
-										result = ProxyResponse.newBuilder()
-												.setType(ProxyResponse.ResponseType.POLICY_GET)
-												.setPolicy((String) deserialize(tmp))
-												.build();
-									} else {
-										result = ProxyResponse.newBuilder().build();
-									}
-									oos.writeObject(result);
-								}
+							}
+							else {
+								ProxyResponse result = runProxyMessage(oos, msg);
+								oos.writeObject(result);
 							}
 						}
 
 					}
 				}
 			} catch (IOException | ClassNotFoundException | SireException | SecretSharingException e) {
-				//e.printStackTrace();
+				e.printStackTrace();
+			}
+		}
+
+		private ProxyResponse runProxyMessage(ObjectOutputStream oos, ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException {
+			Response res = serviceProxy.invokeOrdered(msg.toByteArray());
+			switch(msg.getOperation()) {
+				case MAP_GET -> {
+					return mapGet(res);
+				}
+				case MAP_LIST -> {
+					return mapList(res);
+				}
+				case MEMBERSHIP_VIEW -> {
+					return memberView(res);
+				}
+				case EXTENSION_GET -> {
+					return extGet(res);
+				}
+				case POLICY_GET -> {
+					return policyGet(res);
+				}
+			}
+			return null;
+		}
+
+		private ProxyResponse policyGet(Response res) throws IOException, ClassNotFoundException {
+			byte[] tmp = res.getPainData();
+			if (tmp != null) {
+				return ProxyResponse.newBuilder()
+						.setType(ProxyResponse.ResponseType.POLICY_GET)
+						.setPolicy((String) deserialize(tmp))
+						.build();
+			} else {
+				return ProxyResponse.newBuilder().build();
+			}
+
+		}
+
+		private ProxyResponse extGet(Response res) throws IOException, ClassNotFoundException {
+			byte[] tmp = res.getPainData();
+			if (tmp != null) {
+				return ProxyResponse.newBuilder()
+						.setType(ProxyResponse.ResponseType.EXTENSION_GET)
+						.setExtension((String) deserialize(tmp))
+						.build();
+			} else {
+				return ProxyResponse.newBuilder().build();
+			}
+		}
+
+		private ProxyResponse memberView(Response res) throws IOException, ClassNotFoundException {
+			byte[] tmp = res.getPainData();
+			ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
+			if (tmp != null) {
+				ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
+				ObjectInputStream oin = new ObjectInputStream(bin);
+				List<DeviceContext> members = (List<DeviceContext>) oin.readObject();
+				for (DeviceContext d : members)
+					prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
+							.setDeviceId(d.getDeviceId())
+							.setTime(Timestamp.newBuilder()
+									.setSeconds(d.getLastPing().getTime() / 1000)
+									.build())
+							.build());
+			}
+			return prBuilder.build();
+		}
+
+		private ProxyResponse mapList(Response res) throws IOException, ClassNotFoundException {
+			byte[] tmp = res.getPainData();
+			ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
+			if (tmp != null) {
+				ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
+				ObjectInputStream oin = new ObjectInputStream(bin);
+				ArrayList<byte[]> lst = (ArrayList<byte[]>) oin.readObject();
+				//System.out.println("List size: " + lst.size());
+				for (byte[] b : lst)
+					prBuilder.addList(ByteString.copyFrom(b));
+			}
+			return prBuilder.build();
+		}
+
+		private ProxyResponse mapGet(Response res) {
+			byte[] tmp = res.getPainData();
+			if (tmp != null) {
+				return ProxyResponse.newBuilder()
+						.setValue(ByteString.copyFrom(tmp))
+						.build();
+			} else {
+				return ProxyResponse.newBuilder().build();
 			}
 		}
 
 		public ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
-			//System.out.println("Processing Message 0!");
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg0.getAttesterPubSesKey()));
@@ -260,8 +281,6 @@ public class SireProxy implements Runnable, ManagementInterface {
 						.build();
 
 				out.close();
-
-				//System.out.println("Message 0 done!");
 
 				return msg1;
 			} catch (InvalidKeySpecException | IOException e) {
@@ -300,7 +319,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 			DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(msg2.getSignatureEvidence()));
 
 			ProxyMessage dataRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.VERIFY)
+					.setOperation(ProxyMessage.Operation.ATTEST_VERIFY)
 					.setEvidence(evidenceToProto(deviceEvidence.getEvidence()))
 					.setSignature(schnorrToProto(deviceEvidence.getEvidenceSignature()))
 					.build();
@@ -347,7 +366,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 		private SchnorrSignature getSignatureFromVerifier(byte[] data) throws SireException {
 
 			ProxyMessage signingRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.SIGN_DATA)
+					.setOperation(ProxyMessage.Operation.ATTEST_SIGN_DATA)
 					.setDataToSign(ByteString.copyFrom(data))
 					.build();
 			UncombinedConfidentialResponse signatureResponse;
@@ -427,7 +446,7 @@ public class SireProxy implements Runnable, ManagementInterface {
 		public ProtoMessage1 joins(ProtoMessage0 msg) {
 			try {
 				ProxyMessage joinRequest = ProxyMessage.newBuilder()
-						.setOperation(ProxyMessage.Operation.JOIN)
+						.setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
 						.setAppId(msg.getAppId())
 						.setDeviceId(msg.getAttesterId())
 						.setDeviceType(msg.getType())
@@ -440,115 +459,5 @@ public class SireProxy implements Runnable, ManagementInterface {
 			}
 			return null;
 		}
-	}
-
-	@Override
-	public void addExtension(String key, String code) {
-		try {
-			ProxyMessage msg = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.EXTENSION_ADD)
-					.setKey(key)
-					.setCode(code)
-					.build();
-			serviceProxy.invokeOrdered(msg.toByteArray());
-		} catch(SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void removeExtension(String key) {
-		try {
-			ProxyMessage msg = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.EXTENSION_REMOVE)
-					.setKey(key)
-					.build();
-			serviceProxy.invokeOrdered(msg.toByteArray());
-		} catch(SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public String getExtension(String key) {
-		try {
-			ProxyMessage msg = ProxyMessage.newBuilder()
-						.setOperation(ProxyMessage.Operation.EXTENSION_GET)
-					.setKey(key)
-					.build();
-			Response res = serviceProxy.invokeOrdered(msg.toByteArray());
-
-			return (String) deserialize(res.getPainData());
-		} catch(SecretSharingException | IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public void setPolicy(String appId, String policy, boolean type) {
-		try {
-			ProxyMessage msg = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.POLICY_ADD)
-					.setAppId(appId)
-					.setPolicy(ProxyMessage.ProtoPolicy.newBuilder()
-							.setType(type)
-							.setPolicy(policy)
-							.build())
-					.build();
-			serviceProxy.invokeOrdered(msg.toByteArray());
-		} catch(SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void deletePolicy(String appId) {
-		try {
-			ProxyMessage msg = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.POLICY_REMOVE)
-					.setAppId(appId)
-					.build();
-			serviceProxy.invokeOrdered(msg.toByteArray());
-		} catch(SecretSharingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public Policy getPolicy(String appId) {
-		try {
-			ProxyMessage msg = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.POLICY_GET)
-					.setAppId(appId)
-					.build();
-			Response res = serviceProxy.invokeOrdered(msg.toByteArray());
-
-			return new Policy((String) deserialize(res.getPainData()), false);
-		} catch(SecretSharingException | IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public List<DeviceContext> getView(String appId) {
-		try {
-			ProxyMessage msg = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.VIEW)
-					.setAppId(appId)
-					.build();
-			Response res = serviceProxy.invokeOrdered(msg.toByteArray());
-
-			byte[] tmp = res.getPainData();
-			if (tmp != null) {
-				ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
-				ObjectInputStream oin = new ObjectInputStream(bin);
-				return (List<DeviceContext>) oin.readObject();
-			} else
-				return null;
-		} catch(SecretSharingException | IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 }

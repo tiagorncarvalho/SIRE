@@ -25,7 +25,7 @@ public class DeviceEvidence {
 		return evidenceSignature;
 	}
 
-	public byte[] serialize() throws SireException {
+	/*public byte[] serialize() throws SireException {
 		try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			 ObjectOutput out = new ObjectOutputStream(bos)) {
 			evidence.writeExternal(out);
@@ -49,5 +49,5 @@ public class DeviceEvidence {
 		} catch (IOException e) {
 			throw new SireException("Failed to deserialize device evidence", e);
 		}
-	}
+	}*/
 }

@@ -12,6 +12,7 @@ import java.util.List;
 @SpringBootApplication
 public class ProxyMain {
     static SireProxy proxy;
+    static SireRestProxy restProxy;
     public static void main(String[] args) {
         if (args.length < 1) {
             System.out.println("Usage: sire.proxy.ProxyMain <proxy id>");
@@ -19,7 +20,9 @@ public class ProxyMain {
         }
         proxy = null;
         try {
-            proxy = new SireProxy(Integer.parseInt(args[0]));
+            int proxyId = Integer.parseInt(args[0]);
+            proxy = new SireProxy(proxyId);
+            restProxy = new SireRestProxy(proxyId + 1);
         } catch (SireException e) {
             e.printStackTrace();
         }
@@ -36,49 +39,49 @@ public class ProxyMain {
             if(key == null || key == "")
                 throw new SireException("Malformed key");
             String newCode = code.substring(1, code.length() - 1);
-            proxy.addExtension(key, newCode);
+            restProxy.addExtension(key, newCode);
         }
 
         @DeleteMapping("/extension")
         public void removeExtension(@RequestParam(value = "key") String key) throws SireException {
             if(key == null || key == "")
                 throw new SireException("Malformed key");
-            proxy.removeExtension(key);
+            restProxy.removeExtension(key);
         }
 
         @GetMapping("/extension")
         public Extension getExtension(@RequestParam(value = "key") String key) throws SireException {
             if(key == null || key == "")
                 throw new SireException("Malformed key");
-            return new Extension (proxy.getExtension(key));
+            return new Extension (restProxy.getExtension(key));
         }
 
         @PostMapping("/policy")
         public void setPolicy(@RequestParam(value = "appId") String appId, @RequestBody String policy) throws SireException {
             if(appId == null || appId == "")
                 throw new SireException("Malformed appId");
-            proxy.setPolicy(appId, policy, false);
+            restProxy.setPolicy(appId, policy, false);
         }
 
         @DeleteMapping("/policy")
         public void removePolicy(@RequestParam(value = "appId") String appId) throws SireException {
             if(appId == null || appId == "")
                 throw new SireException("Malformed appId");
-            proxy.deletePolicy(appId);
+            restProxy.deletePolicy(appId);
         }
 
         @GetMapping("/policy")
         public Policy getPolicy(@RequestParam(value = "appId") String appId) throws SireException {
             if(appId == null || appId == "")
                 throw new SireException("Malformed appId");
-            return proxy.getPolicy(appId);
+            return restProxy.getPolicy(appId);
         }
 
         @GetMapping("/view")
         public List<DeviceContext> getView(@RequestParam(value = "appId") String appId) throws SireException {
             if(appId == null || appId == "")
                 throw new SireException("Malformed appId");
-            return proxy.getView(appId);
+            return restProxy.getView(appId);
         }
     }
 }

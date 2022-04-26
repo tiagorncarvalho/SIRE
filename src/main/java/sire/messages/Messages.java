@@ -7507,25 +7507,25 @@ public final class Messages {
     public enum Operation
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
-       * <code>GENERATE_SIGNING_KEY = 0;</code>
+       * <code>ATTEST_GENERATE_SIGNING_KEY = 0;</code>
        */
-      GENERATE_SIGNING_KEY(0),
+      ATTEST_GENERATE_SIGNING_KEY(0),
       /**
-       * <code>GET_PUBLIC_KEY = 1;</code>
+       * <code>ATTEST_GET_PUBLIC_KEY = 1;</code>
        */
-      GET_PUBLIC_KEY(1),
+      ATTEST_GET_PUBLIC_KEY(1),
       /**
-       * <code>SIGN_DATA = 2;</code>
+       * <code>ATTEST_SIGN_DATA = 2;</code>
        */
-      SIGN_DATA(2),
+      ATTEST_SIGN_DATA(2),
       /**
-       * <code>VERIFY = 3;</code>
+       * <code>ATTEST_VERIFY = 3;</code>
        */
-      VERIFY(3),
+      ATTEST_VERIFY(3),
       /**
-       * <code>GET_RANDOM_NUMBER = 4;</code>
+       * <code>ATTEST_GET_RANDOM_NUMBER = 4;</code>
        */
-      GET_RANDOM_NUMBER(4),
+      ATTEST_GET_RANDOM_NUMBER(4),
       /**
        * <code>MAP_PUT = 5;</code>
        */
@@ -7547,21 +7547,21 @@ public final class Messages {
        */
       MAP_CAS(9),
       /**
-       * <code>JOIN = 10;</code>
+       * <code>MEMBERSHIP_JOIN = 10;</code>
        */
-      JOIN(10),
+      MEMBERSHIP_JOIN(10),
       /**
-       * <code>LEAVE = 11;</code>
+       * <code>MEMBERSHIP_LEAVE = 11;</code>
        */
-      LEAVE(11),
+      MEMBERSHIP_LEAVE(11),
       /**
-       * <code>VIEW = 12;</code>
+       * <code>MEMBERSHIP_VIEW = 12;</code>
        */
-      VIEW(12),
+      MEMBERSHIP_VIEW(12),
       /**
-       * <code>PING = 13;</code>
+       * <code>MEMBERSHIP_PING = 13;</code>
        */
-      PING(13),
+      MEMBERSHIP_PING(13),
       /**
        * <code>EXTENSION_ADD = 14;</code>
        */
@@ -7594,25 +7594,25 @@ public final class Messages {
       ;
 
       /**
-       * <code>GENERATE_SIGNING_KEY = 0;</code>
+       * <code>ATTEST_GENERATE_SIGNING_KEY = 0;</code>
        */
-      public static final int GENERATE_SIGNING_KEY_VALUE = 0;
+      public static final int ATTEST_GENERATE_SIGNING_KEY_VALUE = 0;
       /**
-       * <code>GET_PUBLIC_KEY = 1;</code>
+       * <code>ATTEST_GET_PUBLIC_KEY = 1;</code>
        */
-      public static final int GET_PUBLIC_KEY_VALUE = 1;
+      public static final int ATTEST_GET_PUBLIC_KEY_VALUE = 1;
       /**
-       * <code>SIGN_DATA = 2;</code>
+       * <code>ATTEST_SIGN_DATA = 2;</code>
        */
-      public static final int SIGN_DATA_VALUE = 2;
+      public static final int ATTEST_SIGN_DATA_VALUE = 2;
       /**
-       * <code>VERIFY = 3;</code>
+       * <code>ATTEST_VERIFY = 3;</code>
        */
-      public static final int VERIFY_VALUE = 3;
+      public static final int ATTEST_VERIFY_VALUE = 3;
       /**
-       * <code>GET_RANDOM_NUMBER = 4;</code>
+       * <code>ATTEST_GET_RANDOM_NUMBER = 4;</code>
        */
-      public static final int GET_RANDOM_NUMBER_VALUE = 4;
+      public static final int ATTEST_GET_RANDOM_NUMBER_VALUE = 4;
       /**
        * <code>MAP_PUT = 5;</code>
        */
@@ -7634,21 +7634,21 @@ public final class Messages {
        */
       public static final int MAP_CAS_VALUE = 9;
       /**
-       * <code>JOIN = 10;</code>
+       * <code>MEMBERSHIP_JOIN = 10;</code>
        */
-      public static final int JOIN_VALUE = 10;
+      public static final int MEMBERSHIP_JOIN_VALUE = 10;
       /**
-       * <code>LEAVE = 11;</code>
+       * <code>MEMBERSHIP_LEAVE = 11;</code>
        */
-      public static final int LEAVE_VALUE = 11;
+      public static final int MEMBERSHIP_LEAVE_VALUE = 11;
       /**
-       * <code>VIEW = 12;</code>
+       * <code>MEMBERSHIP_VIEW = 12;</code>
        */
-      public static final int VIEW_VALUE = 12;
+      public static final int MEMBERSHIP_VIEW_VALUE = 12;
       /**
-       * <code>PING = 13;</code>
+       * <code>MEMBERSHIP_PING = 13;</code>
        */
-      public static final int PING_VALUE = 13;
+      public static final int MEMBERSHIP_PING_VALUE = 13;
       /**
        * <code>EXTENSION_ADD = 14;</code>
        */
@@ -7697,20 +7697,20 @@ public final class Messages {
 
       public static Operation forNumber(int value) {
         switch (value) {
-          case 0: return GENERATE_SIGNING_KEY;
-          case 1: return GET_PUBLIC_KEY;
-          case 2: return SIGN_DATA;
-          case 3: return VERIFY;
-          case 4: return GET_RANDOM_NUMBER;
+          case 0: return ATTEST_GENERATE_SIGNING_KEY;
+          case 1: return ATTEST_GET_PUBLIC_KEY;
+          case 2: return ATTEST_SIGN_DATA;
+          case 3: return ATTEST_VERIFY;
+          case 4: return ATTEST_GET_RANDOM_NUMBER;
           case 5: return MAP_PUT;
           case 6: return MAP_DELETE;
           case 7: return MAP_GET;
           case 8: return MAP_LIST;
           case 9: return MAP_CAS;
-          case 10: return JOIN;
-          case 11: return LEAVE;
-          case 12: return VIEW;
-          case 13: return PING;
+          case 10: return MEMBERSHIP_JOIN;
+          case 11: return MEMBERSHIP_LEAVE;
+          case 12: return MEMBERSHIP_VIEW;
+          case 13: return MEMBERSHIP_PING;
           case 14: return EXTENSION_ADD;
           case 15: return EXTENSION_REMOVE;
           case 16: return EXTENSION_GET;
@@ -8682,7 +8682,7 @@ public final class Messages {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (operation_ != sire.messages.Messages.ProxyMessage.Operation.GENERATE_SIGNING_KEY.getNumber()) {
+      if (operation_ != sire.messages.Messages.ProxyMessage.Operation.ATTEST_GENERATE_SIGNING_KEY.getNumber()) {
         output.writeEnum(1, operation_);
       }
       if (evidence_ != null) {
@@ -8727,7 +8727,7 @@ public final class Messages {
       if (size != -1) return size;
 
       size = 0;
-      if (operation_ != sire.messages.Messages.ProxyMessage.Operation.GENERATE_SIGNING_KEY.getNumber()) {
+      if (operation_ != sire.messages.Messages.ProxyMessage.Operation.ATTEST_GENERATE_SIGNING_KEY.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, operation_);
       }
@@ -12500,7 +12500,7 @@ public final class Messages {
       "key\030\002 \001(\014\022\r\n\005value\030\003 \001(\014\022\017\n\007oldData\030\004 \001(" +
       "\014\"S\n\014MapOperation\022\013\n\007MAP_PUT\020\000\022\016\n\nMAP_DE" +
       "LETE\020\001\022\013\n\007MAP_GET\020\002\022\014\n\010MAP_LIST\020\003\022\013\n\007MAP" +
-      "_CAS\020\004\"\232\006\n\014ProxyMessage\0228\n\toperation\030\001 \001" +
+      "_CAS\020\004\"\351\006\n\014ProxyMessage\0228\n\toperation\030\001 \001" +
       "(\0162%.sire.messages.ProxyMessage.Operatio" +
       "n\022.\n\010evidence\030\002 \001(\0132\034.sire.messages.Prot" +
       "oEvidence\022.\n\tsignature\030\003 \001(\0132\033.sire.mess" +
@@ -12511,29 +12511,31 @@ public final class Messages {
       "s.ProxyMessage.ProtoPolicy\0222\n\ndeviceType" +
       "\030\014 \001(\0162\036.sire.messages.ProtoDeviceType\032+" +
       "\n\013ProtoPolicy\022\016\n\006policy\030\001 \001(\t\022\014\n\004type\030\002 " +
-      "\001(\010\"\345\002\n\tOperation\022\030\n\024GENERATE_SIGNING_KE" +
-      "Y\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIGN_DATA\020\002\022\n" +
-      "\n\006VERIFY\020\003\022\025\n\021GET_RANDOM_NUMBER\020\004\022\013\n\007MAP" +
-      "_PUT\020\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MAP_GET\020\007\022\014\n\010M" +
-      "AP_LIST\020\010\022\013\n\007MAP_CAS\020\t\022\010\n\004JOIN\020\n\022\t\n\005LEAV" +
-      "E\020\013\022\010\n\004VIEW\020\014\022\010\n\004PING\020\r\022\021\n\rEXTENSION_ADD" +
-      "\020\016\022\024\n\020EXTENSION_REMOVE\020\017\022\021\n\rEXTENSION_GE" +
-      "T\020\020\022\016\n\nPOLICY_ADD\020\021\022\021\n\rPOLICY_REMOVE\020\022\022\016" +
-      "\n\nPOLICY_GET\020\023\022\033\n\027GET_VERIFIER_PUBLIC_KE" +
-      "Y\020\024\"\251\003\n\rProxyResponse\0227\n\004type\030\001 \001(\0162).si" +
-      "re.messages.ProxyResponse.ResponseType\022\014" +
-      "\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022@\n\007members\030\004" +
-      " \003(\0132/.sire.messages.ProxyResponse.Proto" +
-      "DeviceContext\022\021\n\textension\030\005 \001(\t\022\016\n\006poli" +
-      "cy\030\006 \001(\t\032\204\001\n\022ProtoDeviceContext\022\020\n\010devic" +
-      "eId\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.google.protobu" +
-      "f.Timestamp\0222\n\ndeviceType\030\003 \001(\0162\036.sire.m" +
-      "essages.ProtoDeviceType\"V\n\014ResponseType\022" +
-      "\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\r" +
-      "EXTENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004*g\n\017Proto" +
-      "DeviceType\022\n\n\006CAMERA\020\000\022\017\n\013THERMOMETER\020\001\022" +
-      "\t\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTIONSENSOR\020\004\022" +
-      "\017\n\013LIGHTSENSOR\020\005b\006proto3"
+      "\001(\010\"\264\003\n\tOperation\022\037\n\033ATTEST_GENERATE_SIG" +
+      "NING_KEY\020\000\022\031\n\025ATTEST_GET_PUBLIC_KEY\020\001\022\024\n" +
+      "\020ATTEST_SIGN_DATA\020\002\022\021\n\rATTEST_VERIFY\020\003\022\034" +
+      "\n\030ATTEST_GET_RANDOM_NUMBER\020\004\022\013\n\007MAP_PUT\020" +
+      "\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MAP_GET\020\007\022\014\n\010MAP_LI" +
+      "ST\020\010\022\013\n\007MAP_CAS\020\t\022\023\n\017MEMBERSHIP_JOIN\020\n\022\024" +
+      "\n\020MEMBERSHIP_LEAVE\020\013\022\023\n\017MEMBERSHIP_VIEW\020" +
+      "\014\022\023\n\017MEMBERSHIP_PING\020\r\022\021\n\rEXTENSION_ADD\020" +
+      "\016\022\024\n\020EXTENSION_REMOVE\020\017\022\021\n\rEXTENSION_GET" +
+      "\020\020\022\016\n\nPOLICY_ADD\020\021\022\021\n\rPOLICY_REMOVE\020\022\022\016\n" +
+      "\nPOLICY_GET\020\023\022\033\n\027GET_VERIFIER_PUBLIC_KEY" +
+      "\020\024\"\251\003\n\rProxyResponse\0227\n\004type\030\001 \001(\0162).sir" +
+      "e.messages.ProxyResponse.ResponseType\022\014\n" +
+      "\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022@\n\007members\030\004 " +
+      "\003(\0132/.sire.messages.ProxyResponse.ProtoD" +
+      "eviceContext\022\021\n\textension\030\005 \001(\t\022\016\n\006polic" +
+      "y\030\006 \001(\t\032\204\001\n\022ProtoDeviceContext\022\020\n\010device" +
+      "Id\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.google.protobuf" +
+      ".Timestamp\0222\n\ndeviceType\030\003 \001(\0162\036.sire.me" +
+      "ssages.ProtoDeviceType\"V\n\014ResponseType\022\013" +
+      "\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rE" +
+      "XTENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004*g\n\017ProtoD" +
+      "eviceType\022\n\n\006CAMERA\020\000\022\017\n\013THERMOMETER\020\001\022\t" +
+      "\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTIONSENSOR\020\004\022\017" +
+      "\n\013LIGHTSENSOR\020\005b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
