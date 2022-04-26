@@ -86,7 +86,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private final ExtensionManager extensionManager = new ExtensionManager();
 
 	//timeout for devices, in seconds
-	private final int timeout = 20;
+	private final int timeout = 10;
 
 	private final VerifierManager verifierManager;
 
@@ -202,7 +202,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				if (share == null)
 					generateRandomNumberFor(messageContext);
 				else {
-//					logger.debug("Sending existing random number share to {}", messageContext.getSender());
+					logger.debug("Sending existing random number share to {}", messageContext.getSender());
 					sendRandomNumberShareTo(messageContext, share);
 				}
 				lock.unlock();

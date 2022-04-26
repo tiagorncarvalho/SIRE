@@ -2,7 +2,6 @@ package sire.messages;
 
 import com.google.protobuf.ByteString;
 import sire.attestation.Evidence;
-import sire.messages.Messages;
 import sire.schnorr.SchnorrSignature;
 import sire.serverProxyUtils.DeviceContext;
 
@@ -61,39 +60,6 @@ public class ProtoUtils {
         ObjectInputStream is = new ObjectInputStream(in);
         return is.readObject();
     }
-
-    /*public static ProtoExtType extTypeToProto (ExtensionType type) {
-        switch(type) {
-            case EXT_JOIN -> {
-                return ProtoExtType.EXT_JOIN;
-            }
-            case EXT_LEAVE -> {
-                return ProtoExtType.EXT_LEAVE;
-            }
-            case EXT_PING -> {
-                return ProtoExtType.EXT_PING;
-            }
-            case EXT_VIEW -> {
-                return ProtoExtType.EXT_VIEW;
-            }
-            case EXT_PUT -> {
-                return ProtoExtType.EXT_PUT;
-            }
-            case EXT_DEL -> {
-                return ProtoExtType.EXT_DEL;
-            }
-            case EXT_GET -> {
-                return ProtoExtType.EXT_GET;
-            }
-            case EXT_CAS -> {
-                return ProtoExtType.EXT_CAS;
-            }
-            case EXT_LIST -> {
-                return ProtoExtType.EXT_LIST;
-            }
-        }
-        return null;
-    }*/
 
     public static void writeByteArray(ObjectOutput out, byte[] arr) throws IOException {
         out.writeInt(arr == null ? -1 : arr.length);

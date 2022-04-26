@@ -6,8 +6,6 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.messages.Messages.*;
-import sire.messages.Message1;
-import sire.messages.Message3;
 import static sire.messages.ProtoUtils.*;
 import com.google.protobuf.ByteString;
 import sire.schnorr.SchnorrSignature;
@@ -85,20 +83,22 @@ public class DeviceStub {
             BigInteger attesterSessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
             ECPoint attesterSessionPublicKey = curveGenerator.multiply(attesterSessionPrivateKey);
 
-            Message1 message1 = join(appId, attesterId, type, attesterSessionPublicKey.getEncoded(true));
+            ProtoMessage1 msg1 = join(appId, attesterId, type, attesterSessionPublicKey.getEncoded(true));
 
-            byte[] sessionPublicKeysHash = computeHash(message1.getVerifierPublicSessionKey(),
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] verifierPubSesKey = byteStringToByteArray(out, msg1.getVerifierPubSesKey());
+            byte[] sessionPublicKeysHash = computeHash(verifierPubSesKey,
                     attesterSessionPublicKey.getEncoded(true));
 
             //computing shared keys
-            ECPoint verifierSessionPublicKey = signatureScheme.decodePublicKey(message1.getVerifierPublicSessionKey());
+            ECPoint verifierSessionPublicKey = signatureScheme.decodePublicKey(verifierPubSesKey);
             ECPoint sharedPoint = verifierSessionPublicKey.multiply(attesterSessionPrivateKey);
             BigInteger sharedSecret = sharedPoint.normalize().getXCoord().toBigInteger();
             SecretKey symmetricEncryptionKey = createSecretKey(sharedSecret.toString().toCharArray(), sessionPublicKeysHash);
             byte[] macKey = symmetricEncryptionKey.getEncoded();//sharedSecret.toByteArray();
 
             //checking validity of the message1
-            SchnorrSignature signatureOfSessionKeys = message1.getSignatureOfSessionKeys();
+            SchnorrSignature signatureOfSessionKeys = protoToSchnorr(msg1.getSignatureSessionKeys());
             boolean isValidSessionSignature = signatureScheme.verifySignature(sessionPublicKeysHash, verifierPublicKey,
                     signatureScheme.decodePublicKey(signatureOfSessionKeys.getRandomPublicKey()),
                     new BigInteger(signatureOfSessionKeys.getSigma()));
@@ -107,7 +107,8 @@ public class DeviceStub {
                 throw new IllegalStateException("Session keys signature is invalid");
             }
 
-            boolean isValidMac = verifyMac(macKey, message1.getMac(), verifierSessionPublicKey.getEncoded(true),
+            byte[] verifierMac = byteStringToByteArray(out, msg1.getMac());
+            boolean isValidMac = verifyMac(macKey, verifierMac, verifierSessionPublicKey.getEncoded(true),
                     verifierPublicKey.getEncoded(true), signatureOfSessionKeys.getRandomPublicKey(),
                     verifierPublicKey.getEncoded(true), signatureOfSessionKeys.getSigma());
 
@@ -115,7 +116,8 @@ public class DeviceStub {
                 throw new IllegalStateException("Mac of message1 is invalid");
             }
 
-            boolean isValidVerifierPublicKey = verifierPublicKey.equals(signatureScheme.decodePublicKey(message1.getVerifierPublicKey()));
+            byte[] verifierPubKey = byteStringToByteArray(out, msg1.getVerifierPubKey());
+            boolean isValidVerifierPublicKey = verifierPublicKey.equals(signatureScheme.decodePublicKey(verifierPubKey));
             if (!isValidVerifierPublicKey) {
                 throw new IllegalStateException("Verifier's public key is invalid");
             }
@@ -145,10 +147,11 @@ public class DeviceStub {
                     claim
             );
 
-            Message3 message3 = sendMessage2(attesterId, attesterSessionPublicKey.getEncoded(true),
+            ProtoMessage3 msg3 = sendMessage2(attesterId, attesterSessionPublicKey.getEncoded(true),
                     evidence, signature, mac);
-            byte[] decryptedData = decryptData(symmetricEncryptionKey, message3.getInitializationVector(),
-                    message3.getEncryptedData());
+
+            byte[] decryptedData = decryptData(symmetricEncryptionKey, byteStringToByteArray(out, msg3.getIv()),
+                    byteStringToByteArray(out, msg3.getEncryptedData()));
             System.out.println("Verifier sent me: " + new String(decryptedData));
         } catch (IOException | SireException | InvalidKeySpecException e) {
             e.printStackTrace();
@@ -214,7 +217,7 @@ public class DeviceStub {
     }
 
     //TODO turn attesterId into hash of Ga
-    public Message1 join(String appId, String attesterId, DeviceType type, byte[] attesterSessionPubKey) throws IOException, ClassNotFoundException {
+    public ProtoMessage1 join(String appId, String attesterId, DeviceType type, byte[] attesterSessionPubKey) throws IOException, ClassNotFoundException {
         ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
                 .setAttesterId(attesterId)
                 .setType(ProtoDeviceType.forNumber(type.ordinal()))
@@ -226,23 +229,22 @@ public class DeviceStub {
 
         this.oos.writeObject(msg0);
         Object o = this.ois.readObject();
-        ProtoMessage1 msg1 = null;
-        if(o instanceof ProtoMessage1)
-            msg1 = (ProtoMessage1) o;
-
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        if(o instanceof ProtoMessage1 msg1) {
+            System.out.println("Message 1 received!");
+            return msg1;
+        }
+        return null;
+        /*ByteArrayOutputStream out = new ByteArrayOutputStream();
         Message1 result = new Message1(byteStringToByteArray(out, msg1.getVerifierPubSesKey()),
                 byteStringToByteArray(out, msg1.getVerifierPubKey()),
                 protoToSchnorr(msg1.getSignatureSessionKeys()),
                 byteStringToByteArray(out, msg1.getMac()));
-        out.close();
-        System.out.println("Message 1 received!");
-        return result;
+        out.close();*/
+
     }
 
     //TODO turn attesterId into hash of Ga
-    public Message3 sendMessage2(String attesterId, byte[] attesterSessionPubKey, Evidence evidence, SchnorrSignature sign, byte[] mac)
+    public ProtoMessage3 sendMessage2(String attesterId, byte[] attesterSessionPubKey, Evidence evidence, SchnorrSignature sign, byte[] mac)
             throws IOException, ClassNotFoundException {
         System.out.println("Sending Message 2!");
         ProtoMessage2 msg2 = ProtoMessage2.newBuilder()
@@ -255,20 +257,20 @@ public class DeviceStub {
 
         this.oos.writeObject(msg2);
         Object o = this.ois.readObject();
-        ProtoMessage3 msg3 = null;
-        if(o instanceof ProtoMessage3)
-            msg3 = (ProtoMessage3) o;
+        if(o instanceof ProtoMessage3 msg3) {
+            System.out.println("Message 2 received!");
+            return msg3;
+        }
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        return null;
+        /*ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 
         Message3 result = new Message3(byteStringToByteArray(out, msg3.getIv()),
                 byteStringToByteArray(out, msg3.getEncryptedData()));
-        out.close();
+        out.close();*/
 
-        System.out.println("Message 2 received!");
 
-        return result;
     }
 
 
