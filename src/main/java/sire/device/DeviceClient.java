@@ -7,6 +7,7 @@ import sire.utils.ExampleObject;
 import javax.crypto.*;
 import java.io.IOException;
 import java.security.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static sire.messages.ProtoUtils.deserialize;
@@ -39,8 +40,6 @@ public class DeviceClient {
 
 			System.out.println("Putting entry: " + key + " " + value.getValue());
 			dummy.put(appId, key, serialize(value));
-			ExampleObject test = (ExampleObject) deserialize(serialize(value));
-			System.out.println("Test: " + test.getValue());
 			ExampleObject aberration = (ExampleObject) deserialize(dummy.getData(appId, key));
 			System.out.println("Getting entry: " + key + " Value: " + aberration.getValue());
 
@@ -56,11 +55,11 @@ public class DeviceClient {
 			dummy.delete(appId, key2);
 
 			System.out.print("Getting entry: " + key2 + " Value: ");
-			Object arr = dummy.getData(appId, key2);
+			byte[] arr = dummy.getData(appId, key2);
 			if(arr == null)
 				System.out.println("null");
 			else
-				System.out.println((String) arr);
+				System.out.println(Arrays.toString(arr));
 
 			System.out.println("Cas, key: " + key + " oldValue: " + value.getValue() + " newValue: " + newValue.getValue());
 			dummy.cas(appId, key, serialize(value), serialize(newValue));

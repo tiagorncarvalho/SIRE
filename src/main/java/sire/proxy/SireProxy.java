@@ -143,19 +143,20 @@ public class SireProxy implements Runnable {
 								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
 							}
 							else {
-								ProxyResponse result = runProxyMessage(oos, msg);
-								oos.writeObject(result);
+								ProxyResponse result = runProxyMessage(msg);
+								if(result != null)
+									oos.writeObject(result);
 							}
 						}
 
 					}
 				}
 			} catch (IOException | ClassNotFoundException | SireException | SecretSharingException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 
-		private ProxyResponse runProxyMessage(ObjectOutputStream oos, ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException {
+		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException {
 			Response res = serviceProxy.invokeOrdered(msg.toByteArray());
 			switch(msg.getOperation()) {
 				case MAP_GET -> {

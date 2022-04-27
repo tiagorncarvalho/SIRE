@@ -57,7 +57,7 @@ public class DeviceStub {
         this.appId = appId;
         this.waTZVersion = waTZVersion;
         this.port = 2500 + proxyId;
-        byte[] claim = "claim".getBytes();
+        byte[] claim = "measure1".getBytes();
         secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         messageDigest = MessageDigest.getInstance("SHA256");
         macEngine = new CMac(new AESEngine());

@@ -3,11 +3,13 @@ package sire.management;
 import sire.api.ManagementInterface;
 import sire.messages.Messages;
 import sire.configuration.Policy;
+import sire.serverProxyUtils.DeviceContext;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 
 public class ManagementStub implements ManagementInterface {
 
@@ -122,6 +124,11 @@ public class ManagementStub implements ManagementInterface {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    @Override
+    public List<DeviceContext> getView(String appId) {
         return null;
     }
 

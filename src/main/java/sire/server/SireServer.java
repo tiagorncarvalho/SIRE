@@ -339,7 +339,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				return new ConfidentialMessage();
 			}
 			case MAP_GET -> {
-				System.out.println(msg.getAppId() + ExtensionType.EXT_GET + msg.getKey());
 				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey());
 				return new ConfidentialMessage(storage.get(msg.getKey()));
 			}
