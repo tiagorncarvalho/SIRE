@@ -442,8 +442,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public void onRandomPolynomialsCreation(RandomPolynomialContext context) {
 		lock.lock();
 		double delta = context.getTime() / 1_000_000.0;
-		logger.debug("Received random number polynomial with id {} in {} ms", context.getId(), delta);
-		MessageContext messageContext = requests.remove(context.getId());
+		logger.debug("Received random number polynomial with id {} in {} ms", context.getInitialId(), delta);
+		MessageContext messageContext = requests.remove(context.getInitialId());
 		data.put(messageContext.getSender(), context.getPoint());
 		logger.debug("Sending random number share to {}", messageContext.getSender());
 		sendRandomNumberShareTo(messageContext, context.getPoint());
@@ -512,7 +512,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		VerifiableShare privateKeyShare = context.getPoint();
 		ECPoint[] commitment = ((EllipticCurveCommitment)context.getPoint().getCommitments()).getCommitment();
 		ECPoint publicKey = commitment[commitment.length - 1];
-		onRandomKey(context.getId(), privateKeyShare, publicKey);
+		onRandomKey(context.getInitialId(), privateKeyShare, publicKey);
 		lock.unlock();
 	}
 
