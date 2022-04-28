@@ -86,7 +86,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private final ExtensionManager extensionManager = new ExtensionManager();
 
 	//timeout for devices, in seconds
-	private final int timeout = 10;
+	private final int timeout = 30;
 
 	private final VerifierManager verifierManager;
 

@@ -56,8 +56,10 @@ public class AppContext implements Serializable {
 
     public void updateDeviceTimestamp(String deviceId, Timestamp timestamp) {
         DeviceContext temp = this.devices.get(deviceId);
-        temp.setLastPing(timestamp);
-        this.devices.put(deviceId, temp);
+        if(temp != null) {
+            temp.setLastPing(timestamp);
+            this.devices.put(deviceId, temp);
+        }
     }
 
     @Override

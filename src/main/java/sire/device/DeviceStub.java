@@ -36,6 +36,7 @@ public class DeviceStub {
     final int proxyId;
     final String appId;
     final String waTZVersion;
+    final byte[] claim;
     final int port;
     Socket s;
     ObjectOutputStream oos;
@@ -57,12 +58,11 @@ public class DeviceStub {
         this.appId = appId;
         this.waTZVersion = waTZVersion;
         this.port = 2500 + proxyId;
-        byte[] claim = "measure1".getBytes();
+        this.claim = "measure1".getBytes();
         secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         messageDigest = MessageDigest.getInstance("SHA256");
         macEngine = new CMac(new AESEngine());
         symmetricCipher = Cipher.getInstance("AES/GCM/NoPadding");
-        SchnorrSignatureScheme signatureScheme = new SchnorrSignatureScheme();
         BigInteger prime = new BigInteger("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF", 16);
         order = new BigInteger("FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551", 16);
         BigInteger a = new BigInteger("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC", 16);
@@ -71,10 +71,18 @@ public class DeviceStub {
         BigInteger cofactor = prime.divide(order);
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
         try {
-            this.s = new Socket("localhost", port);
+            this.s = new Socket(/*"192.168.2.34"*/"localhost", port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
+            attest();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void attest() {
+        try {
+            SchnorrSignatureScheme signatureScheme = new SchnorrSignatureScheme();
             ECPoint verifierPublicKey = getVerifierPublicKey();
             ECPoint curveGenerator = signatureScheme.getGenerator();
             BigInteger attesterPrivateKey = new BigInteger("4049546346519992604730332816858472394381393488413156548605745581385");
@@ -153,7 +161,7 @@ public class DeviceStub {
             byte[] decryptedData = decryptData(symmetricEncryptionKey, byteStringToByteArray(out, msg3.getIv()),
                     byteStringToByteArray(out, msg3.getEncryptedData()));
             System.out.println("Verifier sent me: " + new String(decryptedData));
-        } catch (IOException | SireException | InvalidKeySpecException e) {
+        } catch (IOException | SireException | InvalidKeySpecException | ClassNotFoundException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
     }
@@ -217,7 +225,7 @@ public class DeviceStub {
     }
 
     //TODO turn attesterId into hash of Ga
-    public ProtoMessage1 join(String appId, String attesterId, DeviceType type, byte[] attesterSessionPubKey) throws IOException, ClassNotFoundException {
+    private ProtoMessage1 join(String appId, String attesterId, DeviceType type, byte[] attesterSessionPubKey) throws IOException, ClassNotFoundException {
         ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
                 .setAttesterId(attesterId)
                 .setType(ProtoDeviceType.forNumber(type.ordinal()))
@@ -234,17 +242,10 @@ public class DeviceStub {
             return msg1;
         }
         return null;
-        /*ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Message1 result = new Message1(byteStringToByteArray(out, msg1.getVerifierPubSesKey()),
-                byteStringToByteArray(out, msg1.getVerifierPubKey()),
-                protoToSchnorr(msg1.getSignatureSessionKeys()),
-                byteStringToByteArray(out, msg1.getMac()));
-        out.close();*/
-
     }
 
     //TODO turn attesterId into hash of Ga
-    public ProtoMessage3 sendMessage2(String attesterId, byte[] attesterSessionPubKey, Evidence evidence, SchnorrSignature sign, byte[] mac)
+    private ProtoMessage3 sendMessage2(String attesterId, byte[] attesterSessionPubKey, Evidence evidence, SchnorrSignature sign, byte[] mac)
             throws IOException, ClassNotFoundException {
         System.out.println("Sending Message 2!");
         ProtoMessage2 msg2 = ProtoMessage2.newBuilder()
@@ -263,14 +264,6 @@ public class DeviceStub {
         }
 
         return null;
-        /*ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-
-        Message3 result = new Message3(byteStringToByteArray(out, msg3.getIv()),
-                byteStringToByteArray(out, msg3.getEncryptedData()));
-        out.close();*/
-
-
     }
 
 
@@ -282,6 +275,7 @@ public class DeviceStub {
 
 
     public void put(String appId, String key, byte[] value) throws IOException {
+        System.out.println("Putting!");
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_PUT)
                 .setAppId(appId)

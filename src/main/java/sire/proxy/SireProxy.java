@@ -158,24 +158,14 @@ public class SireProxy implements Runnable {
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException {
 			Response res = serviceProxy.invokeOrdered(msg.toByteArray());
-			switch(msg.getOperation()) {
-				case MAP_GET -> {
-					return mapGet(res);
-				}
-				case MAP_LIST -> {
-					return mapList(res);
-				}
-				case MEMBERSHIP_VIEW -> {
-					return memberView(res);
-				}
-				case EXTENSION_GET -> {
-					return extGet(res);
-				}
-				case POLICY_GET -> {
-					return policyGet(res);
-				}
-			}
-			return null;
+			return switch(msg.getOperation()) {
+				case MAP_GET -> mapGet(res);
+				case MAP_LIST -> mapList(res);
+				case MEMBERSHIP_VIEW -> memberView(res);
+				case EXTENSION_GET -> extGet(res);
+				case POLICY_GET -> policyGet(res);
+				default -> null;
+			};
 		}
 
 		private ProxyResponse policyGet(Response res) throws IOException, ClassNotFoundException {
