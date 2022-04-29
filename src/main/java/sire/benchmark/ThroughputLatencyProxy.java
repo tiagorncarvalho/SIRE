@@ -62,7 +62,7 @@ public class ThroughputLatencyProxy {
     //For throughput measurement
     private long startTime;
     private long numRequests;
-    private final Set<Integer> senders;
+    private  int numSenders;
     private double maxThroughput;
 
 
@@ -83,7 +83,7 @@ public class ThroughputLatencyProxy {
 
     public ThroughputLatencyProxy (int proxyId) throws SireException {
         this.proxyId = proxyId;
-        senders = new HashSet<>(3000);
+        //senders = new HashSet<>(3000);
         try {
             ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
             serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
@@ -115,6 +115,7 @@ public class ThroughputLatencyProxy {
         verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
 
         attesters = new HashMap<>();
+        startTime = System.nanoTime();
         System.out.println("Ready!");
     }
 
@@ -128,6 +129,7 @@ public class ThroughputLatencyProxy {
                     s = ss.accept();
                 }
                 System.out.println("New client!");
+                numSenders++;
                 new ThroughputLatencyProxyThread(s).start();
                 System.out.println("Connection accepted");
             }
@@ -483,10 +485,9 @@ public class ThroughputLatencyProxy {
             if (throughput > maxThroughput)
                 maxThroughput = throughput;
             logger.info("M:(clients[#]|requests[#]|delta[ns]|throughput[ops/s]|max[ops/s])>({}|{}|{}|{}|{})",
-                    senders.size(), numRequests, delta, throughput, maxThroughput);
+                    numSenders, numRequests, delta, throughput, maxThroughput);
             numRequests = 0;
             startTime = currentTime;
-            senders.clear();
         }
     }
 }
