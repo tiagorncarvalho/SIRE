@@ -19,35 +19,33 @@ import java.util.concurrent.Future;
 public class LatencyAttestationClient {
 
     private static String initialId;
-    private static int proxyId;
     private static final String appId = "app1";
     private static final String waTZVersion = "1.0";
 
     public static void main(String[] args) throws InterruptedException, NoSuchPaddingException, NoSuchAlgorithmException, ClassNotFoundException {
-        if (args.length != 6) {
-            System.out.println("USAGE: benchmark.LatencyAttestationClient <initial client id> <proxy id>" +
+        if (args.length != 5) {
+            System.out.println("USAGE: benchmark.LatencyAttestationClient <initial client id> " +
                     "<num clients> <number of ops> <operation> <measurement leader?>");
             System.exit(-1);
         }
         initialId = args[0];
-        proxyId = Integer.parseInt(args[1]);
-        int numClients = Integer.parseInt(args[2]);
-        int numOperations = Integer.parseInt(args[3]);
+        int numClients = Integer.parseInt(args[1]);
+        int numOperations = Integer.parseInt(args[2]);
         Messages.ProxyMessage.Operation operation;
-        if((operation = operationFromString(args[4])) == null) {
+        if((operation = operationFromString(args[3])) == null) {
             System.out.println("Couldn't parse operation. Available operations:\n - attest\n - getKey");
             System.exit(-1);
         }
 
         System.out.println("Operation: " + operation);
 
-        boolean measurementLeader = Boolean.parseBoolean(args[5]);
+        boolean measurementLeader = Boolean.parseBoolean(args[4]);
 
         Random random = new Random(1L);
         byte[] value = new byte[1024];
         random.nextBytes(value);
 
-        DeviceStub stub = new DeviceStub(initialId, DeviceContext.DeviceType.CAMERA, proxyId, appId, waTZVersion);
+        DeviceStub stub = new DeviceStub(initialId, DeviceContext.DeviceType.CAMERA, appId, waTZVersion);
 
         Client[] clients = new Client[numClients];
         for (int i = 0; i < numClients; i++) {
@@ -56,7 +54,7 @@ public class LatencyAttestationClient {
 
             if (i > 0) {
                 stub = new DeviceStub(String.valueOf(Integer.parseInt(initialId) + i), DeviceContext.DeviceType.CAMERA,
-                        proxyId, appId, waTZVersion);
+                         appId, waTZVersion);
             }
 
             String key = initialId + i;

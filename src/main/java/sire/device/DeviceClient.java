@@ -25,11 +25,10 @@ public class DeviceClient {
 			System.exit(-1);
 		}
 		String attesterId = args[0];
-		int proxyId = 1;
 		String appId = "app1";
 		String waTZVersion = "1.0";
 		DeviceType type = DeviceType.MOTIONSENSOR;
-		DeviceStub dummy = new DeviceStub(attesterId, type, proxyId, appId, waTZVersion);
+		DeviceStub dummy = new DeviceStub(attesterId, type, appId, waTZVersion);
 
 		try {
 			String key = "exampleKey" + attesterId;

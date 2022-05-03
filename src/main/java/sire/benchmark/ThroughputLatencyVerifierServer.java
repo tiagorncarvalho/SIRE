@@ -132,19 +132,22 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.parseFrom(bytes);
             Messages.ProxyMessage.Operation op = msg.getOperation();
-            if(op.toString().startsWith("MAP"))
+            if(op.toString().startsWith("MAP")) {
+                printMeasurement();
                 return executeOrderedMap(msg);
-            else if(op.toString().startsWith("ATTEST"))
+            }
+            else if(op.toString().startsWith("ATTEST")) {
+                printMeasurement();
                 return executeOrderedAttestation(msg, messageContext);
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            printMeasurement();
         }
         return null;
     }
 
     private void printMeasurement() {
+        System.out.println("Printing!");
         long currentTime = System.nanoTime();
         double deltaTime = (currentTime - startTime) / 1_000_000_000.0;
         if ((int) (deltaTime / 2) > 0) {

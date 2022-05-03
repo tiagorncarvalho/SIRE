@@ -5,6 +5,7 @@ import demo.Measurement;
 import master.IProcessingResult;
 import master.client.ClientsMaster;
 import master.message.Message;
+import master.proxy.ProxyMaster;
 import master.server.ServersMaster;
 import pod.ProcessInfo;
 import pod.WorkerCommands;
@@ -34,11 +35,15 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
     private final long sleepBetweenRounds;
     private CountDownLatch serversReadyCounter;
     private CountDownLatch clientsReadyCounter;
+    private CountDownLatch proxyReadyCounter;
     private CountDownLatch measurementDelivered;
 
     private final String workingDirectory;
     private final String serverCommand;
     private final int numOfServers;
+
+    private final String proxyCommand;
+    private final int numOfProxy;
 
     private final String clientCommand;
     private final int numOfClients;
@@ -63,6 +68,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
         this.totalRounds = configuration.getClientsPerRound().length;
         this.numOfServers = configuration.getNumServerPods();
         this.numOfClients = configuration.getNumClientPods();
+        this.numOfProxy = configuration.getNumProxyPods();
         this.numMaxRealClients = new int[totalRounds];
         this.avgLatency = new double[totalRounds];
         this.latencyDev = new double[totalRounds];
@@ -71,7 +77,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
         this.maxLatency = new double[totalRounds];
         this.maxThroughput = new double[totalRounds];
         this.sleepBetweenRounds = 10;
-        this.numRequests = 1_000_000_000;
+        this.numRequests = 50;
         this.operation = "attest";//attest or getKey
         this.clients = configuration.getClientsPerRound();
         for (int i = 0; i < clients.length; i++) {
@@ -84,17 +90,21 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                 ".security -Dlogback.configurationFile=./config/logback.xml -cp lib/* ";
         String initialClientCommand = "java -Xmx4g -Djava.security.properties=./config/java" +
                 ".security -Dlogback.configurationFile=./config/logback.xml -cp lib/* ";
+        String initialProxyCommand = "java -Xmx28g -Djava.security.properties=./config/java" +
+                ".security -Dlogback.configurationFile=./config/logback.xml -cp lib/* ";
 
-        this.serverCommand = initialServerCommand + "benchmark.ThroughputLatencyVerifierServer ";
-        this.clientCommand = initialClientCommand + "benchmark.LatencyAttestationClient ";
+        this.serverCommand = initialServerCommand + "sire.benchmark.ThroughputLatencyVerifierServer ";
+        this.clientCommand = initialClientCommand + "sire.benchmark.LatencyAttestationClient ";
+        this.proxyCommand = initialProxyCommand + "sire.benchmark.ThroughputLatencyProxy ";
     }
 
     @Override
-    public void executeBenchmark(ServersMaster serversMaster, long[] serverPodsIds, ClientsMaster clientsMaster,
-                                 long[] clientPodsIds) {
+    public void executeBenchmark(ServersMaster serversMaster, long[] serverPodsIds, ProxyMaster proxyMaster,
+                                 long[] proxyPodsIds, ClientsMaster clientsMaster, long[] clientPodsIds) {
         round = 1;
         long measurementClientId = clientPodsIds[0];
         long measurementServerId = serverPodsIds[0];
+        long measurementProxyId = proxyPodsIds[0];
         while (true) {
             try {
                 lock.lock();
@@ -115,14 +125,27 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                 serversMaster.startWorkers(0, serverCommands);
                 serversReadyCounter.await();
 
+                System.out.println("Starting proxy");
+                proxyReadyCounter = new CountDownLatch(numOfProxy);
+                WorkerCommands[] proxyCommands = new WorkerCommands[numOfProxy];
+                for(int i = 0; i < numOfProxy; i++) {
+                    proxyCommands[i] = new WorkerCommands(proxyPodsIds[i],
+                            new ProcessInfo[]{
+                                    new ProcessInfo(proxyCommand + (i+1), workingDirectory)
+                            });
+                }
+                proxyMaster.startWorkers(0, proxyCommands);
+                proxyReadyCounter.await();
+
+
                 System.out.println("Starting clients");
                 clientsReadyCounter = new CountDownLatch(1 + clientsPerPod.length);
                 int clientId = numOfServers + 100;
                 WorkerCommands[] clientCommands = new WorkerCommands[1 + clientsPerPod.length];
                 clientCommands[0] = new WorkerCommands(
                         measurementClientId, new ProcessInfo[]{
-                        new ProcessInfo(clientCommand + clientId + " 1 " + numRequests
-                                + " " + operation + " false true", workingDirectory)
+                        new ProcessInfo(clientCommand + clientId + " " + numOfClients + " " + numRequests + " "
+                                 + operation + " true", workingDirectory)
                 });
                 clientId++;
                 for (int i = 0; i < clientsPerPod.length; i++) {
@@ -133,8 +156,8 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                     ProcessInfo[] processes = new ProcessInfo[numOfWorkers];
                     for (int j = 0; j < numOfWorkers; j++) {
                         int clientsPerWorker = Math.min(totalClientsPerPod, maxClientsPerWorker);
-                        String command = clientCommand + clientId + " " + clientsPerWorker + " "
-                                + numRequests + " " + operation + " true false";
+                        String command = clientCommand + clientId + " " + numOfClients + " " + numRequests + " "
+                                + operation + " false";
                         totalClientsPerPod -= clientsPerWorker;
                         processes[j] = new ProcessInfo(command, workingDirectory);
                         clientId += clientsPerWorker;
@@ -152,6 +175,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                 System.out.println("Starting measurement");
                 clientsMaster.startProcessing(measurementClientId);
                 serversMaster.startProcessing(measurementServerId);
+                proxyMaster.startProcessing(measurementProxyId);
 
                 System.out.println("Waiting 120s");
                 sleepSeconds(120);
@@ -159,11 +183,13 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                 System.out.println("Stopping server side measurement");
                 clientsMaster.stopProcessing(measurementClientId);
                 serversMaster.stopProcessing(measurementServerId);
+                proxyMaster.stopProcessing(measurementProxyId);
 
                 measurementDelivered = new CountDownLatch(2);
                 System.out.println("Getting measurements");
                 serversMaster.requestProcessingResult(measurementServerId);
                 clientsMaster.requestProcessingResult(measurementClientId);
+                proxyMaster.requestProcessingResult(measurementProxyId);
 
                 System.out.println("Waiting for measurements");
                 measurementDelivered.await();
@@ -171,6 +197,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                 System.out.println("Stopping processes");
                 serversMaster.stopWorkers();
                 clientsMaster.stopWorkers();
+                proxyMaster.stopWorkers();
                 round++;
                 if (round > totalRounds || numOfClients == 1) {
                     storeResumedMeasurements(numMaxRealClients, avgLatency, latencyDev, avgThroughput, throughputDev, maxLatency, maxThroughput);
@@ -247,6 +274,11 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
     }
 
     @Override
+    public void processProxyReadyEvent(Message message) {
+        proxyReadyCounter.countDown();
+    }
+
+    @Override
     public void deliverServerProcessingResult(IProcessingResult processingResult) {
         Measurement measurement = (Measurement) processingResult;
         System.out.println("Received server measurement result");
@@ -285,6 +317,47 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
         latencyDev[round - 1] = st.getDP(true);
         maxLatency[round - 1] = st.getMax(true);
         measurementDelivered.countDown();
+    }
+
+    @Override
+    public void deliverProxyProcessingResult(IProcessingResult processingResult) {
+        Measurement measurement = (Measurement) processingResult;
+        System.out.println("Received proxy measurement result");
+        saveProxyMeasurements(round, measurement);
+        long[] clients = measurement.getMeasurements()[0];
+        long[] requests = measurement.getMeasurements()[1];
+        long[] delta = measurement.getMeasurements()[2];
+        long[] th = new long[clients.length];
+        long minClients = Long.MAX_VALUE;
+        long maxClients = Long.MIN_VALUE;
+        int size = clients.length;
+        for (int i = 0; i < size; i++) {
+            minClients = Long.min(minClients, clients[i]);
+            maxClients = Long.max(maxClients, clients[i]);
+            th[i] = (long) (requests[i] / (delta[i] / 1_000_000_000.0));
+        }
+        Storage st = new Storage(th);
+        System.out.printf("Proxy Measurement[ops/s] - avg:%f dev:%f max:%d | minClients:%d maxClients:%d\n",
+                st.getAverage(true), st.getDP(true), st.getMax(true), minClients, maxClients);
+
+        measurementDelivered.countDown();
+    }
+
+    public void saveProxyMeasurements(int round, Measurement measurement) {
+        String fileName = "proxy_" + round + ".csv";
+        try (BufferedWriter resultFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)))) {
+            long[] clients = measurement.getMeasurements()[0];
+            long[] numRequests = measurement.getMeasurements()[1];
+            long[] delta = measurement.getMeasurements()[2];
+            int size = clients.length;
+            resultFile.write("clients(#),requests(#),delta(ns)\n");
+            for (int i = 0; i < size; i++) {
+                resultFile.write(String.format("%d,%d,%d\n", clients[i], numRequests[i], delta[i]));
+            }
+            resultFile.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveServerMeasurements(int round, Measurement measurement) {

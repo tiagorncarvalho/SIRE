@@ -82,6 +82,7 @@ public class ThroughputLatencyProxy {
     }
 
     public ThroughputLatencyProxy (int proxyId) throws SireException {
+        System.out.println("Starting proxy!");
         this.proxyId = proxyId;
         //senders = new HashSet<>(3000);
         try {
@@ -90,6 +91,7 @@ public class ThroughputLatencyProxy {
         } catch (SecretSharingException e) {
             throw new SireException("Failed to contact the distributed verifier", e);
         }
+        //System.out.println("Created serviceProxy!");
         try {
             messageDigest = MessageDigest.getInstance("SHA256");
             BlockCipher aes = new AESEngine();
@@ -102,6 +104,7 @@ public class ThroughputLatencyProxy {
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new SireException("Failed to initialize cryptographic tools", e);
         }
+        //System.out.println("Sending getKey message!");
         Response response;
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
@@ -113,15 +116,17 @@ public class ThroughputLatencyProxy {
             throw new SireException("Failed to obtain verifier's public key", e);
         }
         verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
+        //System.out.println("Received key!");
 
         attesters = new HashMap<>();
         startTime = System.nanoTime();
-        System.out.println("Ready!");
+        System.out.println("Proxy is ready");
     }
 
     public void run() {
         try {
             ServerSocket ss = new ServerSocket(2500 + this.proxyId);
+            System.out.println(2500 + this.proxyId);
             Socket s;
             Object socketLock = new Object();
             while(true) {
@@ -156,6 +161,7 @@ public class ThroughputLatencyProxy {
                     Object o;
                     while ((o = ois.readObject()) != null) {
                         System.out.println("Object received! " + o);
+                        numRequests++;
                         if (o instanceof Messages.ProtoMessage0 msg0) {
                             Messages.ProtoMessage1 msg1 = joins(msg0);
                             oos.writeObject(msg1);

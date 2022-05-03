@@ -33,7 +33,6 @@ import java.util.List;
 public class DeviceStub {
     final String attesterId;
     final DeviceType type;
-    final int proxyId;
     final String appId;
     final String waTZVersion;
     final byte[] claim;
@@ -50,14 +49,13 @@ public class DeviceStub {
     private static MessageDigest messageDigest;
     private static Cipher symmetricCipher;
 
-    public DeviceStub(String attesterId, DeviceType type, int proxyId, String appId, String waTZVersion)
+    public DeviceStub(String attesterId, DeviceType type, String appId, String waTZVersion)
             throws NoSuchAlgorithmException, NoSuchPaddingException, ClassNotFoundException {
         this.attesterId = attesterId;
         this.type = type;
-        this.proxyId = proxyId;
         this.appId = appId;
         this.waTZVersion = waTZVersion;
-        this.port = 2500 + proxyId;
+        this.port = 2500 + 1;
         this.claim = "measure1".getBytes();
         secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         messageDigest = MessageDigest.getInstance("SHA256");
@@ -71,7 +69,7 @@ public class DeviceStub {
         BigInteger cofactor = prime.divide(order);
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
         try {
-            this.s = new Socket(/*"192.168.2.34"*/"localhost", port);
+            this.s = new Socket("192.168.2.34"/*"localhost"*/, port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
             attest();
