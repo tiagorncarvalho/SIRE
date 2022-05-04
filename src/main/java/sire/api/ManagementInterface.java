@@ -55,4 +55,11 @@ public interface ManagementInterface {
      * @return
      */
     List<DeviceContext> getView(String appId);
+
+    /**
+     *
+     * @param admin
+     * @return
+     */
+    List<String> getApps(String admin);
 }

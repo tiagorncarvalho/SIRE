@@ -24,126 +24,135 @@
         display: none;
         overflow: hidden;
     }
+
+
 </style>
 <script type="text/javascript">
-function fetchExtension(extKey) {
-    var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
-    fetch(apiUrl).then(response => {
-      return response.json();
-    }).then(data => {
-      appendExtension(data)
-    }).catch(err => {
-      // Do something for an error here
-    });
-}
-function addExtension(extKey, newCode) {
-    var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
-    fetch(apiUrl, {
-		method: 'post',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(newCode).replace(/\\/g, '')
-	}).then(response => {
-      return response.json();
-    }).then(data => {
-      //appendExtension(data)
-    }).catch(err => {
-      // Do something for an error here
-    });
-}
+    const urlParams = new URLSearchParams(window.location.search);
+    const appId = urlParams.get('app');
 
-function deleteExtension(extKey) {
-    var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
-    fetch(apiUrl, {
-		method: 'delete'
-	}).then(response => {
-      return response.json();
-    }).then(data => {
-      //appendExtension(data)
-    }).catch(err => {
-      // Do something for an error here
-    });
-}
-function fetchPolicy(appId) {
-    var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
-    fetch(apiUrl).then(response => {
-      return response.json();
-    }).then(data => {
-      appendPolicy(data)
-    }).catch(err => {
-      // Do something for an error here
-    });
-}
+    window.onload = function(){
+        document.getElementById('header').innerHTML = "<h1>" + appId + "\'s Management Interface</h1>";
+    };
+    function fetchExtension(extKey) {
+        var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
+        fetch(apiUrl).then(response => {
+          return response.json();
+        }).then(data => {
+          appendExtension(data)
+        }).catch(err => {
+          // Do something for an error here
+        });
+    }
+    function addExtension(extKey, newCode) {
+        var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
+        fetch(apiUrl, {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newCode).replace(/\\/g, '')
+        }).then(response => {
+          return response.json();
+        }).then(data => {
+          //appendExtension(data)
+        }).catch(err => {
+          // Do something for an error here
+        });
+    }
 
-function addPolicy(appId, policy) {
-    var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
-    fetch(apiUrl, {
-		method: 'post',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(policy)
-	}).then(response => {
-      return response.json();
-    }).then(data => {
-      //appendExtension(data)
-    }).catch(err => {
-      // Do something for an error here
-    });
-}
+    function deleteExtension(extKey) {
+        var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
+        fetch(apiUrl, {
+            method: 'delete'
+        }).then(response => {
+          return response.json();
+        }).then(data => {
+          //appendExtension(data)
+        }).catch(err => {
+          // Do something for an error here
+        });
+    }
+    function fetchPolicy() {
+        var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
+        fetch(apiUrl).then(response => {
+          return response.json();
+        }).then(data => {
+          appendPolicy(data)
+        }).catch(err => {
+          // Do something for an error here
+        });
+    }
 
-function deletePolicy(appId) {
-    var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
-    fetch(apiUrl, {
-		method: 'delete'
-	}).then(response => {
-      return response.json();
-    }).then(data => {
-      //appendExtension(data)
-    }).catch(err => {
-      // Do something for an error here
-    });
-}
+    function addPolicy(policy) {
+        var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
+        fetch(apiUrl, {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(policy)
+        }).then(response => {
+          return response.json();
+        }).then(data => {
+          //appendExtension(data)
+        }).catch(err => {
+          // Do something for an error here
+        });
+    }
 
-function fetchMembership(appId) {
-    var apiUrl = 'http://localhost:8080/view?appId=' + appId;
-    fetch(apiUrl).then(response => {
-      return response.json();
-    }).then(data => {
-      appendMembership(data)
-    }).catch(err => {
-      // Do something for an error here
-    });
-}
-function appendExtension(data) {
-    var mainContainer = document.getElementById("extensionCode");
-    mainContainer.innerHTML = "";
-    var div = document.createElement("code");
-    div.innerHTML = 'Extension:  ' + data.code;
-    mainContainer.appendChild(div);
-}
+    function deletePolicy() {
+        var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
+        fetch(apiUrl, {
+            method: 'delete'
+        }).then(response => {
+          return response.json();
+        }).then(data => {
+          //appendExtension(data)
+        }).catch(err => {
+          // Do something for an error here
+        });
+    }
 
-function appendPolicy(data) {
-    var mainContainer = document.getElementById("policyGet");
-    mainContainer.innerHTML = "";
-    var div = document.createElement("code");
-    div.innerHTML = 'Policy:  ' + data.policy;
-    mainContainer.appendChild(div);
-}
+    function fetchMembership() {
+        var apiUrl = 'http://localhost:8080/view?appId=' + appId;
+        fetch(apiUrl).then(response => {
+          return response.json();
+        }).then(data => {
+          appendMembership(data)
+        }).catch(err => {
+          // Do something for an error here
+        });
+    }
+    function appendExtension(data) {
+        var mainContainer = document.getElementById("extensionCode");
+        mainContainer.innerHTML = "";
+        var div = document.createElement("code");
+        div.innerHTML = 'Extension:  ' + data.code;
+        mainContainer.appendChild(div);
+    }
 
-function appendMembership(data) {
-    var mainContainer = document.getElementById("memberGet");
-    mainContainer.innerHTML = "";
-	for(var i = 0; i < data.length; i++) {
-		var div = document.createElement("code");
-		div.innerHTML = 'Device ID: ' + data[i].deviceId + ' Device Type: ' + data[i].deviceType + ' Last ping: ' +
-            data[i].lastPing;
-		mainContainer.appendChild(div);
-	}
-}
+    function appendPolicy(data) {
+        var mainContainer = document.getElementById("policyGet");
+        mainContainer.innerHTML = "";
+        var div = document.createElement("code");
+        div.innerHTML = 'Policy:  ' + data.policy;
+        mainContainer.appendChild(div);
+    }
+
+    function appendMembership(data) {
+        var mainContainer = document.getElementById("memberGet");
+        mainContainer.innerHTML = "";
+        for(var i = 0; i < data.length; i++) {
+            var div = document.createElement("code");
+            div.innerHTML = 'Device ID: ' + data[i].deviceId + ' Device Type: ' + data[i].deviceType + ' Last ping: ' +
+                data[i].lastPing;
+            mainContainer.appendChild(div);
+        }
+    }
+
 </script>
 <head>
 <title>
@@ -152,8 +161,7 @@ SIRE's Management Interface</title>
 <meta name="description" content="Web page for app administrators to manage and configure extensions and policies, as well as view the membership state.">
 </head>
 <body>
-<header>
-<h1>SIRE's Management Interface</h1>
+<header id="header">
 </header>
 <h2>Extensions</h2>
 <button type="button" class="collapsible">Get Extension</button>
@@ -179,36 +187,26 @@ SIRE's Management Interface</title>
 <h2>Policy</h2>
 <button type="button" class="collapsible">Get Policy</button>
 <div class="content">
-    <form>
-        <label>App ID: </label><input type="text" id="policyId" name="policyId">
-    </form>
-    <button onClick="fetchPolicy(document.getElementById('policyId').value)">Get Policy</button>
+    <button onClick="fetchPolicy()">Get Policy</button>
 <div id="policyGet"></div>
 </div>
 
 <button type="button" class="collapsible">Add Policy</button>
 <div class="content">
     <form>
-        <label>App ID: </label><input type="text" id="policyIdAdd" name="policyIdAdd">
         <label>Policy: </label><input type="text" id="policyAdd" name="policyAdd">
     </form>
-    <button onClick="addPolicy(document.getElementById('policyIdAdd').value, document.getElementById('policyAdd').value)">Add Policy</button>
+    <button onClick="addPolicy(document.getElementById('policyAdd').value)">Add Policy</button>
 </div>
 
 <button type="button" class="collapsible">Remove Policy</button>
 <div class="content">
-    <form>
-        <label>App ID: </label><input type="text" id="policyIdDel" name="policyIdDel">
-    </form>
-    <button onClick="deletePolicy(document.getElementById('policyIdDel').value)">Remove Policy</button>
+    <button onClick="deletePolicy()">Remove Policy</button>
 </div>
 <h2>Membership</h2>
 <button type="button" class="collapsible">Get View</button>
 <div class="content">
-    <form>
-        <label>App ID: </label><input type="text" id="memberId" name="memberId">
-    </form>
-    <button onClick="fetchMembership(document.getElementById('memberId').value)">Get View</button>
+    <button onClick="fetchMembership()">Get View</button>
     <div id="memberGet"></div>
     <p></p>
 </div>

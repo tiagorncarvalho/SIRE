@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+<style>
+    h3 {
+        display:inline;
+    }
+</style>
+<head>
+    <title>
+        SIRE's Management Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Web page for app administrators to manage and configure extensions and policies, as well as view the membership state.">
+</head>
+<body>
+<header>
+    <h1>SIRE's Management Platform</h1>
+</header>
+<div id="title"></div>
+<div id="apps"></div>
+</body>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const admin = urlParams.get('admin');
+    window.onload = function(){
+        document.getElementById('title').innerHTML = "<h2>" + admin + "\'s App List</h2>";
+    };
+
+    console.log(admin);
+    const apps = ["app1", "app2"];
+    appendApps(apps);
+
+    /*var apiUrl = 'http://localhost:8080/apps?admin=' + admin;
+    fetch(apiUrl).then(response => {
+        return response.json();
+    }).then(data => {
+        appendApps(data)
+    }).catch(err => {
+        // Do something for an error here
+    });*/
+
+    function appendApps(data) {
+        var mainContainer = document.getElementById("apps");
+        mainContainer.innerHTML = "<ul>";
+        for(var i = 0; i < data.length; i++) {
+            var div = document.createElement("li");
+            div.innerHTML = "<a href='management_api.html?app=" + data[i] + "'><h3>" + data[i] + "</h3></a>";
+            mainContainer.appendChild(div);
+        }
+        mainContainer.innerHTML = mainContainer.innerHTML + "</ul>";
+
+    }
+</script>
+</html>

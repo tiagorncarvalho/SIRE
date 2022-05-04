@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+<style>
+    .content input {
+        width: 100%;
+        clear: both;
+    }
+    input[type=text], input[type=password] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        box-sizing: border-box;
+    }
+    input[type=submit] {
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+</style>
+<head>
+    <title>
+        SIRE's Management Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Web page for app administrators to manage and configure extensions and policies, as well as view the membership state.">
+</head>
+<body>
+<header>
+    <h1>SIRE's Management Platform</h1>
+</header>
+
+<div>
+    <form method="post" id="login-form">
+        <label><b>Username</b></label> <br>
+        <input type="text" placeholder="Enter Username" name="username" id="username-field" class="login-form-field" required> <br>
+
+        <label><b>Password</b></label> <br>
+        <input type="password" placeholder="Enter Password" name="password" id="password-field" class="login-form-field" required> <br>
+
+        <input type="submit" value="Login" id="login-form-submit">
+        <label>
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
+    </form>
+</div>
+</body>
+<script>
+    const loginForm = document.getElementById("login-form");
+    const loginButton = document.getElementById("login-form-submit");
+
+    loginButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        const username = loginForm.username.value;
+        const password = loginForm.password.value;
+
+        if (username === "admin" && password === "appadmin") {
+            window.location.replace("management_app_list.html?admin=" + username);
+        } else {
+            alert("Wrong username and/or password. Please try again.");
+        }
+    })
+</script>
+</html>
