@@ -57,8 +57,8 @@ public class LatencyAttestationClient {
                          appId, waTZVersion);
             }
 
-            String key = initialId + i;
-            clients[i] = new Client(initialId + i, stub, numOperations, measurementLeader) {
+            String key = Integer.toString(Integer.parseInt(initialId) + i);
+            clients[i] = new Client(Integer.toString(Integer.parseInt(initialId) + i), stub, numOperations, measurementLeader) {
                 @Override
                 void sendOperation(DeviceStub stub) {
                     System.out.println("Sending op!");
@@ -125,13 +125,13 @@ public class LatencyAttestationClient {
 
         @Override
         public void run() {
-            if (Objects.equals(id, initialId)) {
+            if (id.equals(initialId)) {
                 if (measurementLeader)
                     System.out.println("I'm measurement leader");
                 System.out.println("Sending test data...");
             }
             sendOperation(stub);
-            if (Objects.equals(id, initialId)) {
+            if (id.equals(initialId)) {
                 System.out.println("Executing experiment for " + numOperations + " ops");
             }
             for (int i = 1; i < numOperations; i++) {
@@ -141,7 +141,7 @@ public class LatencyAttestationClient {
                 t2 = System.nanoTime();
                 long latency = t2 - t1;
 
-                if (Objects.equals(id, initialId) && measurementLeader)
+                if (id.equals(initialId) && measurementLeader)
                     System.out.println("M: " + latency);
 
                 try {

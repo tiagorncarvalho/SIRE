@@ -24,17 +24,16 @@ import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.server.SireServer;
 import sire.serverProxyUtils.AppContext;
+import sire.serverProxyUtils.DeviceContext;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.commitment.linear.LinearCommitments;
 import vss.secretsharing.Share;
 import vss.secretsharing.VerifiableShare;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.*;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -78,7 +77,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     private final Map<String, byte[]> storage;
 
     //key value store for membership state, key = appId
-    //private final Map<String, AppContext> membership;
+    private final Map<String, AppContext> membership;
 
     //runs and stores extensions
     private final ExtensionManager extensionManager = new ExtensionManager();
@@ -99,7 +98,8 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
             System.out.println("Usage: sire.server.SireServer <server id>");
             System.exit(-1);
         }
-        new SireServer(Integer.parseInt(args[0]));
+
+        new ThroughputLatencyVerifierServer(Integer.parseInt(args[0]));
     }
 
     public ThroughputLatencyVerifierServer(int id) throws NoSuchAlgorithmException {
@@ -108,8 +108,8 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         lock = new ReentrantLock(true);
         requests = new TreeMap<>();
         data = new TreeMap<>();
+        membership = new TreeMap<>();
         storage = new TreeMap<>();
-        //membership = new TreeMap<>();
         signingKeyRequests = new LinkedList<>();
         signingRequestContexts = new TreeMap<>();
         signingData = new TreeMap<>();
@@ -132,22 +132,21 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.parseFrom(bytes);
             Messages.ProxyMessage.Operation op = msg.getOperation();
-            if(op.toString().startsWith("MAP")) {
-                printMeasurement();
+            if(op.toString().startsWith("MAP"))
                 return executeOrderedMap(msg);
-            }
-            else if(op.toString().startsWith("ATTEST")) {
-                printMeasurement();
+            else if(op.toString().startsWith("ATTEST"))
                 return executeOrderedAttestation(msg, messageContext);
-            }
+            else if(op.toString().startsWith("MEMBERSHIP"))
+                return executeOrderedMembership(msg, messageContext);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            printMeasurement();
         }
         return null;
     }
 
     private void printMeasurement() {
-        System.out.println("Printing!");
         long currentTime = System.nanoTime();
         double deltaTime = (currentTime - startTime) / 1_000_000_000.0;
         if ((int) (deltaTime / 2) > 0) {
@@ -231,6 +230,59 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                     sendRandomNumberShareTo(messageContext, share);
                 }
                 lock.unlock();
+            }
+        }
+        return null;
+    }
+
+    private ConfidentialMessage executeOrderedMembership(Messages.ProxyMessage msg, MessageContext messageContext) throws IOException {
+        Messages.ProxyMessage.Operation op = msg.getOperation();
+        switch(op) {
+            case MEMBERSHIP_JOIN -> {
+
+                lock.lock();
+                if(!membership.containsKey(msg.getAppId()))
+                    membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout));
+
+                membership.get(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
+                        new java.sql.Timestamp(messageContext.getTimestamp()), protoDevToDev(msg.getDeviceType())));
+
+                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_JOIN, msg.getDeviceId());
+
+                lock.unlock();
+                return new ConfidentialMessage();
+            }
+            case MEMBERSHIP_LEAVE -> {
+                lock.lock();
+                membership.get(msg.getAppId()).removeDevice(msg.getDeviceId());
+
+                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LEAVE, msg.getDeviceId());
+
+                lock.unlock();
+                return new ConfidentialMessage();
+            }
+            case MEMBERSHIP_PING -> {
+                lock.lock();
+                membership.get(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(),
+                        new Timestamp(messageContext.getTimestamp()));
+
+                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PING, msg.getDeviceId());
+
+                lock.unlock();
+                return new ConfidentialMessage();
+            }
+            case MEMBERSHIP_VIEW -> {
+                List<DeviceContext> members = membership.get(msg.getAppId()).getMembership();
+                ByteArrayOutputStream bout = new ByteArrayOutputStream();
+                ObjectOutputStream out = new ObjectOutputStream(bout);
+                out.writeObject(members);
+                out.close();
+                byte[] res = bout.toByteArray();
+                bout.close();
+
+                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_VIEW, "");
+
+                return new ConfidentialMessage(res);
             }
         }
         return null;
@@ -370,7 +422,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
 
     private void onRandomKey(int id, VerifiableShare privateKeyShare, ECPoint publicKey) {
         if (signingRequestContexts.containsKey(id)) {
-            logger.info("Received random signing key");
+            /*logger.info*/System.out.println("Received random signing key");
             MessageContext messageContext = signingRequestContexts.remove(id);
             signAndSend(messageContext, signingData.remove(messageContext.getSender()), verifierSigningPrivateKeyShare,
                     privateKeyShare, publicKey);
@@ -383,7 +435,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
             }
             signingKeyRequests.clear();
         } else {
-            logger.warn("Received an unknown polynomial id {}", id);
+            //("Received an unknown polynomial id {}", id);
         }
     }
 
@@ -441,12 +493,53 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
 
     @Override
     public ConfidentialSnapshot getConfidentialSnapshot() {
+        try (ByteArrayOutputStream bout = new ByteArrayOutputStream();
+             ObjectOutput out = new ObjectOutputStream(bout)) {
+            out.writeInt(requests.size());
+            for (Map.Entry<Integer, MessageContext> entry : requests.entrySet()) {
+                out.writeInt(entry.getKey());
+                out.writeObject(entry.getValue());
+            }
+            out.writeInt(data.size());
+            VerifiableShare[] shares = new VerifiableShare[data.size()];
+            int index = 0;
+            for (Map.Entry<Integer, VerifiableShare> entry : data.entrySet()) {
+                out.writeInt(entry.getKey());
+                entry.getValue().writeExternal(out);
+                shares[index++] = entry.getValue();
+            }
+            out.flush();
+            bout.flush();
+            return new ConfidentialSnapshot(bout.toByteArray(), shares);
+        } catch (IOException e) {
+            logger.error("Error while taking snapshot", e);
+        }
         return null;
     }
 
     @Override
     public void installConfidentialSnapshot(ConfidentialSnapshot confidentialSnapshot) {
-
+        try (ByteArrayInputStream bin = new ByteArrayInputStream(confidentialSnapshot.getPlainData());
+             ObjectInput in = new ObjectInputStream(bin)) {
+            int size = in.readInt();
+            requests = new TreeMap<>();
+            while (size-- > 0) {
+                int key = in.readInt();
+                MessageContext value = (MessageContext) in.readObject();
+                requests.put(key, value);
+            }
+            size = in.readInt();
+            data = new TreeMap<>();
+            VerifiableShare[] shares = confidentialSnapshot.getShares();
+            for (int i = 0; i < size; i++) {
+                int key = in.readInt();
+                VerifiableShare value = shares[i];
+                value.readExternal(in);
+                data.put(key, value);
+            }
+        } catch (IOException | ClassCastException | ClassNotFoundException e) {
+            logger.error("Error while installing snapshot", e);
+        }
     }
 
 
