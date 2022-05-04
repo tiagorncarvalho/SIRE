@@ -34,8 +34,8 @@
     window.onload = function(){
         document.getElementById('header').innerHTML = "<h1>" + appId + "\'s Management Interface</h1>";
     };
-    function fetchExtension(extKey) {
-        var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
+    function fetchExtension(extType, extKey) {
+        var apiUrl = 'http://localhost:8080/extension?key=' + appId + extType + extKey;
         fetch(apiUrl).then(response => {
           return response.json();
         }).then(data => {
@@ -44,8 +44,8 @@
           // Do something for an error here
         });
     }
-    function addExtension(extKey, newCode) {
-        var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
+    function addExtension(extType, extKey, newCode) {
+        var apiUrl = 'http://localhost:8080/extension?key=' + appId + extType + extKey;
         fetch(apiUrl, {
             method: 'post',
             headers: {
@@ -62,8 +62,8 @@
         });
     }
 
-    function deleteExtension(extKey) {
-        var apiUrl = 'http://localhost:8080/extension?key=' + extKey;
+    function deleteExtension(extType, extKey) {
+        var apiUrl = 'http://localhost:8080/extension?key=' + appId + extType + extKey;
         fetch(apiUrl, {
             method: 'delete'
         }).then(response => {
@@ -166,22 +166,29 @@ SIRE's Management Interface</title>
 <h2>Extensions</h2>
 <button type="button" class="collapsible">Get Extension</button>
 <div class="content">
-    <label>Extension key: </label><input type="text" id="extKey" name="extKey"> <br>
-    <button onClick="fetchExtension(document.getElementById('extKey').value)">Get Extension</button>
+    <form>
+        <label>Extension type: </label><input type="text" id="extType" name="extType"> <br>
+        <label>Extension key: </label><input type="text" id="extKey" name="extKey"> <br>
+    </form>
+    <button onClick="fetchExtension(document.getElementById('extType'), document.getElementById('extKey').value)">Get Extension</button>
     <div id="extensionCode"></div>
 </div>
 <button type="button" class="collapsible">Add Extension</button>
 <div class="content">
     <form>
+        <label>Extension type: </label><input type="text" id="extTypeAdd" name="extTypeAdd"> <br>
         <label>Extension key: </label> <input type="text" id="extKeyAdd" name="extKeyAdd"> <br>
         <label>Extension code: </label> <input type="text" id="extCodeAdd" name="extCodeAdd"> <br>
     </form>
-    <button onClick="addExtension(document.getElementById('extKeyAdd').value, document.getElementById('extCodeAdd').value)">Add Extension</button>
+    <button onClick="addExtension(document.getElementById('extTypeAdd'), document.getElementById('extKeyAdd').value, document.getElementById('extCodeAdd').value)">Add Extension</button>
 </div>
 <button type="button" class="collapsible">Remove Extension</button>
 <div class="content">
-    <label>Extension key: </label><input type="text" id="extKeyDel" name="extKeyDel">
-    <button onClick="deleteExtension(document.getElementById('extKeyDel').value)">Remove Extension</button>
+    <form>
+        <label>Extension type: </label><input type="text" id="extTypeDel" name="extTypeAdd"> <br>
+        <label>Extension key: </label><input type="text" id="extKeyDel" name="extKeyDel">
+    </form>
+    <button onClick="deleteExtension(document.getElementById('extTypeDel'), document.getElementById('extKeyDel').value)">Remove Extension</button>
 </div>
 
 <h2>Policy</h2>
