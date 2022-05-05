@@ -1,7 +1,7 @@
 package sire.management;
 
 import sire.api.ManagementInterface;
-import sire.configuration.AppManager;
+import sire.configuration.AdminManager;
 import sire.messages.Messages;
 import sire.configuration.Policy;
 import sire.serverProxyUtils.DeviceContext;
@@ -135,7 +135,7 @@ public class ManagementStub implements ManagementInterface {
 
     @Override
     public List<String> getApps(String admin) {
-        return AppManager.getInstance().getAppsFromAdmin(admin);
+        return AdminManager.getInstance().getAppsFromAdmin(admin);
     }
 
     public void close() {

@@ -2,17 +2,17 @@ package sire.configuration;
 
 import java.util.*;
 
-public class AppManager {
+public class AdminManager {
     private final Map<AppAdmin, List<String>> appAdmins;
-    private static AppManager instance = null;
+    private static AdminManager instance = null;
 
-    public static AppManager getInstance() {
+    public static AdminManager getInstance() {
         if(instance == null)
-            instance = new AppManager();
+            instance = new AdminManager();
         return instance;
     }
 
-    private AppManager() {
+    private AdminManager() {
         appAdmins = new HashMap<>();
         appAdmins.put(new AppAdmin("admin", "appadmin"), new ArrayList<>(Arrays.asList("app1", "app2","app3")));
     }
@@ -51,4 +51,23 @@ public class AppManager {
         }
         return null;
     }
+
+    private class AppAdmin {
+        private final String username;
+        private final String password;
+
+        public AppAdmin(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+    }
+
 }
