@@ -3,7 +3,7 @@ package sire.proxy;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import sire.api.ManagementInterface;
-import sire.configuration.AdminManager;
+import sire.management.AdminManager;
 import sire.configuration.Policy;
 import sire.messages.Messages;
 import sire.serverProxyUtils.DeviceContext;

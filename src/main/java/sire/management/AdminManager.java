@@ -1,4 +1,4 @@
-package sire.configuration;
+package sire.management;
 
 import java.util.*;
 
@@ -52,7 +52,7 @@ public class AdminManager {
         return null;
     }
 
-    private class AppAdmin {
+    private static class AppAdmin {
         private final String username;
         private final String password;
 

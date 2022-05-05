@@ -11,7 +11,6 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
 import sire.attestation.DeviceEvidence;
 import sire.attestation.Evidence;
 import sire.messages.Messages;

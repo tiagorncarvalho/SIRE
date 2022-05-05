@@ -40,10 +40,10 @@
     });*/
 
     function appendApps(data) {
-        var mainContainer = document.getElementById("apps");
+        const mainContainer = document.getElementById("apps");
         mainContainer.innerHTML = "<ul>";
-        for(var i = 0; i < data.length; i++) {
-            var div = document.createElement("li");
+        for(let i = 0; i < data.length; i++) {
+            const div = document.createElement("li");
             div.innerHTML = "<a href='management_api.html?app=" + data[i] + "'><h3>" + data[i] + "</h3></a>";
             mainContainer.appendChild(div);
         }

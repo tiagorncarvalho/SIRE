@@ -6,10 +6,10 @@ import sire.serverProxyUtils.DeviceContext;
 
 import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -29,6 +29,8 @@ public class LatencyAttestationClient {
             System.exit(-1);
         }
         initialId = args[0];
+        DeviceContext.DeviceType type = DeviceContext.DeviceType.CAMERA;
+        byte[] claim = "measure1".getBytes();
         int numClients = Integer.parseInt(args[1]);
         int numOperations = Integer.parseInt(args[2]);
         Messages.ProxyMessage.Operation operation;
@@ -45,7 +47,7 @@ public class LatencyAttestationClient {
         byte[] value = new byte[1024];
         random.nextBytes(value);
 
-        DeviceStub stub = new DeviceStub(initialId, DeviceContext.DeviceType.CAMERA, appId, waTZVersion);
+        DeviceStub stub = new DeviceStub();
 
         Client[] clients = new Client[numClients];
         for (int i = 0; i < numClients; i++) {
@@ -53,19 +55,18 @@ public class LatencyAttestationClient {
             Thread.sleep(sleepTime);
 
             if (i > 0) {
-                stub = new DeviceStub(String.valueOf(Integer.parseInt(initialId) + i), DeviceContext.DeviceType.CAMERA,
-                         appId, waTZVersion);
+                stub = new DeviceStub();
             }
 
-            String key = Integer.toString(Integer.parseInt(initialId) + i);
+            String id = Integer.toString(Integer.parseInt(initialId) + i);
             clients[i] = new Client(Integer.toString(Integer.parseInt(initialId) + i), stub, numOperations, measurementLeader) {
                 @Override
                 void sendOperation(DeviceStub stub) {
                     System.out.println("Sending op!");
                     try {
                         switch (operation) {
-                            case ATTEST_VERIFY -> stub.attest();
-                            case MAP_PUT -> stub.put(appId, key, value);
+                            case ATTEST_VERIFY -> stub.attest(appId, id, type, waTZVersion, claim);
+                            case MAP_PUT -> stub.put(id, appId, id, value);
                         }
                     } catch (IOException  e) {
                         e.printStackTrace();
@@ -95,15 +96,6 @@ public class LatencyAttestationClient {
             executorService.shutdown();
             System.out.println("Experiment ended");
         }
-    }
-
-    private static Messages.ProxyMessage.Operation operationFromString(String str) {
-        return switch (str) {
-            case "mapPut" -> Messages.ProxyMessage.Operation.MAP_PUT;
-            case "mapGet" -> Messages.ProxyMessage.Operation.MAP_GET;
-            case "attest" -> Messages.ProxyMessage.Operation.ATTEST_VERIFY;
-            default -> null;
-        };
     }
 
     private static abstract class Client extends Thread {
@@ -169,5 +161,14 @@ public class LatencyAttestationClient {
             }
             super.interrupt();
         }
+    }
+
+    private static Messages.ProxyMessage.Operation operationFromString(String str) {
+        return switch (str) {
+            case "mapPut" -> Messages.ProxyMessage.Operation.MAP_PUT;
+            case "mapGet" -> Messages.ProxyMessage.Operation.MAP_GET;
+            case "attest" -> Messages.ProxyMessage.Operation.ATTEST_VERIFY;
+            default -> null;
+        };
     }
 }

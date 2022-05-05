@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en">
 <html>
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 <style>
@@ -35,7 +36,7 @@
         document.getElementById('header').innerHTML = "<h1>" + appId + "\'s Management Interface</h1>";
     };
     function fetchExtension(extType, extKey) {
-        var apiUrl = 'http://localhost:8080/extension?key=' + appId + extType + extKey;
+        const apiUrl = 'http://localhost:8080/extension?key=' + appId + extType + extKey;
         fetch(apiUrl).then(response => {
           return response.json();
         }).then(data => {
@@ -45,7 +46,7 @@
         });
     }
     function addExtension(extType, extKey, newCode) {
-        var apiUrl = 'http://localhost:8080/extension?key=' + appId + extType + extKey;
+        const apiUrl = 'http://localhost:8080/extension?key=' + appId + extType + extKey;
         fetch(apiUrl, {
             method: 'post',
             headers: {
@@ -63,7 +64,7 @@
     }
 
     function deleteExtension(extType, extKey) {
-        var apiUrl = 'http://localhost:8080/extension?key=' + appId + extType + extKey;
+        const apiUrl = 'http://localhost:8080/extension?key=' + appId + extType + extKey;
         fetch(apiUrl, {
             method: 'delete'
         }).then(response => {
@@ -75,7 +76,7 @@
         });
     }
     function fetchPolicy() {
-        var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
+        const apiUrl = 'http://localhost:8080/policy?appId=' + appId;
         fetch(apiUrl).then(response => {
           return response.json();
         }).then(data => {
@@ -86,7 +87,7 @@
     }
 
     function addPolicy(policy) {
-        var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
+        const apiUrl = 'http://localhost:8080/policy?appId=' + appId;
         fetch(apiUrl, {
             method: 'post',
             headers: {
@@ -104,7 +105,7 @@
     }
 
     function deletePolicy() {
-        var apiUrl = 'http://localhost:8080/policy?appId=' + appId;
+        const apiUrl = 'http://localhost:8080/policy?appId=' + appId;
         fetch(apiUrl, {
             method: 'delete'
         }).then(response => {
@@ -117,7 +118,7 @@
     }
 
     function fetchMembership() {
-        var apiUrl = 'http://localhost:8080/view?appId=' + appId;
+        const apiUrl = 'http://localhost:8080/view?appId=' + appId;
         fetch(apiUrl).then(response => {
           return response.json();
         }).then(data => {
@@ -127,26 +128,26 @@
         });
     }
     function appendExtension(data) {
-        var mainContainer = document.getElementById("extensionCode");
+        const mainContainer = document.getElementById("extensionCode");
         mainContainer.innerHTML = "";
-        var div = document.createElement("code");
+        const div = document.createElement("code");
         div.innerHTML = 'Extension:  ' + data.code;
         mainContainer.appendChild(div);
     }
 
     function appendPolicy(data) {
-        var mainContainer = document.getElementById("policyGet");
+        const mainContainer = document.getElementById("policyGet");
         mainContainer.innerHTML = "";
-        var div = document.createElement("code");
+        const div = document.createElement("code");
         div.innerHTML = 'Policy:  ' + data.policy;
         mainContainer.appendChild(div);
     }
 
     function appendMembership(data) {
-        var mainContainer = document.getElementById("memberGet");
+        const mainContainer = document.getElementById("memberGet");
         mainContainer.innerHTML = "";
-        for(var i = 0; i < data.length; i++) {
-            var div = document.createElement("code");
+        for(let i = 0; i < data.length; i++) {
+            const div = document.createElement("code");
             div.innerHTML = 'Device ID: ' + data[i].deviceId + ' Device Type: ' + data[i].deviceType + ' Last ping: ' +
                 data[i].lastPing;
             mainContainer.appendChild(div);
@@ -223,13 +224,13 @@ SIRE's Management Interface</title>
 </footer>
 
 <script>
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
+    const coll = document.getElementsByClassName("collapsible");
+    let i;
 
     for (i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function() {
             this.classList.toggle("active");
-            var content = this.nextElementSibling;
+            const content = this.nextElementSibling;
             if (content.style.display === "block") {
                 content.style.display = "none";
             } else {

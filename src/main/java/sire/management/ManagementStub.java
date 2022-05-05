@@ -1,7 +1,6 @@
 package sire.management;
 
 import sire.api.ManagementInterface;
-import sire.configuration.AdminManager;
 import sire.messages.Messages;
 import sire.configuration.Policy;
 import sire.serverProxyUtils.DeviceContext;

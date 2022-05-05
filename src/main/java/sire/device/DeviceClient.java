@@ -28,7 +28,9 @@ public class DeviceClient {
 		String appId = "app1";
 		String waTZVersion = "1.0";
 		DeviceType type = DeviceType.MOTIONSENSOR;
-		DeviceStub dummy = new DeviceStub(attesterId, type, appId, waTZVersion);
+		byte[] claim = "measure1".getBytes();
+		DeviceStub dummy = new DeviceStub();
+		dummy.attest(appId, attesterId, type, waTZVersion, claim);
 
 		try {
 			String key = "exampleKey" + attesterId;
@@ -38,42 +40,42 @@ public class DeviceClient {
 			ExampleObject newValue = new ExampleObject("exampleNewValue" + attesterId);
 
 			System.out.println("Putting entry: " + key + " " + value.getValue());
-			dummy.put(appId, key, serialize(value));
-			ExampleObject aberration = (ExampleObject) deserialize(dummy.getData(appId, key));
+			dummy.put(attesterId, appId, key, serialize(value));
+			ExampleObject aberration = (ExampleObject) deserialize(dummy.getData(attesterId, appId, key));
 			System.out.println("Getting entry: " + key + " Value: " + aberration.getValue());
 
 			System.out.println("Putting entry: " + key2 + " " + value2.getValue());
-			dummy.put(appId, key2, serialize(value2));
+			dummy.put(attesterId, appId, key2, serialize(value2));
 			System.out.print("Getting all entries: [");
-			List<byte[]> res = dummy.getList(appId);
+			List<byte[]> res = dummy.getList(attesterId, appId);
 			for(byte[] b : res)
 				System.out.print(((ExampleObject) deserialize(b)).getValue() + ",");
 			System.out.println("]");
 
 			System.out.println("Delete entry: " + key2);
-			dummy.delete(appId, key2);
+			dummy.delete(attesterId, appId, key2);
 
 			System.out.print("Getting entry: " + key2 + " Value: ");
-			byte[] arr = dummy.getData(appId, key2);
+			byte[] arr = dummy.getData(attesterId, appId, key2);
 			if(arr == null)
 				System.out.println("null");
 			else
 				System.out.println(Arrays.toString(arr));
 
 			System.out.println("Cas, key: " + key + " oldValue: " + value.getValue() + " newValue: " + newValue.getValue());
-			dummy.cas(appId, key, serialize(value), serialize(newValue));
+			dummy.cas(attesterId, appId, key, serialize(value), serialize(newValue));
 
-			ExampleObject result = (ExampleObject) deserialize(dummy.getData(appId, key));
+			ExampleObject result = (ExampleObject) deserialize(dummy.getData(attesterId, appId, key));
 
 			System.out.println("Getting entry: " + key + " Value: " + result.getValue());
 
-			for(DeviceContext d : dummy.getView(appId))
+			for(DeviceContext d : dummy.getView(attesterId, appId))
 				System.out.println(d.toString());
 			dummy.ping(appId, attesterId);
-			for(DeviceContext d : dummy.getView(appId))
+			for(DeviceContext d : dummy.getView(attesterId, appId))
 				System.out.println(d.toString());
 			/*dummy.leave(appId, attesterId);
-			for(DeviceContext d : dummy.getView(appId))
+			for(DeviceContext d : dummy.getView(attesterId, appId))
 				System.out.println(d.toString());*/
 			System.out.println("Done!");
 

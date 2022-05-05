@@ -3,7 +3,6 @@ package sire.api;
 import sire.messages.Messages.ProtoMessage0;
 import sire.messages.Messages.ProtoMessage1;
 import sire.serverProxyUtils.DeviceContext;
-import sire.serverProxyUtils.SireException;
 import sire.messages.Messages.ProxyMessage;
 
 /**

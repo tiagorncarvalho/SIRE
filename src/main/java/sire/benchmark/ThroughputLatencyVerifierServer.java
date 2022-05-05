@@ -22,7 +22,6 @@ import sire.configuration.ExtensionType;
 import sire.messages.Messages;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignatureScheme;
-import sire.server.SireServer;
 import sire.serverProxyUtils.AppContext;
 import sire.serverProxyUtils.DeviceContext;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
@@ -422,7 +421,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
 
     private void onRandomKey(int id, VerifiableShare privateKeyShare, ECPoint publicKey) {
         if (signingRequestContexts.containsKey(id)) {
-            /*logger.info*/System.out.println("Received random signing key");
+            logger.info("Received random signing key");
             MessageContext messageContext = signingRequestContexts.remove(id);
             signAndSend(messageContext, signingData.remove(messageContext.getSender()), verifierSigningPrivateKeyShare,
                     privateKeyShare, publicKey);
@@ -435,7 +434,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
             }
             signingKeyRequests.clear();
         } else {
-            //("Received an unknown polynomial id {}", id);
+            logger.info("Received an unknown polynomial id {}", id);
         }
     }
 

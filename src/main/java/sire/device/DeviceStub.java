@@ -31,11 +31,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DeviceStub {
-    final String attesterId;
-    final DeviceType type;
-    final String appId;
-    final String waTZVersion;
-    final byte[] claim;
     final int port;
     Socket s;
     ObjectOutputStream oos;
@@ -49,14 +44,8 @@ public class DeviceStub {
     private static MessageDigest messageDigest;
     private static Cipher symmetricCipher;
 
-    public DeviceStub(String attesterId, DeviceType type, String appId, String waTZVersion)
-            throws NoSuchAlgorithmException, NoSuchPaddingException, ClassNotFoundException {
-        this.attesterId = attesterId;
-        this.type = type;
-        this.appId = appId;
-        this.waTZVersion = waTZVersion;
+    public DeviceStub() throws NoSuchAlgorithmException, NoSuchPaddingException {
         this.port = 2500 + 1;
-        this.claim = "measure1".getBytes();
         secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         messageDigest = MessageDigest.getInstance("SHA256");
         macEngine = new CMac(new AESEngine());
@@ -72,13 +61,12 @@ public class DeviceStub {
             this.s = new Socket("192.168.2.34"/*"localhost"*/, port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
-            attest();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void attest() {
+    public void attest(String appId, String attesterId, DeviceType type, String waTZVersion, byte[] claim) {
         try {
             SchnorrSignatureScheme signatureScheme = new SchnorrSignatureScheme();
             ECPoint verifierPublicKey = getVerifierPublicKey();
@@ -153,7 +141,7 @@ public class DeviceStub {
                     claim
             );
 
-            ProtoMessage3 msg3 = sendMessage2(attesterId, attesterSessionPublicKey.getEncoded(true),
+            ProtoMessage3 msg3 = sendMessage2(attesterId, appId, attesterSessionPublicKey.getEncoded(true),
                     evidence, signature, mac);
 
             byte[] decryptedData = decryptData(symmetricEncryptionKey, byteStringToByteArray(out, msg3.getIv()),
@@ -243,7 +231,7 @@ public class DeviceStub {
     }
 
     //TODO turn attesterId into hash of Ga
-    private ProtoMessage3 sendMessage2(String attesterId, byte[] attesterSessionPubKey, Evidence evidence, SchnorrSignature sign, byte[] mac)
+    private ProtoMessage3 sendMessage2(String attesterId, String appId, byte[] attesterSessionPubKey, Evidence evidence, SchnorrSignature sign, byte[] mac)
             throws IOException, ClassNotFoundException {
         System.out.println("Sending Message 2!");
         ProtoMessage2 msg2 = ProtoMessage2.newBuilder()
@@ -252,6 +240,7 @@ public class DeviceStub {
                 .setSignatureEvidence(schnorrToProto(sign))
                 .setMac(ByteString.copyFrom(mac))
                 .setAttesterId(attesterId)
+                .setAppId(appId)
                 .build();
 
         this.oos.writeObject(msg2);
@@ -272,10 +261,11 @@ public class DeviceStub {
 
 
 
-    public void put(String appId, String key, byte[] value) throws IOException {
+    public void put(String attesterId, String appId, String key, byte[] value) throws IOException {
         System.out.println("Putting!");
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_PUT)
+                .setDeviceId(attesterId)
                 .setAppId(appId)
                 .setKey(key)
                 .setValue(ByteString.copyFrom(value))
@@ -284,9 +274,10 @@ public class DeviceStub {
     }
 
 
-    public void delete(String appId, String key) throws IOException {
+    public void delete(String attesterId, String appId, String key) throws IOException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_DELETE)
+                .setDeviceId(attesterId)
                 .setAppId(appId)
                 .setKey(key)
                 .build();
@@ -294,9 +285,10 @@ public class DeviceStub {
     }
 
 
-    public byte[] getData(String appId, String key) throws IOException, ClassNotFoundException {
+    public byte[] getData(String attesterId, String appId, String key) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_GET)
+                .setDeviceId(attesterId)
                 .setAppId(appId)
                 .setKey(key)
                 .build();
@@ -314,9 +306,10 @@ public class DeviceStub {
     }
 
 
-    public List<byte[]> getList(String appId) throws IOException, ClassNotFoundException {
+    public List<byte[]> getList(String attesterId, String appId) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_LIST)
+                .setDeviceId(attesterId)
                 .setAppId(appId)
                 .build();
         this.oos.writeObject(msg);
@@ -333,10 +326,11 @@ public class DeviceStub {
     }
 
 
-    public void cas(String appId, String key, byte[] oldData, byte[] newData) throws IOException {
+    public void cas(String attesterId, String appId, String key, byte[] oldData, byte[] newData) throws IOException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_CAS)
                 .setAppId(appId)
+                .setDeviceId(attesterId)
                 .setKey(key)
                 .setValue(ByteString.copyFrom(newData))
                 .setOldData(ByteString.copyFrom(oldData))
@@ -362,9 +356,10 @@ public class DeviceStub {
         this.oos.writeObject(msg);
     }
 
-    public List<DeviceContext> getView(String appId) throws IOException, ClassNotFoundException {
+    public List<DeviceContext> getView(String attesterId, String appId) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MEMBERSHIP_VIEW)
+                .setDeviceId(attesterId)
                 .setAppId(appId)
                 .build();
         this.oos.writeObject(msg);

@@ -9,9 +9,7 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
-import sire.api.ManagementInterface;
 import sire.attestation.DeviceEvidence;
-import sire.configuration.Policy;
 import sire.serverProxyUtils.*;
 
 import static sire.messages.ProtoUtils.*;

@@ -124,6 +124,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		try {
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
 			ProxyMessage.Operation op = msg.getOperation();
+			membership.get(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 			if(op.toString().startsWith("MAP"))
 				return executeOrderedMap(msg);
 			else if(op.toString().startsWith("EXTENSION") || op.toString().startsWith("POLICY"))
