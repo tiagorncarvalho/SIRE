@@ -216,7 +216,6 @@ public class SireProxy implements Runnable {
 				ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
 				ObjectInputStream oin = new ObjectInputStream(bin);
 				ArrayList<byte[]> lst = (ArrayList<byte[]>) oin.readObject();
-				//System.out.println("List size: " + lst.size());
 				for (byte[] b : lst)
 					prBuilder.addList(ByteString.copyFrom(b));
 			}

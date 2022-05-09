@@ -29,7 +29,7 @@ public class ProxyMain {
         SpringApplication.run(ProxyMain.class, args);
         proxy.run();
     }
-    //TODO security issues (no appId)
+
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RestController
     public static class ProxyController {
