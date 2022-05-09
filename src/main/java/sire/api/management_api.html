@@ -171,7 +171,7 @@ SIRE's Management Interface</title>
         <label>Extension type: </label><input type="text" id="extType" name="extType"> <br>
         <label>Extension key: </label><input type="text" id="extKey" name="extKey"> <br>
     </form>
-    <button onClick="fetchExtension(document.getElementById('extType'), document.getElementById('extKey').value)">Get Extension</button>
+    <button onClick="fetchExtension(document.getElementById('extType').value, document.getElementById('extKey').value)">Get Extension</button>
     <div id="extensionCode"></div>
 </div>
 <button type="button" class="collapsible">Add Extension</button>
@@ -181,7 +181,7 @@ SIRE's Management Interface</title>
         <label>Extension key: </label> <input type="text" id="extKeyAdd" name="extKeyAdd"> <br>
         <label>Extension code: </label> <input type="text" id="extCodeAdd" name="extCodeAdd"> <br>
     </form>
-    <button onClick="addExtension(document.getElementById('extTypeAdd'), document.getElementById('extKeyAdd').value, document.getElementById('extCodeAdd').value)">Add Extension</button>
+    <button onClick="addExtension(document.getElementById('extTypeAdd').value, document.getElementById('extKeyAdd').value, document.getElementById('extCodeAdd').value)">Add Extension</button>
 </div>
 <button type="button" class="collapsible">Remove Extension</button>
 <div class="content">
@@ -189,7 +189,7 @@ SIRE's Management Interface</title>
         <label>Extension type: </label><input type="text" id="extTypeDel" name="extTypeAdd"> <br>
         <label>Extension key: </label><input type="text" id="extKeyDel" name="extKeyDel">
     </form>
-    <button onClick="deleteExtension(document.getElementById('extTypeDel'), document.getElementById('extKeyDel').value)">Remove Extension</button>
+    <button onClick="deleteExtension(document.getElementById('extTypeDel').value, document.getElementById('extKeyDel').value)">Remove Extension</button>
 </div>
 
 <h2>Policy</h2>

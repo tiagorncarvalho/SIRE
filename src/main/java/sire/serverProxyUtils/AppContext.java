@@ -82,4 +82,8 @@ public class AppContext implements Serializable {
     public Policy getPolicy() {
         return policy;
     }
+
+    public boolean hasDevice(String deviceId) {
+        return devices.containsKey(deviceId);
+    }
 }

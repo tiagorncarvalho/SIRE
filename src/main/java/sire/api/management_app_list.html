@@ -27,17 +27,17 @@
     };
 
     console.log(admin);
-    const apps = ["app1", "app2"];
-    appendApps(apps);
+    /*const apps = ["app1", "app2"];
+    appendApps(apps);*/
 
-    /*var apiUrl = 'http://localhost:8080/apps?admin=' + admin;
+    var apiUrl = 'http://localhost:8080/apps?admin=' + admin;
     fetch(apiUrl).then(response => {
         return response.json();
     }).then(data => {
         appendApps(data)
     }).catch(err => {
         // Do something for an error here
-    });*/
+    });
 
     function appendApps(data) {
         const mainContainer = document.getElementById("apps");
