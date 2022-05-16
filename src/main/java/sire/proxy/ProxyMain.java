@@ -11,22 +11,20 @@ import java.util.List;
 
 @SpringBootApplication
 public class ProxyMain {
-    static SireProxy proxy;
+    /*static SireProxy proxy;*/
     static SireRestProxy restProxy;
+    static ProxyWatz proxy;
     public static void main(String[] args) {
         if (args.length < 1) {
             System.out.println("Usage: sire.proxy.ProxyMain <proxy id>");
             System.exit(-1);
         }
         proxy = null;
-        try {
-            int proxyId = Integer.parseInt(args[0]);
-            proxy = new SireProxy(proxyId);
-            restProxy = new SireRestProxy(proxyId + 1);
-        } catch (SireException e) {
-            e.printStackTrace();
-        }
-        SpringApplication.run(ProxyMain.class, args);
+        int proxyId = Integer.parseInt(args[0]);
+        proxy = new ProxyWatz(proxyId);
+        //proxy = new SireProxy(proxyId);
+        /*restProxy = new SireRestProxy(proxyId + 1);*/
+        //SpringApplication.run(ProxyMain.class, args);
         proxy.run();
     }
 

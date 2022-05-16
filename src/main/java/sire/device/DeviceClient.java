@@ -18,8 +18,7 @@ import static sire.messages.ProtoUtils.serialize;
  */
 public class DeviceClient {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException,
-			ClassNotFoundException {
+	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException {
 		if (args.length < 1) {
 			System.out.println("Usage: sire.attester.AttesterClient <attester id>");
 			System.exit(-1);

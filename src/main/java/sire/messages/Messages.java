@@ -1520,42 +1520,18 @@ public final class Messages {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string attesterId = 1;</code>
+     * <code>int32 attesterId = 1;</code>
      */
-    java.lang.String getAttesterId();
-    /**
-     * <code>string attesterId = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getAttesterIdBytes();
-
-    /**
-     * <code>string appId = 2;</code>
-     */
-    java.lang.String getAppId();
-    /**
-     * <code>string appId = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getAppIdBytes();
+    int getAttesterId();
 
     /**
      * <pre>
      *Ga
      * </pre>
      *
-     * <code>bytes attesterPubSesKey = 3;</code>
+     * <code>bytes attesterPubSesKey = 2;</code>
      */
     com.google.protobuf.ByteString getAttesterPubSesKey();
-
-    /**
-     * <code>.sire.messages.ProtoDeviceType type = 4;</code>
-     */
-    int getTypeValue();
-    /**
-     * <code>.sire.messages.ProtoDeviceType type = 4;</code>
-     */
-    sire.messages.Messages.ProtoDeviceType getType();
   }
   /**
    * <pre>
@@ -1574,10 +1550,8 @@ public final class Messages {
       super(builder);
     }
     private ProtoMessage0() {
-      attesterId_ = "";
-      appId_ = "";
+      attesterId_ = 0;
       attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
-      type_ = 0;
     }
 
     @java.lang.Override
@@ -1604,27 +1578,14 @@ public final class Messages {
             case 0:
               done = true;
               break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 8: {
 
-              attesterId_ = s;
+              attesterId_ = input.readInt32();
               break;
             }
             case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              appId_ = s;
-              break;
-            }
-            case 26: {
 
               attesterPubSesKey_ = input.readBytes();
-              break;
-            }
-            case 32: {
-              int rawValue = input.readEnum();
-
-              type_ = rawValue;
               break;
             }
             default: {
@@ -1660,101 +1621,25 @@ public final class Messages {
     }
 
     public static final int ATTESTERID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object attesterId_;
+    private int attesterId_;
     /**
-     * <code>string attesterId = 1;</code>
+     * <code>int32 attesterId = 1;</code>
      */
-    public java.lang.String getAttesterId() {
-      java.lang.Object ref = attesterId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        attesterId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string attesterId = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getAttesterIdBytes() {
-      java.lang.Object ref = attesterId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        attesterId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public int getAttesterId() {
+      return attesterId_;
     }
 
-    public static final int APPID_FIELD_NUMBER = 2;
-    private volatile java.lang.Object appId_;
-    /**
-     * <code>string appId = 2;</code>
-     */
-    public java.lang.String getAppId() {
-      java.lang.Object ref = appId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        appId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string appId = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getAppIdBytes() {
-      java.lang.Object ref = appId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        appId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int ATTESTERPUBSESKEY_FIELD_NUMBER = 3;
+    public static final int ATTESTERPUBSESKEY_FIELD_NUMBER = 2;
     private com.google.protobuf.ByteString attesterPubSesKey_;
     /**
      * <pre>
      *Ga
      * </pre>
      *
-     * <code>bytes attesterPubSesKey = 3;</code>
+     * <code>bytes attesterPubSesKey = 2;</code>
      */
     public com.google.protobuf.ByteString getAttesterPubSesKey() {
       return attesterPubSesKey_;
-    }
-
-    public static final int TYPE_FIELD_NUMBER = 4;
-    private int type_;
-    /**
-     * <code>.sire.messages.ProtoDeviceType type = 4;</code>
-     */
-    public int getTypeValue() {
-      return type_;
-    }
-    /**
-     * <code>.sire.messages.ProtoDeviceType type = 4;</code>
-     */
-    public sire.messages.Messages.ProtoDeviceType getType() {
-      @SuppressWarnings("deprecation")
-      sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(type_);
-      return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1771,17 +1656,11 @@ public final class Messages {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getAttesterIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, attesterId_);
-      }
-      if (!getAppIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, appId_);
+      if (attesterId_ != 0) {
+        output.writeInt32(1, attesterId_);
       }
       if (!attesterPubSesKey_.isEmpty()) {
-        output.writeBytes(3, attesterPubSesKey_);
-      }
-      if (type_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
-        output.writeEnum(4, type_);
+        output.writeBytes(2, attesterPubSesKey_);
       }
       unknownFields.writeTo(output);
     }
@@ -1792,19 +1671,13 @@ public final class Messages {
       if (size != -1) return size;
 
       size = 0;
-      if (!getAttesterIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, attesterId_);
-      }
-      if (!getAppIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, appId_);
+      if (attesterId_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, attesterId_);
       }
       if (!attesterPubSesKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, attesterPubSesKey_);
-      }
-      if (type_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(4, type_);
+          .computeBytesSize(2, attesterPubSesKey_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1822,13 +1695,10 @@ public final class Messages {
       sire.messages.Messages.ProtoMessage0 other = (sire.messages.Messages.ProtoMessage0) obj;
 
       boolean result = true;
-      result = result && getAttesterId()
-          .equals(other.getAttesterId());
-      result = result && getAppId()
-          .equals(other.getAppId());
+      result = result && (getAttesterId()
+          == other.getAttesterId());
       result = result && getAttesterPubSesKey()
           .equals(other.getAttesterPubSesKey());
-      result = result && type_ == other.type_;
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1841,13 +1711,9 @@ public final class Messages {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + ATTESTERID_FIELD_NUMBER;
-      hash = (53 * hash) + getAttesterId().hashCode();
-      hash = (37 * hash) + APPID_FIELD_NUMBER;
-      hash = (53 * hash) + getAppId().hashCode();
+      hash = (53 * hash) + getAttesterId();
       hash = (37 * hash) + ATTESTERPUBSESKEY_FIELD_NUMBER;
       hash = (53 * hash) + getAttesterPubSesKey().hashCode();
-      hash = (37 * hash) + TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + type_;
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1985,13 +1851,9 @@ public final class Messages {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        attesterId_ = "";
-
-        appId_ = "";
+        attesterId_ = 0;
 
         attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
-
-        type_ = 0;
 
         return this;
       }
@@ -2020,9 +1882,7 @@ public final class Messages {
       public sire.messages.Messages.ProtoMessage0 buildPartial() {
         sire.messages.Messages.ProtoMessage0 result = new sire.messages.Messages.ProtoMessage0(this);
         result.attesterId_ = attesterId_;
-        result.appId_ = appId_;
         result.attesterPubSesKey_ = attesterPubSesKey_;
-        result.type_ = type_;
         onBuilt();
         return result;
       }
@@ -2071,19 +1931,11 @@ public final class Messages {
 
       public Builder mergeFrom(sire.messages.Messages.ProtoMessage0 other) {
         if (other == sire.messages.Messages.ProtoMessage0.getDefaultInstance()) return this;
-        if (!other.getAttesterId().isEmpty()) {
-          attesterId_ = other.attesterId_;
-          onChanged();
-        }
-        if (!other.getAppId().isEmpty()) {
-          appId_ = other.appId_;
-          onChanged();
+        if (other.getAttesterId() != 0) {
+          setAttesterId(other.getAttesterId());
         }
         if (other.getAttesterPubSesKey() != com.google.protobuf.ByteString.EMPTY) {
           setAttesterPubSesKey(other.getAttesterPubSesKey());
-        }
-        if (other.type_ != 0) {
-          setTypeValue(other.getTypeValue());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2114,140 +1966,28 @@ public final class Messages {
         return this;
       }
 
-      private java.lang.Object attesterId_ = "";
+      private int attesterId_ ;
       /**
-       * <code>string attesterId = 1;</code>
+       * <code>int32 attesterId = 1;</code>
        */
-      public java.lang.String getAttesterId() {
-        java.lang.Object ref = attesterId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          attesterId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      public int getAttesterId() {
+        return attesterId_;
       }
       /**
-       * <code>string attesterId = 1;</code>
+       * <code>int32 attesterId = 1;</code>
        */
-      public com.google.protobuf.ByteString
-          getAttesterIdBytes() {
-        java.lang.Object ref = attesterId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          attesterId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string attesterId = 1;</code>
-       */
-      public Builder setAttesterId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+      public Builder setAttesterId(int value) {
+        
         attesterId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string attesterId = 1;</code>
+       * <code>int32 attesterId = 1;</code>
        */
       public Builder clearAttesterId() {
         
-        attesterId_ = getDefaultInstance().getAttesterId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string attesterId = 1;</code>
-       */
-      public Builder setAttesterIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        attesterId_ = value;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object appId_ = "";
-      /**
-       * <code>string appId = 2;</code>
-       */
-      public java.lang.String getAppId() {
-        java.lang.Object ref = appId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          appId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>string appId = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getAppIdBytes() {
-        java.lang.Object ref = appId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          appId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string appId = 2;</code>
-       */
-      public Builder setAppId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        appId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string appId = 2;</code>
-       */
-      public Builder clearAppId() {
-        
-        appId_ = getDefaultInstance().getAppId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string appId = 2;</code>
-       */
-      public Builder setAppIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        appId_ = value;
+        attesterId_ = 0;
         onChanged();
         return this;
       }
@@ -2258,7 +1998,7 @@ public final class Messages {
        *Ga
        * </pre>
        *
-       * <code>bytes attesterPubSesKey = 3;</code>
+       * <code>bytes attesterPubSesKey = 2;</code>
        */
       public com.google.protobuf.ByteString getAttesterPubSesKey() {
         return attesterPubSesKey_;
@@ -2268,7 +2008,7 @@ public final class Messages {
        *Ga
        * </pre>
        *
-       * <code>bytes attesterPubSesKey = 3;</code>
+       * <code>bytes attesterPubSesKey = 2;</code>
        */
       public Builder setAttesterPubSesKey(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -2284,56 +2024,11 @@ public final class Messages {
        *Ga
        * </pre>
        *
-       * <code>bytes attesterPubSesKey = 3;</code>
+       * <code>bytes attesterPubSesKey = 2;</code>
        */
       public Builder clearAttesterPubSesKey() {
         
         attesterPubSesKey_ = getDefaultInstance().getAttesterPubSesKey();
-        onChanged();
-        return this;
-      }
-
-      private int type_ = 0;
-      /**
-       * <code>.sire.messages.ProtoDeviceType type = 4;</code>
-       */
-      public int getTypeValue() {
-        return type_;
-      }
-      /**
-       * <code>.sire.messages.ProtoDeviceType type = 4;</code>
-       */
-      public Builder setTypeValue(int value) {
-        type_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.sire.messages.ProtoDeviceType type = 4;</code>
-       */
-      public sire.messages.Messages.ProtoDeviceType getType() {
-        @SuppressWarnings("deprecation")
-        sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(type_);
-        return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
-      }
-      /**
-       * <code>.sire.messages.ProtoDeviceType type = 4;</code>
-       */
-      public Builder setType(sire.messages.Messages.ProtoDeviceType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        
-        type_ = value.getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.sire.messages.ProtoDeviceType type = 4;</code>
-       */
-      public Builder clearType() {
-        
-        type_ = 0;
         onChanged();
         return this;
       }
@@ -7507,176 +7202,216 @@ public final class Messages {
     public enum Operation
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
+       * <pre>
+       *----------ATTESTATION-----------
+       * </pre>
+       *
        * <code>ATTEST_GENERATE_SIGNING_KEY = 0;</code>
        */
       ATTEST_GENERATE_SIGNING_KEY(0),
       /**
-       * <code>ATTEST_GET_PUBLIC_KEY = 1;</code>
+       * <code>ATTEST_GET_VERIFIER_PUBLIC_KEY = 1;</code>
        */
-      ATTEST_GET_PUBLIC_KEY(1),
+      ATTEST_GET_VERIFIER_PUBLIC_KEY(1),
       /**
-       * <code>ATTEST_SIGN_DATA = 2;</code>
+       * <code>ATTEST_GET_PUBLIC_KEY = 2;</code>
        */
-      ATTEST_SIGN_DATA(2),
+      ATTEST_GET_PUBLIC_KEY(2),
       /**
-       * <code>ATTEST_VERIFY = 3;</code>
+       * <code>ATTEST_SIGN_DATA = 3;</code>
        */
-      ATTEST_VERIFY(3),
+      ATTEST_SIGN_DATA(3),
       /**
-       * <code>ATTEST_GET_RANDOM_NUMBER = 4;</code>
+       * <code>ATTEST_VERIFY = 4;</code>
        */
-      ATTEST_GET_RANDOM_NUMBER(4),
+      ATTEST_VERIFY(4),
       /**
-       * <code>MAP_PUT = 5;</code>
+       * <code>ATTEST_GET_RANDOM_NUMBER = 5;</code>
        */
-      MAP_PUT(5),
+      ATTEST_GET_RANDOM_NUMBER(5),
       /**
-       * <code>MAP_DELETE = 6;</code>
+       * <pre>
+       *--------------MAP--------------
+       * </pre>
+       *
+       * <code>MAP_PUT = 6;</code>
        */
-      MAP_DELETE(6),
+      MAP_PUT(6),
       /**
-       * <code>MAP_GET = 7;</code>
+       * <code>MAP_DELETE = 7;</code>
        */
-      MAP_GET(7),
+      MAP_DELETE(7),
       /**
-       * <code>MAP_LIST = 8;</code>
+       * <code>MAP_GET = 8;</code>
        */
-      MAP_LIST(8),
+      MAP_GET(8),
       /**
-       * <code>MAP_CAS = 9;</code>
+       * <code>MAP_LIST = 9;</code>
        */
-      MAP_CAS(9),
+      MAP_LIST(9),
       /**
-       * <code>MEMBERSHIP_JOIN = 10;</code>
+       * <code>MAP_CAS = 10;</code>
        */
-      MEMBERSHIP_JOIN(10),
+      MAP_CAS(10),
       /**
-       * <code>MEMBERSHIP_LEAVE = 11;</code>
+       * <pre>
+       *-----------MEMBERSHIP-----------
+       * </pre>
+       *
+       * <code>MEMBERSHIP_JOIN = 11;</code>
        */
-      MEMBERSHIP_LEAVE(11),
+      MEMBERSHIP_JOIN(11),
       /**
-       * <code>MEMBERSHIP_VIEW = 12;</code>
+       * <code>MEMBERSHIP_LEAVE = 12;</code>
        */
-      MEMBERSHIP_VIEW(12),
+      MEMBERSHIP_LEAVE(12),
       /**
-       * <code>MEMBERSHIP_PING = 13;</code>
+       * <code>MEMBERSHIP_VIEW = 13;</code>
        */
-      MEMBERSHIP_PING(13),
+      MEMBERSHIP_VIEW(13),
       /**
-       * <code>EXTENSION_ADD = 14;</code>
+       * <code>MEMBERSHIP_PING = 14;</code>
        */
-      EXTENSION_ADD(14),
+      MEMBERSHIP_PING(14),
       /**
-       * <code>EXTENSION_REMOVE = 15;</code>
+       * <pre>
+       *-----------EXTENSION------------
+       * </pre>
+       *
+       * <code>EXTENSION_ADD = 15;</code>
        */
-      EXTENSION_REMOVE(15),
+      EXTENSION_ADD(15),
       /**
-       * <code>EXTENSION_GET = 16;</code>
+       * <code>EXTENSION_REMOVE = 16;</code>
        */
-      EXTENSION_GET(16),
+      EXTENSION_REMOVE(16),
       /**
-       * <code>POLICY_ADD = 17;</code>
+       * <code>EXTENSION_GET = 17;</code>
        */
-      POLICY_ADD(17),
+      EXTENSION_GET(17),
       /**
-       * <code>POLICY_REMOVE = 18;</code>
+       * <pre>
+       *-------------POLICY-------------
+       * </pre>
+       *
+       * <code>POLICY_ADD = 18;</code>
        */
-      POLICY_REMOVE(18),
+      POLICY_ADD(18),
       /**
-       * <code>POLICY_GET = 19;</code>
+       * <code>POLICY_REMOVE = 19;</code>
        */
-      POLICY_GET(19),
+      POLICY_REMOVE(19),
       /**
-       * <code>GET_VERIFIER_PUBLIC_KEY = 20;</code>
+       * <code>POLICY_GET = 20;</code>
        */
-      GET_VERIFIER_PUBLIC_KEY(20),
+      POLICY_GET(20),
       UNRECOGNIZED(-1),
       ;
 
       /**
+       * <pre>
+       *----------ATTESTATION-----------
+       * </pre>
+       *
        * <code>ATTEST_GENERATE_SIGNING_KEY = 0;</code>
        */
       public static final int ATTEST_GENERATE_SIGNING_KEY_VALUE = 0;
       /**
-       * <code>ATTEST_GET_PUBLIC_KEY = 1;</code>
+       * <code>ATTEST_GET_VERIFIER_PUBLIC_KEY = 1;</code>
        */
-      public static final int ATTEST_GET_PUBLIC_KEY_VALUE = 1;
+      public static final int ATTEST_GET_VERIFIER_PUBLIC_KEY_VALUE = 1;
       /**
-       * <code>ATTEST_SIGN_DATA = 2;</code>
+       * <code>ATTEST_GET_PUBLIC_KEY = 2;</code>
        */
-      public static final int ATTEST_SIGN_DATA_VALUE = 2;
+      public static final int ATTEST_GET_PUBLIC_KEY_VALUE = 2;
       /**
-       * <code>ATTEST_VERIFY = 3;</code>
+       * <code>ATTEST_SIGN_DATA = 3;</code>
        */
-      public static final int ATTEST_VERIFY_VALUE = 3;
+      public static final int ATTEST_SIGN_DATA_VALUE = 3;
       /**
-       * <code>ATTEST_GET_RANDOM_NUMBER = 4;</code>
+       * <code>ATTEST_VERIFY = 4;</code>
        */
-      public static final int ATTEST_GET_RANDOM_NUMBER_VALUE = 4;
+      public static final int ATTEST_VERIFY_VALUE = 4;
       /**
-       * <code>MAP_PUT = 5;</code>
+       * <code>ATTEST_GET_RANDOM_NUMBER = 5;</code>
        */
-      public static final int MAP_PUT_VALUE = 5;
+      public static final int ATTEST_GET_RANDOM_NUMBER_VALUE = 5;
       /**
-       * <code>MAP_DELETE = 6;</code>
+       * <pre>
+       *--------------MAP--------------
+       * </pre>
+       *
+       * <code>MAP_PUT = 6;</code>
        */
-      public static final int MAP_DELETE_VALUE = 6;
+      public static final int MAP_PUT_VALUE = 6;
       /**
-       * <code>MAP_GET = 7;</code>
+       * <code>MAP_DELETE = 7;</code>
        */
-      public static final int MAP_GET_VALUE = 7;
+      public static final int MAP_DELETE_VALUE = 7;
       /**
-       * <code>MAP_LIST = 8;</code>
+       * <code>MAP_GET = 8;</code>
        */
-      public static final int MAP_LIST_VALUE = 8;
+      public static final int MAP_GET_VALUE = 8;
       /**
-       * <code>MAP_CAS = 9;</code>
+       * <code>MAP_LIST = 9;</code>
        */
-      public static final int MAP_CAS_VALUE = 9;
+      public static final int MAP_LIST_VALUE = 9;
       /**
-       * <code>MEMBERSHIP_JOIN = 10;</code>
+       * <code>MAP_CAS = 10;</code>
        */
-      public static final int MEMBERSHIP_JOIN_VALUE = 10;
+      public static final int MAP_CAS_VALUE = 10;
       /**
-       * <code>MEMBERSHIP_LEAVE = 11;</code>
+       * <pre>
+       *-----------MEMBERSHIP-----------
+       * </pre>
+       *
+       * <code>MEMBERSHIP_JOIN = 11;</code>
        */
-      public static final int MEMBERSHIP_LEAVE_VALUE = 11;
+      public static final int MEMBERSHIP_JOIN_VALUE = 11;
       /**
-       * <code>MEMBERSHIP_VIEW = 12;</code>
+       * <code>MEMBERSHIP_LEAVE = 12;</code>
        */
-      public static final int MEMBERSHIP_VIEW_VALUE = 12;
+      public static final int MEMBERSHIP_LEAVE_VALUE = 12;
       /**
-       * <code>MEMBERSHIP_PING = 13;</code>
+       * <code>MEMBERSHIP_VIEW = 13;</code>
        */
-      public static final int MEMBERSHIP_PING_VALUE = 13;
+      public static final int MEMBERSHIP_VIEW_VALUE = 13;
       /**
-       * <code>EXTENSION_ADD = 14;</code>
+       * <code>MEMBERSHIP_PING = 14;</code>
        */
-      public static final int EXTENSION_ADD_VALUE = 14;
+      public static final int MEMBERSHIP_PING_VALUE = 14;
       /**
-       * <code>EXTENSION_REMOVE = 15;</code>
+       * <pre>
+       *-----------EXTENSION------------
+       * </pre>
+       *
+       * <code>EXTENSION_ADD = 15;</code>
        */
-      public static final int EXTENSION_REMOVE_VALUE = 15;
+      public static final int EXTENSION_ADD_VALUE = 15;
       /**
-       * <code>EXTENSION_GET = 16;</code>
+       * <code>EXTENSION_REMOVE = 16;</code>
        */
-      public static final int EXTENSION_GET_VALUE = 16;
+      public static final int EXTENSION_REMOVE_VALUE = 16;
       /**
-       * <code>POLICY_ADD = 17;</code>
+       * <code>EXTENSION_GET = 17;</code>
        */
-      public static final int POLICY_ADD_VALUE = 17;
+      public static final int EXTENSION_GET_VALUE = 17;
       /**
-       * <code>POLICY_REMOVE = 18;</code>
+       * <pre>
+       *-------------POLICY-------------
+       * </pre>
+       *
+       * <code>POLICY_ADD = 18;</code>
        */
-      public static final int POLICY_REMOVE_VALUE = 18;
+      public static final int POLICY_ADD_VALUE = 18;
       /**
-       * <code>POLICY_GET = 19;</code>
+       * <code>POLICY_REMOVE = 19;</code>
        */
-      public static final int POLICY_GET_VALUE = 19;
+      public static final int POLICY_REMOVE_VALUE = 19;
       /**
-       * <code>GET_VERIFIER_PUBLIC_KEY = 20;</code>
+       * <code>POLICY_GET = 20;</code>
        */
-      public static final int GET_VERIFIER_PUBLIC_KEY_VALUE = 20;
+      public static final int POLICY_GET_VALUE = 20;
 
 
       public final int getNumber() {
@@ -7698,26 +7433,26 @@ public final class Messages {
       public static Operation forNumber(int value) {
         switch (value) {
           case 0: return ATTEST_GENERATE_SIGNING_KEY;
-          case 1: return ATTEST_GET_PUBLIC_KEY;
-          case 2: return ATTEST_SIGN_DATA;
-          case 3: return ATTEST_VERIFY;
-          case 4: return ATTEST_GET_RANDOM_NUMBER;
-          case 5: return MAP_PUT;
-          case 6: return MAP_DELETE;
-          case 7: return MAP_GET;
-          case 8: return MAP_LIST;
-          case 9: return MAP_CAS;
-          case 10: return MEMBERSHIP_JOIN;
-          case 11: return MEMBERSHIP_LEAVE;
-          case 12: return MEMBERSHIP_VIEW;
-          case 13: return MEMBERSHIP_PING;
-          case 14: return EXTENSION_ADD;
-          case 15: return EXTENSION_REMOVE;
-          case 16: return EXTENSION_GET;
-          case 17: return POLICY_ADD;
-          case 18: return POLICY_REMOVE;
-          case 19: return POLICY_GET;
-          case 20: return GET_VERIFIER_PUBLIC_KEY;
+          case 1: return ATTEST_GET_VERIFIER_PUBLIC_KEY;
+          case 2: return ATTEST_GET_PUBLIC_KEY;
+          case 3: return ATTEST_SIGN_DATA;
+          case 4: return ATTEST_VERIFY;
+          case 5: return ATTEST_GET_RANDOM_NUMBER;
+          case 6: return MAP_PUT;
+          case 7: return MAP_DELETE;
+          case 8: return MAP_GET;
+          case 9: return MAP_LIST;
+          case 10: return MAP_CAS;
+          case 11: return MEMBERSHIP_JOIN;
+          case 12: return MEMBERSHIP_LEAVE;
+          case 13: return MEMBERSHIP_VIEW;
+          case 14: return MEMBERSHIP_PING;
+          case 15: return EXTENSION_ADD;
+          case 16: return EXTENSION_REMOVE;
+          case 17: return EXTENSION_GET;
+          case 18: return POLICY_ADD;
+          case 19: return POLICY_REMOVE;
+          case 20: return POLICY_GET;
           default: return null;
         }
       }
@@ -12473,69 +12208,68 @@ public final class Messages {
       "\022\r\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014\022\024\n\014r" +
       "andomPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022\016\n\006an" +
       "chor\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005claim" +
-      "\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"{\n\rProtoMe" +
-      "ssage0\022\022\n\nattesterId\030\001 \001(\t\022\r\n\005appId\030\002 \001(" +
-      "\t\022\031\n\021attesterPubSesKey\030\003 \001(\014\022,\n\004type\030\004 \001" +
-      "(\0162\036.sire.messages.ProtoDeviceType\"\212\001\n\rP" +
-      "rotoMessage1\022\031\n\021verifierPubSesKey\030\001 \001(\014\022" +
-      "\026\n\016verifierPubKey\030\002 \001(\014\0229\n\024signatureSess" +
-      "ionKeys\030\003 \001(\0132\033.sire.messages.ProtoSchno" +
-      "rr\022\013\n\003mac\030\004 \001(\014\"\302\001\n\rProtoMessage2\022\r\n\005app" +
-      "Id\030\001 \001(\t\022\031\n\021attesterPubSesKey\030\002 \001(\014\022.\n\010e" +
-      "vidence\030\003 \001(\0132\034.sire.messages.ProtoEvide" +
-      "nce\0226\n\021signatureEvidence\030\004 \001(\0132\033.sire.me" +
-      "ssages.ProtoSchnorr\022\013\n\003mac\030\005 \001(\014\022\022\n\natte" +
-      "sterId\030\006 \001(\t\"2\n\rProtoMessage3\022\n\n\002iv\030\001 \001(" +
-      "\014\022\025\n\rencryptedData\030\002 \001(\014\"\305\002\n\027ProxyAttest" +
-      "ationMessage\022F\n\toperation\030\001 \001(\01623.sire.m" +
-      "essages.ProxyAttestationMessage.AttOpera" +
-      "tion\022.\n\010evidence\030\002 \001(\0132\034.sire.messages.P" +
-      "rotoEvidence\022.\n\tsignature\030\003 \001(\0132\033.sire.m" +
-      "essages.ProtoSchnorr\022\022\n\ndataToSign\030\004 \001(\014" +
-      "\"n\n\014AttOperation\022\030\n\024GENERATE_SIGNING_KEY" +
-      "\020\000\022\022\n\016GET_PUBLIC_KEY\020\001\022\r\n\tSIGN_DATA\020\002\022\n\n" +
-      "\006VERIFY\020\003\022\025\n\021GET_RANDOM_NUMBER\020\004\"\323\001\n\017Pro" +
-      "xyMapMessage\022>\n\toperation\030\001 \001(\0162+.sire.m" +
-      "essages.ProxyMapMessage.MapOperation\022\013\n\003" +
-      "key\030\002 \001(\014\022\r\n\005value\030\003 \001(\014\022\017\n\007oldData\030\004 \001(" +
-      "\014\"S\n\014MapOperation\022\013\n\007MAP_PUT\020\000\022\016\n\nMAP_DE" +
-      "LETE\020\001\022\013\n\007MAP_GET\020\002\022\014\n\010MAP_LIST\020\003\022\013\n\007MAP" +
-      "_CAS\020\004\"\351\006\n\014ProxyMessage\0228\n\toperation\030\001 \001" +
-      "(\0162%.sire.messages.ProxyMessage.Operatio" +
-      "n\022.\n\010evidence\030\002 \001(\0132\034.sire.messages.Prot" +
-      "oEvidence\022.\n\tsignature\030\003 \001(\0132\033.sire.mess" +
-      "ages.ProtoSchnorr\022\022\n\ndataToSign\030\004 \001(\014\022\013\n" +
-      "\003key\030\005 \001(\t\022\r\n\005value\030\006 \001(\014\022\017\n\007oldData\030\007 \001" +
-      "(\014\022\020\n\010deviceId\030\010 \001(\t\022\r\n\005appId\030\t \001(\t\022\014\n\004c" +
-      "ode\030\n \001(\t\0227\n\006policy\030\013 \001(\0132\'.sire.message" +
-      "s.ProxyMessage.ProtoPolicy\0222\n\ndeviceType" +
-      "\030\014 \001(\0162\036.sire.messages.ProtoDeviceType\032+" +
-      "\n\013ProtoPolicy\022\016\n\006policy\030\001 \001(\t\022\014\n\004type\030\002 " +
-      "\001(\010\"\264\003\n\tOperation\022\037\n\033ATTEST_GENERATE_SIG" +
-      "NING_KEY\020\000\022\031\n\025ATTEST_GET_PUBLIC_KEY\020\001\022\024\n" +
-      "\020ATTEST_SIGN_DATA\020\002\022\021\n\rATTEST_VERIFY\020\003\022\034" +
-      "\n\030ATTEST_GET_RANDOM_NUMBER\020\004\022\013\n\007MAP_PUT\020" +
-      "\005\022\016\n\nMAP_DELETE\020\006\022\013\n\007MAP_GET\020\007\022\014\n\010MAP_LI" +
-      "ST\020\010\022\013\n\007MAP_CAS\020\t\022\023\n\017MEMBERSHIP_JOIN\020\n\022\024" +
-      "\n\020MEMBERSHIP_LEAVE\020\013\022\023\n\017MEMBERSHIP_VIEW\020" +
-      "\014\022\023\n\017MEMBERSHIP_PING\020\r\022\021\n\rEXTENSION_ADD\020" +
-      "\016\022\024\n\020EXTENSION_REMOVE\020\017\022\021\n\rEXTENSION_GET" +
-      "\020\020\022\016\n\nPOLICY_ADD\020\021\022\021\n\rPOLICY_REMOVE\020\022\022\016\n" +
-      "\nPOLICY_GET\020\023\022\033\n\027GET_VERIFIER_PUBLIC_KEY" +
-      "\020\024\"\251\003\n\rProxyResponse\0227\n\004type\030\001 \001(\0162).sir" +
-      "e.messages.ProxyResponse.ResponseType\022\014\n" +
-      "\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022@\n\007members\030\004 " +
-      "\003(\0132/.sire.messages.ProxyResponse.ProtoD" +
-      "eviceContext\022\021\n\textension\030\005 \001(\t\022\016\n\006polic" +
-      "y\030\006 \001(\t\032\204\001\n\022ProtoDeviceContext\022\020\n\010device" +
-      "Id\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.google.protobuf" +
-      ".Timestamp\0222\n\ndeviceType\030\003 \001(\0162\036.sire.me" +
-      "ssages.ProtoDeviceType\"V\n\014ResponseType\022\013" +
-      "\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rE" +
-      "XTENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004*g\n\017ProtoD" +
-      "eviceType\022\n\n\006CAMERA\020\000\022\017\n\013THERMOMETER\020\001\022\t" +
-      "\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTIONSENSOR\020\004\022\017" +
-      "\n\013LIGHTSENSOR\020\005b\006proto3"
+      "\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\">\n\rProtoMe" +
+      "ssage0\022\022\n\nattesterId\030\001 \001(\005\022\031\n\021attesterPu" +
+      "bSesKey\030\002 \001(\014\"\212\001\n\rProtoMessage1\022\031\n\021verif" +
+      "ierPubSesKey\030\001 \001(\014\022\026\n\016verifierPubKey\030\002 \001" +
+      "(\014\0229\n\024signatureSessionKeys\030\003 \001(\0132\033.sire." +
+      "messages.ProtoSchnorr\022\013\n\003mac\030\004 \001(\014\"\302\001\n\rP" +
+      "rotoMessage2\022\r\n\005appId\030\001 \001(\t\022\031\n\021attesterP" +
+      "ubSesKey\030\002 \001(\014\022.\n\010evidence\030\003 \001(\0132\034.sire." +
+      "messages.ProtoEvidence\0226\n\021signatureEvide" +
+      "nce\030\004 \001(\0132\033.sire.messages.ProtoSchnorr\022\013" +
+      "\n\003mac\030\005 \001(\014\022\022\n\nattesterId\030\006 \001(\t\"2\n\rProto" +
+      "Message3\022\n\n\002iv\030\001 \001(\014\022\025\n\rencryptedData\030\002 " +
+      "\001(\014\"\305\002\n\027ProxyAttestationMessage\022F\n\topera" +
+      "tion\030\001 \001(\01623.sire.messages.ProxyAttestat" +
+      "ionMessage.AttOperation\022.\n\010evidence\030\002 \001(" +
+      "\0132\034.sire.messages.ProtoEvidence\022.\n\tsigna" +
+      "ture\030\003 \001(\0132\033.sire.messages.ProtoSchnorr\022" +
+      "\022\n\ndataToSign\030\004 \001(\014\"n\n\014AttOperation\022\030\n\024G" +
+      "ENERATE_SIGNING_KEY\020\000\022\022\n\016GET_PUBLIC_KEY\020" +
+      "\001\022\r\n\tSIGN_DATA\020\002\022\n\n\006VERIFY\020\003\022\025\n\021GET_RAND" +
+      "OM_NUMBER\020\004\"\323\001\n\017ProxyMapMessage\022>\n\topera" +
+      "tion\030\001 \001(\0162+.sire.messages.ProxyMapMessa" +
+      "ge.MapOperation\022\013\n\003key\030\002 \001(\014\022\r\n\005value\030\003 " +
+      "\001(\014\022\017\n\007oldData\030\004 \001(\014\"S\n\014MapOperation\022\013\n\007" +
+      "MAP_PUT\020\000\022\016\n\nMAP_DELETE\020\001\022\013\n\007MAP_GET\020\002\022\014" +
+      "\n\010MAP_LIST\020\003\022\013\n\007MAP_CAS\020\004\"\360\006\n\014ProxyMessa" +
+      "ge\0228\n\toperation\030\001 \001(\0162%.sire.messages.Pr" +
+      "oxyMessage.Operation\022.\n\010evidence\030\002 \001(\0132\034" +
+      ".sire.messages.ProtoEvidence\022.\n\tsignatur" +
+      "e\030\003 \001(\0132\033.sire.messages.ProtoSchnorr\022\022\n\n" +
+      "dataToSign\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value\030\006" +
+      " \001(\014\022\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(\t\022" +
+      "\r\n\005appId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0227\n\006policy\030\013" +
+      " \001(\0132\'.sire.messages.ProxyMessage.ProtoP" +
+      "olicy\0222\n\ndeviceType\030\014 \001(\0162\036.sire.message" +
+      "s.ProtoDeviceType\032+\n\013ProtoPolicy\022\016\n\006poli" +
+      "cy\030\001 \001(\t\022\014\n\004type\030\002 \001(\010\"\273\003\n\tOperation\022\037\n\033" +
+      "ATTEST_GENERATE_SIGNING_KEY\020\000\022\"\n\036ATTEST_" +
+      "GET_VERIFIER_PUBLIC_KEY\020\001\022\031\n\025ATTEST_GET_" +
+      "PUBLIC_KEY\020\002\022\024\n\020ATTEST_SIGN_DATA\020\003\022\021\n\rAT" +
+      "TEST_VERIFY\020\004\022\034\n\030ATTEST_GET_RANDOM_NUMBE" +
+      "R\020\005\022\013\n\007MAP_PUT\020\006\022\016\n\nMAP_DELETE\020\007\022\013\n\007MAP_" +
+      "GET\020\010\022\014\n\010MAP_LIST\020\t\022\013\n\007MAP_CAS\020\n\022\023\n\017MEMB" +
+      "ERSHIP_JOIN\020\013\022\024\n\020MEMBERSHIP_LEAVE\020\014\022\023\n\017M" +
+      "EMBERSHIP_VIEW\020\r\022\023\n\017MEMBERSHIP_PING\020\016\022\021\n" +
+      "\rEXTENSION_ADD\020\017\022\024\n\020EXTENSION_REMOVE\020\020\022\021" +
+      "\n\rEXTENSION_GET\020\021\022\016\n\nPOLICY_ADD\020\022\022\021\n\rPOL" +
+      "ICY_REMOVE\020\023\022\016\n\nPOLICY_GET\020\024\"\251\003\n\rProxyRe" +
+      "sponse\0227\n\004type\030\001 \001(\0162).sire.messages.Pro" +
+      "xyResponse.ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n" +
+      "\005value\030\003 \001(\014\022@\n\007members\030\004 \003(\0132/.sire.mes" +
+      "sages.ProxyResponse.ProtoDeviceContext\022\021" +
+      "\n\textension\030\005 \001(\t\022\016\n\006policy\030\006 \001(\t\032\204\001\n\022Pr" +
+      "otoDeviceContext\022\020\n\010deviceId\030\001 \001(\t\022(\n\004ti" +
+      "me\030\002 \001(\0132\032.google.protobuf.Timestamp\0222\n\n" +
+      "deviceType\030\003 \001(\0162\036.sire.messages.ProtoDe" +
+      "viceType\"V\n\014ResponseType\022\013\n\007MAP_GET\020\000\022\014\n" +
+      "\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_GET\020\003" +
+      "\022\016\n\nPOLICY_GET\020\004*g\n\017ProtoDeviceType\022\n\n\006C" +
+      "AMERA\020\000\022\017\n\013THERMOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n\005L" +
+      "IDAR\020\003\022\020\n\014MOTIONSENSOR\020\004\022\017\n\013LIGHTSENSOR\020" +
+      "\005b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -12567,7 +12301,7 @@ public final class Messages {
     internal_static_sire_messages_ProtoMessage0_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProtoMessage0_descriptor,
-        new java.lang.String[] { "AttesterId", "AppId", "AttesterPubSesKey", "Type", });
+        new java.lang.String[] { "AttesterId", "AttesterPubSesKey", });
     internal_static_sire_messages_ProtoMessage1_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_sire_messages_ProtoMessage1_fieldAccessorTable = new

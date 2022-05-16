@@ -20,10 +20,8 @@ message ProtoEvidence {
 
 //=======Messages=======
 message ProtoMessage0 {
-  string attesterId = 1;
-  string appId = 2;
-  bytes attesterPubSesKey = 3; //Ga
-  ProtoDeviceType type = 4;
+  int32 attesterId = 1;
+  bytes attesterPubSesKey = 2; //Ga
 }
 
 message ProtoMessage1 {
