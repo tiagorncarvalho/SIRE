@@ -137,7 +137,7 @@ public class SireProxy implements Runnable {
 							ProtoMessage3 msg3 = processMessage2(msg2);
 							oos.writeObject(msg3);
 						} else if (o instanceof ProxyMessage msg) {
-							if (msg.getOperation() == ProxyMessage.Operation.GET_VERIFIER_PUBLIC_KEY) {
+							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_VERIFIER_PUBLIC_KEY) {
 								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
 							}
 							else {
@@ -256,7 +256,7 @@ public class SireProxy implements Runnable {
 						verifierPublicKey.getEncoded(true), signature.getRandomPublicKey(),
 						signature.getSigningPublicKey(), signature.getSigma());
 
-				AttesterContext newAttester = new AttesterContext(msg0.getAttesterId(), mySessionPrivateKey,
+				AttesterContext newAttester = new AttesterContext(Integer.toString(msg0.getAttesterId()), mySessionPrivateKey,
 						mySessionPublicKey,
 						attesterSessionPublicKey, symmetricEncryptionKey, macKey);
 				attesters.put(newAttester.getAttesterId(), newAttester);
@@ -435,9 +435,9 @@ public class SireProxy implements Runnable {
 			try {
 				ProxyMessage joinRequest = ProxyMessage.newBuilder()
 						.setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
-						.setAppId(msg.getAppId())
-						.setDeviceId(msg.getAttesterId())
-						.setDeviceType(msg.getType())
+						//.setAppId(msg.getAppId())
+						.setDeviceId(Integer.toString(msg.getAttesterId()))
+						//.setDeviceType(msg.getType())
 						.build();
 				serviceProxy.invokeOrdered(joinRequest.toByteArray());
 

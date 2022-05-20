@@ -168,7 +168,7 @@ public class ThroughputLatencyProxy {
                             Messages.ProtoMessage3 msg3 = processMessage2(msg2);
                             oos.writeObject(msg3);
                         } else if (o instanceof Messages.ProxyMessage msg) {
-                            if (msg.getOperation() == Messages.ProxyMessage.Operation.GET_VERIFIER_PUBLIC_KEY) {
+                            if (msg.getOperation() == Messages.ProxyMessage.Operation.ATTEST_GET_VERIFIER_PUBLIC_KEY) {
                                 oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
                             }
                             else {
@@ -288,7 +288,7 @@ public class ThroughputLatencyProxy {
                         verifierPublicKey.getEncoded(true), signature.getRandomPublicKey(),
                         signature.getSigningPublicKey(), signature.getSigma());
 
-                AttesterContext newAttester = new AttesterContext(msg0.getAttesterId(), mySessionPrivateKey,
+                AttesterContext newAttester = new AttesterContext(String.valueOf(msg0.getAttesterId()), mySessionPrivateKey,
                         mySessionPublicKey,
                         attesterSessionPublicKey, symmetricEncryptionKey, macKey);
                 attesters.put(newAttester.getAttesterId(), newAttester);
@@ -467,9 +467,9 @@ public class ThroughputLatencyProxy {
             try {
                 Messages.ProxyMessage joinRequest = Messages.ProxyMessage.newBuilder()
                         .setOperation(Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN)
-                        .setAppId(msg.getAppId())
-                        .setDeviceId(msg.getAttesterId())
-                        .setDeviceType(msg.getType())
+                        //.setAppId(msg.getAppId())
+                        .setDeviceId(String.valueOf(msg.getAttesterId()))
+                        //.setDeviceType(msg.getType())
                         .build();
                 serviceProxy.invokeOrdered(joinRequest.toByteArray());
 

@@ -154,7 +154,7 @@ public class DeviceStub {
 
     public ECPoint getVerifierPublicKey() throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
-                .setOperation(ProxyMessage.Operation.GET_VERIFIER_PUBLIC_KEY)
+                .setOperation(ProxyMessage.Operation.ATTEST_GET_VERIFIER_PUBLIC_KEY)
                 .build();
         this.oos.writeObject(msg);
         Object o = this.ois.readObject();
@@ -213,9 +213,9 @@ public class DeviceStub {
     //TODO turn attesterId into hash of Ga
     private ProtoMessage1 join(String appId, String attesterId, DeviceType type, byte[] attesterSessionPubKey) throws IOException, ClassNotFoundException {
         ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
-                .setAttesterId(attesterId)
-                .setType(ProtoDeviceType.forNumber(type.ordinal()))
-                .setAppId(appId)
+                .setAttesterId(Integer.valueOf(attesterId))
+                //.setType(ProtoDeviceType.forNumber(type.ordinal()))
+                //.setAppId(appId)
                 .setAttesterPubSesKey(ByteString.copyFrom(attesterSessionPubKey))
                 .build();
 
