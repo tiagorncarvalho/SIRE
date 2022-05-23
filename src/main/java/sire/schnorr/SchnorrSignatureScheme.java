@@ -1,5 +1,12 @@
 package sire.schnorr;
 
+import org.bouncycastle.asn1.sec.ECPrivateKey;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.signers.ECDSASigner;
+import org.bouncycastle.jce.ECNamedCurveTable;
+import org.bouncycastle.jce.spec.ECParameterSpec;
+import org.bouncycastle.jce.spec.ECPrivateKeySpec;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
@@ -9,9 +16,12 @@ import vss.interpolation.LagrangeInterpolation;
 import vss.polynomial.Polynomial;
 import vss.secretsharing.Share;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -154,5 +164,31 @@ public class SchnorrSignatureScheme {
 
 	public static byte[] encodePublicKey(ECPoint publicKey) {
 		return publicKey.getEncoded(true);
+	}
+
+	/*public byte[] signECDSA(BigInteger key, byte[] data) throws IOException {
+		ECDomainParameters domainParameters = new ECDomainParameters(curve, generator, order);
+		ECPrivateKeyParameters keyParameters = new ECPrivateKeyParameters(key, domainParameters);
+		ECDSASigner signer = new ECDSASigner();
+		signer.init(true, keyParameters);
+		BigInteger[] temp = signer.generateSignature(computeHash(data));
+		ByteArrayOutputStream baout = new ByteArrayOutputStream();
+		//System.out.println(Arrays.toString(temp[0].toByteArray()));
+		//System.out.println(Arrays.toString(temp[1].toByteArray()));
+		baout.write(temp[0].toByteArray());
+		baout.write(temp[1].toByteArray());
+		return baout.toByteArray();
+	}*/
+
+	public byte[] signECDSA(BigInteger key, byte[] data) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, InvalidKeyException, SignatureException {
+		KeyFactory fac = KeyFactory.getInstance("EC", "BC");
+		ECParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256r1");
+		ECPrivateKeySpec keySpec = new ECPrivateKeySpec(key, spec);
+		PrivateKey privateKey = fac.generatePrivate(keySpec);
+
+		Signature ecdsa = Signature.getInstance("SHA256withPLAIN-ECDSA", "BC");
+		ecdsa.initSign(privateKey);
+		ecdsa.update(data);
+		return ecdsa.sign();
 	}
 }

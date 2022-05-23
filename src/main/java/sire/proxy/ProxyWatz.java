@@ -1,28 +1,31 @@
 package sire.proxy;
 
-import org.bouncycastle.asn1.eac.ECDSAPublicKey;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
-import org.bouncycastle.jcajce.provider.asymmetric.ec.KeyFactorySpi;
-import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.schnorr.SchnorrSignatureScheme;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.security.spec.ECParameterSpec;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
+import java.util.Objects;
 
 
 public class ProxyWatz implements Runnable {
     private int proxyId;
+
+    SchnorrSignatureScheme scheme;
+    ECCurve curve;
+
+    ECPoint ecdsaPubKey;
+    BigInteger ecdsaPrivKey;
 
     public ProxyWatz(int proxyId) {
         this.proxyId = proxyId;
@@ -49,25 +52,25 @@ public class ProxyWatz implements Runnable {
 
     private class ProxyWatzThread extends Thread {
         private final Socket s;
-        SchnorrSignatureScheme scheme;
-        ECCurve curve;
-
-        ECPoint ecdsaPubKey;
-        BigInteger ecdsaPrivKey;
-        ECPoint verSessionPubKey;
-        BigInteger verSessionPrivateKey;
+        private final ECPoint ecdhPubKey;
+        private final BigInteger ecdhPrivateKey;
+        private BigInteger macKey;
+        private BigInteger sessionKey;
+        private ECPoint attesterPubKey;
+        private ECPoint sharedSecret;
 
         ProxyWatzThread (Socket s) throws NoSuchAlgorithmException {
             this.s = s;
             System.out.println("Proxy Thread started!");
-            this.scheme = new SchnorrSignatureScheme();
-            this.curve = scheme.getCurve();
-            this.ecdsaPubKey = curve.createPoint(new BigInteger("a22ac2720edd386d52c1944260bbcbf7595109bc252bbe35c7ffc8ade211604e", 16),
-                    new BigInteger("5c4f6db0631a27aedb0e0d16ffb21cdb69096a948c9081890347f17edb82f50b", 16));
-            this.verSessionPubKey = curve.createPoint(new BigInteger("d4f1ab37f973051ec59f9400761b250360659a18ca1a4cea2c7f783b68c04c51", 16),
-                    new BigInteger("e01ad742889934ef1ba29cce3d1a8222d374a607fd042b80066ebc711c19a639", 16));
-            this.verSessionPrivateKey = new BigInteger("450915b28c8e070e900146e5d809f5027b763253f971503569e9a3ff4f276f9e", 16);
-            this.ecdsaPrivKey = new BigInteger("0f27fdab57a84711ceb90361bdb45ce26d4eb6cae5245a2e09f696ec16a9bc6c", 16);
+            scheme = new SchnorrSignatureScheme();
+            curve = scheme.getCurve();
+            ecdsaPubKey = curve.createPoint(new BigInteger("f670099bf7178ec7398ac883d67c1bd5ccf53280b72316d14b41f2cf9566a52a", 16),
+                    new BigInteger("2dda697b5fa54b89d607904da468874a4be4e96f6efe8b05eba71c85266047d2", 16));
+            ecdsaPrivKey = new BigInteger("d9c6df5618bcf8b550d6cc02ad69f22c7166833140c00954345de3e812d6c378", 16);
+
+            ecdhPubKey = curve.createPoint(new BigInteger("971907e89c9c2f3870bedbc8e4eb492b68ba0f3bbd66a712b29098d5f9d55ce6", 16),
+                    new BigInteger("0310fb91babcd11c629a672bf7a6b6c56d828220eb9a06067339cb501f5ee3ee", 16));
+            ecdhPrivateKey = new BigInteger("964a3a0393ddf3f04ead3c4be85e5fbe5f3a2323eb36cbfb41c1dd0ed8394bfa", 16);
         }
 
         @Override
@@ -75,117 +78,114 @@ public class ProxyWatz implements Runnable {
             try {
                 DataOutputStream oos = new DataOutputStream(s.getOutputStream());
                 DataInputStream ois = new DataInputStream(s.getInputStream());
-
                 while (!s.isClosed()) {
                     System.out.println("Running!");
-                    byte[] b = ois.readAllBytes();
+                    byte[] b = ois.readNBytes(72);
                     if(b != null) {
                         System.out.println("Message 0 received!");
 
-                        int attPubKeyXSize = Byte.toUnsignedInt(b[32]);
-                        String attPubKeyX = bytesToHex(Arrays.copyOfRange(b, 0, attPubKeyXSize));
-
-                        int attPubKeyYSize = Byte.toUnsignedInt(b[68]);
-                        String attPubKeyY = bytesToHex(Arrays.copyOfRange(b, 36, 36 + attPubKeyYSize));
-
-                        ECPoint attesterPubKey = curve.createPoint(new BigInteger(attPubKeyX, 16), new BigInteger(attPubKeyY, 16));
-                        System.out.println("X: " + attesterPubKey.getAffineXCoord() + " Y: " + attesterPubKey.getAffineYCoord());
-
-                        ECPoint sharedKey = attesterPubKey.multiply(verSessionPrivateKey);
-                        sharedKey = sharedKey.normalize();
-
-
-                        CMac cmac = new CMac(new AESEngine());
-
-                        byte[] gabx = sharedKey.getXCoord().getEncoded();
-                        System.out.println("Big endian: " + Arrays.toString(gabx));
-
-                        byte[] revgabx = gabx.clone();
-                        int i = 0;
-                        int j = revgabx.length - 1;
-                        byte tmp;
-                        while (j > i) {
-                            tmp = revgabx[j];
-                            revgabx[j] = revgabx[i];
-                            revgabx[i] = tmp;
-                            j--;
-                            i++;
-                        }
-
-                        System.out.println("Little endian: " + Arrays.toString(revgabx));
-                        cmac.init(new KeyParameter(new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}));
-                        cmac.update(revgabx, 0, revgabx.length);
-                        byte[] out = new byte[cmac.getMacSize()];
-                        cmac.doFinal(out, 0);
-
-                        System.out.println("KDK: " + bytesToHex(out));
-
-                        CMac cmacKey = new CMac(new AESEngine());
-                        cmacKey.init(new KeyParameter(out));
-                        String sequence = "01534d4b008000";
-                        byte[] msg = hexStringToByteArray(sequence);
-                        cmacKey.update(msg, 0, msg.length);
-                        byte[] macKey = new byte[cmacKey.getMacSize()];
-                        cmacKey.doFinal(macKey, 0);
-
-                        byte[] pubKeyX = verSessionPubKey.getXCoord().getEncoded();
-                        int pubKeyXSize = pubKeyX.length;
-                        byte[] pubKeyY = verSessionPubKey.getYCoord().getEncoded();
-                        int pubKeyYSize = pubKeyY.length;
-
-                        byte[] ecdsaPubKeyX = ecdsaPubKey.getXCoord().getEncoded();
-                        int ecdsaPubKeyXSize = ecdsaPubKeyX.length;
-                        byte[] ecdsaPubKeyY = ecdsaPubKey.getYCoord().getEncoded();
-                        int ecdsaPubKeyYSize = ecdsaPubKeyY.length;
-
-
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        baos.write(pubKeyX);
-                        baos.write(attesterPubKey.getXCoord().getEncoded());
-                        byte[] signingData = baos.toByteArray();
-                        //simulator uses ecdsa, sire uses schnorr
-
-                        baos.reset();
-                        baos.write(pubKeyX);
-                        baos.write(pubKeyXSize);
-                        baos.write(pubKeyY);
-                        baos.write(pubKeyYSize);
-                        baos.write(ecdsaPubKeyX);
-                        baos.write(ecdsaPubKeyXSize);
-                        baos.write(ecdsaPubKeyY);
-                        baos.write(ecdsaPubKeyYSize);
-                        baos.write(signingData);
-                        byte[] content = baos.toByteArray();
-
-                        CMac fMac = new CMac(new AESEngine());
-                        fMac.init(new KeyParameter(macKey));
-                        fMac.update(content, 0, content.length);
-                        byte[] resMac = new byte[fMac.getMacSize()];
-                        fMac.doFinal(resMac, 0);
-
-                        baos.reset();
-                        baos.write(content);
-                        baos.write(resMac);
-                        byte[] msg1 = baos.toByteArray();
-
-                        oos.write(msg1);
+                        oos.write(Objects.requireNonNull(processMessage0(b)));
+                        System.out.println("Message 1 sent!");
+                        break;
                     }
-
-                    /*b = ois.readAllBytes();
-                    if(b != null) {
-                        System.out.println("Message 2 received!");
-                        //read message 2
-
-                        //prepare message 3
-
-                        //send message 3
-
-                    }*/
-                    break;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        private byte[] processMessage0(byte[] b) {
+            try {
+                int attPubKeyXSize = Byte.toUnsignedInt(b[32]);
+                String attPubKeyX = bytesToHex(Arrays.copyOfRange(b, 0, attPubKeyXSize));
+
+                int attPubKeyYSize = Byte.toUnsignedInt(b[68]);
+                String attPubKeyY = bytesToHex(Arrays.copyOfRange(b, 36, 36 + attPubKeyYSize));
+
+                attesterPubKey = curve.createPoint(new BigInteger(attPubKeyX, 16), new BigInteger(attPubKeyY, 16));
+
+                sharedSecret = attesterPubKey.multiply(ecdhPrivateKey);
+                sharedSecret = sharedSecret.normalize();
+
+                CMac cmac = new CMac(new AESEngine());
+
+                byte[] gabx = sharedSecret.getXCoord().getEncoded();
+
+                cmac.init(new KeyParameter(new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}));
+                cmac.update(gabx, 0, gabx.length);
+                byte[] out = new byte[cmac.getMacSize()];
+                cmac.doFinal(out, 0);
+
+                macKey = new BigInteger(doMAC(out, hexStringToByteArray("01534d4b00800000")));
+
+                sessionKey = new BigInteger(doMAC(out, hexStringToByteArray("01534b00800000")));
+
+                byte[] ecdhPubKeyX = ecdhPubKey.getXCoord().getEncoded();
+                int ecdhPubKeyXSize = ecdhPubKeyX.length;
+                byte[] ecdhPubKeyY = ecdhPubKey.getYCoord().getEncoded();
+                int ecdhPubKeyYSize = ecdhPubKeyY.length;
+
+                byte[] ecdsaPubKeyX = ecdsaPubKey.getXCoord().getEncoded();
+                int ecdsaPubKeyXSize = ecdsaPubKeyX.length;
+                byte[] ecdsaPubKeyY = ecdsaPubKey.getYCoord().getEncoded();
+                int ecdsaPubKeyYSize = ecdsaPubKeyY.length;
+
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                DataOutputStream baos = new DataOutputStream(output);
+
+                baos.write(ecdhPubKeyX);
+                baos.write(ecdhPubKeyY);
+                baos.write(attesterPubKey.getXCoord().getEncoded());
+                baos.write(attesterPubKey.getYCoord().getEncoded());
+                baos.flush();
+                byte[] signingData = output.toByteArray();
+
+                byte[] signature = scheme.signECDSA(ecdsaPrivKey, signingData); //simulator uses ecdsa, sire uses schnorr
+
+                output.reset();
+                baos.write(ecdhPubKeyX);
+                baos.write(ecdhPubKeyY);
+                baos.write(ecdsaPubKeyX);
+                baos.write(ecdsaPubKeyY);
+                baos.flush();
+                byte[] keys = output.toByteArray();
+
+                byte[] resMac = doMAC(macKey.toByteArray(), keys, signature);
+
+                output.reset();
+                baos.write(ecdhPubKeyX);
+                baos.writeInt(ecdhPubKeyXSize);
+                baos.write(ecdhPubKeyY);
+                baos.writeInt(ecdhPubKeyYSize);
+                baos.write(ecdsaPubKeyX);
+                baos.writeInt(ecdsaPubKeyXSize);
+                baos.write(ecdsaPubKeyY);
+                baos.writeInt(ecdsaPubKeyYSize);
+                baos.write(signature);
+                baos.flush();
+                byte[] content = output.toByteArray();
+
+
+                output.reset();
+                baos.write(content);
+                baos.write(resMac);
+                baos.flush();
+                return output.toByteArray(); //msg1
+            } catch (IOException | NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException | SignatureException | InvalidKeySpecException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private byte[] doMAC(byte[] key, byte[]... blocks) {
+            CMac cMac = new CMac(new AESEngine());
+            cMac.init(new KeyParameter(key));
+            for(byte[] b : blocks)
+                cMac.update(b, 0, b.length);
+            byte[] result = new byte[cMac.getMacSize()];
+            cMac.doFinal(result, 0);
+
+            return result;
         }
 
         private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
