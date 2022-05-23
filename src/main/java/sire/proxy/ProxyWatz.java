@@ -116,9 +116,9 @@ public class ProxyWatz implements Runnable {
                 byte[] out = new byte[cmac.getMacSize()];
                 cmac.doFinal(out, 0);
 
-                macKey = new BigInteger(doMAC(out, hexStringToByteArray("01534d4b00800000")));
+                macKey = new BigInteger(doMAC(out, hexStringToByteArray("01534d4b008000")));
 
-                sessionKey = new BigInteger(doMAC(out, hexStringToByteArray("01534b00800000")));
+                sessionKey = new BigInteger(doMAC(out, hexStringToByteArray("01534b008000")));
 
                 byte[] ecdhPubKeyX = ecdhPubKey.getXCoord().getEncoded();
                 int ecdhPubKeyXSize = ecdhPubKeyX.length;
