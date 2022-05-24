@@ -82,11 +82,22 @@ public class ProxyWatz implements Runnable {
                     System.out.println("Running!");
                     byte[] b = ois.readNBytes(72);
                     if(b != null) {
+                        System.out.println("Reading message 0...");
+                        readMessage0(b);
                         System.out.println("Message 0 received!");
 
-                        oos.write(Objects.requireNonNull(processMessage0(b)));
+                        System.out.println("Creating message 1...");
+                        oos.write(Objects.requireNonNull(createMessage1()));
                         System.out.println("Message 1 sent!");
-                        break;
+
+                        b = ois.readNBytes(64);
+                        System.out.println("Reading message 2...");
+                        readMessage2(b);
+                        System.out.println("Message 2 received!");
+
+                        System.out.println("Creating message 3...");
+                        oos.write(createMessage3());
+                        System.out.println("Message 3 sent!");
                     }
                 }
             } catch (IOException e) {
@@ -94,32 +105,36 @@ public class ProxyWatz implements Runnable {
             }
         }
 
-        private byte[] processMessage0(byte[] b) {
+        private void readMessage0(byte[] b) {
+            int attPubKeyXSize = Byte.toUnsignedInt(b[32]);
+            String attPubKeyX = bytesToHex(Arrays.copyOfRange(b, 0, attPubKeyXSize));
+
+            int attPubKeyYSize = Byte.toUnsignedInt(b[68]);
+            String attPubKeyY = bytesToHex(Arrays.copyOfRange(b, 36, 36 + attPubKeyYSize));
+
+            attesterPubKey = curve.createPoint(new BigInteger(attPubKeyX, 16), new BigInteger(attPubKeyY, 16));
+
+            sharedSecret = attesterPubKey.multiply(ecdhPrivateKey);
+            sharedSecret = sharedSecret.normalize();
+
+            CMac cmac = new CMac(new AESEngine());
+
+            byte[] gabx = sharedSecret.getXCoord().getEncoded();
+
+            cmac.init(new KeyParameter(new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}));
+            cmac.update(gabx, 0, gabx.length);
+            byte[] out = new byte[cmac.getMacSize()];
+            cmac.doFinal(out, 0);
+
+            macKey = new BigInteger(doMAC(out, hexStringToByteArray("01534d4b008000")));
+
+            sessionKey = new BigInteger(doMAC(out, hexStringToByteArray("01534b008000")));
+
+            //return createMessage1();
+        }
+
+        private byte[] createMessage1() {
             try {
-                int attPubKeyXSize = Byte.toUnsignedInt(b[32]);
-                String attPubKeyX = bytesToHex(Arrays.copyOfRange(b, 0, attPubKeyXSize));
-
-                int attPubKeyYSize = Byte.toUnsignedInt(b[68]);
-                String attPubKeyY = bytesToHex(Arrays.copyOfRange(b, 36, 36 + attPubKeyYSize));
-
-                attesterPubKey = curve.createPoint(new BigInteger(attPubKeyX, 16), new BigInteger(attPubKeyY, 16));
-
-                sharedSecret = attesterPubKey.multiply(ecdhPrivateKey);
-                sharedSecret = sharedSecret.normalize();
-
-                CMac cmac = new CMac(new AESEngine());
-
-                byte[] gabx = sharedSecret.getXCoord().getEncoded();
-
-                cmac.init(new KeyParameter(new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}));
-                cmac.update(gabx, 0, gabx.length);
-                byte[] out = new byte[cmac.getMacSize()];
-                cmac.doFinal(out, 0);
-
-                macKey = new BigInteger(doMAC(out, hexStringToByteArray("01534d4b008000")));
-
-                sessionKey = new BigInteger(doMAC(out, hexStringToByteArray("01534b008000")));
-
                 byte[] ecdhPubKeyX = ecdhPubKey.getXCoord().getEncoded();
                 int ecdhPubKeyXSize = ecdhPubKeyX.length;
                 byte[] ecdhPubKeyY = ecdhPubKey.getYCoord().getEncoded();
@@ -175,6 +190,14 @@ public class ProxyWatz implements Runnable {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        private void readMessage2(byte[] b) {
+
+        }
+
+        private byte[] createMessage3() {
+            return new byte[32];
         }
 
         private byte[] doMAC(byte[] key, byte[]... blocks) {
