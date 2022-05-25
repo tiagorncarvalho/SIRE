@@ -14,7 +14,7 @@ public class ProxyMain {
     /*static SireProxy proxy;*/
     static SireRestProxy restProxy;
     static ProxyWatz proxy;
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SireException {
         if (args.length < 1) {
             System.out.println("Usage: sire.proxy.ProxyMain <proxy id>");
             System.exit(-1);

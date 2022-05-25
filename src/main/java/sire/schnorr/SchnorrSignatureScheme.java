@@ -151,7 +151,7 @@ public class SchnorrSignatureScheme {
 		return curve;
 	}
 
-	private byte[] computeHash(byte[]... contents) {
+	public byte[] computeHash(byte[]... contents) {
 		for (byte[] content : contents) {
 			messageDigest.update(content);
 		}

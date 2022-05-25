@@ -73,7 +73,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private VerifiableShare verifierSigningPrivateKeyShare;
 	private ECPoint verifierSigningPublicKey;
 
-	private final byte[] dummyDataForAttester = "Sire".getBytes();
+	private final byte[] dummyDataForAttester = "A".repeat(2000).getBytes();
 	//private final ECPoint dummyAttesterPublicKey;
 
 	//key value store for information concerning devices, applications and more

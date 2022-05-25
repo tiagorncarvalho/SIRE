@@ -73,12 +73,12 @@ public class DeviceClient {
 			dummy.ping(appId, attesterId);
 			for(DeviceContext d : dummy.getView(attesterId, appId))
 				System.out.println(d.toString());
-			/*dummy.leave(appId, attesterId);
+			dummy.leave(appId, attesterId);
 			for(DeviceContext d : dummy.getView(attesterId, appId))
-				System.out.println(d.toString());*/
+				System.out.println(d.toString());
 			System.out.println("Done!");
 
-		} catch (IOException | ClassNotFoundException /*| InterruptedException*/ e) {
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 			dummy.close();
