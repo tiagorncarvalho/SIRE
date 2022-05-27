@@ -33,6 +33,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -322,7 +323,7 @@ public class ThroughputLatencyProxy {
                     byteStringToByteArray(out, msg2.getAttesterPubSesKey()),
                     evidence.getAnchor(),
                     encodedAttestationServicePublicKey,
-                    evidence.getWaTZVersion().getBytes(),
+                    ByteBuffer.allocate(4).putInt(evidence.getWaTZVersion()).array(),
                     evidence.getClaim()
             );
 

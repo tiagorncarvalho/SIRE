@@ -13,7 +13,7 @@ message ProtoSchnorr {
 
 message ProtoEvidence {
   bytes anchor = 1;
-  string watzVersion = 2;
+  uint32 watzVersion = 2;
   bytes claim = 3;
   bytes servicePubKey = 4;
 }
@@ -38,6 +38,7 @@ message ProtoMessage2 {
   ProtoSchnorr signatureEvidence = 4; //Sign_A(Evidence)
   bytes mac = 5; //MAC_Km(content2)
   string attesterId = 6;
+  bytes ecdsaSignature = 7;
 }
 
 message ProtoMessage3 {

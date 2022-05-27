@@ -22,6 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
@@ -66,7 +67,7 @@ public class DeviceStub {
         }
     }
 
-    public void attest(String appId, String attesterId, DeviceType type, String waTZVersion, byte[] claim) {
+    public void attest(String appId, String attesterId, DeviceType type, int waTZVersion, byte[] claim) {
         try {
             SchnorrSignatureScheme signatureScheme = new SchnorrSignatureScheme();
             ECPoint verifierPublicKey = getVerifierPublicKey();
@@ -124,7 +125,7 @@ public class DeviceStub {
             byte[] signingHash = computeHash(
                     anchor,
                     attesterPublicKey.getEncoded(true),
-                    waTZVersion.getBytes(),
+                    ByteBuffer.allocate(4).putInt(waTZVersion).array(),
                     claim
             );
             BigInteger randomPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
@@ -137,7 +138,7 @@ public class DeviceStub {
                     attesterSessionPublicKey.getEncoded(true),
                     anchor,
                     attesterPublicKey.getEncoded(true),
-                    waTZVersion.getBytes(),
+                    ByteBuffer.allocate(4).putInt(waTZVersion).array(),
                     claim
             );
 

@@ -20,7 +20,7 @@ public class LatencyAttestationClient {
 
     private static String initialId;
     private static final String appId = "app1";
-    private static final String waTZVersion = "1.0";
+    private static final int waTZVersion = 1;
 
     public static void main(String[] args) throws InterruptedException, NoSuchPaddingException, NoSuchAlgorithmException, ClassNotFoundException {
         if (args.length != 5) {

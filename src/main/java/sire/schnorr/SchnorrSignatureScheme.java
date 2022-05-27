@@ -7,6 +7,7 @@ import org.bouncycastle.crypto.signers.ECDSASigner;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.jce.spec.ECPrivateKeySpec;
+import org.bouncycastle.jce.spec.ECPublicKeySpec;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
@@ -179,6 +180,17 @@ public class SchnorrSignatureScheme {
 		baout.write(temp[1].toByteArray());
 		return baout.toByteArray();
 	}*/
+
+	public boolean verifyECDSA(ECPoint key, byte[] signature) throws NoSuchAlgorithmException, NoSuchProviderException,
+			InvalidKeySpecException, InvalidKeyException, SignatureException {
+		KeyFactory fac = KeyFactory.getInstance("EC", "BC");
+		ECParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256r1");
+		ECPublicKeySpec keySpec = new ECPublicKeySpec(key, spec);
+		PublicKey publicKey = fac.generatePublic(keySpec);
+		Signature ecdsa = Signature.getInstance("SHA256withECDSA", "BC");
+		ecdsa.initVerify(publicKey);
+		return ecdsa.verify(signature);
+	}
 
 	public byte[] signECDSA(BigInteger key, byte[] data) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, InvalidKeyException, SignatureException {
 		KeyFactory fac = KeyFactory.getInstance("EC", "BC");

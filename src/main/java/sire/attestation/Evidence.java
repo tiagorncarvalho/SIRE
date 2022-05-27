@@ -12,13 +12,13 @@ import java.io.ObjectOutput;
  */
 public class Evidence implements Externalizable {
 	private byte[] anchor;
-	private String waTZVersion;
+	private int waTZVersion;
 	private byte[] claim;
 	private byte[] encodedAttestationServicePublicKey;
 
 	public Evidence() {}
 
-	public Evidence(byte[] anchor, String waTZVersion, byte[] claim, byte[] encodedAttestationServicePublicKey) {
+	public Evidence(byte[] anchor, int waTZVersion, byte[] claim, byte[] encodedAttestationServicePublicKey) {
 		this.anchor = anchor;
 		this.waTZVersion = waTZVersion;
 		this.claim = claim;
@@ -29,7 +29,7 @@ public class Evidence implements Externalizable {
 		return anchor;
 	}
 
-	public String getWaTZVersion() {
+	public int getWaTZVersion() {
 		return waTZVersion;
 	}
 
@@ -44,7 +44,7 @@ public class Evidence implements Externalizable {
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		ProtoUtils.writeByteArray(out, anchor);
-		out.writeUTF(waTZVersion);
+		out.write(waTZVersion);
 		ProtoUtils.writeByteArray(out, claim);
 		ProtoUtils.writeByteArray(out, encodedAttestationServicePublicKey);
 	}
@@ -52,7 +52,7 @@ public class Evidence implements Externalizable {
 	@Override
 	public void readExternal(ObjectInput in) throws IOException {
 		anchor = ProtoUtils.readByteArray(in);
-		waTZVersion = in.readUTF();
+		waTZVersion = in.readInt();
 		claim = ProtoUtils.readByteArray(in);
 		encodedAttestationServicePublicKey = ProtoUtils.readByteArray(in);
 	}

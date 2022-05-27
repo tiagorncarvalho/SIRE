@@ -45,11 +45,11 @@ public class ProxyWatz implements Runnable {
         try {
             ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
             serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
-            symmetricCipher = Cipher.getInstance("AES/GCM/NoPadding");
+            symmetricCipher = Cipher.getInstance("AES/GCM/NoPadding", "BC");
             secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         } catch (SecretSharingException e) {
             throw new SireException("Failed to contact the distributed verifier", e);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | NoSuchProviderException e) {
             e.printStackTrace();
         }
     }
@@ -117,10 +117,10 @@ public class ProxyWatz implements Runnable {
                         System.out.println("Reading message 2...");
                         byte[] data = readMessage2(b);
                         System.out.println("Message 2 received!");
-
                         System.out.println("Creating message 3...");
                         oos.write(createMessage3(data));
                         System.out.println("Message 3 sent!");
+                        break;
                     }
                 }
             } catch (IOException | SireException | SecretSharingException | InvalidKeySpecException e) {
@@ -214,26 +214,38 @@ public class ProxyWatz implements Runnable {
             return null;
         }
 
-        private byte[] readMessage2(byte[] b) throws SireException, SecretSharingException {
+        private byte[] readMessage2(byte[] b) throws SireException, SecretSharingException, IOException {
             byte[] mac = Arrays.copyOfRange(b, 272, 272 + 16);
-            byte[] content = Arrays.copyOfRange(b, 0, 272);
-            if(!Arrays.equals(mac, doMAC(macKey.toByteArray(), content)))
-                throw new SireException("Invalid MAC for Message 2!");
 
             int localPubKeyXSize = Byte.toUnsignedInt(b[32]);
-            String localPubKeyX = bytesToHex(Arrays.copyOfRange(b, 0, localPubKeyXSize));
+            byte[] localPubKeyX = Arrays.copyOfRange(b, 0, localPubKeyXSize);
             int localPubKeyYSize = Byte.toUnsignedInt(b[68]);
-            String localPubKeyY = bytesToHex(Arrays.copyOfRange(b, 36, 36 + localPubKeyYSize));
-            ECPoint tempKey = curve.createPoint(new BigInteger(localPubKeyX, 16), new BigInteger(localPubKeyY, 16));
+            byte[] localPubKeyY = Arrays.copyOfRange(b, 36, 36 + localPubKeyYSize);
+
+            byte[] quote = Arrays.copyOfRange(b, 72, 272);
+
+            byte[] tempMac = doMAC(macKey.toByteArray(), Arrays.copyOfRange(b, 0, localPubKeyXSize), Arrays.copyOfRange(b, 36, 36 + localPubKeyYSize), quote);
+
+            System.out.println("Mac: " + bytesToHex(mac));
+            System.out.println("TempMac: " + bytesToHex(tempMac));
+
+            if(!Arrays.equals(mac, tempMac))
+                throw new SireException("Invalid MAC for Message 2!");
+
+            ECPoint tempKey = curve.createPoint(new BigInteger(bytesToHex(localPubKeyX), 16),
+                    new BigInteger(bytesToHex(localPubKeyY), 16));
             if(!tempKey.equals(attesterPubKey))
                 throw new SireException("Invalid attester public session key for Message 2!");
 
-            int quoteBegin = 72;
-            byte[] anchor = Arrays.copyOfRange(b, quoteBegin, quoteBegin + 32);
-            int watzVersion = b[quoteBegin + 32];
-            byte[] claimHash = Arrays.copyOfRange(b, quoteBegin + 36, quoteBegin + 36 + 32);
-            byte[] attestationKey = Arrays.copyOfRange(b, quoteBegin + 68, quoteBegin + 68 + 65);
-            byte[] signature = Arrays.copyOfRange(b, quoteBegin + 133, quoteBegin + 133 + 64);
+            byte[] anchor = Arrays.copyOfRange(quote, 0, 32);
+            int watzVersion = quote[32];
+            System.out.println("version: " + watzVersion);
+            byte[] claimHash = Arrays.copyOfRange(quote, 36, 36 + 32);
+            System.out.println("Claim hash: " + bytesToHex(claimHash));
+            byte[] attestationKey = Arrays.copyOfRange(quote, 68, 68 + 65);
+            System.out.println("Att key: " + bytesToHex(attestationKey));
+            byte[] signature = Arrays.copyOfRange(quote, 133, 133 + 64);
+            System.out.println("Sign: " + bytesToHex(signature));
 
             byte[] data;
             if((data = verifyQuote(anchor, watzVersion, claimHash, attestationKey, signature)) == null)
@@ -242,12 +254,16 @@ public class ProxyWatz implements Runnable {
             return data;
         }
 
-        private byte[] verifyQuote(byte[] anchor, int watzVersion, byte[] claimHash, byte[] attestationKey, byte[] signature) throws SireException, SecretSharingException {
-            if(!Arrays.equals(scheme.computeHash(ecdhPubKey.getEncoded(true), attesterPubKey.getEncoded(true)), anchor))
+        private byte[] verifyQuote(byte[] anchor, int watzVersion, byte[] claimHash, byte[] attestationKey, byte[] signature)
+                throws SireException, SecretSharingException {
+            byte[] anc = scheme.computeHash(attesterPubKey.getXCoord().getEncoded(), attesterPubKey.getYCoord().getEncoded(),
+                    ecdhPubKey.getXCoord().getEncoded(), ecdhPubKey.getYCoord().getEncoded());
+
+            if(!Arrays.equals(anc, anchor))
                 throw new SireException("Invalid anchor for Message 2!");
 
             Messages.ProtoEvidence evidence = Messages.ProtoEvidence.newBuilder()
-                    .setWatzVersion(String.valueOf(watzVersion))
+                    .setWatzVersion(watzVersion)
                     .setServicePubKey(ByteString.copyFrom(attestationKey))
                     .setClaim(ByteString.copyFrom(claimHash))
                     .build();
@@ -258,6 +274,7 @@ public class ProxyWatz implements Runnable {
                     .setEcdsaSignature(ByteString.copyFrom(signature))
                     .build();
 
+            //byte[] tmp = "A".repeat(2000).getBytes();
             byte[] tmp = serviceProxy.invokeOrdered(req.toByteArray()).getPainData();
 
             if (!Arrays.equals(tmp, new byte[]{0}))
@@ -268,9 +285,12 @@ public class ProxyWatz implements Runnable {
 
 
         private byte[] createMessage3(byte[] data) throws InvalidKeySpecException, SireException, IOException {
+            byte[] tempData = encryptData(data);
             byte[] iv = symmetricCipher.getIV();
-            byte[] encryptedData = encryptData(createSecretKey(bytesToHex(sessionKey.toByteArray()).toCharArray(), new byte[]{0}), data);
-            byte[] tag = new byte[16]; //TODO
+            byte[] encryptedData = Arrays.copyOfRange(tempData, 0, data.length);
+            byte[] tag = Arrays.copyOfRange(tempData, data.length, tempData.length);
+
+            System.out.println("Iv " + iv.length + " data " + data.length + " encyptedData " + encryptedData.length); //+ " tag " + tag.length);
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             DataOutputStream baos = new DataOutputStream(output);
@@ -281,17 +301,14 @@ public class ProxyWatz implements Runnable {
             baos.write(encryptedData);
 
             baos.flush();
-            return output.toByteArray();
+            byte[] out = output.toByteArray();
+            System.out.println("Length " + out.length);
+            return out;
         }
 
-        private SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {
-            KeySpec spec = new PBEKeySpec(password, salt, 65536, AES_KEY_LENGTH);
-            return new SecretKeySpec(secretKeyFactory.generateSecret(spec).getEncoded(), "AES");
-        }
-
-        private byte[] encryptData(SecretKey key, byte[] data) throws SireException {
+        private byte[] encryptData(byte[] data) throws SireException {
             try {
-                symmetricCipher.init(Cipher.ENCRYPT_MODE, key);
+                symmetricCipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(sessionKey.toByteArray(), "AES"));
                 return symmetricCipher.doFinal(data);
             } catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
                 throw new SireException("Failed to encrypt data", e);
@@ -299,7 +316,7 @@ public class ProxyWatz implements Runnable {
         }
 
         private byte[] doMAC(byte[] key, byte[]... blocks) {
-            CMac cMac = new CMac(new AESEngine());
+            CMac cMac = new CMac(new AESEngine(), 128);
             cMac.init(new KeyParameter(key));
             for(byte[] b : blocks)
                 cMac.update(b, 0, b.length);

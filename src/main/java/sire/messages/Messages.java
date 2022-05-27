@@ -777,14 +777,9 @@ public final class Messages {
     com.google.protobuf.ByteString getAnchor();
 
     /**
-     * <code>string watzVersion = 2;</code>
+     * <code>uint32 watzVersion = 2;</code>
      */
-    java.lang.String getWatzVersion();
-    /**
-     * <code>string watzVersion = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getWatzVersionBytes();
+    int getWatzVersion();
 
     /**
      * <code>bytes claim = 3;</code>
@@ -810,7 +805,7 @@ public final class Messages {
     }
     private ProtoEvidence() {
       anchor_ = com.google.protobuf.ByteString.EMPTY;
-      watzVersion_ = "";
+      watzVersion_ = 0;
       claim_ = com.google.protobuf.ByteString.EMPTY;
       servicePubKey_ = com.google.protobuf.ByteString.EMPTY;
     }
@@ -844,10 +839,9 @@ public final class Messages {
               anchor_ = input.readBytes();
               break;
             }
-            case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 16: {
 
-              watzVersion_ = s;
+              watzVersion_ = input.readUInt32();
               break;
             }
             case 26: {
@@ -902,37 +896,12 @@ public final class Messages {
     }
 
     public static final int WATZVERSION_FIELD_NUMBER = 2;
-    private volatile java.lang.Object watzVersion_;
+    private int watzVersion_;
     /**
-     * <code>string watzVersion = 2;</code>
+     * <code>uint32 watzVersion = 2;</code>
      */
-    public java.lang.String getWatzVersion() {
-      java.lang.Object ref = watzVersion_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        watzVersion_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string watzVersion = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getWatzVersionBytes() {
-      java.lang.Object ref = watzVersion_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        watzVersion_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public int getWatzVersion() {
+      return watzVersion_;
     }
 
     public static final int CLAIM_FIELD_NUMBER = 3;
@@ -970,8 +939,8 @@ public final class Messages {
       if (!anchor_.isEmpty()) {
         output.writeBytes(1, anchor_);
       }
-      if (!getWatzVersionBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, watzVersion_);
+      if (watzVersion_ != 0) {
+        output.writeUInt32(2, watzVersion_);
       }
       if (!claim_.isEmpty()) {
         output.writeBytes(3, claim_);
@@ -992,8 +961,9 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(1, anchor_);
       }
-      if (!getWatzVersionBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, watzVersion_);
+      if (watzVersion_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(2, watzVersion_);
       }
       if (!claim_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
@@ -1021,8 +991,8 @@ public final class Messages {
       boolean result = true;
       result = result && getAnchor()
           .equals(other.getAnchor());
-      result = result && getWatzVersion()
-          .equals(other.getWatzVersion());
+      result = result && (getWatzVersion()
+          == other.getWatzVersion());
       result = result && getClaim()
           .equals(other.getClaim());
       result = result && getServicePubKey()
@@ -1041,7 +1011,7 @@ public final class Messages {
       hash = (37 * hash) + ANCHOR_FIELD_NUMBER;
       hash = (53 * hash) + getAnchor().hashCode();
       hash = (37 * hash) + WATZVERSION_FIELD_NUMBER;
-      hash = (53 * hash) + getWatzVersion().hashCode();
+      hash = (53 * hash) + getWatzVersion();
       hash = (37 * hash) + CLAIM_FIELD_NUMBER;
       hash = (53 * hash) + getClaim().hashCode();
       hash = (37 * hash) + SERVICEPUBKEY_FIELD_NUMBER;
@@ -1181,7 +1151,7 @@ public final class Messages {
         super.clear();
         anchor_ = com.google.protobuf.ByteString.EMPTY;
 
-        watzVersion_ = "";
+        watzVersion_ = 0;
 
         claim_ = com.google.protobuf.ByteString.EMPTY;
 
@@ -1268,9 +1238,8 @@ public final class Messages {
         if (other.getAnchor() != com.google.protobuf.ByteString.EMPTY) {
           setAnchor(other.getAnchor());
         }
-        if (!other.getWatzVersion().isEmpty()) {
-          watzVersion_ = other.watzVersion_;
-          onChanged();
+        if (other.getWatzVersion() != 0) {
+          setWatzVersion(other.getWatzVersion());
         }
         if (other.getClaim() != com.google.protobuf.ByteString.EMPTY) {
           setClaim(other.getClaim());
@@ -1336,71 +1305,28 @@ public final class Messages {
         return this;
       }
 
-      private java.lang.Object watzVersion_ = "";
+      private int watzVersion_ ;
       /**
-       * <code>string watzVersion = 2;</code>
+       * <code>uint32 watzVersion = 2;</code>
        */
-      public java.lang.String getWatzVersion() {
-        java.lang.Object ref = watzVersion_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          watzVersion_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      public int getWatzVersion() {
+        return watzVersion_;
       }
       /**
-       * <code>string watzVersion = 2;</code>
+       * <code>uint32 watzVersion = 2;</code>
        */
-      public com.google.protobuf.ByteString
-          getWatzVersionBytes() {
-        java.lang.Object ref = watzVersion_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          watzVersion_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string watzVersion = 2;</code>
-       */
-      public Builder setWatzVersion(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+      public Builder setWatzVersion(int value) {
+        
         watzVersion_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string watzVersion = 2;</code>
+       * <code>uint32 watzVersion = 2;</code>
        */
       public Builder clearWatzVersion() {
         
-        watzVersion_ = getDefaultInstance().getWatzVersion();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string watzVersion = 2;</code>
-       */
-      public Builder setWatzVersionBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        watzVersion_ = value;
+        watzVersion_ = 0;
         onChanged();
         return this;
       }
@@ -3101,6 +3027,11 @@ public final class Messages {
      */
     com.google.protobuf.ByteString
         getAttesterIdBytes();
+
+    /**
+     * <code>bytes ecdsaSignature = 7;</code>
+     */
+    com.google.protobuf.ByteString getEcdsaSignature();
   }
   /**
    * Protobuf type {@code sire.messages.ProtoMessage2}
@@ -3119,6 +3050,7 @@ public final class Messages {
       attesterPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
       mac_ = com.google.protobuf.ByteString.EMPTY;
       attesterId_ = "";
+      ecdsaSignature_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -3191,6 +3123,11 @@ public final class Messages {
               java.lang.String s = input.readStringRequireUtf8();
 
               attesterId_ = s;
+              break;
+            }
+            case 58: {
+
+              ecdsaSignature_ = input.readBytes();
               break;
             }
             default: {
@@ -3385,6 +3322,15 @@ public final class Messages {
       }
     }
 
+    public static final int ECDSASIGNATURE_FIELD_NUMBER = 7;
+    private com.google.protobuf.ByteString ecdsaSignature_;
+    /**
+     * <code>bytes ecdsaSignature = 7;</code>
+     */
+    public com.google.protobuf.ByteString getEcdsaSignature() {
+      return ecdsaSignature_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3417,6 +3363,9 @@ public final class Messages {
       if (!getAttesterIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, attesterId_);
       }
+      if (!ecdsaSignature_.isEmpty()) {
+        output.writeBytes(7, ecdsaSignature_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -3447,6 +3396,10 @@ public final class Messages {
       }
       if (!getAttesterIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, attesterId_);
+      }
+      if (!ecdsaSignature_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, ecdsaSignature_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3482,6 +3435,8 @@ public final class Messages {
           .equals(other.getMac());
       result = result && getAttesterId()
           .equals(other.getAttesterId());
+      result = result && getEcdsaSignature()
+          .equals(other.getEcdsaSignature());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -3509,6 +3464,8 @@ public final class Messages {
       hash = (53 * hash) + getMac().hashCode();
       hash = (37 * hash) + ATTESTERID_FIELD_NUMBER;
       hash = (53 * hash) + getAttesterId().hashCode();
+      hash = (37 * hash) + ECDSASIGNATURE_FIELD_NUMBER;
+      hash = (53 * hash) + getEcdsaSignature().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3662,6 +3619,8 @@ public final class Messages {
 
         attesterId_ = "";
 
+        ecdsaSignature_ = com.google.protobuf.ByteString.EMPTY;
+
         return this;
       }
 
@@ -3702,6 +3661,7 @@ public final class Messages {
         }
         result.mac_ = mac_;
         result.attesterId_ = attesterId_;
+        result.ecdsaSignature_ = ecdsaSignature_;
         onBuilt();
         return result;
       }
@@ -3769,6 +3729,9 @@ public final class Messages {
         if (!other.getAttesterId().isEmpty()) {
           attesterId_ = other.attesterId_;
           onChanged();
+        }
+        if (other.getEcdsaSignature() != com.google.protobuf.ByteString.EMPTY) {
+          setEcdsaSignature(other.getEcdsaSignature());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4321,6 +4284,35 @@ public final class Messages {
   checkByteStringIsUtf8(value);
         
         attesterId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString ecdsaSignature_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes ecdsaSignature = 7;</code>
+       */
+      public com.google.protobuf.ByteString getEcdsaSignature() {
+        return ecdsaSignature_;
+      }
+      /**
+       * <code>bytes ecdsaSignature = 7;</code>
+       */
+      public Builder setEcdsaSignature(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        ecdsaSignature_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes ecdsaSignature = 7;</code>
+       */
+      public Builder clearEcdsaSignature() {
+        
+        ecdsaSignature_ = getDefaultInstance().getEcdsaSignature();
         onChanged();
         return this;
       }
@@ -10319,56 +10311,56 @@ public final class Messages {
       "protobuf/timestamp.proto\"G\n\014ProtoSchnorr" +
       "\022\r\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014\022\024\n\014r" +
       "andomPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022\016\n\006an" +
-      "chor\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005claim" +
+      "chor\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\r\022\r\n\005claim" +
       "\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\">\n\rProtoMe" +
       "ssage0\022\022\n\nattesterId\030\001 \001(\005\022\031\n\021attesterPu" +
       "bSesKey\030\002 \001(\014\"\212\001\n\rProtoMessage1\022\031\n\021verif" +
       "ierPubSesKey\030\001 \001(\014\022\026\n\016verifierPubKey\030\002 \001" +
       "(\014\0229\n\024signatureSessionKeys\030\003 \001(\0132\033.sire." +
-      "messages.ProtoSchnorr\022\013\n\003mac\030\004 \001(\014\"\302\001\n\rP" +
+      "messages.ProtoSchnorr\022\013\n\003mac\030\004 \001(\014\"\332\001\n\rP" +
       "rotoMessage2\022\r\n\005appId\030\001 \001(\t\022\031\n\021attesterP" +
       "ubSesKey\030\002 \001(\014\022.\n\010evidence\030\003 \001(\0132\034.sire." +
       "messages.ProtoEvidence\0226\n\021signatureEvide" +
       "nce\030\004 \001(\0132\033.sire.messages.ProtoSchnorr\022\013" +
-      "\n\003mac\030\005 \001(\014\022\022\n\nattesterId\030\006 \001(\t\"2\n\rProto" +
-      "Message3\022\n\n\002iv\030\001 \001(\014\022\025\n\rencryptedData\030\002 " +
-      "\001(\014\"\210\007\n\014ProxyMessage\0228\n\toperation\030\001 \001(\0162" +
-      "%.sire.messages.ProxyMessage.Operation\022." +
-      "\n\010evidence\030\002 \001(\0132\034.sire.messages.ProtoEv" +
-      "idence\022.\n\tsignature\030\003 \001(\0132\033.sire.message" +
-      "s.ProtoSchnorr\022\022\n\ndataToSign\030\004 \001(\014\022\013\n\003ke" +
-      "y\030\005 \001(\t\022\r\n\005value\030\006 \001(\014\022\017\n\007oldData\030\007 \001(\014\022" +
-      "\020\n\010deviceId\030\010 \001(\t\022\r\n\005appId\030\t \001(\t\022\014\n\004code" +
-      "\030\n \001(\t\0227\n\006policy\030\013 \001(\0132\'.sire.messages.P" +
-      "roxyMessage.ProtoPolicy\0222\n\ndeviceType\030\014 " +
-      "\001(\0162\036.sire.messages.ProtoDeviceType\022\026\n\016e" +
-      "cdsaSignature\030\r \001(\014\032+\n\013ProtoPolicy\022\016\n\006po" +
-      "licy\030\001 \001(\t\022\014\n\004type\030\002 \001(\010\"\273\003\n\tOperation\022\037" +
-      "\n\033ATTEST_GENERATE_SIGNING_KEY\020\000\022\"\n\036ATTES" +
-      "T_GET_VERIFIER_PUBLIC_KEY\020\001\022\031\n\025ATTEST_GE" +
-      "T_PUBLIC_KEY\020\002\022\024\n\020ATTEST_SIGN_DATA\020\003\022\021\n\r" +
-      "ATTEST_VERIFY\020\004\022\034\n\030ATTEST_GET_RANDOM_NUM" +
-      "BER\020\005\022\013\n\007MAP_PUT\020\006\022\016\n\nMAP_DELETE\020\007\022\013\n\007MA" +
-      "P_GET\020\010\022\014\n\010MAP_LIST\020\t\022\013\n\007MAP_CAS\020\n\022\023\n\017ME" +
-      "MBERSHIP_JOIN\020\013\022\024\n\020MEMBERSHIP_LEAVE\020\014\022\023\n" +
-      "\017MEMBERSHIP_VIEW\020\r\022\023\n\017MEMBERSHIP_PING\020\016\022" +
-      "\021\n\rEXTENSION_ADD\020\017\022\024\n\020EXTENSION_REMOVE\020\020" +
-      "\022\021\n\rEXTENSION_GET\020\021\022\016\n\nPOLICY_ADD\020\022\022\021\n\rP" +
-      "OLICY_REMOVE\020\023\022\016\n\nPOLICY_GET\020\024\"\251\003\n\rProxy" +
-      "Response\0227\n\004type\030\001 \001(\0162).sire.messages.P" +
-      "roxyResponse.ResponseType\022\014\n\004list\030\002 \003(\014\022" +
-      "\r\n\005value\030\003 \001(\014\022@\n\007members\030\004 \003(\0132/.sire.m" +
-      "essages.ProxyResponse.ProtoDeviceContext" +
-      "\022\021\n\textension\030\005 \001(\t\022\016\n\006policy\030\006 \001(\t\032\204\001\n\022" +
-      "ProtoDeviceContext\022\020\n\010deviceId\030\001 \001(\t\022(\n\004" +
-      "time\030\002 \001(\0132\032.google.protobuf.Timestamp\0222" +
-      "\n\ndeviceType\030\003 \001(\0162\036.sire.messages.Proto" +
-      "DeviceType\"V\n\014ResponseType\022\013\n\007MAP_GET\020\000\022" +
-      "\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_GET" +
-      "\020\003\022\016\n\nPOLICY_GET\020\004*g\n\017ProtoDeviceType\022\n\n" +
-      "\006CAMERA\020\000\022\017\n\013THERMOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n" +
-      "\005LIDAR\020\003\022\020\n\014MOTIONSENSOR\020\004\022\017\n\013LIGHTSENSO" +
-      "R\020\005b\006proto3"
+      "\n\003mac\030\005 \001(\014\022\022\n\nattesterId\030\006 \001(\t\022\026\n\016ecdsa" +
+      "Signature\030\007 \001(\014\"2\n\rProtoMessage3\022\n\n\002iv\030\001" +
+      " \001(\014\022\025\n\rencryptedData\030\002 \001(\014\"\210\007\n\014ProxyMes" +
+      "sage\0228\n\toperation\030\001 \001(\0162%.sire.messages." +
+      "ProxyMessage.Operation\022.\n\010evidence\030\002 \001(\013" +
+      "2\034.sire.messages.ProtoEvidence\022.\n\tsignat" +
+      "ure\030\003 \001(\0132\033.sire.messages.ProtoSchnorr\022\022" +
+      "\n\ndataToSign\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005value" +
+      "\030\006 \001(\014\022\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 \001(" +
+      "\t\022\r\n\005appId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0227\n\006policy" +
+      "\030\013 \001(\0132\'.sire.messages.ProxyMessage.Prot" +
+      "oPolicy\0222\n\ndeviceType\030\014 \001(\0162\036.sire.messa" +
+      "ges.ProtoDeviceType\022\026\n\016ecdsaSignature\030\r " +
+      "\001(\014\032+\n\013ProtoPolicy\022\016\n\006policy\030\001 \001(\t\022\014\n\004ty" +
+      "pe\030\002 \001(\010\"\273\003\n\tOperation\022\037\n\033ATTEST_GENERAT" +
+      "E_SIGNING_KEY\020\000\022\"\n\036ATTEST_GET_VERIFIER_P" +
+      "UBLIC_KEY\020\001\022\031\n\025ATTEST_GET_PUBLIC_KEY\020\002\022\024" +
+      "\n\020ATTEST_SIGN_DATA\020\003\022\021\n\rATTEST_VERIFY\020\004\022" +
+      "\034\n\030ATTEST_GET_RANDOM_NUMBER\020\005\022\013\n\007MAP_PUT" +
+      "\020\006\022\016\n\nMAP_DELETE\020\007\022\013\n\007MAP_GET\020\010\022\014\n\010MAP_L" +
+      "IST\020\t\022\013\n\007MAP_CAS\020\n\022\023\n\017MEMBERSHIP_JOIN\020\013\022" +
+      "\024\n\020MEMBERSHIP_LEAVE\020\014\022\023\n\017MEMBERSHIP_VIEW" +
+      "\020\r\022\023\n\017MEMBERSHIP_PING\020\016\022\021\n\rEXTENSION_ADD" +
+      "\020\017\022\024\n\020EXTENSION_REMOVE\020\020\022\021\n\rEXTENSION_GE" +
+      "T\020\021\022\016\n\nPOLICY_ADD\020\022\022\021\n\rPOLICY_REMOVE\020\023\022\016" +
+      "\n\nPOLICY_GET\020\024\"\251\003\n\rProxyResponse\0227\n\004type" +
+      "\030\001 \001(\0162).sire.messages.ProxyResponse.Res" +
+      "ponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022@" +
+      "\n\007members\030\004 \003(\0132/.sire.messages.ProxyRes" +
+      "ponse.ProtoDeviceContext\022\021\n\textension\030\005 " +
+      "\001(\t\022\016\n\006policy\030\006 \001(\t\032\204\001\n\022ProtoDeviceConte" +
+      "xt\022\020\n\010deviceId\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.goo" +
+      "gle.protobuf.Timestamp\0222\n\ndeviceType\030\003 \001" +
+      "(\0162\036.sire.messages.ProtoDeviceType\"V\n\014Re" +
+      "sponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n" +
+      "\004VIEW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n\nPOLICY_GET" +
+      "\020\004*g\n\017ProtoDeviceType\022\n\n\006CAMERA\020\000\022\017\n\013THE" +
+      "RMOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTI" +
+      "ONSENSOR\020\004\022\017\n\013LIGHTSENSOR\020\005b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -10412,7 +10404,7 @@ public final class Messages {
     internal_static_sire_messages_ProtoMessage2_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProtoMessage2_descriptor,
-        new java.lang.String[] { "AppId", "AttesterPubSesKey", "Evidence", "SignatureEvidence", "Mac", "AttesterId", });
+        new java.lang.String[] { "AppId", "AttesterPubSesKey", "Evidence", "SignatureEvidence", "Mac", "AttesterId", "EcdsaSignature", });
     internal_static_sire_messages_ProtoMessage3_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_sire_messages_ProtoMessage3_fieldAccessorTable = new

@@ -7,6 +7,7 @@ import sire.schnorr.SchnorrSignature;
  */
 public class DeviceEvidence {
 	private final Evidence evidence;
+	/*byte[] evidenceSignature;*/
 	private final SchnorrSignature evidenceSignature;
 
 	public DeviceEvidence(Evidence evidence, SchnorrSignature evidenceSignature) {

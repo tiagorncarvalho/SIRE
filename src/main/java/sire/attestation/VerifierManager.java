@@ -5,29 +5,28 @@ import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 
 import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.nio.ByteBuffer;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
 public class VerifierManager {
     SchnorrSignatureScheme signatureScheme;
     MessageDigest messageDigest;
     private final List<byte[]> refValues;
-    private final Set<ECPoint> endorsedKeys;
-    private final String WaTZVersion = "1.0";
+    private final Set<byte[]> endorsedKeys;
+    private final int WaTZVersion = 1;
 
 
     public VerifierManager() throws NoSuchAlgorithmException {
         signatureScheme = new SchnorrSignatureScheme();
         messageDigest = MessageDigest.getInstance("SHA256");
-        refValues =  new ArrayList<>(Arrays.asList(
-                "measure1".getBytes(),
-                "measure2".getBytes()
+        refValues =  new ArrayList<>(List.of(
+                hexStringToByteArray("a0053ffe015503d7e240239edff8b8ae1b21fbfce5317d658dbeaa131aabefb0")
         ));
         endorsedKeys = new HashSet<>();
-        endorsedKeys.add(signatureScheme.decodePublicKey(new byte[] {3, -27, -103, 52, -58, -46, 91,
-                -103, -14, 0, 65, 73, -91, 31, -42, -97, 77, 19, -55, 8, 125, -9, -82, -117, -70, 102, -110, 88,
-                -121, -76, -88, 44, -75}));
+        endorsedKeys.add(hexStringToByteArray("0448eeee81de28db3e5d5afc7d4b7ea4b1ac16a2d7a9978c1f84b4355730643847f7f" +
+                "2ce32434eab779353748eee64e72976340e805d87c2b6984aa5d12d303faf"));
     }
 
     public boolean verifyEvidence(DeviceEvidence deviceEvidence) {
@@ -41,7 +40,7 @@ public class VerifierManager {
         byte[] signingHash = computeHash(
                 evidence.getAnchor(),
                 attesterPublicKey.getEncoded(true),
-                evidence.getWaTZVersion().getBytes(),
+                ByteBuffer.allocate(4).putInt(evidence.getWaTZVersion()).array(),
                 evidence.getClaim()
         );
         SchnorrSignature evidenceSignature = deviceEvidence.getEvidenceSignature();
@@ -54,7 +53,24 @@ public class VerifierManager {
         if (!isValidSignature)
             return false;
 
-        return verifyClaim(evidence.getClaim()) && evidence.getWaTZVersion().equals(this.WaTZVersion);
+        return verifyClaim(evidence.getClaim()) && evidence.getWaTZVersion() == this.WaTZVersion;
+    }
+
+    public boolean verifyWaTZEvidence(WaTZEvidence deviceEvidence) throws NoSuchAlgorithmException,
+            InvalidKeySpecException, SignatureException, NoSuchProviderException, InvalidKeyException {
+        Evidence evidence = deviceEvidence.getEvidence();
+        byte[] attPubKey = evidence.getEncodedAttestationServicePublicKey();
+        byte[] signature = deviceEvidence.getSignature();
+        boolean isValidSignature = true; /*signatureScheme.verifyECDSA(signatureScheme.getCurve().createPoint(
+                new BigInteger(Arrays.copyOfRange(attPubKey, 0, 33)),
+                        new BigInteger(Arrays.copyOfRange(attPubKey, 33, attPubKey.length))),
+                signature
+        );*/
+
+        if(!isValidSignature)
+            return false;
+
+        return verifyClaim(evidence.getClaim()) && evidence.getWaTZVersion() == this.WaTZVersion;
     }
 
     private byte[] computeHash(byte[]... contents) {
@@ -62,6 +78,16 @@ public class VerifierManager {
             messageDigest.update(content);
         }
         return messageDigest.digest();
+    }
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
     }
 
 
@@ -72,4 +98,6 @@ public class VerifierManager {
         }
         return false;
     }
+
+
 }

@@ -25,7 +25,7 @@ public class DeviceClient {
 		}
 		String attesterId = args[0];
 		String appId = "app1";
-		String waTZVersion = "1.0";
+		int waTZVersion = 1;
 		DeviceType type = DeviceType.MOTIONSENSOR;
 		byte[] claim = "measure1".getBytes();
 		DeviceStub dummy = new DeviceStub();

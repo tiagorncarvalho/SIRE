@@ -16,6 +16,7 @@ import org.bouncycastle.math.ec.ECPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sire.attestation.VerifierManager;
+import sire.attestation.WaTZEvidence;
 import sire.configuration.Policy;
 import sire.attestation.DeviceEvidence;
 import sire.configuration.ExtensionManager;
@@ -32,7 +33,11 @@ import vss.secretsharing.VerifiableShare;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -135,13 +140,14 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				return executeOrderedMembership(msg, messageContext);
 			else if(op.toString().startsWith("ATTEST"))
 				return executeOrderedAttestation(msg, messageContext);
-		} catch (IOException e) {
+		} catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException | SignatureException |
+				NoSuchProviderException | InvalidKeyException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	private ConfidentialMessage executeOrderedAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException {
+	private ConfidentialMessage executeOrderedAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, NoSuchProviderException, InvalidKeyException {
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
 			case ATTEST_GENERATE_SIGNING_KEY -> {
@@ -184,15 +190,13 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				lock.unlock();
 			}
 			case ATTEST_VERIFY -> {
-				DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
-						protoToSchnorr(msg.getSignature()));
-				boolean isValidEvidence = verifierManager.verifyEvidence(deviceEvidence);
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				WaTZEvidence evidence = new WaTZEvidence(protoToEvidence(msg.getEvidence()),
+						byteStringToByteArray(out, msg.getEcdsaSignature()));
+				boolean isValidEvidence = verifierManager.verifyWaTZEvidence(evidence);
 				byte[] plainData;
 				if (isValidEvidence) {
-					plainData = new byte[dummyDataForAttester.length + 1];
-					plainData[0] = 1;
-					System.arraycopy(dummyDataForAttester, 0, plainData, 1,
-							dummyDataForAttester.length);
+					plainData = dummyDataForAttester;
 				} else {
 					plainData = new byte[] {0};
 				}
