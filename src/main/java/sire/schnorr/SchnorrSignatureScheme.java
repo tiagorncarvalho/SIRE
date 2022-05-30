@@ -1,5 +1,9 @@
 package sire.schnorr;
 
+import org.bouncycastle.asn1.ASN1EncodableVector;
+import org.bouncycastle.asn1.ASN1Encoding;
+import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.sec.ECPrivateKey;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
@@ -181,14 +185,15 @@ public class SchnorrSignatureScheme {
 		return baout.toByteArray();
 	}*/
 
-	public boolean verifyECDSA(ECPoint key, byte[] signature) throws NoSuchAlgorithmException, NoSuchProviderException,
+	public boolean verifyECDSA(ECPoint key, byte[] signature, byte[] signingData) throws NoSuchAlgorithmException, NoSuchProviderException,
 			InvalidKeySpecException, InvalidKeyException, SignatureException {
 		KeyFactory fac = KeyFactory.getInstance("EC", "BC");
 		ECParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256r1");
 		ECPublicKeySpec keySpec = new ECPublicKeySpec(key, spec);
 		PublicKey publicKey = fac.generatePublic(keySpec);
-		Signature ecdsa = Signature.getInstance("SHA256withECDSA", "BC");
+		Signature ecdsa = Signature.getInstance("SHA256withPLAIN-ECDSA", "BC");
 		ecdsa.initVerify(publicKey);
+		ecdsa.update(signingData);
 		return ecdsa.verify(signature);
 	}
 
@@ -202,5 +207,14 @@ public class SchnorrSignatureScheme {
 		ecdsa.initSign(privateKey);
 		ecdsa.update(data);
 		return ecdsa.sign();
+	}
+
+	private byte[] DEREncodeSignature(byte [] signature) throws IOException {
+		BigInteger r = new BigInteger(1, Arrays.copyOfRange(signature, 0, 32));
+		BigInteger s = new BigInteger(1, Arrays.copyOfRange(signature, 32, 64));
+		ASN1EncodableVector v = new ASN1EncodableVector();
+		v.add(new ASN1Integer(r));
+		v.add(new ASN1Integer(s));
+		return new DERSequence(v).getEncoded(ASN1Encoding.DER);
 	}
 }

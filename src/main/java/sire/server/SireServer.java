@@ -194,6 +194,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				WaTZEvidence evidence = new WaTZEvidence(protoToEvidence(msg.getEvidence()),
 						byteStringToByteArray(out, msg.getEcdsaSignature()));
 				boolean isValidEvidence = verifierManager.verifyWaTZEvidence(evidence);
+				System.out.println("isValid? " + isValidEvidence);
 				byte[] plainData;
 				if (isValidEvidence) {
 					plainData = dummyDataForAttester;

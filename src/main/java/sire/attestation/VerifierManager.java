@@ -4,8 +4,12 @@ import org.bouncycastle.math.ec.ECPoint;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.util.*;
@@ -57,20 +61,34 @@ public class VerifierManager {
     }
 
     public boolean verifyWaTZEvidence(WaTZEvidence deviceEvidence) throws NoSuchAlgorithmException,
-            InvalidKeySpecException, SignatureException, NoSuchProviderException, InvalidKeyException {
+            InvalidKeySpecException, SignatureException, NoSuchProviderException, InvalidKeyException, IOException {
         Evidence evidence = deviceEvidence.getEvidence();
         byte[] attPubKey = evidence.getEncodedAttestationServicePublicKey();
+        String attPubKeyX = bytesToHex(Arrays.copyOfRange(attPubKey, 1, 33));
+        String attPubKeyY = bytesToHex(Arrays.copyOfRange(attPubKey, 33, attPubKey.length));
         byte[] signature = deviceEvidence.getSignature();
-        boolean isValidSignature = true; /*signatureScheme.verifyECDSA(signatureScheme.getCurve().createPoint(
-                new BigInteger(Arrays.copyOfRange(attPubKey, 0, 33)),
-                        new BigInteger(Arrays.copyOfRange(attPubKey, 33, attPubKey.length))),
-                signature
-        );*/
+        byte[] signingData = createSigningData(evidence.getAnchor(), evidence.getWaTZVersion(), evidence.getClaim(), attPubKey);
+        boolean isValidSignature = signatureScheme.verifyECDSA(signatureScheme.getCurve().createPoint(
+                new BigInteger(attPubKeyX, 16), new BigInteger(attPubKeyY, 16)), signature, signingData);
+        System.out.println("IsValidSignature? " + isValidSignature);
 
         if(!isValidSignature)
             return false;
 
         return verifyClaim(evidence.getClaim()) && evidence.getWaTZVersion() == this.WaTZVersion;
+    }
+
+    private byte[] createSigningData(byte[] anchor, int waTZVersion, byte[] claim, byte[] attKey) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+
+        dos.write(anchor);
+        dos.writeInt(Integer.reverseBytes(waTZVersion));
+        dos.write(claim);
+        dos.write(attKey);
+        dos.flush();
+
+        return baos.toByteArray();
     }
 
     private byte[] computeHash(byte[]... contents) {
@@ -88,6 +106,17 @@ public class VerifierManager {
                     + Character.digit(s.charAt(i+1), 16));
         }
         return data;
+    }
+
+    private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
+    public static String bytesToHex(byte[] bytes) {
+        byte[] hexChars = new byte[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars, StandardCharsets.UTF_8);
     }
 
 

@@ -13,7 +13,6 @@ import sire.serverProxyUtils.SireException;
 import vss.facade.SecretSharingException;
 
 import javax.crypto.*;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
@@ -22,7 +21,6 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -79,7 +77,7 @@ public class ProxyWatz implements Runnable {
         private final BigInteger ecdhPrivateKey;
         private BigInteger macKey;
         private BigInteger sessionKey;
-        private ECPoint attesterPubKey;
+        private ECPoint attEcdhPubKey;
         private ECPoint sharedSecret;
 
         ProxyWatzThread (Socket s) throws NoSuchAlgorithmException {
@@ -123,7 +121,7 @@ public class ProxyWatz implements Runnable {
                         break;
                     }
                 }
-            } catch (IOException | SireException | SecretSharingException | InvalidKeySpecException e) {
+            } catch (IOException | SireException | SecretSharingException | InvalidKeySpecException | NoSuchAlgorithmException | SignatureException | NoSuchProviderException | InvalidKeyException e) {
                 e.printStackTrace();
             }
         }
@@ -135,9 +133,9 @@ public class ProxyWatz implements Runnable {
             int attPubKeyYSize = Byte.toUnsignedInt(b[68]);
             String attPubKeyY = bytesToHex(Arrays.copyOfRange(b, 36, 36 + attPubKeyYSize));
 
-            attesterPubKey = curve.createPoint(new BigInteger(attPubKeyX, 16), new BigInteger(attPubKeyY, 16));
+            attEcdhPubKey = curve.createPoint(new BigInteger(attPubKeyX, 16), new BigInteger(attPubKeyY, 16));
 
-            sharedSecret = attesterPubKey.multiply(ecdhPrivateKey);
+            sharedSecret = attEcdhPubKey.multiply(ecdhPrivateKey);
             sharedSecret = sharedSecret.normalize();
 
             CMac cmac = new CMac(new AESEngine());
@@ -172,8 +170,8 @@ public class ProxyWatz implements Runnable {
 
                 baos.write(ecdhPubKeyX);
                 baos.write(ecdhPubKeyY);
-                baos.write(attesterPubKey.getXCoord().getEncoded());
-                baos.write(attesterPubKey.getYCoord().getEncoded());
+                baos.write(attEcdhPubKey.getXCoord().getEncoded());
+                baos.write(attEcdhPubKey.getYCoord().getEncoded());
                 baos.flush();
                 byte[] signingData = output.toByteArray();
 
@@ -191,13 +189,13 @@ public class ProxyWatz implements Runnable {
 
                 output.reset();
                 baos.write(ecdhPubKeyX);
-                baos.writeInt(ecdhPubKeyXSize);
+                baos.writeInt(Integer.reverseBytes(ecdhPubKeyXSize));
                 baos.write(ecdhPubKeyY);
-                baos.writeInt(ecdhPubKeyYSize);
+                baos.writeInt(Integer.reverseBytes(ecdhPubKeyYSize));
                 baos.write(ecdsaPubKeyX);
-                baos.writeInt(ecdsaPubKeyXSize);
+                baos.writeInt(Integer.reverseBytes(ecdsaPubKeyXSize));
                 baos.write(ecdsaPubKeyY);
-                baos.writeInt(ecdsaPubKeyYSize);
+                baos.writeInt(Integer.reverseBytes(ecdsaPubKeyYSize));
                 baos.write(signature);
                 baos.flush();
                 byte[] content = output.toByteArray();
@@ -214,7 +212,7 @@ public class ProxyWatz implements Runnable {
             return null;
         }
 
-        private byte[] readMessage2(byte[] b) throws SireException, SecretSharingException, IOException {
+        private byte[] readMessage2(byte[] b) throws SireException, SecretSharingException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, NoSuchProviderException, InvalidKeyException {
             byte[] mac = Arrays.copyOfRange(b, 272, 272 + 16);
 
             int localPubKeyXSize = Byte.toUnsignedInt(b[32]);
@@ -234,7 +232,7 @@ public class ProxyWatz implements Runnable {
 
             ECPoint tempKey = curve.createPoint(new BigInteger(bytesToHex(localPubKeyX), 16),
                     new BigInteger(bytesToHex(localPubKeyY), 16));
-            if(!tempKey.equals(attesterPubKey))
+            if(!tempKey.equals(attEcdhPubKey))
                 throw new SireException("Invalid attester public session key for Message 2!");
 
             byte[] anchor = Arrays.copyOfRange(quote, 0, 32);
@@ -247,6 +245,9 @@ public class ProxyWatz implements Runnable {
             byte[] signature = Arrays.copyOfRange(quote, 133, 133 + 64);
             System.out.println("Sign: " + bytesToHex(signature));
 
+            String attPubKeyX = bytesToHex(Arrays.copyOfRange(attestationKey, 1, 33));
+            String attPubKeyY = bytesToHex(Arrays.copyOfRange(attestationKey, 33, attestationKey.length));
+
             byte[] data;
             if((data = verifyQuote(anchor, watzVersion, claimHash, attestationKey, signature)) == null)
                 throw new SireException("Invalid quote for Message 2!");
@@ -256,13 +257,14 @@ public class ProxyWatz implements Runnable {
 
         private byte[] verifyQuote(byte[] anchor, int watzVersion, byte[] claimHash, byte[] attestationKey, byte[] signature)
                 throws SireException, SecretSharingException {
-            byte[] anc = scheme.computeHash(attesterPubKey.getXCoord().getEncoded(), attesterPubKey.getYCoord().getEncoded(),
+            byte[] anc = scheme.computeHash(attEcdhPubKey.getXCoord().getEncoded(), attEcdhPubKey.getYCoord().getEncoded(),
                     ecdhPubKey.getXCoord().getEncoded(), ecdhPubKey.getYCoord().getEncoded());
 
             if(!Arrays.equals(anc, anchor))
                 throw new SireException("Invalid anchor for Message 2!");
 
             Messages.ProtoEvidence evidence = Messages.ProtoEvidence.newBuilder()
+                    .setAnchor(ByteString.copyFrom(anchor))
                     .setWatzVersion(watzVersion)
                     .setServicePubKey(ByteString.copyFrom(attestationKey))
                     .setClaim(ByteString.copyFrom(claimHash))
@@ -297,7 +299,7 @@ public class ProxyWatz implements Runnable {
 
             baos.write(iv);
             baos.write(tag);
-            baos.writeInt(encryptedData.length);
+            baos.writeInt(Integer.reverseBytes(encryptedData.length));
             baos.write(encryptedData);
 
             baos.flush();
