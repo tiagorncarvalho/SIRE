@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class LatencyAttestationClient {
+    //TODO Needs to be reimplemented... From the ground up.
 
     private static String initialId;
     private static final String appId = "app1";
@@ -67,35 +68,36 @@ public class LatencyAttestationClient {
                         switch (operation) {
                             case ATTEST_VERIFY -> stub.attest(appId, id, type, waTZVersion, claim);
                             case MAP_PUT -> stub.put(id, appId, id, value);
+                            case MAP_GET -> stub.getData(id, appId, "key");
                         }
-                    } catch (IOException  e) {
+                    } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
             };
-            ExecutorService executorService = Executors.newFixedThreadPool(numClients);
-            Collection<Future<?>> tasks = new LinkedList<>();
-            for (Client client : clients) {
-                try {
-                    Thread.sleep(random.nextInt(50));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                tasks.add(executorService.submit(client));
-            }
-            Runtime.getRuntime().addShutdownHook(new Thread(executorService::shutdownNow));
-            for (Future<?> task : tasks) {
-                try {
-                    task.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                    executorService.shutdownNow();
-                    System.exit(-1);
-                }
-            }
-            executorService.shutdown();
-            System.out.println("Experiment ended");
         }
+        ExecutorService executorService = Executors.newFixedThreadPool(numClients);
+        Collection<Future<?>> tasks = new LinkedList<>();
+        for (Client client : clients) {
+            try {
+                Thread.sleep(random.nextInt(50));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            tasks.add(executorService.submit(client));
+        }
+        Runtime.getRuntime().addShutdownHook(new Thread(executorService::shutdownNow));
+        for (Future<?> task : tasks) {
+            try {
+                task.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                executorService.shutdownNow();
+                System.exit(-1);
+            }
+        }
+        executorService.shutdown();
+        System.out.println("Experiment ended");
     }
 
     private static abstract class Client extends Thread {

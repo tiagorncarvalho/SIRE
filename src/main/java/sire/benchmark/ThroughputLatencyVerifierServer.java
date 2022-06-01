@@ -40,6 +40,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import static sire.messages.ProtoUtils.*;
 
 public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecutable, RandomPolynomialListener, RandomKeyPolynomialListener {
+    //TODO Needs to be reimplemented... From the ground up.
     private final Logger logger = LoggerFactory.getLogger("sire");
     private final ServerCommunicationSystem serverCommunicationSystem;
     private final DistributedPolynomialManager distributedPolynomialManager;
@@ -109,6 +110,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         data = new TreeMap<>();
         membership = new TreeMap<>();
         storage = new TreeMap<>();
+        storage.put("key", "Kamen Rider Yukito".getBytes());
         signingKeyRequests = new LinkedList<>();
         signingRequestContexts = new TreeMap<>();
         signingData = new TreeMap<>();
@@ -182,16 +184,11 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 }
             }
             case ATTEST_GET_PUBLIC_KEY -> {
-                try {
-                    lock.lock();
-                    if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
-                        signingKeyRequests.add(messageContext);
-                        generateSigningKey();
-                    } else if (verifierSigningPrivateKeyShare != null){
-                        return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
-                    }
-                } finally {
-                    lock.unlock();
+                if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
+                    signingKeyRequests.add(messageContext);
+                    generateSigningKey();
+                } else if (verifierSigningPrivateKeyShare != null){
+                    return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
                 }
             }
             case ATTEST_SIGN_DATA -> {
@@ -238,7 +235,6 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         Messages.ProxyMessage.Operation op = msg.getOperation();
         switch(op) {
             case MEMBERSHIP_JOIN -> {
-
                 lock.lock();
                 if(!membership.containsKey(msg.getAppId()))
                     membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout));

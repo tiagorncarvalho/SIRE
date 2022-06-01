@@ -48,7 +48,7 @@ message ProtoMessage3 {
 }
 
 //=======ProxyMsg=======
-message ProxyAttestationMessage {
+/*message ProxyAttestationMessage {
   enum AttOperation {
       GENERATE_SIGNING_KEY = 0;
       GET_PUBLIC_KEY = 1;
@@ -74,7 +74,7 @@ message ProxyMapMessage {
   bytes key = 2;
   bytes value = 3; //also serves as newData
   bytes oldData = 4;
-}
+}*/
 
 enum ProtoDeviceType {
   CAMERA = 0;
