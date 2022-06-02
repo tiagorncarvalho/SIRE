@@ -43,6 +43,7 @@ import java.util.*;
  */
 
 public class SireProxy implements Runnable {
+	//TODO Remove responsibility of combining shares... Rethink attestation protocol asap
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
 	private final MessageDigest messageDigest;
@@ -137,7 +138,7 @@ public class SireProxy implements Runnable {
 							ProtoMessage3 msg3 = processMessage2(msg2);
 							oos.writeObject(msg3);
 						} else if (o instanceof ProxyMessage msg) {
-							if (msg.getOperation() == ProxyMessage.Operation.GET_VERIFIER_PUBLIC_KEY) {
+							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_VERIFIER_PUBLIC_KEY) {
 								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
 							}
 							else {
@@ -199,12 +200,26 @@ public class SireProxy implements Runnable {
 				ObjectInputStream oin = new ObjectInputStream(bin);
 				List<DeviceContext> members = (List<DeviceContext>) oin.readObject();
 				for (DeviceContext d : members)
-					prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
-							.setDeviceId(d.getDeviceId())
-							.setTime(Timestamp.newBuilder()
-									.setSeconds(d.getLastPing().getTime() / 1000)
-									.build())
-							.build());
+					if(d.isAttested()) {
+						prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
+								.setDeviceId(d.getDeviceId())
+								.setTime(Timestamp.newBuilder()
+										.setSeconds(d.getLastPing().getTime() / 1000)
+										.build())
+								.setCertificate(ByteString.copyFrom(d.getCertificate()))
+								.setCertExpTime(Timestamp.newBuilder()
+										.setSeconds(d.getCertExpTime().getTime() / 1000)
+										.build())
+								.build());
+					} else {
+						prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
+								.setDeviceId(d.getDeviceId())
+								.setTime(Timestamp.newBuilder()
+										.setSeconds(d.getLastPing().getTime() / 1000)
+										.build())
+								.build());
+					}
+
 			}
 			return prBuilder.build();
 		}
@@ -307,6 +322,8 @@ public class SireProxy implements Runnable {
 			DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(msg2.getSignatureEvidence()));
 
 			ProxyMessage dataRequest = ProxyMessage.newBuilder()
+					.setDeviceId(msg2.getAttesterId())
+					.setAppId(msg2.getAppId())
 					.setOperation(ProxyMessage.Operation.ATTEST_VERIFY)
 					.setEvidence(evidenceToProto(deviceEvidence.getEvidence()))
 					.setSignature(schnorrToProto(deviceEvidence.getEvidenceSignature()))

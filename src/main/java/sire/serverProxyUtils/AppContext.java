@@ -13,19 +13,22 @@ public class AppContext implements Serializable {
     final TreeMap<String, DeviceContext> devices;
     Policy policy;
     final int timeout;
+    final long certTimeout;
 
-    public AppContext(String id, int timeout) {
+    public AppContext(String id, int timeout, long certTimeout) {
         this.id = id;
         this.timeout = timeout;
         this.devices = new TreeMap<>();
         this.policy = new Policy();
+        this.certTimeout = certTimeout;
     }
 
-    public AppContext(String id, int timeout, Policy policy) {
+    public AppContext(String id, int timeout, long certTimeout, Policy policy) {
         this.id = id;
         this.timeout = timeout;
         this.devices = new TreeMap<>();
         this.policy = policy;
+        this.certTimeout = certTimeout;
     }
 
     public String getId() {
@@ -37,9 +40,8 @@ public class AppContext implements Serializable {
     }
 
     public List<DeviceContext> getMembership() {
-        Timestamp now = new Timestamp(System.currentTimeMillis());
         for(Map.Entry<String, DeviceContext> e : devices.entrySet())
-            if(new Timestamp(e.getValue().getLastPing().getTime() + (this.timeout * 1000L)).before(now))
+            if(e.getValue().isTimedout(this.timeout))
                 devices.remove(e.getKey());
         return devices.values().stream().toList();
     }
@@ -85,5 +87,13 @@ public class AppContext implements Serializable {
 
     public boolean hasDevice(String deviceId) {
         return devices.containsKey(deviceId);
+    }
+
+    public void setDeviceAsAttested(String deviceId, byte[] certificate, Timestamp timestamp) {
+        this.devices.get(deviceId).setAsAttested(certificate, new Timestamp(timestamp.getTime() + 30 * 60000));
+    }
+
+    public boolean isDeviceValid(String deviceId) {
+        return this.devices.containsKey(deviceId) && this.devices.get(deviceId).isValid(timeout);
     }
 }

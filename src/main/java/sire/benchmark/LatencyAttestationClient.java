@@ -1,6 +1,6 @@
 package sire.benchmark;
 
-import sire.device.DeviceStub;
+/*import sire.device.DeviceStub;
 import sire.messages.Messages;
 import sire.serverProxyUtils.DeviceContext;
 
@@ -14,12 +14,12 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.Future;*/
 
 public class LatencyAttestationClient {
     //TODO Needs to be reimplemented... From the ground up.
 
-    private static String initialId;
+    /*private static String initialId;
     private static final String appId = "app1";
     private static final String waTZVersion = "1.0";
 
@@ -172,5 +172,5 @@ public class LatencyAttestationClient {
             case "attest" -> Messages.ProxyMessage.Operation.ATTEST_VERIFY;
             default -> null;
         };
-    }
+    }*/
 }

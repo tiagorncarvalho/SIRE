@@ -25,6 +25,7 @@ import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.AppContext;
 import sire.serverProxyUtils.DeviceContext;
+import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.commitment.linear.LinearCommitments;
 import vss.secretsharing.Share;
@@ -87,6 +88,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	//timeout for devices, in seconds
 	private final int timeout = 30;
+	private final long certTimeout = 30 * 60000; //30min
 
 	private final VerifierManager verifierManager;
 
@@ -135,7 +137,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				return executeOrderedMembership(msg, messageContext);
 			else if(op.toString().startsWith("ATTEST"))
 				return executeOrderedAttestation(msg, messageContext);
-		} catch (IOException e) {
+		} catch (IOException | SireException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -193,6 +195,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					plainData[0] = 1;
 					System.arraycopy(dummyDataForAttester, 0, plainData, 1,
 							dummyDataForAttester.length);
+					membership.get(msg.getAppId()).setDeviceAsAttested(msg.getDeviceId(), dummyDataForAttester, new Timestamp(messageContext.getTimestamp()));
 				} else {
 					plainData = new byte[] {0};
 				}
@@ -214,14 +217,16 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		return null;
 	}
 
-	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException {
+	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
+		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.get(msg.getAppId()).isDeviceValid(msg.getDeviceId()))
+			throw new SireException("Unknown Device: Not attested or not in this app membership.");
 		switch(op) {
 			case MEMBERSHIP_JOIN -> {
 
 				lock.lock();
 				if(!membership.containsKey(msg.getAppId()))
-					membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout));
+					membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout, this.certTimeout));
 
 				membership.get(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
 						new Timestamp(messageContext.getTimestamp()), protoDevToDev(msg.getDeviceType())));
@@ -292,7 +297,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				if(membership.containsKey(msg.getAppId()))
 					membership.get(msg.getAppId()).setPolicy(msg.getPolicy().getPolicy(), msg.getPolicy().getType());
 				else
-					membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout,
+					membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout, this.certTimeout,
 							new Policy(msg.getPolicy().getPolicy(), msg.getPolicy().getType())));
 				lock.unlock();
 				return new ConfidentialMessage();
@@ -315,7 +320,10 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		return null;
 	}
 
-	private ConfidentialMessage executeOrderedMap(ProxyMessage msg) throws IOException {
+	private ConfidentialMessage executeOrderedMap(ProxyMessage msg) throws IOException, SireException {
+		if(membership.get(msg.getAppId()).isDeviceValid(msg.getDeviceId())) {
+			throw new SireException("Unknown Device: Not attested or not in this app membership.");
+		}
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
 			case MAP_PUT -> {
