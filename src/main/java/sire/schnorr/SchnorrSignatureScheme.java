@@ -1,13 +1,7 @@
 package sire.schnorr;
 
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Encoding;
-import org.bouncycastle.asn1.ASN1Integer;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.sec.ECPrivateKey;
-import org.bouncycastle.crypto.params.ECDomainParameters;
-import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
-import org.bouncycastle.crypto.signers.ECDSASigner;
+import org.bouncycastle.asn1.nist.NISTNamedCurves;
+import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.jce.ECNamedCurveTable;
 import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.jce.spec.ECPrivateKeySpec;
@@ -20,15 +14,13 @@ import vss.interpolation.InterpolationStrategy;
 import vss.interpolation.LagrangeInterpolation;
 import vss.polynomial.Polynomial;
 import vss.secretsharing.Share;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import static java.math.BigInteger.ZERO;
 
 /**
  * @author robin
@@ -40,9 +32,13 @@ public class SchnorrSignatureScheme {
 	private final Set<BigInteger> corruptedShareholders;
 	private final InterpolationStrategy interpolationStrategy;
 	private final ECCurve curve;
+	private final SecureRandom rng;
+	X9ECParameters x9;
 
 	public SchnorrSignatureScheme() throws NoSuchAlgorithmException {
 		messageDigest = MessageDigest.getInstance("SHA256");
+		rng = new SecureRandom();
+		x9 = NISTNamedCurves.getByName("P-256");
 
 		//secp256r1 curve domain parameters
 		BigInteger prime = new BigInteger("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF", 16);
@@ -110,7 +106,7 @@ public class SchnorrSignatureScheme {
 			if (counter <= f) {
 				throw new SecretSharingException("Not enough valid shares!");
 			}
-			sigma = interpolationStrategy.interpolateAt(BigInteger.ZERO, minimumShares);
+			sigma = interpolationStrategy.interpolateAt(ZERO, minimumShares);
 		} else {
 			sigma = sigmaPolynomial.getConstant();
 		}
@@ -171,20 +167,6 @@ public class SchnorrSignatureScheme {
 		return publicKey.getEncoded(true);
 	}
 
-	/*public byte[] signECDSA(BigInteger key, byte[] data) throws IOException {
-		ECDomainParameters domainParameters = new ECDomainParameters(curve, generator, order);
-		ECPrivateKeyParameters keyParameters = new ECPrivateKeyParameters(key, domainParameters);
-		ECDSASigner signer = new ECDSASigner();
-		signer.init(true, keyParameters);
-		BigInteger[] temp = signer.generateSignature(computeHash(data));
-		ByteArrayOutputStream baout = new ByteArrayOutputStream();
-		//System.out.println(Arrays.toString(temp[0].toByteArray()));
-		//System.out.println(Arrays.toString(temp[1].toByteArray()));
-		baout.write(temp[0].toByteArray());
-		baout.write(temp[1].toByteArray());
-		return baout.toByteArray();
-	}*/
-
 	public boolean verifyECDSA(ECPoint key, byte[] signature, byte[] signingData) throws NoSuchAlgorithmException, NoSuchProviderException,
 			InvalidKeySpecException, InvalidKeyException, SignatureException {
 		KeyFactory fac = KeyFactory.getInstance("EC", "BC");
@@ -209,12 +191,17 @@ public class SchnorrSignatureScheme {
 		return ecdsa.sign();
 	}
 
-	private byte[] DEREncodeSignature(byte [] signature) throws IOException {
-		BigInteger r = new BigInteger(1, Arrays.copyOfRange(signature, 0, 32));
-		BigInteger s = new BigInteger(1, Arrays.copyOfRange(signature, 32, 64));
-		ASN1EncodableVector v = new ASN1EncodableVector();
-		v.add(new ASN1Integer(r));
-		v.add(new ASN1Integer(s));
-		return new DERSequence(v).getEncoded(ASN1Encoding.DER);
+	public BigInteger generateBigInt(){
+		System.out.println("Bit Length: " + x9.getN().bitLength());
+		BigInteger rndBig = new BigInteger(x9.getN().bitLength() - 1, rng);
+		if (rndBig.compareTo(BigInteger.ZERO) == 0) {
+			rndBig = rndBig.add(BigInteger.ONE);
+		}
+
+		return rndBig;
 	}
+
+    public ECPoint generateKey(BigInteger privKey) {
+		return generator.multiply(privKey).normalize();
+    }
 }

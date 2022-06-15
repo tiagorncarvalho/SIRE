@@ -26,6 +26,7 @@ import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.AppContext;
 import sire.serverProxyUtils.DeviceContext;
+import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.commitment.linear.LinearCommitments;
 import vss.secretsharing.Share;
@@ -33,6 +34,7 @@ import vss.secretsharing.VerifiableShare;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -92,6 +94,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	//timeout for devices, in seconds
 	private final int timeout = 30;
+	//validity of att certificate
+	private final long certTimeout = 30 * 60000; //30min
 
 	private final VerifierManager verifierManager;
 
@@ -190,17 +194,28 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				lock.unlock();
 			}
 			case ATTEST_VERIFY -> {
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				WaTZEvidence evidence = new WaTZEvidence(protoToEvidence(msg.getEvidence()),
-						byteStringToByteArray(out, msg.getEcdsaSignature()));
-				boolean isValidEvidence = verifierManager.verifyWaTZEvidence(evidence);
-				System.out.println("isValid? " + isValidEvidence);
-				byte[] plainData;
-				if (isValidEvidence) {
-					plainData = dummyDataForAttester;
-				} else {
-					plainData = new byte[] {0};
+				ByteArrayOutputStream out= new ByteArrayOutputStream();
+				try {
+					WaTZEvidence evidence = new WaTZEvidence(protoToEvidence(msg.getEvidence()),
+							byteStringToByteArray(out, msg.getEcdsaSignature()));
+					verifierManager.verifyWaTZEvidence(evidence);
+				} catch(SireException e) {
+					out.reset();
+					out.write(0);
+					out.write(e.getMessage().getBytes());
+					System.err.println(e.getMessage());
+					return new ConfidentialMessage(out.toByteArray());
 				}
+				//System.out.println("isValid? " + isValidEvidence);
+				byte[] plainData;
+				plainData = dummyDataForAttester;
+				if(!membership.containsKey(msg.getAppId()))
+					membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout));
+
+				membership.get(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
+						new Timestamp(messageContext.getTimestamp()), plainData, new Timestamp(messageContext.getTimestamp() + certTimeout)));
+
+				System.out.println("Device ID: " + msg.getDeviceId());
 
 				return new ConfidentialMessage(plainData);
 			}
@@ -229,7 +244,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout));
 
 				membership.get(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
-						new Timestamp(messageContext.getTimestamp()), protoDevToDev(msg.getDeviceType())));
+						new Timestamp(messageContext.getTimestamp()), dummyDataForAttester,
+						new Timestamp(messageContext.getTimestamp() + certTimeout)));
 
 				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_JOIN, msg.getDeviceId());
 
@@ -279,7 +295,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				lock.lock();
 				extensionManager.addExtension(msg.getKey(), msg.getCode());
 				lock.unlock();
-				System.out.println("Code: " + msg.getCode());
+				//System.out.println("Code: " + msg.getCode());
 				return new ConfidentialMessage();
 			}
 			case EXTENSION_REMOVE -> {

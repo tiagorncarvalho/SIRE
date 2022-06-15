@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+<head>
+    <meta charset="UTF-8">
+    <title>SIRE System State</title>
+</head>
+<style>
+    pre {
+        white-space: pre-wrap;       /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    }
+</style>
+<script>
+    async function doing() {
+        while (true) {
+            await sleep(5000);
+            getUpdates();
+        }
+    }
+
+    async function getUpdates() {
+        const apiUrl = 'http://localhost:8080/state'
+        fetch(apiUrl).then(response => {
+            return response.json();
+        }).then(data => {
+            appendUpdates(data)
+        }).catch(err => {
+            // Do something for an error here
+        });
+    }
+
+    /*function sleep(seconds)
+    {
+        var e = new Date().getTime() + (seconds * 1000);
+        while (new Date().getTime() <= e) {}
+    }*/
+
+    function sleep(time) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, time || 1000);
+        });
+    }
+
+    function appendUpdates(data) {
+        var mainContainer = document.getElementById("state");
+        for(i = 0; i < data.length; i++) {
+            const div = document.createElement("div");
+            div.innerHTML = data[i] + "<br>";
+            mainContainer.appendChild(div);
+        }
+    }
+</script>
+<body>
+<header>
+    <h1>SIRE System Viewer</h1>
+</header>
+<!--<pre>
+    <code>-->
+<pre>
+    <div id="state"></div>
+</pre>
+
+<!--    </code>
+</pre>-->
+<footer>
+    <p>SIRE - Trusted Verifier Service</p>
+</footer>
+</body>
+<script>
+    doing();
+</script>
+</html>

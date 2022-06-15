@@ -24,15 +24,15 @@ public class DeviceClient {
 			System.exit(-1);
 		}
 		String attesterId = args[0];
-		String appId = "app1";
+		String appId = "Example App";
 		int waTZVersion = 1;
 		DeviceType type = DeviceType.MOTIONSENSOR;
 		byte[] claim = "measure1".getBytes();
 		DeviceStub dummy = new DeviceStub();
-		dummy.attest(appId, attesterId, type, waTZVersion, claim);
+		//dummy.attest(appId, attesterId, type, waTZVersion, claim);
 
 		try {
-			String key = "exampleKey" + attesterId;
+			/*String key = "exampleKey" + attesterId;
 			String key2 = "exampleKey2" + attesterId;
 			ExampleObject value = new ExampleObject("exampleValue" + attesterId);
 			ExampleObject value2 = new ExampleObject("exampleValue2" + attesterId);
@@ -76,7 +76,10 @@ public class DeviceClient {
 			dummy.leave(appId, attesterId);
 			for(DeviceContext d : dummy.getView(attesterId, appId))
 				System.out.println(d.toString());
-			System.out.println("Done!");
+			System.out.println("Done!");*/
+
+			for(DeviceContext d : dummy.getView(attesterId, appId))
+				System.out.println(d.toString());
 
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();

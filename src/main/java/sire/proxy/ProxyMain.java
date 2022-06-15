@@ -1,29 +1,48 @@
 package sire.proxy;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 import sire.configuration.Extension;
 import sire.configuration.Policy;
 import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.SireException;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {GroovyTemplateAutoConfiguration.class})
 public class ProxyMain {
-    /*static SireProxy proxy;*/
+    /*static SireProxy sireProxy;*/
     static SireRestProxy restProxy;
-    static ProxyWatz proxy;
-    public static void main(String[] args) throws SireException {
+    static ProxyWatz proxyWatz;
+    private static List<String> stateUpdates;
+    public static void main(String[] args) {
         if (args.length < 1) {
             System.out.println("Usage: sire.proxy.ProxyMain <proxy id>");
             System.exit(-1);
         }
 
-        proxy = null;
-        int proxyId = Integer.parseInt(args[0]);
-        proxy = new ProxyWatz(proxyId);
-        proxy.run();
+        proxyWatz = null;
+        /*sireProxy = null;*/
+        stateUpdates = new ArrayList<>();
+        try {
+            int proxyId = Integer.parseInt(args[0]);
+            proxyWatz = new ProxyWatz(proxyId, stateUpdates);
+            /*sireProxy = new SireProxy(proxyId);*/
+            restProxy = new SireRestProxy(proxyId + 1);
+        } catch (SireException e) {
+            e.printStackTrace();
+        }
+
+        SpringApplication app = new SpringApplication(ProxyMain.class);
+        app.setDefaultProperties(Collections
+                .singletonMap("server.port", "8083"));
+        app.run(args);
+        //SpringApplication.run(ProxyMain.class, args);
+        proxyWatz.run();
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -49,7 +68,7 @@ public class ProxyMain {
         public Extension getExtension(@RequestParam(value = "key") String key) throws SireException {
             if(key == null || key.equals(""))
                 throw new SireException("Malformed key");
-            return new Extension (restProxy.getExtension(key));
+            return new Extension(restProxy.getExtension(key));
         }
 
         @PostMapping("/policy")
@@ -85,6 +104,17 @@ public class ProxyMain {
             if(admin == null || admin.equals(""))
                 throw new SireException("Malformed adminId");
             return restProxy.getApps(admin);
+        }
+
+        @GetMapping("/state")
+        public List<String> getState() {
+            List<String> temp = new ArrayList<>(stateUpdates);
+            stateUpdates.clear();
+
+            if(temp.size() > 0)
+                System.out.println("Sent: " + temp.get(0));
+
+            return temp;
         }
     }
 }

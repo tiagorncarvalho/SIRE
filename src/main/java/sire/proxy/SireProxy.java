@@ -199,13 +199,18 @@ public class SireProxy implements Runnable {
 				ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
 				ObjectInputStream oin = new ObjectInputStream(bin);
 				List<DeviceContext> members = (List<DeviceContext>) oin.readObject();
-				for (DeviceContext d : members)
+				for (DeviceContext d : members) {
 					prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
 							.setDeviceId(d.getDeviceId())
 							.setTime(Timestamp.newBuilder()
 									.setSeconds(d.getLastPing().getTime() / 1000)
 									.build())
+							.setCertificate(ByteString.copyFrom(d.getCertificate()))
+							.setCertExpTime(Timestamp.newBuilder()
+									.setSeconds(d.getCertExpTime().getTime() / 1000)
+									.build())
 							.build());
+				}
 			}
 			return prBuilder.build();
 		}

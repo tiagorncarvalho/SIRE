@@ -1,5 +1,6 @@
-package sire.benchmark.auto;
 
+package sire.benchmark.auto;
+/*
 import controller.IBenchmarkStrategy;
 import demo.Measurement;
 import master.IProcessingResult;
@@ -23,11 +24,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+*/
+public class ThroughputLatencyBenchmarkStrategy {//implements IBenchmarkStrategy {
+    //TODO Needs to be reimplemented... From the ground up.
 
-/**
- * @author robin
- */
-public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
+/*
     private final Lock lock;
     private final Condition sleepCondition;
     private final int totalRounds;
@@ -77,8 +78,8 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
         this.maxLatency = new double[totalRounds];
         this.maxThroughput = new double[totalRounds];
         this.sleepBetweenRounds = 10;
-        this.numRequests = 50;
-        this.operation = "attest";//attest or getKey
+        this.numRequests = 500;
+        this.operation = "mapGet";//attest or getKey
         this.clients = configuration.getClientsPerRound();
         for (int i = 0; i < clients.length; i++) {
             clients[i]--;
@@ -144,7 +145,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                 WorkerCommands[] clientCommands = new WorkerCommands[1 + clientsPerPod.length];
                 clientCommands[0] = new WorkerCommands(
                         measurementClientId, new ProcessInfo[]{
-                        new ProcessInfo(clientCommand + clientId + " " + numOfClients + " " + numRequests + " "
+                        new ProcessInfo(clientCommand + clientId + " 1 " + numRequests + " "
                                  + operation + " true", workingDirectory)
                 });
                 clientId++;
@@ -156,7 +157,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                     ProcessInfo[] processes = new ProcessInfo[numOfWorkers];
                     for (int j = 0; j < numOfWorkers; j++) {
                         int clientsPerWorker = Math.min(totalClientsPerPod, maxClientsPerWorker);
-                        String command = clientCommand + clientId + " " + numOfClients + " " + numRequests + " "
+                        String command = clientCommand + clientId + " " + clientsPerWorker + " " + numRequests + " "
                                 + operation + " false";
                         totalClientsPerPod -= clientsPerWorker;
                         processes[j] = new ProcessInfo(command, workingDirectory);
@@ -402,5 +403,6 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
         Executors.newSingleThreadExecutor().shutdown();
         lock.unlock();
     }
-
+*/
 }
+

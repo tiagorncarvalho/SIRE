@@ -8263,13 +8263,22 @@ public final class Messages {
       com.google.protobuf.TimestampOrBuilder getTimeOrBuilder();
 
       /**
-       * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
+       * <code>bytes certificate = 3;</code>
        */
-      int getDeviceTypeValue();
+      com.google.protobuf.ByteString getCertificate();
+
       /**
-       * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
        */
-      sire.messages.Messages.ProtoDeviceType getDeviceType();
+      boolean hasCertExpTime();
+      /**
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+       */
+      com.google.protobuf.Timestamp getCertExpTime();
+      /**
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+       */
+      com.google.protobuf.TimestampOrBuilder getCertExpTimeOrBuilder();
     }
     /**
      * Protobuf type {@code sire.messages.ProxyResponse.ProtoDeviceContext}
@@ -8285,7 +8294,7 @@ public final class Messages {
       }
       private ProtoDeviceContext() {
         deviceId_ = "";
-        deviceType_ = 0;
+        certificate_ = com.google.protobuf.ByteString.EMPTY;
       }
 
       @java.lang.Override
@@ -8331,10 +8340,22 @@ public final class Messages {
 
                 break;
               }
-              case 24: {
-                int rawValue = input.readEnum();
+              case 26: {
 
-                deviceType_ = rawValue;
+                certificate_ = input.readBytes();
+                break;
+              }
+              case 34: {
+                com.google.protobuf.Timestamp.Builder subBuilder = null;
+                if (certExpTime_ != null) {
+                  subBuilder = certExpTime_.toBuilder();
+                }
+                certExpTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(certExpTime_);
+                  certExpTime_ = subBuilder.buildPartial();
+                }
+
                 break;
               }
               default: {
@@ -8424,21 +8445,34 @@ public final class Messages {
         return getTime();
       }
 
-      public static final int DEVICETYPE_FIELD_NUMBER = 3;
-      private int deviceType_;
+      public static final int CERTIFICATE_FIELD_NUMBER = 3;
+      private com.google.protobuf.ByteString certificate_;
       /**
-       * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
+       * <code>bytes certificate = 3;</code>
        */
-      public int getDeviceTypeValue() {
-        return deviceType_;
+      public com.google.protobuf.ByteString getCertificate() {
+        return certificate_;
+      }
+
+      public static final int CERTEXPTIME_FIELD_NUMBER = 4;
+      private com.google.protobuf.Timestamp certExpTime_;
+      /**
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+       */
+      public boolean hasCertExpTime() {
+        return certExpTime_ != null;
       }
       /**
-       * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
        */
-      public sire.messages.Messages.ProtoDeviceType getDeviceType() {
-        @SuppressWarnings("deprecation")
-        sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(deviceType_);
-        return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
+      public com.google.protobuf.Timestamp getCertExpTime() {
+        return certExpTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : certExpTime_;
+      }
+      /**
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+       */
+      public com.google.protobuf.TimestampOrBuilder getCertExpTimeOrBuilder() {
+        return getCertExpTime();
       }
 
       private byte memoizedIsInitialized = -1;
@@ -8461,8 +8495,11 @@ public final class Messages {
         if (time_ != null) {
           output.writeMessage(2, getTime());
         }
-        if (deviceType_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
-          output.writeEnum(3, deviceType_);
+        if (!certificate_.isEmpty()) {
+          output.writeBytes(3, certificate_);
+        }
+        if (certExpTime_ != null) {
+          output.writeMessage(4, getCertExpTime());
         }
         unknownFields.writeTo(output);
       }
@@ -8480,9 +8517,13 @@ public final class Messages {
           size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(2, getTime());
         }
-        if (deviceType_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
+        if (!certificate_.isEmpty()) {
           size += com.google.protobuf.CodedOutputStream
-            .computeEnumSize(3, deviceType_);
+            .computeBytesSize(3, certificate_);
+        }
+        if (certExpTime_ != null) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(4, getCertExpTime());
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -8507,7 +8548,13 @@ public final class Messages {
           result = result && getTime()
               .equals(other.getTime());
         }
-        result = result && deviceType_ == other.deviceType_;
+        result = result && getCertificate()
+            .equals(other.getCertificate());
+        result = result && (hasCertExpTime() == other.hasCertExpTime());
+        if (hasCertExpTime()) {
+          result = result && getCertExpTime()
+              .equals(other.getCertExpTime());
+        }
         result = result && unknownFields.equals(other.unknownFields);
         return result;
       }
@@ -8525,8 +8572,12 @@ public final class Messages {
           hash = (37 * hash) + TIME_FIELD_NUMBER;
           hash = (53 * hash) + getTime().hashCode();
         }
-        hash = (37 * hash) + DEVICETYPE_FIELD_NUMBER;
-        hash = (53 * hash) + deviceType_;
+        hash = (37 * hash) + CERTIFICATE_FIELD_NUMBER;
+        hash = (53 * hash) + getCertificate().hashCode();
+        if (hasCertExpTime()) {
+          hash = (37 * hash) + CERTEXPTIME_FIELD_NUMBER;
+          hash = (53 * hash) + getCertExpTime().hashCode();
+        }
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
         return hash;
@@ -8668,8 +8719,14 @@ public final class Messages {
             time_ = null;
             timeBuilder_ = null;
           }
-          deviceType_ = 0;
+          certificate_ = com.google.protobuf.ByteString.EMPTY;
 
+          if (certExpTimeBuilder_ == null) {
+            certExpTime_ = null;
+          } else {
+            certExpTime_ = null;
+            certExpTimeBuilder_ = null;
+          }
           return this;
         }
 
@@ -8702,7 +8759,12 @@ public final class Messages {
           } else {
             result.time_ = timeBuilder_.build();
           }
-          result.deviceType_ = deviceType_;
+          result.certificate_ = certificate_;
+          if (certExpTimeBuilder_ == null) {
+            result.certExpTime_ = certExpTime_;
+          } else {
+            result.certExpTime_ = certExpTimeBuilder_.build();
+          }
           onBuilt();
           return result;
         }
@@ -8758,8 +8820,11 @@ public final class Messages {
           if (other.hasTime()) {
             mergeTime(other.getTime());
           }
-          if (other.deviceType_ != 0) {
-            setDeviceTypeValue(other.getDeviceTypeValue());
+          if (other.getCertificate() != com.google.protobuf.ByteString.EMPTY) {
+            setCertificate(other.getCertificate());
+          }
+          if (other.hasCertExpTime()) {
+            mergeCertExpTime(other.getCertExpTime());
           }
           this.mergeUnknownFields(other.unknownFields);
           onChanged();
@@ -8976,49 +9041,150 @@ public final class Messages {
           return timeBuilder_;
         }
 
-        private int deviceType_ = 0;
+        private com.google.protobuf.ByteString certificate_ = com.google.protobuf.ByteString.EMPTY;
         /**
-         * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
+         * <code>bytes certificate = 3;</code>
          */
-        public int getDeviceTypeValue() {
-          return deviceType_;
+        public com.google.protobuf.ByteString getCertificate() {
+          return certificate_;
         }
         /**
-         * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
+         * <code>bytes certificate = 3;</code>
          */
-        public Builder setDeviceTypeValue(int value) {
-          deviceType_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
-         */
-        public sire.messages.Messages.ProtoDeviceType getDeviceType() {
-          @SuppressWarnings("deprecation")
-          sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(deviceType_);
-          return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
-        }
-        /**
-         * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
-         */
-        public Builder setDeviceType(sire.messages.Messages.ProtoDeviceType value) {
+        public Builder setCertificate(com.google.protobuf.ByteString value) {
           if (value == null) {
-            throw new NullPointerException();
-          }
-          
-          deviceType_ = value.getNumber();
+    throw new NullPointerException();
+  }
+  
+          certificate_ = value;
           onChanged();
           return this;
         }
         /**
-         * <code>.sire.messages.ProtoDeviceType deviceType = 3;</code>
+         * <code>bytes certificate = 3;</code>
          */
-        public Builder clearDeviceType() {
+        public Builder clearCertificate() {
           
-          deviceType_ = 0;
+          certificate_ = getDefaultInstance().getCertificate();
           onChanged();
           return this;
+        }
+
+        private com.google.protobuf.Timestamp certExpTime_ = null;
+        private com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> certExpTimeBuilder_;
+        /**
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+         */
+        public boolean hasCertExpTime() {
+          return certExpTimeBuilder_ != null || certExpTime_ != null;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+         */
+        public com.google.protobuf.Timestamp getCertExpTime() {
+          if (certExpTimeBuilder_ == null) {
+            return certExpTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : certExpTime_;
+          } else {
+            return certExpTimeBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+         */
+        public Builder setCertExpTime(com.google.protobuf.Timestamp value) {
+          if (certExpTimeBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            certExpTime_ = value;
+            onChanged();
+          } else {
+            certExpTimeBuilder_.setMessage(value);
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+         */
+        public Builder setCertExpTime(
+            com.google.protobuf.Timestamp.Builder builderForValue) {
+          if (certExpTimeBuilder_ == null) {
+            certExpTime_ = builderForValue.build();
+            onChanged();
+          } else {
+            certExpTimeBuilder_.setMessage(builderForValue.build());
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+         */
+        public Builder mergeCertExpTime(com.google.protobuf.Timestamp value) {
+          if (certExpTimeBuilder_ == null) {
+            if (certExpTime_ != null) {
+              certExpTime_ =
+                com.google.protobuf.Timestamp.newBuilder(certExpTime_).mergeFrom(value).buildPartial();
+            } else {
+              certExpTime_ = value;
+            }
+            onChanged();
+          } else {
+            certExpTimeBuilder_.mergeFrom(value);
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+         */
+        public Builder clearCertExpTime() {
+          if (certExpTimeBuilder_ == null) {
+            certExpTime_ = null;
+            onChanged();
+          } else {
+            certExpTime_ = null;
+            certExpTimeBuilder_ = null;
+          }
+
+          return this;
+        }
+        /**
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+         */
+        public com.google.protobuf.Timestamp.Builder getCertExpTimeBuilder() {
+          
+          onChanged();
+          return getCertExpTimeFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+         */
+        public com.google.protobuf.TimestampOrBuilder getCertExpTimeOrBuilder() {
+          if (certExpTimeBuilder_ != null) {
+            return certExpTimeBuilder_.getMessageOrBuilder();
+          } else {
+            return certExpTime_ == null ?
+                com.google.protobuf.Timestamp.getDefaultInstance() : certExpTime_;
+          }
+        }
+        /**
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
+            getCertExpTimeFieldBuilder() {
+          if (certExpTimeBuilder_ == null) {
+            certExpTimeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder>(
+                    getCertExpTime(),
+                    getParentForChildren(),
+                    isClean());
+            certExpTime_ = null;
+          }
+          return certExpTimeBuilder_;
         }
         @java.lang.Override
         public final Builder setUnknownFields(
@@ -10347,20 +10513,21 @@ public final class Messages {
       "\020\r\022\023\n\017MEMBERSHIP_PING\020\016\022\021\n\rEXTENSION_ADD" +
       "\020\017\022\024\n\020EXTENSION_REMOVE\020\020\022\021\n\rEXTENSION_GE" +
       "T\020\021\022\016\n\nPOLICY_ADD\020\022\022\021\n\rPOLICY_REMOVE\020\023\022\016" +
-      "\n\nPOLICY_GET\020\024\"\251\003\n\rProxyResponse\0227\n\004type" +
+      "\n\nPOLICY_GET\020\024\"\273\003\n\rProxyResponse\0227\n\004type" +
       "\030\001 \001(\0162).sire.messages.ProxyResponse.Res" +
       "ponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022@" +
       "\n\007members\030\004 \003(\0132/.sire.messages.ProxyRes" +
       "ponse.ProtoDeviceContext\022\021\n\textension\030\005 " +
-      "\001(\t\022\016\n\006policy\030\006 \001(\t\032\204\001\n\022ProtoDeviceConte" +
+      "\001(\t\022\016\n\006policy\030\006 \001(\t\032\226\001\n\022ProtoDeviceConte" +
       "xt\022\020\n\010deviceId\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.goo" +
-      "gle.protobuf.Timestamp\0222\n\ndeviceType\030\003 \001" +
-      "(\0162\036.sire.messages.ProtoDeviceType\"V\n\014Re" +
-      "sponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n" +
-      "\004VIEW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n\nPOLICY_GET" +
-      "\020\004*g\n\017ProtoDeviceType\022\n\n\006CAMERA\020\000\022\017\n\013THE" +
-      "RMOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTI" +
-      "ONSENSOR\020\004\022\017\n\013LIGHTSENSOR\020\005b\006proto3"
+      "gle.protobuf.Timestamp\022\023\n\013certificate\030\003 " +
+      "\001(\014\022/\n\013certExpTime\030\004 \001(\0132\032.google.protob" +
+      "uf.Timestamp\"V\n\014ResponseType\022\013\n\007MAP_GET\020" +
+      "\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_G" +
+      "ET\020\003\022\016\n\nPOLICY_GET\020\004*g\n\017ProtoDeviceType\022" +
+      "\n\n\006CAMERA\020\000\022\017\n\013THERMOMETER\020\001\022\t\n\005RADAR\020\002\022" +
+      "\t\n\005LIDAR\020\003\022\020\n\014MOTIONSENSOR\020\004\022\017\n\013LIGHTSEN" +
+      "SOR\020\005b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -10434,7 +10601,7 @@ public final class Messages {
     internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor,
-        new java.lang.String[] { "DeviceId", "Time", "DeviceType", });
+        new java.lang.String[] { "DeviceId", "Time", "Certificate", "CertExpTime", });
     com.google.protobuf.TimestampProto.getDescriptor();
   }
 

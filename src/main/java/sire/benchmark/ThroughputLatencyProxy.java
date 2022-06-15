@@ -1,6 +1,7 @@
 package sire.benchmark;
 
-import com.google.protobuf.ByteString;
+
+/*import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
@@ -42,9 +43,12 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.*;
 
-import static sire.messages.ProtoUtils.*;
+import static sire.messages.ProtoUtils.*;*/
+
 
 public class ThroughputLatencyProxy {
+    //TODO Needs to be reimplemented... From the ground up.
+    /*
     private final Logger logger = LoggerFactory.getLogger("sire");
     private static final int AES_KEY_LENGTH = 128;
     private final ConfidentialServiceProxy serviceProxy;
@@ -496,4 +500,5 @@ public class ThroughputLatencyProxy {
             startTime = currentTime;
         }
     }
+*/
 }

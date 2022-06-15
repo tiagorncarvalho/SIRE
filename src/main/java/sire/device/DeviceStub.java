@@ -59,7 +59,7 @@ public class DeviceStub {
         BigInteger cofactor = prime.divide(order);
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
         try {
-            this.s = new Socket("192.168.2.34"/*"localhost"*/, port);
+            this.s = new Socket(/*"192.168.2.34"*/"localhost", port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
         } catch (IOException e) {
@@ -371,7 +371,8 @@ public class DeviceStub {
             ArrayList<DeviceContext> tmp = new ArrayList<>();
             for(ProxyResponse.ProtoDeviceContext d : res)
                 tmp.add(new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000),
-                        protoDevToDev(d.getDeviceType())));
+                        byteStringToByteArray(new ByteArrayOutputStream(), d.getCertificate()),
+                        new Timestamp(d.getTime().getSeconds() * 1000)));
             return tmp;
         }
         return null;

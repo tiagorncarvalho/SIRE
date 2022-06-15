@@ -3,6 +3,7 @@ package sire.attestation;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
+import sire.serverProxyUtils.SireException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -18,7 +19,7 @@ public class VerifierManager {
     SchnorrSignatureScheme signatureScheme;
     MessageDigest messageDigest;
     private final List<byte[]> refValues;
-    private final Set<byte[]> endorsedKeys;
+    private final Set<String> endorsedKeys;
     private final int WaTZVersion = 1;
 
 
@@ -26,14 +27,14 @@ public class VerifierManager {
         signatureScheme = new SchnorrSignatureScheme();
         messageDigest = MessageDigest.getInstance("SHA256");
         refValues =  new ArrayList<>(List.of(
-                hexStringToByteArray("a0053ffe015503d7e240239edff8b8ae1b21fbfce5317d658dbeaa131aabefb0")
+                hexStringToByteArray("4C4517CFB01F0747124F64BDA21B2CD9E94F6D7AA32E067EB45C4C516F346DE1")
         ));
         endorsedKeys = new HashSet<>();
-        endorsedKeys.add(hexStringToByteArray("0448eeee81de28db3e5d5afc7d4b7ea4b1ac16a2d7a9978c1f84b4355730643847f7f" +
-                "2ce32434eab779353748eee64e72976340e805d87c2b6984aa5d12d303faf"));
+        endorsedKeys.add("0448EEEE81DE28DB3E5D5AFC7D4B7EA4B1AC16A2D7A9978C1F84B4355730643847F7F2CE32434EAB779353748EEE" +
+                "64E72976340E805D87C2B6984AA5D12D303FAF");
     }
 
-    public boolean verifyEvidence(DeviceEvidence deviceEvidence) {
+    public boolean verifyEvidence(DeviceEvidence deviceEvidence) throws SireException {
         Evidence evidence = deviceEvidence.getEvidence();
         ECPoint attesterPublicKey = signatureScheme.decodePublicKey(evidence
                 .getEncodedAttestationServicePublicKey());
@@ -60,10 +61,12 @@ public class VerifierManager {
         return verifyClaim(evidence.getClaim()) && evidence.getWaTZVersion() == this.WaTZVersion;
     }
 
-    public boolean verifyWaTZEvidence(WaTZEvidence deviceEvidence) throws NoSuchAlgorithmException,
-            InvalidKeySpecException, SignatureException, NoSuchProviderException, InvalidKeyException, IOException {
+    public void verifyWaTZEvidence(WaTZEvidence deviceEvidence) throws NoSuchAlgorithmException,
+            InvalidKeySpecException, SignatureException, NoSuchProviderException, InvalidKeyException, IOException, SireException {
         Evidence evidence = deviceEvidence.getEvidence();
         byte[] attPubKey = evidence.getEncodedAttestationServicePublicKey();
+        if(!endorsedKeys.contains(bytesToHex(attPubKey)))
+            throw new SireException("Invalid attestation key! </span> Key: " + bytesToHex(attPubKey));
         String attPubKeyX = bytesToHex(Arrays.copyOfRange(attPubKey, 1, 33));
         String attPubKeyY = bytesToHex(Arrays.copyOfRange(attPubKey, 33, attPubKey.length));
         byte[] signature = deviceEvidence.getSignature();
@@ -73,9 +76,12 @@ public class VerifierManager {
         System.out.println("IsValidSignature? " + isValidSignature);
 
         if(!isValidSignature)
-            return false;
+            throw new SireException("Invalid signature! </span>");
 
-        return verifyClaim(evidence.getClaim()) && evidence.getWaTZVersion() == this.WaTZVersion;
+        if(evidence.getWaTZVersion() != this.WaTZVersion)
+            throw new SireException("Wrong WaTZVersion!");
+
+        verifyClaimWatz(evidence.getClaim());
     }
 
     private byte[] createSigningData(byte[] anchor, int waTZVersion, byte[] claim, byte[] attKey) throws IOException {
@@ -128,5 +134,24 @@ public class VerifierManager {
         return false;
     }
 
+    private void verifyClaimWatz(byte[] claim) throws SireException {
+        for(byte[] c : refValues) {
+            if (Arrays.equals(c, claim))
+                return;
+        }
+        throw new SireException("Invalid claim!</span> Claim: " + bytesToHex(claim));
+    }
 
+
+    public List<byte[]> getRefValues() {
+        return refValues;
+    }
+
+    public Set<String> getEndorsedKeys() {
+        return endorsedKeys;
+    }
+
+    public int getWaTZVersion() {
+        return WaTZVersion;
+    }
 }

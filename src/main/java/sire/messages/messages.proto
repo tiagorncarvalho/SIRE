@@ -151,7 +151,8 @@ message ProxyResponse {
   message ProtoDeviceContext {
     string deviceId = 1;
     google.protobuf.Timestamp time = 2;
-    ProtoDeviceType deviceType = 3;
+    bytes certificate = 3;
+    google.protobuf.Timestamp certExpTime = 4;
   }
   repeated ProtoDeviceContext members = 4;
   string extension = 5;

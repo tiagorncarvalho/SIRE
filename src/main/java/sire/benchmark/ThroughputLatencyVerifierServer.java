@@ -1,6 +1,6 @@
 package sire.benchmark;
 
-import bftsmart.communication.ServerCommunicationSystem;
+/*import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.core.messages.TOMMessage;
@@ -37,10 +37,10 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static sire.messages.ProtoUtils.*;
+import static sire.messages.ProtoUtils.*;*/
 
-public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecutable, RandomPolynomialListener, RandomKeyPolynomialListener {
-    private final Logger logger = LoggerFactory.getLogger("sire");
+public class ThroughputLatencyVerifierServer {//implements ConfidentialSingleExecutable, RandomPolynomialListener, RandomKeyPolynomialListener {
+    /*private final Logger logger = LoggerFactory.getLogger("sire");
     private final ServerCommunicationSystem serverCommunicationSystem;
     private final DistributedPolynomialManager distributedPolynomialManager;
     private final ServiceReplica serviceReplica;
@@ -343,10 +343,10 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         return null;
     }
 
-    /**
+    *//**
      * Method used to generate a random number
      * @param messageContext Message context of the client requesting the generation of a random number
-     */
+     *//*
     private void generateRandomNumberFor(MessageContext messageContext) {
         int id = distributedPolynomialManager.createRandomPolynomial(
                 serviceReplica.getReplicaContext().getCurrentView().getF(),
@@ -354,19 +354,19 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         requests.put(id, messageContext);
     }
 
-    /**
+    *//**
      * Method used to generate a signing key.
-     */
+     *//*
     private void generateSigningKey() {
         signingKeyGenerationId = distributedPolynomialManager.createRandomKeyPolynomial(
                 serviceReplica.getReplicaContext().getCurrentView().getF(),
                 serviceReplica.getReplicaContext().getCurrentView().getProcesses());
     }
 
-    /**
+    *//**
      * Method used to generate a random key used to sign data
      * @param messageContext Message context of the client requesting to sign data
-     */
+     *//*
     private void generateRandomKey(MessageContext messageContext) {
         int id = distributedPolynomialManager.createRandomKeyPolynomial(
                 serviceReplica.getReplicaContext().getCurrentView().getF(),
@@ -374,21 +374,21 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         signingRequestContexts.put(id, messageContext);
     }
 
-    /**
+    *//**
      * Method used to asynchronously send the random number share
      * @param receiverContext Information about the requesting client
      * @param share Random number share
-     */
+     *//*
     public void sendRandomNumberShareTo(MessageContext receiverContext, VerifiableShare share) {
         ConfidentialMessage response = new ConfidentialMessage(null, share);//maybe send encrypted if needed (e.g., when tls encryption is off)
         sendResponseTo(receiverContext, response);
     }
 
-    /**
+    *//**
      * Method used to send a response to a client
      * @param receiverContext Information about the requesting client
      * @param response The response
-     */
+     *//*
     public void sendResponseTo(MessageContext receiverContext, ConfidentialMessage response) {
         TOMMessage tomMessage = new TOMMessage(
                 id,
@@ -403,10 +403,10 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     }
 
 
-    /**
+    *//**
      * Method called by the polynomial generation manager when the requested random number is generated
      * @param context Random number share and its context
-     */
+     *//*
     @Override
     public void onRandomPolynomialsCreation(RandomPolynomialContext context) {
         lock.lock();
@@ -471,10 +471,10 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         sendResponseTo(receiverContext, response);
     }
 
-    /**
+    *//**
      * Method called by the polynomial generation manager when the requested random key is generated
      * @param context Random number share and its context
-     */
+     *//*
     @Override
     public void onRandomKeyPolynomialsCreation(RandomPolynomialContext context) {
         lock.lock();
@@ -539,7 +539,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         } catch (IOException | ClassCastException | ClassNotFoundException e) {
             logger.error("Error while installing snapshot", e);
         }
-    }
+    }*/
 
 
 }
