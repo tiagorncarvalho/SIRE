@@ -1,3 +1,4 @@
+/*
 package sire.benchmark;
 
 import com.google.protobuf.ByteString;
@@ -19,7 +20,7 @@ import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.AttesterContext;
-import sire.serverProxyUtils.DeviceContext;
+import sire.membership.DeviceContext;
 import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.facade.SecretSharingException;
@@ -496,3 +497,4 @@ public class ThroughputLatencyProxy {
         }
     }
 }
+*/

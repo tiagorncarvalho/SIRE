@@ -3,9 +3,9 @@ package sire.proxy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
-import sire.configuration.Extension;
-import sire.configuration.Policy;
-import sire.serverProxyUtils.DeviceContext;
+import sire.coordination.Extension;
+import sire.attestation.Policy;
+import sire.membership.DeviceContext;
 import sire.serverProxyUtils.SireException;
 import java.util.List;
 

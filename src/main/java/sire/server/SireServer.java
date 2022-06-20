@@ -15,16 +15,16 @@ import confidential.statemanagement.ConfidentialSnapshot;
 import org.bouncycastle.math.ec.ECPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sire.coordination.CoordinationManager;
 import sire.attestation.VerifierManager;
-import sire.configuration.Policy;
 import sire.attestation.DeviceEvidence;
-import sire.configuration.ExtensionManager;
-import sire.configuration.ExtensionType;
+import sire.coordination.ExtensionManager;
+import sire.coordination.ExtensionType;
+import sire.membership.DeviceContext;
+import sire.membership.MembershipManager;
 import sire.messages.Messages.*;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignatureScheme;
-import sire.serverProxyUtils.AppContext;
-import sire.serverProxyUtils.DeviceContext;
 import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.commitment.linear.LinearCommitments;
@@ -78,17 +78,18 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	//private final ECPoint dummyAttesterPublicKey;
 
 	//key value store for information concerning devices, applications and more
-	private final Map<String, byte[]> storage;
+	//private final Map<String, byte[]> storage;
+	private final CoordinationManager storage;
 
 	//key value store for membership state, key = appId
-	private final Map<String, AppContext> membership;
+	//private final Map<String, AppContext> membership;
+	private final MembershipManager membership;
 
 	//runs and stores extensions
-	private final ExtensionManager extensionManager = new ExtensionManager();
+	private final ExtensionManager extensionManager = ExtensionManager.getInstance();
 
 	//timeout for devices, in seconds
-	private final int timeout = 30;
-	private final long certTimeout = 30 * 60000; //30min
+	 //30min
 
 	private final VerifierManager verifierManager;
 
@@ -105,8 +106,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		lock = new ReentrantLock(true);
 		requests = new TreeMap<>();
 		data = new TreeMap<>();
-		storage = new TreeMap<>();
-		membership = new TreeMap<>();
+		storage = new CoordinationManager();
+		//membership = new TreeMap<>();
+		membership = new MembershipManager();
 		signingKeyRequests = new LinkedList<>();
 		signingRequestContexts = new TreeMap<>();
 		signingData = new TreeMap<>();
@@ -127,8 +129,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		try {
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
 			ProxyMessage.Operation op = msg.getOperation();
-			if(membership.containsKey(msg.getAppId()) && membership.get(msg.getAppId()).hasDevice(msg.getDeviceId()))
-				membership.get(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
+			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
+				membership.updateDeviceTimestamp(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 			if(op.toString().startsWith("MAP"))
 				return executeOrderedMap(msg);
 			else if(op.toString().startsWith("EXTENSION") || op.toString().startsWith("POLICY"))
@@ -188,14 +190,14 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			case ATTEST_VERIFY -> {
 				DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
 						protoToSchnorr(msg.getSignature()));
-				boolean isValidEvidence = verifierManager.verifyEvidence(deviceEvidence);
+				boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence);
 				byte[] plainData;
 				if (isValidEvidence) {
 					plainData = new byte[dummyDataForAttester.length + 1];
 					plainData[0] = 1;
 					System.arraycopy(dummyDataForAttester, 0, plainData, 1,
 							dummyDataForAttester.length);
-					membership.get(msg.getAppId()).setDeviceAsAttested(msg.getDeviceId(), dummyDataForAttester, new Timestamp(messageContext.getTimestamp()));
+					membership.setDeviceAsAttested(msg.getAppId(), msg.getDeviceId(), dummyDataForAttester, new Timestamp(messageContext.getTimestamp()));
 				} else {
 					plainData = new byte[] {0};
 				}
@@ -219,17 +221,15 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
-		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.get(msg.getAppId()).isDeviceValid(msg.getDeviceId()))
+		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
 			throw new SireException("Unknown Device: Not attested or not in this app membership.");
 		switch(op) {
 			case MEMBERSHIP_JOIN -> {
 
 				lock.lock();
-				if(!membership.containsKey(msg.getAppId()))
-					membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout, this.certTimeout));
 
-				membership.get(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
-						new Timestamp(messageContext.getTimestamp()), protoDevToDev(msg.getDeviceType())));
+				membership.addDevice(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
+						protoDevToDev(msg.getDeviceType()));
 
 				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_JOIN, msg.getDeviceId());
 
@@ -238,7 +238,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			}
 			case MEMBERSHIP_LEAVE -> {
 				lock.lock();
-				membership.get(msg.getAppId()).removeDevice(msg.getDeviceId());
+				membership.removeDevice(msg.getAppId(), msg.getDeviceId());
 
 				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LEAVE, msg.getDeviceId());
 
@@ -247,7 +247,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			}
 			case MEMBERSHIP_PING -> {
 				lock.lock();
-				membership.get(msg.getAppId()).updateDeviceTimestamp(msg.getDeviceId(),
+				membership.updateDeviceTimestamp(msg.getAppId(), msg.getDeviceId(),
 						new Timestamp(messageContext.getTimestamp()));
 
 				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PING, msg.getDeviceId());
@@ -256,7 +256,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				return new ConfidentialMessage();
 			}
 			case MEMBERSHIP_VIEW -> {
-				List<DeviceContext> members = membership.get(msg.getAppId()).getMembership();
+				List<DeviceContext> members = membership.getMembership(msg.getAppId());
 				ByteArrayOutputStream bout = new ByteArrayOutputStream();
 				ObjectOutputStream out = new ObjectOutputStream(bout);
 				out.writeObject(members);
@@ -294,34 +294,30 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			}
 			case POLICY_ADD -> {
 				lock.lock();
-				if(membership.containsKey(msg.getAppId()))
-					membership.get(msg.getAppId()).setPolicy(msg.getPolicy().getPolicy(), msg.getPolicy().getType());
-				else
-					membership.put(msg.getAppId(), new AppContext(msg.getAppId(), this.timeout, this.certTimeout,
-							new Policy(msg.getPolicy().getPolicy(), msg.getPolicy().getType())));
+				verifierManager.setPolicy(msg.getAppId(), msg.getPolicy().getPolicy(), msg.getPolicy().getType());
 				lock.unlock();
 				return new ConfidentialMessage();
 			}
 			case POLICY_REMOVE -> {
-				if(!membership.containsKey(msg.getAppId()))
+				if(!membership.containsApp(msg.getAppId()))
 					return new ConfidentialMessage(serialize("NOT FOUND"));
 				lock.lock();
-				membership.get(msg.getAppId()).removePolicy();
+				verifierManager.removePolicy(msg.getAppId());
 				lock.unlock();
 				return new ConfidentialMessage();
 			}
 			case POLICY_GET -> {
-				if(!membership.containsKey(msg.getAppId()))
+				if(!membership.containsApp(msg.getAppId()))
 					return new ConfidentialMessage(serialize("NOT FOUND"));
 				else
-					return new ConfidentialMessage(serialize(membership.get(msg.getAppId()).getPolicy().getPolicy()));
+					return new ConfidentialMessage(serialize(verifierManager.getPolicy(msg.getAppId())));
 			}
 		}
 		return null;
 	}
 
 	private ConfidentialMessage executeOrderedMap(ProxyMessage msg) throws IOException, SireException {
-		if(membership.get(msg.getAppId()).isDeviceValid(msg.getDeviceId())) {
+		if(membership.isDeviceValid(msg.getAppId(), msg.getDeviceId())) {
 			throw new SireException("Unknown Device: Not attested or not in this app membership.");
 		}
 		ProxyMessage.Operation op = msg.getOperation();
@@ -331,7 +327,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				byte[] value = byteStringToByteArray(out, msg.getValue());
 				out.close();
-				storage.put(msg.getKey(), value);
+				storage.put(msg.getAppId(), msg.getKey(), value);
 				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PUT, msg.getKey());
 				lock.unlock();
 
@@ -339,17 +335,17 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			}
 			case MAP_DELETE -> {
 				lock.lock();
-				storage.remove(msg.getKey());
+				storage.remove(msg.getAppId(), msg.getKey());
 				lock.unlock();
 				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_DEL, msg.getKey());
 				return new ConfidentialMessage();
 			}
 			case MAP_GET -> {
 				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey());
-				return new ConfidentialMessage(storage.get(msg.getKey()));
+				return new ConfidentialMessage(storage.get(msg.getAppId(), msg.getKey()));
 			}
 			case MAP_LIST -> {
-				ArrayList<byte []> lista = new ArrayList<>(storage.values());
+				List<byte []> lista = new ArrayList<>(storage.getValues(msg.getAppId()));
 				ByteArrayOutputStream bout = new ByteArrayOutputStream();
 				ObjectOutputStream out = new ObjectOutputStream(bout);
 				out.writeObject(lista);
@@ -368,9 +364,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				byte[] oldValue = byteStringToByteArray(out, msg.getOldData());
 				byte[] newValue = byteStringToByteArray(out, msg.getValue());
 				out.close();
-				if(Arrays.equals(storage.get(key), oldValue)) {
-					storage.put(key, newValue);
-				}
+				storage.cas(msg.getAppId(), key, oldValue, newValue);
 				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_CAS, msg.getKey());
 				lock.unlock();
 				return new ConfidentialMessage();

@@ -1,6 +1,6 @@
-package sire.serverProxyUtils;
+package sire.membership;
 
-import sire.configuration.Policy;
+import sire.attestation.Policy;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -11,7 +11,7 @@ import java.util.TreeMap;
 public class AppContext implements Serializable {
     final String id;
     final TreeMap<String, DeviceContext> devices;
-    Policy policy;
+    //Policy policy;
     final int timeout;
     final long certTimeout;
 
@@ -19,7 +19,7 @@ public class AppContext implements Serializable {
         this.id = id;
         this.timeout = timeout;
         this.devices = new TreeMap<>();
-        this.policy = new Policy();
+        //this.policy = new Policy();
         this.certTimeout = certTimeout;
     }
 
@@ -27,7 +27,7 @@ public class AppContext implements Serializable {
         this.id = id;
         this.timeout = timeout;
         this.devices = new TreeMap<>();
-        this.policy = policy;
+        //this.policy = policy;
         this.certTimeout = certTimeout;
     }
 
@@ -69,11 +69,10 @@ public class AppContext implements Serializable {
         return "AppContext{" +
                 "id='" + id + '\'' +
                 ", devices=" + devices +
-                ", policy=" + policy +
                 '}';
     }
 
-    public void setPolicy(String policy, boolean type) {
+/*    public void setPolicy(String policy, boolean type) {
         this.policy.setPolicy(policy, type);
     }
 
@@ -83,7 +82,7 @@ public class AppContext implements Serializable {
 
     public Policy getPolicy() {
         return policy;
-    }
+    }*/
 
     public boolean hasDevice(String deviceId) {
         return devices.containsKey(deviceId);

@@ -1,7 +1,7 @@
 package sire.device;
 
-import sire.serverProxyUtils.DeviceContext;
-import sire.serverProxyUtils.DeviceContext.DeviceType;
+import sire.membership.DeviceContext;
+import sire.membership.DeviceContext.DeviceType;
 import sire.utils.ExampleObject;
 
 import javax.crypto.*;

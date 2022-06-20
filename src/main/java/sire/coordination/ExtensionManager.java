@@ -1,4 +1,4 @@
-package sire.configuration;
+package sire.coordination;
 
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
@@ -8,11 +8,19 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ExtensionManager {
+    private static ExtensionManager instance = null;
     final Map<String, Extension> extensions;
     final GroovyShell sh;
-    public ExtensionManager() {
+
+    private ExtensionManager() {
         this.sh = new GroovyShell();
         this.extensions = new TreeMap<>();
+    }
+
+    public static ExtensionManager getInstance() {
+        if(instance == null)
+            instance = new ExtensionManager();
+        return instance;
     }
 
     public void addExtension(String key, String code) {

@@ -1,7 +1,7 @@
 package sire.api;
 
-import sire.configuration.Policy;
-import sire.serverProxyUtils.DeviceContext;
+import sire.attestation.Policy;
+import sire.membership.DeviceContext;
 
 import java.util.List;
 

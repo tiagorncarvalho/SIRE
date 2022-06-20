@@ -2,7 +2,7 @@ package sire.benchmark;
 
 /*import sire.device.DeviceStub;
 import sire.messages.Messages;
-import sire.serverProxyUtils.DeviceContext;
+import sire.membership.DeviceContext;
 
 import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;

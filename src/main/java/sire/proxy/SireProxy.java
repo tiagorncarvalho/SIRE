@@ -10,6 +10,7 @@ import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.attestation.DeviceEvidence;
+import sire.membership.DeviceContext;
 import sire.serverProxyUtils.*;
 
 import static sire.messages.ProtoUtils.*;

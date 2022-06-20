@@ -4,9 +4,9 @@ import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import sire.api.ManagementInterface;
 import sire.management.AdminManager;
-import sire.configuration.Policy;
+import sire.attestation.Policy;
 import sire.messages.Messages;
-import sire.serverProxyUtils.DeviceContext;
+import sire.membership.DeviceContext;
 import sire.serverProxyUtils.SireException;
 import vss.facade.SecretSharingException;
 

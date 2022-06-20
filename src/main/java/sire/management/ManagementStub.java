@@ -2,8 +2,8 @@ package sire.management;
 
 import sire.api.ManagementInterface;
 import sire.messages.Messages;
-import sire.configuration.Policy;
-import sire.serverProxyUtils.DeviceContext;
+import sire.attestation.Policy;
+import sire.membership.DeviceContext;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

@@ -1,4 +1,4 @@
-package sire.serverProxyUtils;
+package sire.membership;
 
 import java.io.Serializable;
 import java.sql.Time;

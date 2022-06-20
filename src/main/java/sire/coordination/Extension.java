@@ -1,4 +1,4 @@
-package sire.configuration;
+package sire.coordination;
 
 import groovy.lang.Script;
 import java.io.Serializable;

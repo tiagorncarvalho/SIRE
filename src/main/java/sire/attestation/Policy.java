@@ -1,4 +1,4 @@
-package sire.configuration;
+package sire.attestation;
 
 public class Policy {
     String policy = "NOT DEFINED";

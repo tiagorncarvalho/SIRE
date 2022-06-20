@@ -10,8 +10,8 @@ import static sire.messages.ProtoUtils.*;
 import com.google.protobuf.ByteString;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
-import sire.serverProxyUtils.DeviceContext;
-import sire.serverProxyUtils.DeviceContext.DeviceType;
+import sire.membership.DeviceContext;
+import sire.membership.DeviceContext.DeviceType;
 import sire.serverProxyUtils.SireException;
 import sire.attestation.Evidence;
 

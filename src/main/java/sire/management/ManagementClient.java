@@ -1,7 +1,7 @@
 package sire.management;
 
 
-import sire.configuration.ExtensionType;
+import sire.coordination.ExtensionType;
 
 public class ManagementClient {
     public static void main(String[] args) {

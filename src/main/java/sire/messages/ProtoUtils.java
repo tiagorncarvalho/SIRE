@@ -3,7 +3,7 @@ package sire.messages;
 import com.google.protobuf.ByteString;
 import sire.attestation.Evidence;
 import sire.schnorr.SchnorrSignature;
-import sire.serverProxyUtils.DeviceContext;
+import sire.membership.DeviceContext;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

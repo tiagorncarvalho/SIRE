@@ -1,4 +1,4 @@
-package sire.configuration;
+package sire.coordination;
 
 public enum ExtensionType {
     EXT_JOIN,
@@ -9,7 +9,8 @@ public enum ExtensionType {
     EXT_DEL,
     EXT_GET,
     EXT_CAS,
-    EXT_LIST;
+    EXT_LIST,
+    EXT_ATTEST;
 
     public static final ExtensionType[] values = values();
 
