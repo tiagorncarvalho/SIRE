@@ -149,7 +149,7 @@ public class ProxyWatz implements Runnable {
                         stateUpdates.add("<span style='color:#70dc70'>New device attested for app <span style='color:#F6BE00'>'Example App'</span> with id</span>: " +
                                 bytesToHex(scheme.computeHash(attEcdhPubKey.getEncoded(true))));
                         //stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#CF9FFF'>App</span>: 'Example App'");
-                        stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#CF9FFF'>Special Message</span>: '" + new String(data).substring(0, 32) + "...' <br>");
+                        stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#CF9FFF'>Confidential Information</span>: '" + new String(data) + "' <br>");
                         break;
                     }
                 }
@@ -160,6 +160,12 @@ public class ProxyWatz implements Runnable {
             }
             catch (IOException | SecretSharingException | InvalidKeySpecException | NoSuchAlgorithmException | SignatureException | NoSuchProviderException | InvalidKeyException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    s.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -324,7 +330,8 @@ public class ProxyWatz implements Runnable {
         }
 
 
-        private byte[] createMessage3(byte[] data) throws InvalidKeySpecException, SireException, IOException {
+        private byte[] createMessage3(byte[] dataPrev) throws InvalidKeySpecException, SireException, IOException {
+            byte[] data = (new String(dataPrev) + generateRandomChars(16)).getBytes();
             byte[] tempData = encryptData(data);
             byte[] iv = symmetricCipher.getIV();
             byte[] encryptedData = Arrays.copyOfRange(tempData, 0, data.length);
@@ -375,6 +382,18 @@ public class ProxyWatz implements Runnable {
             }
             return data;
         }
+    }
+
+    public String generateRandomChars(int length) {
+        String candidateChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < length; i++) {
+            sb.append(candidateChars.charAt(random.nextInt(candidateChars
+                    .length())));
+        }
+
+        return sb.toString();
     }
 
 /*    private Collection<String> splitString(String s) {

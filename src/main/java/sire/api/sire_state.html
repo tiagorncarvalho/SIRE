@@ -22,7 +22,7 @@
     }
 
     async function getUpdates() {
-        const apiUrl = 'http://localhost:8080/state'
+        const apiUrl = 'http://localhost:8083/state'
         fetch(apiUrl).then(response => {
             return response.json();
         }).then(data => {

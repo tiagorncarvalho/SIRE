@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import sire.attestation.VerifierManager;
 import sire.attestation.WaTZEvidence;
 import sire.configuration.Policy;
-import sire.attestation.DeviceEvidence;
 import sire.configuration.ExtensionManager;
 import sire.configuration.ExtensionType;
 import sire.messages.Messages.*;
@@ -34,7 +33,6 @@ import vss.secretsharing.VerifiableShare;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -80,7 +78,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private VerifiableShare verifierSigningPrivateKeyShare;
 	private ECPoint verifierSigningPublicKey;
 
-	private final byte[] dummyDataForAttester = "A".repeat(2000).getBytes();
+	private final byte[] dummyDataForAttester = "SECRET VALUE:".getBytes();//"A".repeat(2000).getBytes();
 	//private final ECPoint dummyAttesterPublicKey;
 
 	//key value store for information concerning devices, applications and more

@@ -27,7 +27,7 @@ public class VerifierManager {
         signatureScheme = new SchnorrSignatureScheme();
         messageDigest = MessageDigest.getInstance("SHA256");
         refValues =  new ArrayList<>(List.of(
-                hexStringToByteArray("4C4517CFB01F0747124F64BDA21B2CD9E94F6D7AA32E067EB45C4C516F346DE1")
+                hexStringToByteArray("D65E90391B43E8943339A55201749B7293E58A6F7876F5158C21E3F62E4D7A83")
         ));
         endorsedKeys = new HashSet<>();
         endorsedKeys.add("0448EEEE81DE28DB3E5D5AFC7D4B7EA4B1AC16A2D7A9978C1F84B4355730643847F7F2CE32434EAB779353748EEE" +
