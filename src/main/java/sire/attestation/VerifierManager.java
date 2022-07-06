@@ -73,7 +73,7 @@ public class VerifierManager {
         byte[] signingData = createSigningData(evidence.getAnchor(), evidence.getWaTZVersion(), evidence.getClaim(), attPubKey);
         boolean isValidSignature = signatureScheme.verifyECDSA(signatureScheme.getCurve().createPoint(
                 new BigInteger(attPubKeyX, 16), new BigInteger(attPubKeyY, 16)), signature, signingData);
-        System.out.println("IsValidSignature? " + isValidSignature);
+        //System.out.println("IsValidSignature? " + isValidSignature);
 
         if(!isValidSignature)
             throw new SireException("Invalid signature! </span>");

@@ -192,7 +192,7 @@ public class SchnorrSignatureScheme {
 	}
 
 	public BigInteger generateBigInt(){
-		System.out.println("Bit Length: " + x9.getN().bitLength());
+		//System.out.println("Bit Length: " + x9.getN().bitLength());
 		BigInteger rndBig = new BigInteger(x9.getN().bitLength() - 1, rng);
 		if (rndBig.compareTo(BigInteger.ZERO) == 0) {
 			rndBig = rndBig.add(BigInteger.ONE);

@@ -213,7 +213,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				membership.get(msg.getAppId()).addDevice(msg.getDeviceId(), new DeviceContext(msg.getDeviceId(),
 						new Timestamp(messageContext.getTimestamp()), plainData, new Timestamp(messageContext.getTimestamp() + certTimeout)));
 
-				System.out.println("Device ID: " + msg.getDeviceId());
+				//System.out.println("Device ID: " + msg.getDeviceId());
 
 				return new ConfidentialMessage(plainData);
 			}

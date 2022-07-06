@@ -146,10 +146,7 @@ public class ProxyWatz implements Runnable {
                         oos.write(createMessage3(data));
                         System.out.println("Message 3 sent!");
 
-                        stateUpdates.add("<span style='color:#70dc70'>New device attested for app <span style='color:#F6BE00'>'Example App'</span> with id</span>: " +
-                                bytesToHex(scheme.computeHash(attEcdhPubKey.getEncoded(true))));
                         //stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#CF9FFF'>App</span>: 'Example App'");
-                        stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#CF9FFF'>Confidential Information</span>: '" + new String(data) + "' <br>");
                         break;
                     }
                 }
@@ -257,14 +254,14 @@ public class ProxyWatz implements Runnable {
         }
 
         private byte[] readMessage2(byte[] b) throws SireException, SecretSharingException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, NoSuchProviderException, InvalidKeyException {
-            System.out.println("Reading message 2! Length: " + b.length);
+            System.out.println("Reading message 2!");
             byte[] mac = Arrays.copyOfRange(b, 272, 272 + 16);
 
             int localPubKeyXSize = Byte.toUnsignedInt(b[32]);
-            System.out.println("XSize: " + localPubKeyXSize);
+            //System.out.println("XSize: " + localPubKeyXSize);
             byte[] localPubKeyX = Arrays.copyOfRange(b, 0, localPubKeyXSize);
             int localPubKeyYSize = Byte.toUnsignedInt(b[68]);
-            System.out.println("YSize: " + localPubKeyYSize);
+            //System.out.println("YSize: " + localPubKeyYSize);
             byte[] localPubKeyY = Arrays.copyOfRange(b, 36, 36 + localPubKeyYSize);
 
             byte[] quote = Arrays.copyOfRange(b, 72, 272);
@@ -349,6 +346,9 @@ public class ProxyWatz implements Runnable {
 
             baos.flush();
             byte[] out = output.toByteArray();
+            stateUpdates.add("<span style='color:#70dc70'>New device attested for app <span style='color:#F6BE00'>'Example App'</span> with id</span>: " +
+                    bytesToHex(scheme.computeHash(attEcdhPubKey.getEncoded(true))));
+            stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#CF9FFF'>Confidential Information</span>: '" + new String(data) + "' <br>");
             //System.out.println("Length " + out.length);
             return out;
         }
