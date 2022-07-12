@@ -2,17 +2,17 @@ package sire.management;
 
 import java.util.*;
 
-public class AdminManager {
+public class AppManager {
     private final Map<AppAdmin, List<String>> appAdmins;
-    private static AdminManager instance = null;
+    private static AppManager instance = null;
 
-    public static AdminManager getInstance() {
+    public static AppManager getInstance() {
         if(instance == null)
-            instance = new AdminManager();
+            instance = new AppManager();
         return instance;
     }
 
-    private AdminManager() {
+    private AppManager() {
         appAdmins = new HashMap<>();
         appAdmins.put(new AppAdmin("admin", "appadmin"), new ArrayList<>(Arrays.asList("app1", "app2","app3")));
     }

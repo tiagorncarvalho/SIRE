@@ -19,7 +19,6 @@ import sire.coordination.CoordinationManager;
 import sire.attestation.VerifierManager;
 import sire.attestation.DeviceEvidence;
 import sire.coordination.ExtensionManager;
-import sire.coordination.ExtensionType;
 import sire.membership.DeviceContext;
 import sire.membership.MembershipManager;
 import sire.messages.Messages.*;
@@ -88,9 +87,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	//runs and stores extensions
 	private final ExtensionManager extensionManager = ExtensionManager.getInstance();
 
-	//timeout for devices, in seconds
-	 //30min
-
+	//verifies the evidence
 	private final VerifierManager verifierManager;
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
@@ -107,7 +104,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		requests = new TreeMap<>();
 		data = new TreeMap<>();
 		storage = new CoordinationManager();
-		//membership = new TreeMap<>();
 		membership = new MembershipManager();
 		signingKeyRequests = new LinkedList<>();
 		signingRequestContexts = new TreeMap<>();
@@ -130,7 +126,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
 			ProxyMessage.Operation op = msg.getOperation();
 			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
-				membership.updateDeviceTimestamp(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
+				membership.ping(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 			if(op.toString().startsWith("MAP"))
 				return executeOrderedMap(msg);
 			else if(op.toString().startsWith("EXTENSION") || op.toString().startsWith("POLICY"))
@@ -228,43 +224,35 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 				lock.lock();
 
-				membership.addDevice(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
+				membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
 						protoDevToDev(msg.getDeviceType()));
-
-				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_JOIN, msg.getDeviceId());
 
 				lock.unlock();
 				return new ConfidentialMessage();
 			}
 			case MEMBERSHIP_LEAVE -> {
 				lock.lock();
-				membership.removeDevice(msg.getAppId(), msg.getDeviceId());
-
-				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LEAVE, msg.getDeviceId());
+				membership.leave(msg.getAppId(), msg.getDeviceId());
 
 				lock.unlock();
 				return new ConfidentialMessage();
 			}
 			case MEMBERSHIP_PING -> {
 				lock.lock();
-				membership.updateDeviceTimestamp(msg.getAppId(), msg.getDeviceId(),
+				membership.ping(msg.getAppId(), msg.getDeviceId(),
 						new Timestamp(messageContext.getTimestamp()));
-
-				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PING, msg.getDeviceId());
 
 				lock.unlock();
 				return new ConfidentialMessage();
 			}
 			case MEMBERSHIP_VIEW -> {
-				List<DeviceContext> members = membership.getMembership(msg.getAppId());
+				List<DeviceContext> members = membership.getView(msg.getAppId());
 				ByteArrayOutputStream bout = new ByteArrayOutputStream();
 				ObjectOutputStream out = new ObjectOutputStream(bout);
 				out.writeObject(members);
 				out.close();
 				byte[] res = bout.toByteArray();
 				bout.close();
-
-				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_VIEW, "");
 
 				return new ConfidentialMessage(res);
 			}
@@ -328,7 +316,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				byte[] value = byteStringToByteArray(out, msg.getValue());
 				out.close();
 				storage.put(msg.getAppId(), msg.getKey(), value);
-				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PUT, msg.getKey());
 				lock.unlock();
 
 				return new ConfidentialMessage();
@@ -337,11 +324,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				lock.lock();
 				storage.remove(msg.getAppId(), msg.getKey());
 				lock.unlock();
-				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_DEL, msg.getKey());
 				return new ConfidentialMessage();
 			}
 			case MAP_GET -> {
-				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey());
 				return new ConfidentialMessage(storage.get(msg.getAppId(), msg.getKey()));
 			}
 			case MAP_LIST -> {
@@ -353,8 +338,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				byte[] result = bout.toByteArray();
 				bout.close();
 
-				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LIST, "");
-
 				return new ConfidentialMessage(result);
 			}
 			case MAP_CAS -> {
@@ -365,7 +348,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				byte[] newValue = byteStringToByteArray(out, msg.getValue());
 				out.close();
 				storage.cas(msg.getAppId(), key, oldValue, newValue);
-				extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_CAS, msg.getKey());
 				lock.unlock();
 				return new ConfidentialMessage();
 			}

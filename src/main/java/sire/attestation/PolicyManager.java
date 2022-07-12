@@ -1,5 +1,6 @@
 package sire.attestation;
 
+
 import sire.coordination.ExtensionManager;
 import sire.coordination.ExtensionType;
 
@@ -31,7 +32,7 @@ public class PolicyManager {
     public boolean executePolicy(String appId) {
         Policy temp = policies.get(appId);
         if(temp.getType()) {
-            //extensionManager.runExtension(appId, ExtensionType.EXT_ATTEST, null);
+            extensionManager.runExtension(appId, ExtensionType.EXT_ATTEST, null);
             return true;
         } else {
             return true; //TODO logical policy

@@ -3,7 +3,7 @@ package sire.proxy;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import sire.api.ManagementInterface;
-import sire.management.AdminManager;
+import sire.management.AppManager;
 import sire.attestation.Policy;
 import sire.messages.Messages;
 import sire.membership.DeviceContext;
@@ -142,6 +142,6 @@ public class SireRestProxy implements ManagementInterface {
 
     @Override
     public List<String> getApps(String admin) {
-        return AdminManager.getInstance().getAppsFromAdmin(admin);
+        return AppManager.getInstance().getAppsFromAdmin(admin);
     }
 }

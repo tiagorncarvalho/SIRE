@@ -134,7 +134,7 @@ public class ManagementStub implements ManagementInterface {
 
     @Override
     public List<String> getApps(String admin) {
-        return AdminManager.getInstance().getAppsFromAdmin(admin);
+        return AppManager.getInstance().getAppsFromAdmin(admin);
     }
 
     public void close() {

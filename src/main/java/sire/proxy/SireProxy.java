@@ -249,7 +249,7 @@ public class SireProxy implements Runnable {
 			}
 		}
 
-		public ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
+		private ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
 			try {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg0.getAttesterPubSesKey()));
@@ -291,7 +291,7 @@ public class SireProxy implements Runnable {
 				throw new SireException("Failed to create shared key", e);
 			}
 		}
-		public ProtoMessage3 processMessage2(ProtoMessage2 msg2) throws SireException, IOException {
+		private ProtoMessage3 processMessage2(ProtoMessage2 msg2) throws SireException, IOException {
 			AttesterContext attester = attesters.get(msg2.getAttesterId());
 			if (attester == null)
 				throw new SireException("Unknown attester id " + msg2.getAttesterId());
@@ -445,11 +445,11 @@ public class SireProxy implements Runnable {
 			return rndBig;
 		}
 
-		public void close() {
+		private void close() {
 			serviceProxy.close();
 		}
 
-		public ProtoMessage1 joins(ProtoMessage0 msg) {
+		private ProtoMessage1 joins(ProtoMessage0 msg) {
 			try {
 				ProxyMessage joinRequest = ProxyMessage.newBuilder()
 						.setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
