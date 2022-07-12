@@ -31,11 +31,13 @@ public class PolicyManager {
 
     public boolean executePolicy(String appId) {
         Policy temp = policies.get(appId);
-        if(temp.getType()) {
-            extensionManager.runExtension(appId, ExtensionType.EXT_ATTEST, null);
+        if(temp != null) {
+            if (temp.getType()) {
+                extensionManager.runExtension(appId, ExtensionType.EXT_ATTEST, null);
+                return true;
+            } else
+                return true; //TODO logical policy
+        } else
             return true;
-        } else {
-            return true; //TODO logical policy
-        }
     }
 }
