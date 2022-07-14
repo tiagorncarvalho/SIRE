@@ -19,7 +19,7 @@ message ProtoEvidence {
 }
 
 //=======Messages=======
-message ProtoMessage0 {
+/*message ProtoMessage0 {
   string attesterId = 1;
   string appId = 2;
   bytes attesterPubSesKey = 3; //Ga
@@ -45,7 +45,7 @@ message ProtoMessage2 {
 message ProtoMessage3 {
   bytes iv = 1; //iv
   bytes encryptedData = 2; //Sign_V(Enc_A(data))
-}
+}*/
 
 //=======ProxyMsg=======
 /*message ProxyAttestationMessage {
@@ -101,18 +101,19 @@ message ProxyMessage {
     MAP_LIST = 9;
     MAP_CAS = 10;
     //-----------MEMBERSHIP-----------
-    MEMBERSHIP_JOIN = 11;
-    MEMBERSHIP_LEAVE = 12;
-    MEMBERSHIP_VIEW = 13;
-    MEMBERSHIP_PING = 14;
+    MEMBERSHIP_PREJOIN = 11;
+    MEMBERSHIP_JOIN = 12;
+    MEMBERSHIP_LEAVE = 13;
+    MEMBERSHIP_VIEW = 14;
+    MEMBERSHIP_PING = 15;
     //-----------EXTENSION------------
-    EXTENSION_ADD = 15;
-    EXTENSION_REMOVE = 16;
-    EXTENSION_GET = 17;
+    EXTENSION_ADD = 16;
+    EXTENSION_REMOVE = 17;
+    EXTENSION_GET = 18;
     //-------------POLICY-------------
-    POLICY_ADD = 18;
-    POLICY_REMOVE = 19;
-    POLICY_GET = 20;
+    POLICY_ADD = 19;
+    POLICY_REMOVE = 20;
+    POLICY_GET = 21;
   }
   Operation operation = 1;
   ProtoEvidence evidence = 2;
@@ -135,6 +136,14 @@ message ProxyMessage {
 
   ProtoPolicy policy = 11;
   ProtoDeviceType deviceType = 12;
+
+  //========PREJOIN REQUEST==========//
+  bytes pubSesKey = 13;
+  ProtoDeviceType type = 14;
+
+  //=========JOIN REQUEST===========//
+  bytes mac = 15;
+
 }
 
 message ProxyResponse {
@@ -144,6 +153,8 @@ message ProxyResponse {
     VIEW = 2;
     EXTENSION_GET = 3;
     POLICY_GET = 4;
+    PREJOIN = 5;
+    JOIN = 6;
   }
   ResponseType type = 1;
   repeated bytes list = 2;
@@ -158,4 +169,14 @@ message ProxyResponse {
   repeated ProtoDeviceContext members = 4;
   string extension = 5;
   string policy = 6;
+
+  //======PREJOIN RESPONSE==========//
+  bytes verifierPubSesKey = 7; //Gv
+  bytes verifierPubKey = 8; //V
+  ProtoSchnorr signatureSessionKeys = 9;  //Signv(Gv,Ga)
+  bytes mac = 10; //MAC_Km(content1)
+
+  //========JOIN RESPONSE===========//
+  bytes iv = 11; //iv
+  bytes encryptedData = 12; //Sign_V(Enc_A(data))
 }

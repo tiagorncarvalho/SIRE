@@ -17,10 +17,10 @@ import java.util.List;
 
 import static sire.messages.ProtoUtils.deserialize;
 
-public class SireRestProxy implements ManagementInterface {
+public class RestProxy implements ManagementInterface {
     private final ConfidentialServiceProxy serviceProxy;
 
-    public SireRestProxy(int proxyId) throws SireException {
+    public RestProxy(int proxyId) throws SireException {
         try {
             ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
             serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);

@@ -183,7 +183,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				out.close();
 				lock.unlock();
 			}
-			case ATTEST_VERIFY -> {
+			/*case ATTEST_VERIFY -> {
 				DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
 						protoToSchnorr(msg.getSignature()));
 				boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence);
@@ -199,7 +199,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				}
 
 				return new ConfidentialMessage(plainData);
-			}
+			}*/
 			case ATTEST_GET_RANDOM_NUMBER -> {
 				lock.lock();
 				VerifiableShare	share = data.get(messageContext.getSender());
@@ -217,10 +217,10 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
-		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
+		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && op != ProxyMessage.Operation.MEMBERSHIP_PREJOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
 			throw new SireException("Unknown Device: Not attested or not in this app membership.");
 		switch(op) {
-			case MEMBERSHIP_JOIN -> {
+			case MEMBERSHIP_PREJOIN -> {
 
 				lock.lock();
 
@@ -229,6 +229,22 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 				lock.unlock();
 				return new ConfidentialMessage();
+			} case MEMBERSHIP_JOIN -> {
+				DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
+						protoToSchnorr(msg.getSignature()));
+				boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence);
+				byte[] plainData;
+				if (isValidEvidence) {
+					plainData = new byte[dummyDataForAttester.length + 1];
+					plainData[0] = 1;
+					System.arraycopy(dummyDataForAttester, 0, plainData, 1,
+							dummyDataForAttester.length);
+					membership.setDeviceAsAttested(msg.getAppId(), msg.getDeviceId(), dummyDataForAttester, new Timestamp(messageContext.getTimestamp()));
+				} else {
+					plainData = new byte[] {0};
+				}
+
+				return new ConfidentialMessage(plainData);
 			}
 			case MEMBERSHIP_LEAVE -> {
 				lock.lock();

@@ -24,6 +24,11 @@ public class MembershipManager implements MembershipInterface {
     }
 
     @Override
+    public void join(byte[] certificate) {
+
+    }
+
+    @Override
     public void leave(String appId, String deviceId) {
         membership.get(appId).removeDevice(deviceId);
     }

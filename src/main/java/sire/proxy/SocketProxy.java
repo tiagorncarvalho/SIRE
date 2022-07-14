@@ -43,7 +43,7 @@ import java.util.*;
  * @author robin
  */
 
-public class SireProxy implements Runnable {
+public class SocketProxy implements Runnable {
 	//TODO Remove responsibility of combining shares... Rethink attestation protocol asap
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
@@ -57,13 +57,15 @@ public class SireProxy implements Runnable {
 	private final ECPoint curveGenerator;
 	private final Cipher symmetricCipher;
 	private final int proxyId;
+	private final Object proxyLock;
 
-	public SireProxy (int proxyId) throws SireException{
+	public SocketProxy(int proxyId) throws SireException{
 		this.proxyId = proxyId;
 
 		try {
 			ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
 			serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
+			proxyLock = new Object();
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to contact the distributed verifier", e);
 		}
@@ -99,11 +101,8 @@ public class SireProxy implements Runnable {
 		try {
 			ServerSocket ss = new ServerSocket(2500 + this.proxyId);
 			Socket s;
-			Object socketLock = new Object();
 			while(true) {
-				synchronized (socketLock) {
-					s = ss.accept();
-				}
+				s = ss.accept();
 				System.out.println("New client!");
 				new SireProxyThread(s).start();
 				System.out.println("Connection accepted");
@@ -132,20 +131,16 @@ public class SireProxy implements Runnable {
 					Object o;
 					while ((o = ois.readObject()) != null) {
 						System.out.println("Object received! " + o);
-						if (o instanceof ProtoMessage0 msg0) {
-							ProtoMessage1 msg1 = joins(msg0);
-							oos.writeObject(msg1);
-						} else if (o instanceof ProtoMessage2 msg2) {
-							ProtoMessage3 msg3 = processMessage2(msg2);
-							oos.writeObject(msg3);
-						} else if (o instanceof ProxyMessage msg) {
-							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_VERIFIER_PUBLIC_KEY) {
-								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
-							}
-							else {
-								ProxyResponse result = runProxyMessage(msg);
-								if(result != null)
-									oos.writeObject(result);
+						if (o instanceof ProxyMessage msg) {
+							switch(msg.getOperation()) {
+								case ATTEST_GET_VERIFIER_PUBLIC_KEY -> oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
+								case MEMBERSHIP_PREJOIN -> oos.writeObject(preJoin(msg));
+								case MEMBERSHIP_JOIN -> oos.writeObject(join(msg));
+								default -> {
+									ProxyResponse result = runProxyMessage(msg);
+									if(result != null)
+										oos.writeObject(result);
+								}
 							}
 						}
 
@@ -153,11 +148,21 @@ public class SireProxy implements Runnable {
 				}
 			} catch (IOException | ClassNotFoundException | SireException | SecretSharingException e) {
 				//e.printStackTrace();
+				/*if (o instanceof ProtoMessage0 msg0) {
+							ProtoMessage1 msg1 = joins(msg0);
+							oos.writeObject(msg1);
+						} else*/ /*if (o instanceof ProtoMessage2 msg2) {
+							ProtoMessage3 msg3 = processMessage2(msg2);
+							oos.writeObject(msg3);
+						} else */
 			}
 		}
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException {
-			Response res = serviceProxy.invokeOrdered(msg.toByteArray());
+			Response res;
+			synchronized (proxyLock) {
+				res = serviceProxy.invokeOrdered(msg.toByteArray());
+			}
 			return switch(msg.getOperation()) {
 				case MAP_GET -> mapGet(res);
 				case MAP_LIST -> mapList(res);
@@ -249,10 +254,13 @@ public class SireProxy implements Runnable {
 			}
 		}
 
-		private ProtoMessage1 processMessage0(ProtoMessage0 msg0) throws SireException {
+		private ProxyResponse preJoin(ProxyMessage msg) throws SireException {
 			try {
+				synchronized (proxyLock) {
+					serviceProxy.invokeOrdered(msg.toByteArray());
+				}
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg0.getAttesterPubSesKey()));
+				ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg.getPubSesKey()));
 				BigInteger mySessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
 				ECPoint mySessionPublicKey = curveGenerator.multiply(mySessionPrivateKey);
 				ECPoint sharedPoint = attesterSessionPublicKey.multiply(mySessionPrivateKey);
@@ -272,12 +280,20 @@ public class SireProxy implements Runnable {
 						verifierPublicKey.getEncoded(true), signature.getRandomPublicKey(),
 						signature.getSigningPublicKey(), signature.getSigma());
 
-				AttesterContext newAttester = new AttesterContext(msg0.getAttesterId(), mySessionPrivateKey,
+				AttesterContext newAttester = new AttesterContext(msg.getDeviceId(), mySessionPrivateKey,
 						mySessionPublicKey,
 						attesterSessionPublicKey, symmetricEncryptionKey, macKey);
 				attesters.put(newAttester.getAttesterId(), newAttester);
 
-				ProtoMessage1 msg1 = ProtoMessage1.newBuilder()
+				/*ProtoMessage1 msg1 = ProtoMessage1.newBuilder()
+						.setVerifierPubSesKey(ByteString.copyFrom(mySessionPublicKey.getEncoded(true)))
+						.setVerifierPubKey(ByteString.copyFrom(verifierPublicKey.getEncoded(true)))
+						.setSignatureSessionKeys(protoSign)
+						.setMac(ByteString.copyFrom(mac))
+						.build();*/
+
+				ProxyResponse res = ProxyResponse.newBuilder()
+						.setType(ProxyResponse.ResponseType.PREJOIN)
 						.setVerifierPubSesKey(ByteString.copyFrom(mySessionPublicKey.getEncoded(true)))
 						.setVerifierPubKey(ByteString.copyFrom(verifierPublicKey.getEncoded(true)))
 						.setSignatureSessionKeys(protoSign)
@@ -286,24 +302,24 @@ public class SireProxy implements Runnable {
 
 				out.close();
 
-				return msg1;
-			} catch (InvalidKeySpecException | IOException e) {
+				return res;
+			} catch (InvalidKeySpecException | IOException | SecretSharingException e) {
 				throw new SireException("Failed to create shared key", e);
 			}
 		}
-		private ProtoMessage3 processMessage2(ProtoMessage2 msg2) throws SireException, IOException {
-			AttesterContext attester = attesters.get(msg2.getAttesterId());
+		private ProxyResponse join(ProxyMessage msg) throws SireException, IOException {
+			AttesterContext attester = attesters.get(msg.getDeviceId());
 			if (attester == null)
-				throw new SireException("Unknown attester id " + msg2.getAttesterId());
+				throw new SireException("Unknown attester id " + msg.getDeviceId());
 
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg2.getAttesterPubSesKey()));
-			Evidence evidence = protoToEvidence(msg2.getEvidence());
+			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg.getPubSesKey()));
+			Evidence evidence = protoToEvidence(msg.getEvidence());
 			byte[] encodedAttestationServicePublicKey = evidence.getEncodedAttestationServicePublicKey();
 			boolean isValidMac = verifyMac(
 					attester.getMacKey(),
-					byteStringToByteArray(out, msg2.getMac()),
-					byteStringToByteArray(out, msg2.getAttesterPubSesKey()),
+					byteStringToByteArray(out, msg.getMac()),
+					byteStringToByteArray(out, msg.getPubSesKey()),
 					evidence.getAnchor(),
 					encodedAttestationServicePublicKey,
 					evidence.getWaTZVersion().getBytes(),
@@ -311,27 +327,30 @@ public class SireProxy implements Runnable {
 			);
 
 			if (!isValidMac)
-				throw new SireException("Attester " + msg2.getAttesterId() + "'s mac is invalid");
+				throw new SireException("Attester " + msg.getDeviceId() + "'s mac is invalid");
 			if (!attester.getAttesterSessionPublicKey().equals(attesterSessionPublicKey))
-				throw new SireException("Attester " + msg2.getAttesterId() + "'s session public key is different");
+				throw new SireException("Attester " + msg.getDeviceId() + "'s session public key is different");
 
 			byte[] localAnchor = computeHash(attester.getAttesterSessionPublicKey().getEncoded(true),
 					attester.getMySessionPublicKey().getEncoded(true));
 			if (!Arrays.equals(localAnchor, evidence.getAnchor()))
 				throw new SireException("Anchor is different");
 
-			DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(msg2.getSignatureEvidence()));
+			DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(msg.getSignature()));
 
 			ProxyMessage dataRequest = ProxyMessage.newBuilder()
-					.setDeviceId(msg2.getAttesterId())
-					.setAppId(msg2.getAppId())
-					.setOperation(ProxyMessage.Operation.ATTEST_VERIFY)
+					.setDeviceId(msg.getDeviceId())
+					.setAppId(msg.getAppId())
+					.setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
 					.setEvidence(evidenceToProto(deviceEvidence.getEvidence()))
 					.setSignature(schnorrToProto(deviceEvidence.getEvidenceSignature()))
 					.build();
 
 			try {
-				Response dataResponse = serviceProxy.invokeOrdered(dataRequest.toByteArray());
+				Response dataResponse;
+				synchronized (proxyLock) {
+					dataResponse = serviceProxy.invokeOrdered(dataRequest.toByteArray());
+				}
 				byte isValid = dataResponse.getPainData()[0];
 				if (isValid == 0)
 					throw new SireException("Evidence is invalid");
@@ -340,10 +359,17 @@ public class SireProxy implements Runnable {
 				byte[] encryptedData = encryptData(attester.getSymmetricEncryptionKey(), data);
 				byte[] initializationVector = symmetricCipher.getIV();
 
-				return ProtoMessage3.newBuilder()
+				return ProxyResponse.newBuilder()
+						.setType(ProxyResponse.ResponseType.JOIN)
 						.setIv(ByteString.copyFrom(initializationVector))
 						.setEncryptedData(ByteString.copyFrom(encryptedData))
 						.build();
+
+
+						/*ProtoMessage3.newBuilder()
+						.setIv(ByteString.copyFrom(initializationVector))
+						.setEncryptedData(ByteString.copyFrom(encryptedData))
+						.build();*/
 
 			} catch (SecretSharingException e) {
 				throw new SireException("Failed to obtain data", e);
@@ -377,7 +403,9 @@ public class SireProxy implements Runnable {
 					.build();
 			UncombinedConfidentialResponse signatureResponse;
 			try {
-				signatureResponse = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered2(signingRequest.toByteArray());
+				synchronized (proxyLock) {
+					signatureResponse = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered2(signingRequest.toByteArray());
+				}
 			} catch (SecretSharingException e) {
 				throw new SireException("Verifier failed to sign", e);
 			}
@@ -446,10 +474,12 @@ public class SireProxy implements Runnable {
 		}
 
 		private void close() {
-			serviceProxy.close();
+			synchronized (proxyLock) {
+				serviceProxy.close();
+			}
 		}
 
-		private ProtoMessage1 joins(ProtoMessage0 msg) {
+		/*private ProtoMessage1 joins(ProtoMessage0 msg) {
 			try {
 				ProxyMessage joinRequest = ProxyMessage.newBuilder()
 						.setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
@@ -457,13 +487,15 @@ public class SireProxy implements Runnable {
 						.setDeviceId(msg.getAttesterId())
 						.setDeviceType(msg.getType())
 						.build();
-				serviceProxy.invokeOrdered(joinRequest.toByteArray());
+				synchronized (proxyLock) {
+					serviceProxy.invokeOrdered(joinRequest.toByteArray());
+				}
 
 				return processMessage0(msg);
 			} catch (SecretSharingException | SireException e) {
 				e.printStackTrace();
 			}
 			return null;
-		}
+		}*/
 	}
 }

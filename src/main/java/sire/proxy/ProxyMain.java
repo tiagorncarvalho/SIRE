@@ -11,8 +11,8 @@ import java.util.List;
 
 @SpringBootApplication
 public class ProxyMain {
-    static SireProxy proxy;
-    static SireRestProxy restProxy;
+    static SocketProxy proxy;
+    static RestProxy restProxy;
     public static void main(String[] args) {
         if (args.length < 1) {
             System.out.println("Usage: sire.proxy.ProxyMain <proxy id>");
@@ -21,8 +21,8 @@ public class ProxyMain {
         proxy = null;
         try {
             int proxyId = Integer.parseInt(args[0]);
-            proxy = new SireProxy(proxyId);
-            restProxy = new SireRestProxy(proxyId + 1);
+            proxy = new SocketProxy(proxyId);
+            restProxy = new RestProxy(proxyId + 1);
         } catch (SireException e) {
             e.printStackTrace();
         }

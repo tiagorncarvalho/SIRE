@@ -86,7 +86,7 @@ public class DeviceStub {
             attesterSessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
             attesterSessionPublicKey = curveGenerator.multiply(attesterSessionPrivateKey);
 
-            ProtoMessage1 msg1 = join(appId, type);
+            ProxyResponse msg1 = preJoin(appId, type);
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] verifierPubSesKey = byteStringToByteArray(out, msg1.getVerifierPubSesKey());
@@ -150,7 +150,7 @@ public class DeviceStub {
                     claim
             );
 
-            ProtoMessage3 msg3 = sendMessage2(appId, evidence, signature, mac);
+            ProxyResponse msg3 = join(appId, evidence, signature, mac);
 
             byte[] decryptedData = decryptData(symmetricEncryptionKey, byteStringToByteArray(out, msg3.getIv()),
                     byteStringToByteArray(out, msg3.getEncryptedData()));
@@ -218,40 +218,49 @@ public class DeviceStub {
         return rndBig;
     }
 
-    private ProtoMessage1 join(String appId, DeviceType type) throws IOException, ClassNotFoundException {
-        ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
+    private ProxyResponse preJoin(String appId, DeviceType type) throws IOException, ClassNotFoundException {
+        /*ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
                 .setAttesterId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
                 .setType(ProtoDeviceType.forNumber(type.ordinal()))
                 .setAppId(appId)
                 .setAttesterPubSesKey(ByteString.copyFrom(attesterSessionPublicKey.getEncoded(true)))
+                .build();*/
+
+        ProxyMessage msg0 = ProxyMessage.newBuilder()
+                .setOperation(ProxyMessage.Operation.MEMBERSHIP_PREJOIN)
+                .setAppId(appId)
+                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
+                .setPubSesKey(ByteString.copyFrom(attesterSessionPublicKey.getEncoded(true)))
+                .setType(ProtoDeviceType.forNumber(type.ordinal()))
                 .build();
 
         System.out.println("Attesting!");
 
         this.oos.writeObject(msg0);
         Object o = this.ois.readObject();
-        if(o instanceof ProtoMessage1 msg1) {
+        if(o instanceof ProxyResponse msg1) {
             System.out.println("Message 1 received!");
             return msg1;
         }
         return null;
     }
 
-    private ProtoMessage3 sendMessage2(String appId, Evidence evidence, SchnorrSignature sign, byte[] mac)
+    private ProxyResponse join(String appId, Evidence evidence, SchnorrSignature sign, byte[] mac)
             throws IOException, ClassNotFoundException {
         System.out.println("Sending Message 2!");
-        ProtoMessage2 msg2 = ProtoMessage2.newBuilder()
-                .setAttesterPubSesKey(ByteString.copyFrom(attesterSessionPublicKey.getEncoded(true)))
+        ProxyMessage msg2 = ProxyMessage.newBuilder()
+                .setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
+                .setPubSesKey(ByteString.copyFrom(attesterSessionPublicKey.getEncoded(true)))
                 .setEvidence(evidenceToProto(evidence))
-                .setSignatureEvidence(schnorrToProto(sign))
+                .setSignature(schnorrToProto(sign))
                 .setMac(ByteString.copyFrom(mac))
-                .setAttesterId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
+                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
                 .setAppId(appId)
                 .build();
 
         this.oos.writeObject(msg2);
         Object o = this.ois.readObject();
-        if(o instanceof ProtoMessage3 msg3) {
+        if(o instanceof ProxyResponse msg3) {
             System.out.println("Message 2 received!");
             return msg3;
         }
