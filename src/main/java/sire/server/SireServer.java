@@ -239,7 +239,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					plainData[0] = 1;
 					System.arraycopy(dummyDataForAttester, 0, plainData, 1,
 							dummyDataForAttester.length);
-					membership.setDeviceAsAttested(msg.getAppId(), msg.getDeviceId(), dummyDataForAttester, new Timestamp(messageContext.getTimestamp()));
+					membership.setCertificate(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 				} else {
 					plainData = new byte[] {0};
 				}

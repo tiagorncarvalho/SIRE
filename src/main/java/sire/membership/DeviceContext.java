@@ -8,8 +8,8 @@ public class DeviceContext implements Serializable {
     private final String deviceId;
     private Timestamp lastPing;
     private DeviceType deviceType;
-    private byte[] certificate;
-    private Timestamp certExpTime;
+/*    private byte[] certificate;
+    private Timestamp certExpTime;*/
 
     public DeviceContext(String deviceId, Timestamp lastPing, DeviceType deviceType) {
         this.deviceId = deviceId;
@@ -35,8 +35,8 @@ public class DeviceContext implements Serializable {
                 "deviceId='" + deviceId + '\'' +
                 ", lastPing=" + lastPing +
                 ", deviceType=" + deviceType +
-                ", certificate=" + Arrays.toString(certificate) +
-                ", certExpTime=" + certExpTime +
+/*                ", certificate=" + Arrays.toString(certificate) +
+                ", certExpTime=" + certExpTime +*/
                 '}';
     }
 
@@ -48,30 +48,9 @@ public class DeviceContext implements Serializable {
         this.deviceType = deviceType;
     }
 
-    public byte[] getCertificate() {
-        return certificate;
-    }
-
-    public Timestamp getCertExpTime() {
-        return certExpTime;
-    }
-
-    public boolean isAttested() {
-        return certificate != null;
-    }
-
     public boolean isTimedout (int timeout) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         return new Timestamp(this.lastPing.getTime() + (timeout * 1000L)).before(now);
-    }
-
-    public boolean isValid(int timeout) {
-        return isTimedout(timeout) && isAttested();
-    }
-
-    public void setAsAttested(byte[] certificate, Timestamp certExpTime) {
-        this.certificate = certificate;
-        this.certExpTime = certExpTime;
     }
 
     public enum DeviceType {

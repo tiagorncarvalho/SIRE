@@ -103,17 +103,18 @@ message ProxyMessage {
     //-----------MEMBERSHIP-----------
     MEMBERSHIP_PREJOIN = 11;
     MEMBERSHIP_JOIN = 12;
-    MEMBERSHIP_LEAVE = 13;
-    MEMBERSHIP_VIEW = 14;
-    MEMBERSHIP_PING = 15;
+    MEMBERSHIP_CERT_JOIN = 13;
+    MEMBERSHIP_LEAVE = 14;
+    MEMBERSHIP_VIEW = 15;
+    MEMBERSHIP_PING = 16;
     //-----------EXTENSION------------
-    EXTENSION_ADD = 16;
-    EXTENSION_REMOVE = 17;
-    EXTENSION_GET = 18;
+    EXTENSION_ADD = 17;
+    EXTENSION_REMOVE = 18;
+    EXTENSION_GET = 19;
     //-------------POLICY-------------
-    POLICY_ADD = 19;
-    POLICY_REMOVE = 20;
-    POLICY_GET = 21;
+    POLICY_ADD = 20;
+    POLICY_REMOVE = 21;
+    POLICY_GET = 22;
   }
   Operation operation = 1;
   ProtoEvidence evidence = 2;
