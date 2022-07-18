@@ -1,6 +1,7 @@
 package sire.api;
 
 import sire.membership.DeviceContext;
+import sire.messages.Messages.ProxyMessage;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -17,8 +18,9 @@ public interface MembershipInterface {
 
     /**
      * Join the system without performing the attestation protocol by supplying the attestation protocol.
+     * @param certificate
      */
-    void join(String appId, String deviceId);
+    void join(byte[] certificate);
 
     /**
      * Leave the system.

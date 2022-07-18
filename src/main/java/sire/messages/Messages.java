@@ -1921,53 +1921,49 @@ public final class Messages {
        */
       MEMBERSHIP_JOIN(12),
       /**
-       * <code>MEMBERSHIP_CERT_JOIN = 13;</code>
+       * <code>MEMBERSHIP_LEAVE = 13;</code>
        */
-      MEMBERSHIP_CERT_JOIN(13),
+      MEMBERSHIP_LEAVE(13),
       /**
-       * <code>MEMBERSHIP_LEAVE = 14;</code>
+       * <code>MEMBERSHIP_VIEW = 14;</code>
        */
-      MEMBERSHIP_LEAVE(14),
+      MEMBERSHIP_VIEW(14),
       /**
-       * <code>MEMBERSHIP_VIEW = 15;</code>
+       * <code>MEMBERSHIP_PING = 15;</code>
        */
-      MEMBERSHIP_VIEW(15),
-      /**
-       * <code>MEMBERSHIP_PING = 16;</code>
-       */
-      MEMBERSHIP_PING(16),
+      MEMBERSHIP_PING(15),
       /**
        * <pre>
        *-----------EXTENSION------------
        * </pre>
        *
-       * <code>EXTENSION_ADD = 17;</code>
+       * <code>EXTENSION_ADD = 16;</code>
        */
-      EXTENSION_ADD(17),
+      EXTENSION_ADD(16),
       /**
-       * <code>EXTENSION_REMOVE = 18;</code>
+       * <code>EXTENSION_REMOVE = 17;</code>
        */
-      EXTENSION_REMOVE(18),
+      EXTENSION_REMOVE(17),
       /**
-       * <code>EXTENSION_GET = 19;</code>
+       * <code>EXTENSION_GET = 18;</code>
        */
-      EXTENSION_GET(19),
+      EXTENSION_GET(18),
       /**
        * <pre>
        *-------------POLICY-------------
        * </pre>
        *
-       * <code>POLICY_ADD = 20;</code>
+       * <code>POLICY_ADD = 19;</code>
        */
-      POLICY_ADD(20),
+      POLICY_ADD(19),
       /**
-       * <code>POLICY_REMOVE = 21;</code>
+       * <code>POLICY_REMOVE = 20;</code>
        */
-      POLICY_REMOVE(21),
+      POLICY_REMOVE(20),
       /**
-       * <code>POLICY_GET = 22;</code>
+       * <code>POLICY_GET = 21;</code>
        */
-      POLICY_GET(22),
+      POLICY_GET(21),
       UNRECOGNIZED(-1),
       ;
 
@@ -2036,53 +2032,49 @@ public final class Messages {
        */
       public static final int MEMBERSHIP_JOIN_VALUE = 12;
       /**
-       * <code>MEMBERSHIP_CERT_JOIN = 13;</code>
+       * <code>MEMBERSHIP_LEAVE = 13;</code>
        */
-      public static final int MEMBERSHIP_CERT_JOIN_VALUE = 13;
+      public static final int MEMBERSHIP_LEAVE_VALUE = 13;
       /**
-       * <code>MEMBERSHIP_LEAVE = 14;</code>
+       * <code>MEMBERSHIP_VIEW = 14;</code>
        */
-      public static final int MEMBERSHIP_LEAVE_VALUE = 14;
+      public static final int MEMBERSHIP_VIEW_VALUE = 14;
       /**
-       * <code>MEMBERSHIP_VIEW = 15;</code>
+       * <code>MEMBERSHIP_PING = 15;</code>
        */
-      public static final int MEMBERSHIP_VIEW_VALUE = 15;
-      /**
-       * <code>MEMBERSHIP_PING = 16;</code>
-       */
-      public static final int MEMBERSHIP_PING_VALUE = 16;
+      public static final int MEMBERSHIP_PING_VALUE = 15;
       /**
        * <pre>
        *-----------EXTENSION------------
        * </pre>
        *
-       * <code>EXTENSION_ADD = 17;</code>
+       * <code>EXTENSION_ADD = 16;</code>
        */
-      public static final int EXTENSION_ADD_VALUE = 17;
+      public static final int EXTENSION_ADD_VALUE = 16;
       /**
-       * <code>EXTENSION_REMOVE = 18;</code>
+       * <code>EXTENSION_REMOVE = 17;</code>
        */
-      public static final int EXTENSION_REMOVE_VALUE = 18;
+      public static final int EXTENSION_REMOVE_VALUE = 17;
       /**
-       * <code>EXTENSION_GET = 19;</code>
+       * <code>EXTENSION_GET = 18;</code>
        */
-      public static final int EXTENSION_GET_VALUE = 19;
+      public static final int EXTENSION_GET_VALUE = 18;
       /**
        * <pre>
        *-------------POLICY-------------
        * </pre>
        *
-       * <code>POLICY_ADD = 20;</code>
+       * <code>POLICY_ADD = 19;</code>
        */
-      public static final int POLICY_ADD_VALUE = 20;
+      public static final int POLICY_ADD_VALUE = 19;
       /**
-       * <code>POLICY_REMOVE = 21;</code>
+       * <code>POLICY_REMOVE = 20;</code>
        */
-      public static final int POLICY_REMOVE_VALUE = 21;
+      public static final int POLICY_REMOVE_VALUE = 20;
       /**
-       * <code>POLICY_GET = 22;</code>
+       * <code>POLICY_GET = 21;</code>
        */
-      public static final int POLICY_GET_VALUE = 22;
+      public static final int POLICY_GET_VALUE = 21;
 
 
       public final int getNumber() {
@@ -2116,16 +2108,15 @@ public final class Messages {
           case 10: return MAP_CAS;
           case 11: return MEMBERSHIP_PREJOIN;
           case 12: return MEMBERSHIP_JOIN;
-          case 13: return MEMBERSHIP_CERT_JOIN;
-          case 14: return MEMBERSHIP_LEAVE;
-          case 15: return MEMBERSHIP_VIEW;
-          case 16: return MEMBERSHIP_PING;
-          case 17: return EXTENSION_ADD;
-          case 18: return EXTENSION_REMOVE;
-          case 19: return EXTENSION_GET;
-          case 20: return POLICY_ADD;
-          case 21: return POLICY_REMOVE;
-          case 22: return POLICY_GET;
+          case 13: return MEMBERSHIP_LEAVE;
+          case 14: return MEMBERSHIP_VIEW;
+          case 15: return MEMBERSHIP_PING;
+          case 16: return EXTENSION_ADD;
+          case 17: return EXTENSION_REMOVE;
+          case 18: return EXTENSION_GET;
+          case 19: return POLICY_ADD;
+          case 20: return POLICY_REMOVE;
+          case 21: return POLICY_GET;
           default: return null;
         }
       }
@@ -8033,7 +8024,7 @@ public final class Messages {
       "\022\r\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014\022\024\n\014r" +
       "andomPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022\016\n\006an" +
       "chor\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005claim" +
-      "\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"\360\007\n\014ProxyM" +
+      "\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"\326\007\n\014ProxyM" +
       "essage\0228\n\toperation\030\001 \001(\0162%.sire.message" +
       "s.ProxyMessage.Operation\022.\n\010evidence\030\002 \001" +
       "(\0132\034.sire.messages.ProtoEvidence\022.\n\tsign" +
@@ -8046,7 +8037,7 @@ public final class Messages {
       "sages.ProtoDeviceType\022\021\n\tpubSesKey\030\r \001(\014" +
       "\022,\n\004type\030\016 \001(\0162\036.sire.messages.ProtoDevi" +
       "ceType\022\013\n\003mac\030\017 \001(\014\032+\n\013ProtoPolicy\022\016\n\006po" +
-      "licy\030\001 \001(\t\022\014\n\004type\030\002 \001(\010\"\355\003\n\tOperation\022\037" +
+      "licy\030\001 \001(\t\022\014\n\004type\030\002 \001(\010\"\323\003\n\tOperation\022\037" +
       "\n\033ATTEST_GENERATE_SIGNING_KEY\020\000\022\"\n\036ATTES" +
       "T_GET_VERIFIER_PUBLIC_KEY\020\001\022\031\n\025ATTEST_GE" +
       "T_PUBLIC_KEY\020\002\022\024\n\020ATTEST_SIGN_DATA\020\003\022\021\n\r" +
@@ -8054,31 +8045,31 @@ public final class Messages {
       "BER\020\005\022\013\n\007MAP_PUT\020\006\022\016\n\nMAP_DELETE\020\007\022\013\n\007MA" +
       "P_GET\020\010\022\014\n\010MAP_LIST\020\t\022\013\n\007MAP_CAS\020\n\022\026\n\022ME" +
       "MBERSHIP_PREJOIN\020\013\022\023\n\017MEMBERSHIP_JOIN\020\014\022" +
-      "\030\n\024MEMBERSHIP_CERT_JOIN\020\r\022\024\n\020MEMBERSHIP_" +
-      "LEAVE\020\016\022\023\n\017MEMBERSHIP_VIEW\020\017\022\023\n\017MEMBERSH" +
-      "IP_PING\020\020\022\021\n\rEXTENSION_ADD\020\021\022\024\n\020EXTENSIO" +
-      "N_REMOVE\020\022\022\021\n\rEXTENSION_GET\020\023\022\016\n\nPOLICY_" +
-      "ADD\020\024\022\021\n\rPOLICY_REMOVE\020\025\022\016\n\nPOLICY_GET\020\026" +
-      "\"\244\005\n\rProxyResponse\0227\n\004type\030\001 \001(\0162).sire." +
-      "messages.ProxyResponse.ResponseType\022\014\n\004l" +
-      "ist\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022@\n\007members\030\004 \003(" +
-      "\0132/.sire.messages.ProxyResponse.ProtoDev" +
-      "iceContext\022\021\n\textension\030\005 \001(\t\022\016\n\006policy\030" +
-      "\006 \001(\t\022\031\n\021verifierPubSesKey\030\007 \001(\014\022\026\n\016veri" +
-      "fierPubKey\030\010 \001(\014\0229\n\024signatureSessionKeys" +
-      "\030\t \001(\0132\033.sire.messages.ProtoSchnorr\022\013\n\003m" +
-      "ac\030\n \001(\014\022\n\n\002iv\030\013 \001(\014\022\025\n\rencryptedData\030\014 " +
-      "\001(\014\032\312\001\n\022ProtoDeviceContext\022\020\n\010deviceId\030\001" +
-      " \001(\t\022(\n\004time\030\002 \001(\0132\032.google.protobuf.Tim" +
-      "estamp\0222\n\ndeviceType\030\003 \001(\0162\036.sire.messag" +
-      "es.ProtoDeviceType\022\023\n\013certificate\030\004 \001(\014\022" +
-      "/\n\013certExpTime\030\005 \001(\0132\032.google.protobuf.T" +
-      "imestamp\"m\n\014ResponseType\022\013\n\007MAP_GET\020\000\022\014\n" +
-      "\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_GET\020\003" +
-      "\022\016\n\nPOLICY_GET\020\004\022\013\n\007PREJOIN\020\005\022\010\n\004JOIN\020\006*" +
-      "g\n\017ProtoDeviceType\022\n\n\006CAMERA\020\000\022\017\n\013THERMO" +
-      "METER\020\001\022\t\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTIONS" +
-      "ENSOR\020\004\022\017\n\013LIGHTSENSOR\020\005b\006proto3"
+      "\024\n\020MEMBERSHIP_LEAVE\020\r\022\023\n\017MEMBERSHIP_VIEW" +
+      "\020\016\022\023\n\017MEMBERSHIP_PING\020\017\022\021\n\rEXTENSION_ADD" +
+      "\020\020\022\024\n\020EXTENSION_REMOVE\020\021\022\021\n\rEXTENSION_GE" +
+      "T\020\022\022\016\n\nPOLICY_ADD\020\023\022\021\n\rPOLICY_REMOVE\020\024\022\016" +
+      "\n\nPOLICY_GET\020\025\"\244\005\n\rProxyResponse\0227\n\004type" +
+      "\030\001 \001(\0162).sire.messages.ProxyResponse.Res" +
+      "ponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022@" +
+      "\n\007members\030\004 \003(\0132/.sire.messages.ProxyRes" +
+      "ponse.ProtoDeviceContext\022\021\n\textension\030\005 " +
+      "\001(\t\022\016\n\006policy\030\006 \001(\t\022\031\n\021verifierPubSesKey" +
+      "\030\007 \001(\014\022\026\n\016verifierPubKey\030\010 \001(\014\0229\n\024signat" +
+      "ureSessionKeys\030\t \001(\0132\033.sire.messages.Pro" +
+      "toSchnorr\022\013\n\003mac\030\n \001(\014\022\n\n\002iv\030\013 \001(\014\022\025\n\ren" +
+      "cryptedData\030\014 \001(\014\032\312\001\n\022ProtoDeviceContext" +
+      "\022\020\n\010deviceId\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.googl" +
+      "e.protobuf.Timestamp\0222\n\ndeviceType\030\003 \001(\016" +
+      "2\036.sire.messages.ProtoDeviceType\022\023\n\013cert" +
+      "ificate\030\004 \001(\014\022/\n\013certExpTime\030\005 \001(\0132\032.goo" +
+      "gle.protobuf.Timestamp\"m\n\014ResponseType\022\013" +
+      "\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rE" +
+      "XTENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004\022\013\n\007PREJOI" +
+      "N\020\005\022\010\n\004JOIN\020\006*g\n\017ProtoDeviceType\022\n\n\006CAME" +
+      "RA\020\000\022\017\n\013THERMOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n\005LIDA" +
+      "R\020\003\022\020\n\014MOTIONSENSOR\020\004\022\017\n\013LIGHTSENSOR\020\005b\006" +
+      "proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

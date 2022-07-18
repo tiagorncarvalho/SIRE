@@ -88,11 +88,11 @@ public class AppContext implements Serializable {
         return devices.containsKey(deviceId);
     }
 
-/*    public void setDeviceAsAttested(String deviceId, byte[] certificate, Timestamp timestamp) {
+    public void setDeviceAsAttested(String deviceId, byte[] certificate, Timestamp timestamp) {
         this.devices.get(deviceId).setAsAttested(certificate, new Timestamp(timestamp.getTime() + 30 * 60000));
-    }*/
+    }
 
     public boolean isDeviceValid(String deviceId) {
-        return this.devices.containsKey(deviceId) && this.devices.get(deviceId).isTimedout(timeout);
+        return this.devices.containsKey(deviceId) && this.devices.get(deviceId).isValid(timeout);
     }
 }

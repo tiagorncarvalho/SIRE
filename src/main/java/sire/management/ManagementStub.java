@@ -1,9 +1,9 @@
 package sire.management;
 
 import sire.api.ManagementInterface;
-import sire.membership.DeviceContext;
 import sire.messages.Messages;
 import sire.attestation.Policy;
+import sire.membership.DeviceContext;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
