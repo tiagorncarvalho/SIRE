@@ -3,7 +3,10 @@ package sire.coordination;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 import org.codehaus.groovy.control.CompilationFailedException;
+import sire.attestation.Evidence;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -60,5 +63,16 @@ public class ExtensionManager {
 
     public void removeExtension(String key) {
         this.extensions.remove(key);
+    }
+
+    public boolean runPolicy(String appId, Evidence evidence) {
+        if(extensions.containsKey(appId + ExtensionType.EXT_ATTEST)) {
+            boolean execResult = (boolean) extensions.get(appId + ExtensionType.EXT_ATTEST).getScript().invokeMethod(
+                    "verifyEvidence", evidence);
+            System.out.println(execResult);
+            return execResult;
+        }
+
+        return true;
     }
 }

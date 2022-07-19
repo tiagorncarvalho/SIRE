@@ -12,28 +12,28 @@ import java.util.*;
 public class VerifierManager {
     SchnorrSignatureScheme signatureScheme;
     MessageDigest messageDigest;
-    private final Map<String, List<byte[]>> refValues;
-    private final Map<String, Set<ECPoint>> endorsedKeys;
+    //private final Map<String, List<byte[]>> refValues;
+    //private final Map<String, Set<ECPoint>> endorsedKeys;
     private final PolicyManager policyManager;
-    private final String WaTZVersion;
+    //private final String WaTZVersion;
 
 
     public VerifierManager() throws NoSuchAlgorithmException {
         signatureScheme = new SchnorrSignatureScheme();
         messageDigest = MessageDigest.getInstance("SHA256");
-        refValues = new HashMap<>();
+        /*refValues = new HashMap<>();
         List<byte[]> tempValues =  new ArrayList<>(Arrays.asList(
                 "measure1".getBytes(),
                 "measure2".getBytes()
         ));
-        refValues.put("app1", tempValues);
-        Set<ECPoint> tempKeys = new HashSet<>();
+        refValues.put("app1", tempValues);*/
+        /*Set<ECPoint> tempKeys = new HashSet<>();
         tempKeys.add(signatureScheme.decodePublicKey(new byte[] {3, -27, -103, 52, -58, -46, 91,
                 -103, -14, 0, 65, 73, -91, 31, -42, -97, 77, 19, -55, 8, 125, -9, -82, -117, -70, 102, -110, 88,
                 -121, -76, -88, 44, -75}));
         endorsedKeys = new HashMap<>();
-        endorsedKeys.put("app1", tempKeys);
-        WaTZVersion = "1.0";
+        endorsedKeys.put("app1", tempKeys);*/
+        //WaTZVersion = "1.0";
         policyManager = new PolicyManager();
     }
 
@@ -41,9 +41,9 @@ public class VerifierManager {
         Evidence evidence = deviceEvidence.getEvidence();
         ECPoint attesterPublicKey = signatureScheme.decodePublicKey(evidence
                 .getEncodedAttestationServicePublicKey());
-        if (!endorsedKeys.get(appId).contains(attesterPublicKey)) {
+        /*if (!endorsedKeys.get(appId).contains(attesterPublicKey)) {
             return false;
-        }
+        }*/
 
         byte[] signingHash = computeHash(
                 evidence.getAnchor(),
@@ -61,9 +61,7 @@ public class VerifierManager {
         if (!isValidSignature)
             return false;
 
-        boolean policyResult = policyManager.executePolicy(appId);
-
-        return policyResult && verifyClaim(appId, evidence.getClaim()) && evidence.getWaTZVersion().equals(this.WaTZVersion);
+        return policyManager.executePolicy(appId, evidence);
     }
 
     private byte[] computeHash(byte[]... contents) {
@@ -74,13 +72,13 @@ public class VerifierManager {
     }
 
 
-    private boolean verifyClaim(String appId, byte[] claim) {
+    /*private boolean verifyClaim(String appId, byte[] claim) {
         for(byte[] c : refValues.get(appId)) {
             if (Arrays.equals(c, claim))
                 return true;
         }
         return false;
-    }
+    }*/
 
     public void setPolicy(String appId, String policy, boolean type) {
         policyManager.setPolicy(appId, policy, type);

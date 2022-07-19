@@ -43,7 +43,7 @@ public class CoordinationManager {
         if(!storage.containsKey(appId))
             return;
         if(Arrays.equals(storage.get(appId).get(key), oldValue)) {
-            extensionManager.runExtension(appId, ExtensionType.EXT_DEL, key);
+            extensionManager.runExtension(appId, ExtensionType.EXT_CAS, key);
             storage.get(appId).put(key, newValue);
         }
     }
