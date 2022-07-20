@@ -32,7 +32,7 @@ public class ProxyMain {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RestController
-    public static class ProxyController {
+    public static class RestProxyController {
 
         @PostMapping("/extension")
         public void addExtension(@RequestParam(value = "key") String key, @RequestBody String code) throws SireException {
@@ -89,6 +89,55 @@ public class ProxyMain {
             if(admin == null || admin.equals(""))
                 throw new SireException("Malformed adminId");
             return restProxy.getApps(admin);
+        }
+
+        //====================MEMBER====================
+
+        @GetMapping("/preJoin")
+        public void preJoin() {
+
+        }
+
+        @GetMapping("/join")
+        public void join() {
+
+        }
+
+        @GetMapping("/leave")
+        public void leave() {
+
+        }
+
+        @GetMapping("/ping")
+        public void ping() {
+
+        }
+
+        //====================MAP====================
+
+        @PutMapping("/map")
+        public void mapPut() {
+
+        }
+
+        @GetMapping("/map")
+        public byte[] mapGet() {
+            return null;
+        }
+
+        @PostMapping("/map")
+        public void mapCas() {
+
+        }
+
+        @DeleteMapping("/map")
+        public void mapDelete() {
+
+        }
+
+        @GetMapping("/mapList")
+        public List<byte[]> mapList() {
+            return null;
         }
     }
 }

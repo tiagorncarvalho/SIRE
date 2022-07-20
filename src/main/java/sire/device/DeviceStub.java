@@ -385,9 +385,8 @@ public class DeviceStub {
             ArrayList<DeviceContext> tmp = new ArrayList<>();
             for(ProxyResponse.ProtoDeviceContext d : res) {
                 DeviceContext dev = new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000),
-                        protoDevToDev(d.getDeviceType()));
-                if(!d.getCertificate().isEmpty())
-                    dev.setAsAttested(byteStringToByteArray(new ByteArrayOutputStream(), d.getCertificate()), new Timestamp(d.getCertExpTime().getSeconds() * 1000));
+                        protoDevToDev(d.getDeviceType()), byteStringToByteArray(new ByteArrayOutputStream(),
+                        d.getCertificate()), new Timestamp(d.getCertExpTime().getSeconds() * 1000));
                 tmp.add(dev);
             }
             return tmp;

@@ -3,6 +3,8 @@ package sire.proxy;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import sire.api.ManagementInterface;
+import sire.api.MapInterface;
+import sire.api.MembershipInterface;
 import sire.management.AppManager;
 import sire.attestation.Policy;
 import sire.messages.Messages;
@@ -13,11 +15,12 @@ import vss.facade.SecretSharingException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.sql.Timestamp;
 import java.util.List;
 
 import static sire.messages.ProtoUtils.deserialize;
 
-public class RestProxy implements ManagementInterface {
+public class RestProxy  {
     private final ConfidentialServiceProxy serviceProxy;
 
     public RestProxy(int proxyId) throws SireException {
@@ -29,7 +32,6 @@ public class RestProxy implements ManagementInterface {
         }
     }
 
-    @Override
     public void addExtension(String key, String code) {
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
@@ -43,7 +45,6 @@ public class RestProxy implements ManagementInterface {
         }
     }
 
-    @Override
     public void removeExtension(String key) {
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
@@ -56,7 +57,7 @@ public class RestProxy implements ManagementInterface {
         }
     }
 
-    @Override
+
     public String getExtension(String key) {
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
@@ -72,7 +73,7 @@ public class RestProxy implements ManagementInterface {
         return null;
     }
 
-    @Override
+
     public void setPolicy(String appId, String policy, boolean type) {
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
@@ -89,7 +90,7 @@ public class RestProxy implements ManagementInterface {
         }
     }
 
-    @Override
+
     public void deletePolicy(String appId) {
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
@@ -102,7 +103,7 @@ public class RestProxy implements ManagementInterface {
         }
     }
 
-    @Override
+
     public Policy getPolicy(String appId) {
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
@@ -118,7 +119,28 @@ public class RestProxy implements ManagementInterface {
         return null;
     }
 
-    @Override
+
+
+    public void join(String appId, String deviceId, byte[] certificate, Timestamp timestamp) {
+
+    }
+
+
+    public void preJoin(String appId, String deviceId, Timestamp timestamp, DeviceContext.DeviceType deviceType) {
+
+    }
+
+
+    public void leave(String appId, String deviceId) {
+
+    }
+
+
+    public void ping(String appId, String deviceId, Timestamp timestamp) {
+
+    }
+
+
     public List<DeviceContext> getView(String appId) {
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
@@ -140,8 +162,33 @@ public class RestProxy implements ManagementInterface {
         return null;
     }
 
-    @Override
+
     public List<String> getApps(String admin) {
         return AppManager.getInstance().getAppsFromAdmin(admin);
+    }
+
+
+    public void put(String appId, String key, byte[] value) {
+
+    }
+
+
+    public void delete(String appId, String key) {
+
+    }
+
+
+    public byte[] getData(String appId, String key) {
+        return new byte[0];
+    }
+
+
+    public List<byte[]> getList(String appId) {
+        return null;
+    }
+
+
+    public void cas(String appId, String key, byte[] oldData, byte[] newData) {
+
     }
 }

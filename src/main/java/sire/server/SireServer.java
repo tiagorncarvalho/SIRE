@@ -227,8 +227,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 				lock.lock();
 
-				membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
-						protoDevToDev(msg.getDeviceType()));
+				//TODO preJoin
 
 				lock.unlock();
 				return new ConfidentialMessage();
@@ -242,7 +241,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					plainData[0] = 1;
 					System.arraycopy(dummyDataForAttester, 0, plainData, 1,
 							dummyDataForAttester.length);
-					membership.setDeviceAsAttested(msg.getAppId(), msg.getDeviceId(), dummyDataForAttester, new Timestamp(messageContext.getTimestamp()));
+					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
+							protoDevToDev(msg.getDeviceType()), dummyDataForAttester);
 				} else {
 					plainData = new byte[] {0};
 				}

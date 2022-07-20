@@ -7,14 +7,16 @@ import java.util.Arrays;
 public class DeviceContext implements Serializable {
     private final String deviceId;
     private Timestamp lastPing;
-    private DeviceType deviceType;
-    private byte[] certificate;
-    private Timestamp certExpTime;
+    private final DeviceType deviceType;
+    private final byte[] certificate;
+    private final Timestamp certExpTime;
 
-    public DeviceContext(String deviceId, Timestamp lastPing, DeviceType deviceType) {
+    public DeviceContext(String deviceId, Timestamp lastPing, DeviceType deviceType, byte[] certificate, Timestamp certExpTime) {
         this.deviceId = deviceId;
         this.lastPing = lastPing;
         this.deviceType = deviceType;
+        this.certificate = certificate;
+        this.certExpTime = certExpTime;
     }
 
     public String getDeviceId() {
@@ -44,10 +46,6 @@ public class DeviceContext implements Serializable {
         return deviceType;
     }
 
-    public void setDeviceType(DeviceType deviceType) {
-        this.deviceType = deviceType;
-    }
-
     public byte[] getCertificate() {
         return certificate;
     }
@@ -69,10 +67,10 @@ public class DeviceContext implements Serializable {
         return isTimedout(timeout) && isAttested();
     }
 
-    public void setAsAttested(byte[] certificate, Timestamp certExpTime) {
+    /*public void setAsAttested(byte[] certificate, Timestamp certExpTime) {
         this.certificate = certificate;
         this.certExpTime = certExpTime;
-    }
+    }*/
 
     public enum DeviceType {
         CAMERA,

@@ -147,14 +147,7 @@ public class SocketProxy implements Runnable {
 					}
 				}
 			} catch (IOException | ClassNotFoundException | SireException | SecretSharingException e) {
-				//e.printStackTrace();
-				/*if (o instanceof ProtoMessage0 msg0) {
-							ProtoMessage1 msg1 = joins(msg0);
-							oos.writeObject(msg1);
-						} else*/ /*if (o instanceof ProtoMessage2 msg2) {
-							ProtoMessage3 msg3 = processMessage2(msg2);
-							oos.writeObject(msg3);
-						} else */
+				e.printStackTrace();
 			}
 		}
 
