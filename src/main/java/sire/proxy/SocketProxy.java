@@ -315,14 +315,14 @@ public class SocketProxy implements Runnable {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg.getPubSesKey()));
 			Evidence evidence = protoToEvidence(msg.getEvidence());
-			byte[] encodedAttestationServicePublicKey = evidence.getEncodedAttestationServicePublicKey();
+			byte[] encodedAttestationServicePublicKey = evidence.getPubKey();
 			boolean isValidMac = verifyMac(
 					attester.getMacKey(),
 					byteStringToByteArray(out, msg.getMac()),
 					byteStringToByteArray(out, msg.getPubSesKey()),
 					evidence.getAnchor(),
 					encodedAttestationServicePublicKey,
-					evidence.getWaTZVersion().getBytes(),
+					evidence.getVersion().getBytes(),
 					evidence.getClaim()
 			);
 

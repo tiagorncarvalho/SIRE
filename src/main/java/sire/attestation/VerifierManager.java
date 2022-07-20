@@ -7,7 +7,6 @@ import sire.schnorr.SchnorrSignatureScheme;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
 
 public class VerifierManager {
     SchnorrSignatureScheme signatureScheme;
@@ -34,13 +33,13 @@ public class VerifierManager {
         endorsedKeys = new HashMap<>();
         endorsedKeys.put("app1", tempKeys);*/
         //WaTZVersion = "1.0";
-        policyManager = new PolicyManager();
+        policyManager = PolicyManager.getInstance();
     }
 
     public boolean verifyEvidence(String appId, DeviceEvidence deviceEvidence) {
         Evidence evidence = deviceEvidence.getEvidence();
         ECPoint attesterPublicKey = signatureScheme.decodePublicKey(evidence
-                .getEncodedAttestationServicePublicKey());
+                .getPubKey());
         /*if (!endorsedKeys.get(appId).contains(attesterPublicKey)) {
             return false;
         }*/
@@ -48,7 +47,7 @@ public class VerifierManager {
         byte[] signingHash = computeHash(
                 evidence.getAnchor(),
                 attesterPublicKey.getEncoded(true),
-                evidence.getWaTZVersion().getBytes(),
+                evidence.getVersion().getBytes(),
                 evidence.getClaim()
         );
         SchnorrSignature evidenceSignature = deviceEvidence.getEvidenceSignature();
@@ -80,7 +79,7 @@ public class VerifierManager {
         return false;
     }*/
 
-    public void setPolicy(String appId, String policy, boolean type) {
+/*    public void setPolicy(String appId, String policy, boolean type) {
         policyManager.setPolicy(appId, policy, type);
     }
 
@@ -90,5 +89,5 @@ public class VerifierManager {
 
     public Policy getPolicy(String appId) {
         return policyManager.getPolicy(appId);
-    }
+    }*/
 }

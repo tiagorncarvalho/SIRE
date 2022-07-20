@@ -12,48 +12,48 @@ import java.io.ObjectOutput;
  */
 public class Evidence implements Externalizable {
 	private byte[] anchor;
-	private String waTZVersion;
+	private String version;
 	private byte[] claim;
-	private byte[] encodedAttestationServicePublicKey;
+	private byte[] pubKey;
 
 	public Evidence() {}
 
-	public Evidence(byte[] anchor, String waTZVersion, byte[] claim, byte[] encodedAttestationServicePublicKey) {
+	public Evidence(byte[] anchor, String version, byte[] claim, byte[] pubKey) {
 		this.anchor = anchor;
-		this.waTZVersion = waTZVersion;
+		this.version = version;
 		this.claim = claim;
-		this.encodedAttestationServicePublicKey = encodedAttestationServicePublicKey;
+		this.pubKey = pubKey;
 	}
 
 	public byte[] getAnchor() {
 		return anchor;
 	}
 
-	public String getWaTZVersion() {
-		return waTZVersion;
+	public String getVersion() {
+		return version;
 	}
 
 	public byte[] getClaim() {
 		return claim;
 	}
 
-	public byte[] getEncodedAttestationServicePublicKey() {
-		return encodedAttestationServicePublicKey;
+	public byte[] getPubKey() {
+		return pubKey;
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		ProtoUtils.writeByteArray(out, anchor);
-		out.writeUTF(waTZVersion);
+		out.writeUTF(version);
 		ProtoUtils.writeByteArray(out, claim);
-		ProtoUtils.writeByteArray(out, encodedAttestationServicePublicKey);
+		ProtoUtils.writeByteArray(out, pubKey);
 	}
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException {
 		anchor = ProtoUtils.readByteArray(in);
-		waTZVersion = in.readUTF();
+		version = in.readUTF();
 		claim = ProtoUtils.readByteArray(in);
-		encodedAttestationServicePublicKey = ProtoUtils.readByteArray(in);
+		pubKey = ProtoUtils.readByteArray(in);
 	}
 }

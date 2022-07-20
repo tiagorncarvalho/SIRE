@@ -5,8 +5,6 @@ import groovy.lang.Script;
 import org.codehaus.groovy.control.CompilationFailedException;
 import sire.attestation.Evidence;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -27,7 +25,6 @@ public class ExtensionManager {
     }
 
     public void addExtension(String key, String code) {
-        //System.out.println("============================================= Code: " + code + " =============================================");
         try {
             this.extensions.put(key, new Extension(code, sh.parse(code)));
         } catch (CompilationFailedException e) {
@@ -44,6 +41,7 @@ public class ExtensionManager {
         return extensions.containsKey(key) ? extensions.get(key).getCode() : null;
     }
 
+    //TODO ExtParams return
     public void runExtension(String appId, ExtensionType type, String key) {
         String temp;
         if(extensions.containsKey(appId + type.name() + key))
@@ -53,12 +51,9 @@ public class ExtensionManager {
         else if (extensions.containsKey(appId))
             temp = appId;
         else {
-            //System.out.println("Left! " + appId + type.name() + key);
             return;
         }
-        //System.out.println("Running extension...");
         extensions.get(temp).getScript().run();
-        //System.out.println("Extension ran!");
     }
 
     public void removeExtension(String key) {

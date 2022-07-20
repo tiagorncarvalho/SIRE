@@ -36,9 +36,9 @@ public class ProtoUtils {
     public static Messages.ProtoEvidence evidenceToProto(Evidence evidence) {
         return Messages.ProtoEvidence.newBuilder()
                 .setAnchor(ByteString.copyFrom(evidence.getAnchor()))
-                .setWatzVersion(evidence.getWaTZVersion())
+                .setWatzVersion(evidence.getVersion())
                 .setClaim(ByteString.copyFrom(evidence.getClaim()))
-                .setServicePubKey(ByteString.copyFrom(evidence.getEncodedAttestationServicePublicKey()))
+                .setServicePubKey(ByteString.copyFrom(evidence.getPubKey()))
                 .build();
     }
 

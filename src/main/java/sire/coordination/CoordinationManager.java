@@ -3,7 +3,7 @@ package sire.coordination;
 import java.util.*;
 
 public class CoordinationManager {
-    private final Map<String, Map<String, byte[]>> storage;
+    private final Map<String, Map<String, byte[]>> storage; //TODO change into a single map
     private final ExtensionManager extensionManager;
 
     public CoordinationManager() {

@@ -15,6 +15,7 @@ import confidential.statemanagement.ConfidentialSnapshot;
 import org.bouncycastle.math.ec.ECPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sire.attestation.PolicyManager;
 import sire.coordination.CoordinationManager;
 import sire.attestation.VerifierManager;
 import sire.attestation.DeviceEvidence;
@@ -89,6 +90,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	//verifies the evidence
 	private final VerifierManager verifierManager;
+	private static PolicyManager policyManager;
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {
@@ -111,6 +113,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		cr = new ConfidentialRecoverable(id, this);
 		serviceReplica = new ServiceReplica(id, cr, cr, null, null, null, null, cr);
 		verifierManager = new VerifierManager();
+		policyManager = PolicyManager.getInstance();
 		serverCommunicationSystem = serviceReplica.getServerCommunicationSystem();
 		distributedPolynomialManager = cr.getDistributedPolynomialManager();
 		distributedPolynomialManager.setRandomPolynomialListener(this);
@@ -298,7 +301,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			}
 			case POLICY_ADD -> {
 				lock.lock();
-				verifierManager.setPolicy(msg.getAppId(), msg.getPolicy().getPolicy(), msg.getPolicy().getType());
+				policyManager.setPolicy(msg.getAppId(), msg.getPolicy().getPolicy(), msg.getPolicy().getType());
 				lock.unlock();
 				return new ConfidentialMessage();
 			}
@@ -306,7 +309,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				if(!membership.containsApp(msg.getAppId()))
 					return new ConfidentialMessage(serialize("NOT FOUND"));
 				lock.lock();
-				verifierManager.removePolicy(msg.getAppId());
+				policyManager.removePolicy(msg.getAppId());
 				lock.unlock();
 				return new ConfidentialMessage();
 			}
@@ -314,7 +317,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				if(!membership.containsApp(msg.getAppId()))
 					return new ConfidentialMessage(serialize("NOT FOUND"));
 				else
-					return new ConfidentialMessage(serialize(verifierManager.getPolicy(msg.getAppId())));
+					return new ConfidentialMessage(serialize(policyManager.getPolicy(msg.getAppId())));
 			}
 		}
 		return null;

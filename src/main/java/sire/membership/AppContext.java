@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 public class AppContext implements Serializable {
     final String id;
-    final TreeMap<String, DeviceContext> devices;
+    final Map<String, DeviceContext> devices;
     //Policy policy;
     final int timeout;
     final long certTimeout;

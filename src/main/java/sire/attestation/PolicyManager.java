@@ -9,9 +9,10 @@ import java.util.Map;
 
 public class PolicyManager {
     private final Map<String, Policy> policies;
+    private static PolicyManager instance;
     private final ExtensionManager extensionManager = ExtensionManager.getInstance();
 
-    public PolicyManager() {
+    private PolicyManager() {
         this.policies = new HashMap<>();
         String code = """
                 package sire.attestation
@@ -36,6 +37,12 @@ public class PolicyManager {
                 """;
         this.policies.put("app1", new Policy(code, true));
         extensionManager.addExtension("app1" + ExtensionType.EXT_ATTEST, code);
+    }
+
+    public static PolicyManager getInstance() {
+        if(instance == null)
+            instance = new PolicyManager();
+        return instance;
     }
 
     public void setPolicy(String appId, String policy, boolean type) {
