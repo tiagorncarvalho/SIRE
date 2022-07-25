@@ -16,10 +16,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;*/
 
-public class LatencyAttestationClient {
-    //TODO Needs to be reimplemented... From the ground up.
+import sire.device.DeviceStub;
+import sire.membership.DeviceContext;
+import sire.messages.Messages;
 
-    /*private static String initialId;
+import javax.crypto.NoSuchPaddingException;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+public class LatencyAttestationClient {
+
+    //private static String initialId;
     private static final String appId = "app1";
     private static final String waTZVersion = "1.0";
 
@@ -29,7 +43,7 @@ public class LatencyAttestationClient {
                     "<num clients> <number of ops> <operation> <measurement leader?>");
             System.exit(-1);
         }
-        initialId = args[0];
+        //initialId = args[0];
         DeviceContext.DeviceType type = DeviceContext.DeviceType.CAMERA;
         byte[] claim = "measure1".getBytes();
         int numClients = Integer.parseInt(args[1]);
@@ -49,6 +63,7 @@ public class LatencyAttestationClient {
         random.nextBytes(value);
 
         DeviceStub stub = new DeviceStub();
+        stub.attest(appId, type, waTZVersion, claim);
 
         Client[] clients = new Client[numClients];
         for (int i = 0; i < numClients; i++) {
@@ -57,18 +72,19 @@ public class LatencyAttestationClient {
 
             if (i > 0) {
                 stub = new DeviceStub();
+                stub.attest(appId, type, waTZVersion, claim);
             }
 
-            String id = Integer.toString(Integer.parseInt(initialId) + i);
-            clients[i] = new Client(Integer.toString(Integer.parseInt(initialId) + i), stub, numOperations, measurementLeader) {
+            String id = Integer.toString(i);
+            clients[i] = new Client(Integer.toString(i), stub, numOperations, measurementLeader) {
                 @Override
                 void sendOperation(DeviceStub stub) {
                     System.out.println("Sending op!");
                     try {
                         switch (operation) {
-                            case ATTEST_VERIFY -> stub.attest(appId, id, type, waTZVersion, claim);
-                            case MAP_PUT -> stub.put(id, appId, id, value);
-                            case MAP_GET -> stub.getData(id, appId, "key");
+                            case ATTEST_VERIFY -> stub.attest(appId, type, waTZVersion, claim);
+                            case MAP_PUT -> stub.put(appId, id, value);
+                            case MAP_GET -> stub.getData(appId, "key");
                         }
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
@@ -119,13 +135,13 @@ public class LatencyAttestationClient {
 
         @Override
         public void run() {
-            if (id.equals(initialId)) {
+            if (id.equals("0")) {
                 if (measurementLeader)
                     System.out.println("I'm measurement leader");
                 System.out.println("Sending test data...");
             }
             sendOperation(stub);
-            if (id.equals(initialId)) {
+            if (id.equals("0")) {
                 System.out.println("Executing experiment for " + numOperations + " ops");
             }
             for (int i = 1; i < numOperations; i++) {
@@ -135,7 +151,7 @@ public class LatencyAttestationClient {
                 t2 = System.nanoTime();
                 long latency = t2 - t1;
 
-                if (id.equals(initialId) && measurementLeader)
+                if (id.equals("0") && measurementLeader)
                     System.out.println("M: " + latency);
 
                 try {
@@ -172,5 +188,5 @@ public class LatencyAttestationClient {
             case "attest" -> Messages.ProxyMessage.Operation.ATTEST_VERIFY;
             default -> null;
         };
-    }*/
+    }
 }

@@ -93,51 +93,84 @@ public class ProxyMain {
 
         //====================MEMBER====================
 
-        @GetMapping("/preJoin")
+        @PutMapping("/member")
         public void preJoin() {
-
+            //TODO
         }
 
-        @GetMapping("/join")
+        @PostMapping("/member")
         public void join() {
-
+            //TODO
         }
 
-        @GetMapping("/leave")
-        public void leave() {
-
+        @DeleteMapping("/member")
+        public void leave(@RequestParam(value = "appId") String appId, @RequestParam(value = "deviceId") String deviceId) throws SireException {
+            if(appId == null || appId.equals(""))
+                throw new SireException("Malformed appId");
+            else if(deviceId == null || deviceId.equals(""))
+                throw new SireException("Malformed deviceId");
+            restProxy.leave(appId, deviceId);
         }
 
-        @GetMapping("/ping")
-        public void ping() {
-
+        @PutMapping("/ping")
+        public void ping(@RequestParam(value = "appId") String appId, @RequestParam(value = "deviceId") String deviceId) throws SireException {
+            if(appId == null || appId.equals(""))
+                throw new SireException("Malformed appId");
+            else if(deviceId == null || deviceId.equals(""))
+                throw new SireException("Malformed deviceId");
+            restProxy.ping(appId, deviceId);
         }
 
         //====================MAP====================
 
         @PutMapping("/map")
-        public void mapPut() {
-
+        public void mapPut(@RequestParam(value = "appId") String appId, @RequestBody String deviceId,
+                           @RequestBody String key, @RequestBody byte[] value) throws SireException {
+            if(appId == null || appId.equals(""))
+                throw new SireException("Malformed appId");
+            else if(deviceId == null || deviceId.equals(""))
+                throw new SireException("Malformed deviceId");
+            restProxy.put(appId, deviceId, key, value);
         }
 
         @GetMapping("/map")
-        public byte[] mapGet() {
-            return null;
+        public byte[] mapGet(@RequestParam(value = "appId") String appId, @RequestBody String deviceId,
+                             @RequestBody String key) throws SireException {
+            if(appId == null || appId.equals(""))
+                throw new SireException("Malformed appId");
+            else if(deviceId == null || deviceId.equals(""))
+                throw new SireException("Malformed deviceId");
+            return restProxy.get(appId, deviceId, key);
         }
 
         @PostMapping("/map")
-        public void mapCas() {
+        public void mapCas(@RequestParam(value = "appId") String appId, @RequestBody String deviceId,
+                           @RequestBody String key, @RequestBody byte[] oldValue, @RequestBody byte[] newValue) throws SireException {
+            if(appId == null || appId.equals(""))
+                throw new SireException("Malformed appId");
+            else if(deviceId == null || deviceId.equals(""))
+                throw new SireException("Malformed deviceId");
+            restProxy.cas(appId, deviceId, key, oldValue, newValue);
 
         }
 
         @DeleteMapping("/map")
-        public void mapDelete() {
-
+        public void mapDelete(@RequestParam(value = "appId") String appId, @RequestBody String deviceId,
+                              @RequestBody String key) throws SireException {
+            if(appId == null || appId.equals(""))
+                throw new SireException("Malformed appId");
+            else if(deviceId == null || deviceId.equals(""))
+                throw new SireException("Malformed deviceId");
+            restProxy.delete(appId, deviceId, key);
         }
 
         @GetMapping("/mapList")
-        public List<byte[]> mapList() {
-            return null;
+        public List<byte[]> mapList(@RequestParam(value = "appId") String appId, @RequestBody String deviceId) throws SireException  {
+            if(appId == null || appId.equals(""))
+                throw new SireException("Malformed appId");
+            else if(deviceId == null || deviceId.equals(""))
+                throw new SireException("Malformed deviceId");
+            return restProxy.getList(appId, deviceId);
         }
     }
 }

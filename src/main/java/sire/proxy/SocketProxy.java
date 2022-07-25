@@ -257,7 +257,7 @@ public class SocketProxy implements Runnable {
 				BigInteger mySessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
 				ECPoint mySessionPublicKey = curveGenerator.multiply(mySessionPrivateKey);
 				ECPoint sharedPoint = attesterSessionPublicKey.multiply(mySessionPrivateKey);
-				BigInteger sharedSecret = sharedPoint.normalize().getXCoord().toBigInteger(); //TODO have to use key derivation algorithm
+				BigInteger sharedSecret = sharedPoint.normalize().getXCoord().toBigInteger(); //have to use key derivation algorithm
 
 				byte[] sessionPublicKeysHash = computeHash(mySessionPublicKey.getEncoded(true),
 						attesterSessionPublicKey.getEncoded(true));

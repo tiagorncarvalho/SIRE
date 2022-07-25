@@ -121,7 +121,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		schnorrSignatureScheme = new SchnorrSignatureScheme();
 	}
 
-	//TODO Add attestation certificates with expiration time
 	@Override
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {

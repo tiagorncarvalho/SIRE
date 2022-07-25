@@ -60,10 +60,4 @@ public class MembershipManager {
         return membership.get(appId).isDeviceValid(deviceId);
     }
 
-
-    //TODO remove this method
-    /*public void setDeviceAsAttested(String appId, String deviceId, byte[] certificate, Timestamp timestamp) {
-        membership.get(appId).setDeviceAsAttested(deviceId, certificate, timestamp);
-    }*/
-
 }

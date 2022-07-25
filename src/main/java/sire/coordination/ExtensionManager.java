@@ -13,7 +13,7 @@ public class ExtensionManager {
     final Map<String, Extension> extensions;
     final GroovyShell sh;
 
-    private ExtensionManager() {
+    public ExtensionManager() {
         this.sh = new GroovyShell();
         this.extensions = new TreeMap<>();
     }

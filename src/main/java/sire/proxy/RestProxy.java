@@ -1,5 +1,6 @@
 package sire.proxy;
 
+import com.google.protobuf.ByteString;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import sire.api.ManagementInterface;
@@ -16,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import static sire.messages.ProtoUtils.deserialize;
@@ -121,23 +123,41 @@ public class RestProxy  {
 
 
 
-    public void join(String appId, String deviceId, byte[] certificate, Timestamp timestamp) {
-
+    public void join(String appId, String deviceId) {
+        //TODO
     }
 
 
     public void preJoin(String appId, String deviceId, Timestamp timestamp, DeviceContext.DeviceType deviceType) {
-
+        //TODO
     }
 
 
     public void leave(String appId, String deviceId) {
-
+        try {
+            Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+                    .setOperation(Messages.ProxyMessage.Operation.MEMBERSHIP_LEAVE)
+                    .setAppId(appId)
+                    .setDeviceId(deviceId)
+                    .build();
+            serviceProxy.invokeOrdered(msg.toByteArray());
+        } catch(SecretSharingException e) {
+            e.printStackTrace();
+        }
     }
 
 
-    public void ping(String appId, String deviceId, Timestamp timestamp) {
-
+    public void ping(String appId, String deviceId) {
+        try {
+            Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+                    .setOperation(Messages.ProxyMessage.Operation.MEMBERSHIP_PING)
+                    .setAppId(appId)
+                    .setDeviceId(deviceId)
+                    .build();
+            serviceProxy.invokeOrdered(msg.toByteArray());
+        } catch(SecretSharingException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -168,27 +188,88 @@ public class RestProxy  {
     }
 
 
-    public void put(String appId, String key, byte[] value) {
-
+    public void put(String appId, String deviceId, String key, byte[] value) {
+        try {
+            Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+                    .setOperation(Messages.ProxyMessage.Operation.MAP_PUT)
+                    .setAppId(appId)
+                    .setDeviceId(deviceId)
+                    .setKey(key)
+                    .setValue(ByteString.copyFrom(value))
+                    .build();
+            serviceProxy.invokeOrdered(msg.toByteArray());
+        } catch(SecretSharingException e) {
+            e.printStackTrace();
+        }
     }
 
 
-    public void delete(String appId, String key) {
-
+    public void delete(String appId, String deviceId, String key) {
+        try {
+            Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+                    .setOperation(Messages.ProxyMessage.Operation.MAP_DELETE)
+                    .setAppId(appId)
+                    .setDeviceId(deviceId)
+                    .setKey(key)
+                    .build();
+            serviceProxy.invokeOrdered(msg.toByteArray());
+        } catch(SecretSharingException e) {
+            e.printStackTrace();
+        }
     }
 
 
-    public byte[] getData(String appId, String key) {
-        return new byte[0];
-    }
-
-
-    public List<byte[]> getList(String appId) {
+    public byte[] get(String appId, String deviceId, String key) {
+        try {
+            Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+                    .setOperation(Messages.ProxyMessage.Operation.MAP_PUT)
+                    .setAppId(appId)
+                    .setDeviceId(deviceId)
+                    .setKey(key)
+                    .build();
+            return serviceProxy.invokeOrdered(msg.toByteArray()).getPainData();
+        } catch(SecretSharingException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
 
-    public void cas(String appId, String key, byte[] oldData, byte[] newData) {
+    public List<byte[]> getList(String appId, String deviceId) {
+        try {
+            Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+                    .setOperation(Messages.ProxyMessage.Operation.MAP_LIST)
+                    .setAppId(appId)
+                    .setDeviceId(deviceId)
+                    .build();
+            byte[] tmp = serviceProxy.invokeOrdered(msg.toByteArray()).getPainData();
+            ArrayList<byte[]> res = null;
+            if (tmp != null) {
+                ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
+                ObjectInputStream oin = new ObjectInputStream(bin);
+                res = (ArrayList<byte[]>) oin.readObject();
+            }
+            return res;
+        } catch (IOException | ClassNotFoundException | SecretSharingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+
+    public void cas(String appId, String deviceId, String key, byte[] oldValue, byte[] newValue) {
+        try {
+            Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+                    .setOperation(Messages.ProxyMessage.Operation.MAP_PUT)
+                    .setAppId(appId)
+                    .setDeviceId(deviceId)
+                    .setKey(key)
+                    .setValue(ByteString.copyFrom(newValue))
+                    .setOldData(ByteString.copyFrom(oldValue))
+                    .build();
+            serviceProxy.invokeOrdered(msg.toByteArray());
+        } catch(SecretSharingException e) {
+            e.printStackTrace();
+        }
     }
 }

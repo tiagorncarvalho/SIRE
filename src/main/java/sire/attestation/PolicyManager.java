@@ -28,11 +28,11 @@ public class PolicyManager {
                                          77, 19, -55, 8, 125, -9, -82, -117, -70, 102, -110, 88, -121, -76, -88, 44, -75] as byte[]]
                     def isKeyValid = false
                     for(key in endorsedKeys) {
-                        if(key == e.getEncodedAttestationServicePublicKey())
+                        if(key == e.getPubKey())
                             isKeyValid = true
                     }
                     def expectedVersion = "1.0"
-                    return isClaimValid && isKeyValid && expectedVersion.equals(e.getWaTZVersion())
+                    return isClaimValid && isKeyValid && expectedVersion.equals(e.getVersion())
                 }
                 """;
         this.policies.put("app1", new Policy(code, true));
@@ -70,7 +70,7 @@ public class PolicyManager {
                 System.out.println(policyResult);
                 return policyResult;
             } else
-                return true; //TODO logical policy
+                return true; //logical policy
         } else
             return true;
     }
