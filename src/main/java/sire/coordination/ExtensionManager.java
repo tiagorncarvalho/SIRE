@@ -41,8 +41,7 @@ public class ExtensionManager {
         return extensions.containsKey(key) ? extensions.get(key).getCode() : null;
     }
 
-    //TODO ExtParams return
-    public void runExtension(String appId, ExtensionType type, String key) {
+    public ExtParams runExtension(String appId, ExtensionType type, String key, ExtParams params) {
         String temp;
         if(extensions.containsKey(appId + type.name() + key))
             temp = appId + type.name() + key;
@@ -51,9 +50,9 @@ public class ExtensionManager {
         else if (extensions.containsKey(appId))
             temp = appId;
         else {
-            return;
+            return params;
         }
-        extensions.get(temp).getScript().run();
+        return (ExtParams) extensions.get(temp).getScript().invokeMethod("runExtension", params);
     }
 
     public void removeExtension(String key) {
@@ -69,5 +68,19 @@ public class ExtensionManager {
         }
 
         return true;
+    }
+
+    public MemberParams runExtensionMember(String appId, ExtensionType type, String deviceId, MemberParams params) {
+        String temp;
+        if(extensions.containsKey(appId + type.name() + deviceId))
+            temp = appId + type.name() + deviceId;
+        else if(extensions.containsKey(appId + type.name()))
+            temp = appId + type.name();
+        else if (extensions.containsKey(appId))
+            temp = appId;
+        else {
+            return params;
+        }
+        return (MemberParams) extensions.get(temp).getScript().invokeMethod("runExtension", params);
     }
 }

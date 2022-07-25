@@ -20,6 +20,7 @@ import sire.attestation.DeviceEvidence;
 import sire.attestation.PolicyManager;
 import sire.attestation.VerifierManager;
 import sire.coordination.CoordinationManager;
+import sire.coordination.ExtParams;
 import sire.coordination.ExtensionManager;
 import sire.coordination.ExtensionType;
 import sire.membership.MembershipManager;
@@ -307,7 +308,8 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 byte[] value = byteStringToByteArray(out, msg.getValue());
                 out.close();
                 storage.put(msg.getAppId(), msg.getKey(), value);
-                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PUT, msg.getKey());
+                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PUT, msg.getKey(),
+                        new ExtParams(msg.getAppId(), value, null));
                 lock.unlock();
 
                 return new ConfidentialMessage();
@@ -316,11 +318,13 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 lock.lock();
                 storage.remove(msg.getAppId(), msg.getKey());
                 lock.unlock();
-                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_DEL, msg.getKey());
+                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_DEL, msg.getKey(),
+                        new ExtParams(msg.getAppId() + msg.getKey(), null, null));
                 return new ConfidentialMessage();
             }
             case MAP_GET -> {
-                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey());
+                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey(),
+                        new ExtParams(msg.getAppId() + msg.getKey(), null, null));
                 return new ConfidentialMessage(storage.get(msg.getAppId(), msg.getKey()));
             }
             case MAP_LIST -> {
@@ -332,7 +336,8 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 byte[] result = bout.toByteArray();
                 bout.close();
 
-                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LIST, "");
+                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LIST, "",
+                        new ExtParams(msg.getAppId() + msg.getKey(), null, null));
 
                 return new ConfidentialMessage(result);
             }
@@ -346,7 +351,8 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 if(Arrays.equals(storage.get(msg.getAppId(), key), oldValue)) {
                     storage.put(msg.getAppId(), key, newValue);
                 }
-                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_CAS, msg.getKey());
+                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_CAS, msg.getKey(),
+                        new ExtParams(msg.getAppId() + msg.getKey(), oldValue, newValue));
                 lock.unlock();
                 return new ConfidentialMessage();
             }

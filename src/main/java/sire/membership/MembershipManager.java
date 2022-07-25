@@ -3,6 +3,7 @@ package sire.membership;
 import sire.api.MembershipInterface;
 import sire.coordination.ExtensionManager;
 import sire.coordination.ExtensionType;
+import sire.coordination.MemberParams;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -23,29 +24,29 @@ public class MembershipManager {
 
     public void join(String appId, String deviceId, Timestamp timestamp, DeviceContext.DeviceType deviceType,
                      byte[] certificate) {
-        extensionManager.runExtension(appId, ExtensionType.EXT_JOIN, deviceId);
+        MemberParams res = extensionManager.runExtensionMember(appId, ExtensionType.EXT_JOIN, deviceId, new MemberParams(appId, deviceId));
         if(!membership.containsKey(appId))
             membership.put(appId, new AppContext(appId, timeout, certTimeout));
-        membership.get(appId).addDevice(deviceId, new DeviceContext(deviceId, timestamp, deviceType, certificate,
+        membership.get(res.getAppId()).addDevice(res.getDeviceId(), new DeviceContext(res.getDeviceId(), timestamp, deviceType, certificate,
                 new Timestamp(timestamp.getTime() + certTimeout)));
     }
 
 
     public void leave(String appId, String deviceId) {
-        extensionManager.runExtension(appId, ExtensionType.EXT_LEAVE, deviceId);
+        MemberParams res = extensionManager.runExtensionMember(appId, ExtensionType.EXT_LEAVE, deviceId, new MemberParams(appId, deviceId));
         membership.get(appId).removeDevice(deviceId);
     }
 
 
     public void ping(String appId, String deviceId, Timestamp timestamp) {
-        extensionManager.runExtension(appId, ExtensionType.EXT_PING, deviceId);
-        membership.get(appId).updateDeviceTimestamp(deviceId, timestamp);
+        MemberParams res = extensionManager.runExtensionMember(appId, ExtensionType.EXT_PING, deviceId, new MemberParams(appId, deviceId));
+        membership.get(res.getAppId()).updateDeviceTimestamp(res.getDeviceId(), timestamp);
     }
 
 
     public List<DeviceContext> getView(String appId) {
-        extensionManager.runExtension(appId, ExtensionType.EXT_VIEW, "");
-        return membership.get(appId).getMembership();
+        MemberParams res = extensionManager.runExtensionMember(appId, ExtensionType.EXT_VIEW, "", new MemberParams(appId, null));
+        return membership.get(res.getAppId()).getMembership();
     }
 
     public boolean containsApp(String appId) {

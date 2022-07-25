@@ -12,26 +12,26 @@ public class CoordinationManager {
     }
 
     public void put(String appId, String key, byte[] value) {
-        extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key);
-        storage.put(appId + key, value);
+        ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ExtParams(key, value, null));
+        storage.put(appId + p.getKey(), p.getValue());
     }
 
     public void remove(String appId, String key) {
-        extensionManager.runExtension(appId, ExtensionType.EXT_DEL, key);
-        storage.remove(appId + key);
+        ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_DEL, key, new ExtParams(key, null, null));
+        storage.remove(appId + p.getKey());
     }
 
     public byte[] get(String appId, String key) {
-        extensionManager.runExtension(appId, ExtensionType.EXT_GET, key);
-        return storage.get(appId + key);
+        ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_GET, key, new ExtParams(key, null, null));
+        return p.getValue();
     }
 
     public Collection<byte[]> getValues(String appId) {
-        extensionManager.runExtension(appId, ExtensionType.EXT_LIST, "");
+        extensionManager.runExtension(appId, ExtensionType.EXT_LIST, "", new ExtParams(null, null, null));
         List<byte[]> res = new ArrayList<>();
         for(Map.Entry<String, byte[]> e : storage.entrySet())
             if(e.getKey().startsWith(appId))
-                res.add( e.getValue());
+                res.add(e.getValue());
         return res;
     }
 
@@ -39,8 +39,8 @@ public class CoordinationManager {
         if(!storage.containsKey(appId))
             return;
         if(Arrays.equals(storage.get(appId + key), oldValue)) {
-            extensionManager.runExtension(appId, ExtensionType.EXT_CAS, key);
-            storage.put(appId + key, newValue);
+            ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_CAS, key, new ExtParams(key, oldValue, newValue));
+            storage.put(appId + p.getKey(), p.getNewValue());
         }
     }
 }
