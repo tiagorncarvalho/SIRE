@@ -1,6 +1,7 @@
 package sire.proxy;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Timestamp;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
@@ -9,7 +10,6 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
-import sire.attestation.DeviceEvidence;
 import sire.membership.DeviceContext;
 import sire.serverProxyUtils.*;
 
@@ -19,7 +19,6 @@ import sire.messages.Messages.*;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
-import sire.attestation.Evidence;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.facade.SecretSharingException;
 import vss.secretsharing.Share;
@@ -134,8 +133,6 @@ public class SocketProxy implements Runnable {
 						if (o instanceof ProxyMessage msg) {
 							switch(msg.getOperation()) {
 								case ATTEST_GET_VERIFIER_PUBLIC_KEY -> oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
-								case MEMBERSHIP_PREJOIN -> oos.writeObject(preJoin(msg));
-								case MEMBERSHIP_JOIN -> oos.writeObject(join(msg));
 								default -> {
 									ProxyResponse result = runProxyMessage(msg);
 									if(result != null)
@@ -146,27 +143,97 @@ public class SocketProxy implements Runnable {
 
 					}
 				}
-			} catch (IOException | ClassNotFoundException | SireException | SecretSharingException e) {
-				e.printStackTrace();
+			} catch (IOException | ClassNotFoundException | SecretSharingException | SireException e) {
+				//e.printStackTrace();
 			}
 		}
 
-		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException {
+		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {
 			Response res;
 			synchronized (proxyLock) {
 				res = serviceProxy.invokeOrdered(msg.toByteArray());
 			}
+
 			return switch(msg.getOperation()) {
 				case MAP_GET -> mapGet(res);
 				case MAP_LIST -> mapList(res);
 				case MEMBERSHIP_VIEW -> memberView(res);
 				case EXTENSION_GET -> extGet(res);
 				case POLICY_GET -> policyGet(res);
+				case TIMESTAMP_GET -> timestampGet(res);
+				case TIMESTAMP_ATT -> timestampAtt(res);
+				case MEMBERSHIP_JOIN -> join(res);
 				default -> null;
 			};
 		}
 
-		private ProxyResponse policyGet(Response res) throws IOException, ClassNotFoundException {
+		private ProxyResponse join(Response res) throws SecretSharingException, InvalidProtocolBufferException {
+			ProxyResponse proxyResponse = ProxyResponse.parseFrom(res.getPainData());
+			return proxyResponse;
+		}
+
+		private ProxyResponse timestampAtt(Response res) throws SireException, SecretSharingException, IOException, ClassNotFoundException {
+			/*UncombinedConfidentialResponse signatureResponse;
+			try {
+				synchronized (proxyLock) {
+					signatureResponse = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered2(msg.toByteArray());
+				}
+			} catch (SecretSharingException e) {
+				throw new SireException("Verifier failed to sign", e);
+			}
+			byte[] data = signatureResponse.getPlainData();
+			System.out.println(Arrays.toString(data) + "\n" + data.length);
+
+			PublicPartialSignature partialSignature;
+			try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
+				 ObjectInput in = new ObjectInputStream(bis)) {
+				partialSignature = PublicPartialSignature.deserialize(signatureScheme, in);
+			} catch (IOException | ClassNotFoundException e) {
+				throw new SireException("Failed to deserialize public data of partial signatures");
+			}
+
+			EllipticCurveCommitment signingKeyCommitment = partialSignature.getSigningKeyCommitment();
+			EllipticCurveCommitment randomKeyCommitment = partialSignature.getRandomKeyCommitment();
+			ECPoint randomPublicKey = partialSignature.getRandomPublicKey();
+			VerifiableShare[] verifiableShares = signatureResponse.getVerifiableShares()[0];
+			Share[] partialSignatures = new Share[verifiableShares.length];
+			for (int i = 0; i < verifiableShares.length; i++) {
+				partialSignatures[i] = verifiableShares[i].getShare();
+			}
+
+			if (randomKeyCommitment == null)
+				throw new IllegalStateException("Random key commitment is null");
+
+			try {
+				BigInteger sigma = signatureScheme.combinePartialSignatures(
+						serviceProxy.getCurrentF(),
+						data,
+						signingKeyCommitment,
+						randomKeyCommitment,
+						randomPublicKey,
+						partialSignatures
+				);
+				SchnorrSignature sign = new SchnorrSignature(sigma.toByteArray(), verifierPublicKey.getEncoded(true),
+						randomPublicKey.getEncoded(true));
+				return ProxyResponse.newBuilder()
+						.setTimestamp(ByteString.copyFrom(Arrays.copyOfRange(data, 0, 12)))
+						.setPubKey(ByteString.copyFrom(Arrays.copyOfRange(data, 12, data.length)))
+						.setSign(schnorrToProto(sign))
+						.build();
+			} catch (SecretSharingException e) {
+				e.printStackTrace();
+			}
+			return null;*/
+
+			ProxyResponse proxyResponse = ProxyResponse.parseFrom(res.getPainData());
+			return proxyResponse;
+		}
+
+		private ProxyResponse timestampGet(Response res) {
+			return null;
+		}
+
+		private ProxyResponse policyGet(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
 			byte[] tmp = res.getPainData();
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()
@@ -179,7 +246,7 @@ public class SocketProxy implements Runnable {
 
 		}
 
-		private ProxyResponse extGet(Response res) throws IOException, ClassNotFoundException {
+		private ProxyResponse extGet(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
 			byte[] tmp = res.getPainData();
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()
@@ -191,7 +258,7 @@ public class SocketProxy implements Runnable {
 			}
 		}
 
-		private ProxyResponse memberView(Response res) throws IOException, ClassNotFoundException {
+		private ProxyResponse memberView(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
 			byte[] tmp = res.getPainData();
 			ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
 			if (tmp != null) {
@@ -199,13 +266,12 @@ public class SocketProxy implements Runnable {
 				ObjectInputStream oin = new ObjectInputStream(bin);
 				List<DeviceContext> members = (List<DeviceContext>) oin.readObject();
 				for (DeviceContext d : members)
-					if(d.isAttested()) {
+					if(d.isCertificateValid()) {
 						prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
 								.setDeviceId(d.getDeviceId())
 								.setTime(Timestamp.newBuilder()
 										.setSeconds(d.getLastPing().getTime() / 1000)
 										.build())
-								.setCertificate(ByteString.copyFrom(d.getCertificate()))
 								.setCertExpTime(Timestamp.newBuilder()
 										.setSeconds(d.getCertExpTime().getTime() / 1000)
 										.build())
@@ -223,7 +289,7 @@ public class SocketProxy implements Runnable {
 			return prBuilder.build();
 		}
 
-		private ProxyResponse mapList(Response res) throws IOException, ClassNotFoundException {
+		private ProxyResponse mapList(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
 			byte[] tmp = res.getPainData();
 			ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
 			if (tmp != null) {
@@ -236,7 +302,7 @@ public class SocketProxy implements Runnable {
 			return prBuilder.build();
 		}
 
-		private ProxyResponse mapGet(Response res) {
+		private ProxyResponse mapGet(Response res) throws SecretSharingException {
 			byte[] tmp = res.getPainData();
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()
@@ -247,127 +313,6 @@ public class SocketProxy implements Runnable {
 			}
 		}
 
-		private ProxyResponse preJoin(ProxyMessage msg) throws SireException {
-			try {
-				synchronized (proxyLock) {
-					serviceProxy.invokeOrdered(msg.toByteArray());
-				}
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg.getPubSesKey()));
-				BigInteger mySessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
-				ECPoint mySessionPublicKey = curveGenerator.multiply(mySessionPrivateKey);
-				ECPoint sharedPoint = attesterSessionPublicKey.multiply(mySessionPrivateKey);
-				BigInteger sharedSecret = sharedPoint.normalize().getXCoord().toBigInteger(); //have to use key derivation algorithm
-
-				byte[] sessionPublicKeysHash = computeHash(mySessionPublicKey.getEncoded(true),
-						attesterSessionPublicKey.getEncoded(true));
-
-				SecretKey symmetricEncryptionKey = createSecretKey(sharedSecret.toString().toCharArray(), sessionPublicKeysHash);
-				byte[] macKey = symmetricEncryptionKey.getEncoded();
-
-				SchnorrSignature signature = getSignatureFromVerifier(sessionPublicKeysHash);
-				ProtoSchnorr protoSign = schnorrToProto(signature);
-
-
-				byte[] mac = computeMac(macKey, mySessionPublicKey.getEncoded(true),
-						verifierPublicKey.getEncoded(true), signature.getRandomPublicKey(),
-						signature.getSigningPublicKey(), signature.getSigma());
-
-				AttesterContext newAttester = new AttesterContext(msg.getDeviceId(), mySessionPrivateKey,
-						mySessionPublicKey,
-						attesterSessionPublicKey, symmetricEncryptionKey, macKey);
-				attesters.put(newAttester.getAttesterId(), newAttester);
-
-				/*ProtoMessage1 msg1 = ProtoMessage1.newBuilder()
-						.setVerifierPubSesKey(ByteString.copyFrom(mySessionPublicKey.getEncoded(true)))
-						.setVerifierPubKey(ByteString.copyFrom(verifierPublicKey.getEncoded(true)))
-						.setSignatureSessionKeys(protoSign)
-						.setMac(ByteString.copyFrom(mac))
-						.build();*/
-
-				ProxyResponse res = ProxyResponse.newBuilder()
-						.setType(ProxyResponse.ResponseType.PREJOIN)
-						.setVerifierPubSesKey(ByteString.copyFrom(mySessionPublicKey.getEncoded(true)))
-						.setVerifierPubKey(ByteString.copyFrom(verifierPublicKey.getEncoded(true)))
-						.setSignatureSessionKeys(protoSign)
-						.setMac(ByteString.copyFrom(mac))
-						.build();
-
-				out.close();
-
-				return res;
-			} catch (InvalidKeySpecException | IOException | SecretSharingException e) {
-				throw new SireException("Failed to create shared key", e);
-			}
-		}
-		private ProxyResponse join(ProxyMessage msg) throws SireException, IOException {
-			AttesterContext attester = attesters.get(msg.getDeviceId());
-			if (attester == null)
-				throw new SireException("Unknown attester id " + msg.getDeviceId());
-
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			ECPoint attesterSessionPublicKey = signatureScheme.decodePublicKey(byteStringToByteArray(out, msg.getPubSesKey()));
-			Evidence evidence = protoToEvidence(msg.getEvidence());
-			byte[] encodedAttestationServicePublicKey = evidence.getPubKey();
-			boolean isValidMac = verifyMac(
-					attester.getMacKey(),
-					byteStringToByteArray(out, msg.getMac()),
-					byteStringToByteArray(out, msg.getPubSesKey()),
-					evidence.getAnchor(),
-					encodedAttestationServicePublicKey,
-					evidence.getVersion().getBytes(),
-					evidence.getClaim()
-			);
-
-			if (!isValidMac)
-				throw new SireException("Attester " + msg.getDeviceId() + "'s mac is invalid");
-			if (!attester.getAttesterSessionPublicKey().equals(attesterSessionPublicKey))
-				throw new SireException("Attester " + msg.getDeviceId() + "'s session public key is different");
-
-			byte[] localAnchor = computeHash(attester.getAttesterSessionPublicKey().getEncoded(true),
-					attester.getMySessionPublicKey().getEncoded(true));
-			if (!Arrays.equals(localAnchor, evidence.getAnchor()))
-				throw new SireException("Anchor is different");
-
-			DeviceEvidence deviceEvidence = new DeviceEvidence(evidence, protoToSchnorr(msg.getSignature()));
-
-			ProxyMessage dataRequest = ProxyMessage.newBuilder()
-					.setDeviceId(msg.getDeviceId())
-					.setAppId(msg.getAppId())
-					.setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
-					.setEvidence(evidenceToProto(deviceEvidence.getEvidence()))
-					.setSignature(schnorrToProto(deviceEvidence.getEvidenceSignature()))
-					.build();
-
-			try {
-				Response dataResponse;
-				synchronized (proxyLock) {
-					dataResponse = serviceProxy.invokeOrdered(dataRequest.toByteArray());
-				}
-				byte isValid = dataResponse.getPainData()[0];
-				if (isValid == 0)
-					throw new SireException("Evidence is invalid");
-				byte[] data = new byte[dataResponse.getPainData().length - 1];
-				System.arraycopy(dataResponse.getPainData(), 1, data, 0, data.length);
-				byte[] encryptedData = encryptData(attester.getSymmetricEncryptionKey(), data);
-				byte[] initializationVector = symmetricCipher.getIV();
-
-				return ProxyResponse.newBuilder()
-						.setType(ProxyResponse.ResponseType.JOIN)
-						.setIv(ByteString.copyFrom(initializationVector))
-						.setEncryptedData(ByteString.copyFrom(encryptedData))
-						.build();
-
-
-						/*ProtoMessage3.newBuilder()
-						.setIv(ByteString.copyFrom(initializationVector))
-						.setEncryptedData(ByteString.copyFrom(encryptedData))
-						.build();*/
-
-			} catch (SecretSharingException e) {
-				throw new SireException("Failed to obtain data", e);
-			}
-		}
 
 		private SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {
 			KeySpec spec = new PBEKeySpec(password, salt, 65536, AES_KEY_LENGTH);
@@ -471,24 +416,5 @@ public class SocketProxy implements Runnable {
 				serviceProxy.close();
 			}
 		}
-
-		/*private ProtoMessage1 joins(ProtoMessage0 msg) {
-			try {
-				ProxyMessage joinRequest = ProxyMessage.newBuilder()
-						.setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
-						.setAppId(msg.getAppId())
-						.setDeviceId(msg.getAttesterId())
-						.setDeviceType(msg.getType())
-						.build();
-				synchronized (proxyLock) {
-					serviceProxy.invokeOrdered(joinRequest.toByteArray());
-				}
-
-				return processMessage0(msg);
-			} catch (SecretSharingException | SireException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}*/
 	}
 }

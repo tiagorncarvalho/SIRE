@@ -207,7 +207,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 out.close();
                 lock.unlock();
             }
-            case ATTEST_VERIFY -> {
+/*            case ATTEST_VERIFY -> {
                 DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
                         protoToSchnorr(msg.getSignature()));
                 boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence);
@@ -222,7 +222,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 }
 
                 return new ConfidentialMessage(plainData);
-            }
+            }*/
             case ATTEST_GET_RANDOM_NUMBER -> {
                 lock.lock();
                 VerifiableShare	share = data.get(messageContext.getSender());
@@ -240,21 +240,14 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
 
     private ConfidentialMessage executeOrderedMembership(Messages.ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
        Messages.ProxyMessage.Operation op = msg.getOperation();
-        if(op != Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN && op != Messages.ProxyMessage.Operation.MEMBERSHIP_PREJOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
+        if(op != Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
             throw new SireException("Unknown Device: Not attested or not in this app membership.");
         switch(op) {
-            case MEMBERSHIP_PREJOIN -> {
-
-                lock.lock();
-
-                //TODO preJoin
-
-                lock.unlock();
-                return new ConfidentialMessage();
-            } case MEMBERSHIP_JOIN -> {
+            case MEMBERSHIP_JOIN -> {
                 DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
                         protoToSchnorr(msg.getSignature()));
-                boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence);
+                boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence,
+                        byteStringToByteArray(new ByteArrayOutputStream(),msg.getTimestamp()));
                 byte[] plainData;
                 if (isValidEvidence) {
                     plainData = new byte[dummyDataForAttester.length + 1];
@@ -262,7 +255,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                     System.arraycopy(dummyDataForAttester, 0, plainData, 1,
                             dummyDataForAttester.length);
                     membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
-                            protoDevToDev(msg.getDeviceType()), dummyDataForAttester);
+                            protoDevToDev(msg.getDeviceType()));
                 } else {
                     plainData = new byte[] {0};
                 }

@@ -4,6 +4,7 @@ import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.core.messages.TOMMessage;
+import com.google.protobuf.ByteString;
 import confidential.ConfidentialMessage;
 import confidential.facade.server.ConfidentialSingleExecutable;
 import confidential.polynomial.DistributedPolynomialManager;
@@ -24,6 +25,7 @@ import sire.membership.DeviceContext;
 import sire.membership.MembershipManager;
 import sire.messages.Messages.*;
 import sire.schnorr.PublicPartialSignature;
+import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
@@ -33,6 +35,7 @@ import vss.secretsharing.VerifiableShare;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.*;
@@ -74,7 +77,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private VerifiableShare verifierSigningPrivateKeyShare;
 	private ECPoint verifierSigningPublicKey;
 
-	private final byte[] dummyDataForAttester = "Sire".getBytes();
+	MessageDigest messageDigest;
 	//private final ECPoint dummyAttesterPublicKey;
 
 	//key value store for information concerning devices, applications and more
@@ -91,6 +94,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	//verifies the evidence
 	private final VerifierManager verifierManager;
 	private static PolicyManager policyManager;
+
+	private final int timebound = 500; //in milliseconds
+	private final Map<String, Timestamp> devicesTimestamps;
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {
@@ -119,6 +125,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		distributedPolynomialManager.setRandomPolynomialListener(this);
 		distributedPolynomialManager.setRandomKeyPolynomialListener(this);
 		schnorrSignatureScheme = new SchnorrSignatureScheme();
+		messageDigest = MessageDigest.getInstance("SHA256");
+		devicesTimestamps = new TreeMap<>();
 	}
 
 	@Override
@@ -131,16 +139,72 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				membership.ping(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 			if(op.toString().startsWith("MAP"))
 				return executeOrderedMap(msg);
-			else if(op.toString().startsWith("EXTENSION") || op.toString().startsWith("POLICY"))
+			else if(op.toString().startsWith("EXTENSION"))
 				return executeOrderedManagement(msg);
+			else if(op.toString().startsWith("POLICY"))
+				return executeOrderedPolicy(msg);
 			else if(op.toString().startsWith("MEMBERSHIP"))
 				return executeOrderedMembership(msg, messageContext);
 			else if(op.toString().startsWith("ATTEST"))
 				return executeOrderedAttestation(msg, messageContext);
+			else if(op.toString().startsWith("TIMESTAMP"))
+				return executeOrderedTimestamp(msg, messageContext);//new ConfidentialMessage(generateTimestamp(msg, messageContext).toByteArray());
 		} catch (IOException | SireException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	private ConfidentialMessage executeOrderedTimestamp(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
+		ProxyMessage.Operation op = msg.getOperation();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		Timestamp ts = new Timestamp(messageContext.getTimestamp());
+		ProxyResponse response;
+		switch(op) {
+			case TIMESTAMP_GET -> {
+				 response = ProxyResponse.newBuilder()
+						.setTimestamp(ByteString.copyFrom(serialize(ts)))
+						.build();
+				lock.unlock();
+				return new ConfidentialMessage(response.toByteArray());
+			}
+			case TIMESTAMP_ATT -> {
+				lock.lock();
+				SchnorrSignature sign = protoToSchnorr(msg.getSignature());
+				boolean isValid = schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),
+						schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey())),
+						schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey()), new BigInteger(sign.getSigma()));
+				if(isValid) {
+					//byte[] data = concat(serialize(ts), byteStringToByteArray(baos, msg.getPubKey()));
+					devicesTimestamps.put(msg.getDeviceId(), ts);
+					response = ProxyResponse.newBuilder()
+							.setTimestamp(ByteString.copyFrom(serialize(ts)))
+							.setPubKey(msg.getPubKey())
+							//.setSign()
+							.build();
+					baos.close();
+					lock.unlock();
+
+					return new ConfidentialMessage(response.toByteArray());
+					/*
+					signingData.put(messageContext.getSender(), data);
+					System.out.println(Arrays.toString(data));
+					generateRandomKey(messageContext);*/
+
+				} else {
+					throw new SireException("Invalid signature!");
+				}
+			}
+		}
+		return null;
+	}
+
+	private byte[] concat(byte[]...content) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		for(byte[] b : content) {
+			baos.write(b);
+		}
+		return baos.toByteArray();
 	}
 
 	private ConfidentialMessage executeOrderedAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException {
@@ -185,23 +249,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				out.close();
 				lock.unlock();
 			}
-			/*case ATTEST_VERIFY -> {
-				DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
-						protoToSchnorr(msg.getSignature()));
-				boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence);
-				byte[] plainData;
-				if (isValidEvidence) {
-					plainData = new byte[dummyDataForAttester.length + 1];
-					plainData[0] = 1;
-					System.arraycopy(dummyDataForAttester, 0, plainData, 1,
-							dummyDataForAttester.length);
-					membership.setDeviceAsAttested(msg.getAppId(), msg.getDeviceId(), dummyDataForAttester, new Timestamp(messageContext.getTimestamp()));
-				} else {
-					plainData = new byte[] {0};
-				}
-
-				return new ConfidentialMessage(plainData);
-			}*/
 			case ATTEST_GET_RANDOM_NUMBER -> {
 				lock.lock();
 				VerifiableShare	share = data.get(messageContext.getSender());
@@ -219,34 +266,32 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
-		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && op != ProxyMessage.Operation.MEMBERSHIP_PREJOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
 			throw new SireException("Unknown Device: Not attested or not in this app membership.");
 		switch(op) {
-			case MEMBERSHIP_PREJOIN -> {
-
-				lock.lock();
-
-				//TODO preJoin
-
-				lock.unlock();
-				return new ConfidentialMessage();
-			} case MEMBERSHIP_JOIN -> {
+			case MEMBERSHIP_JOIN -> {
 				DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
 						protoToSchnorr(msg.getSignature()));
-				boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence);
-				byte[] plainData;
-				if (isValidEvidence) {
-					plainData = new byte[dummyDataForAttester.length + 1];
-					plainData[0] = 1;
-					System.arraycopy(dummyDataForAttester, 0, plainData, 1,
-							dummyDataForAttester.length);
-					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
-							protoDevToDev(msg.getDeviceType()), dummyDataForAttester);
-				} else {
-					plainData = new byte[] {0};
-				}
+				boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence,
+						byteStringToByteArray(baos, msg.getTimestamp()));
+				boolean isTimedout = (new Timestamp(messageContext.getTimestamp())).before(
+						new Timestamp(devicesTimestamps.get(msg.getDeviceId()).getTime() + timebound));
 
-				return new ConfidentialMessage(plainData);
+				if (isValidEvidence && isTimedout) {
+					ProxyResponse res = ProxyResponse.newBuilder()
+							.setTimestamp(ByteString.copyFrom(serialize(new Timestamp(messageContext.getTimestamp()))))
+							.setHash(ByteString.copyFrom(computeHash(msg.toByteArray())))
+							.setPubKey(msg.getPubKey())
+							//.setSign()
+							.build();
+					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
+							protoDevToDev(msg.getDeviceType()));
+
+					return new ConfidentialMessage(res.toByteArray());
+				} else {
+					return new ConfidentialMessage(new byte[]{0});
+				}
 			}
 			case MEMBERSHIP_LEAVE -> {
 				lock.lock();
@@ -285,7 +330,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				lock.lock();
 				extensionManager.addExtension(msg.getKey(), msg.getCode());
 				lock.unlock();
-				System.out.println("Code: " + msg.getCode());
 				return new ConfidentialMessage();
 			}
 			case EXTENSION_REMOVE -> {
@@ -298,6 +342,13 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				String code = extensionManager.getExtensionCode(msg.getKey());
 				return new ConfidentialMessage(serialize(code != null ? code : "NOT FOUND"));
 			}
+		}
+		return null;
+	}
+
+	private ConfidentialMessage executeOrderedPolicy(ProxyMessage msg) throws IOException {
+		ProxyMessage.Operation op = msg.getOperation();
+		switch(op) {
 			case POLICY_ADD -> {
 				lock.lock();
 				policyManager.setPolicy(msg.getAppId(), msg.getPolicy().getPolicy(), msg.getPolicy().getType());
@@ -305,7 +356,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				return new ConfidentialMessage();
 			}
 			case POLICY_REMOVE -> {
-				if(!membership.containsApp(msg.getAppId()))
+				if (!membership.containsApp(msg.getAppId()))
 					return new ConfidentialMessage(serialize("NOT FOUND"));
 				lock.lock();
 				policyManager.removePolicy(msg.getAppId());
@@ -313,7 +364,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				return new ConfidentialMessage();
 			}
 			case POLICY_GET -> {
-				if(!membership.containsApp(msg.getAppId()))
+				if (!membership.containsApp(msg.getAppId()))
 					return new ConfidentialMessage(serialize("NOT FOUND"));
 				else
 					return new ConfidentialMessage(serialize(policyManager.getPolicy(msg.getAppId())));
@@ -569,5 +620,12 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		} catch (IOException | ClassCastException | ClassNotFoundException e) {
 			logger.error("Error while installing snapshot", e);
 		}
+	}
+
+	private byte[] computeHash(byte[]... contents) {
+		for (byte[] content : contents) {
+			messageDigest.update(content);
+		}
+		return messageDigest.digest();
 	}
 }

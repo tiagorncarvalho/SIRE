@@ -1529,42 +1529,59 @@ public final class Messages {
     sire.messages.Messages.ProxyMessage.Operation getOperation();
 
     /**
+     * <pre>
+     *=========JOIN REQUEST===========//
+     * </pre>
+     *
      * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
     boolean hasEvidence();
     /**
+     * <pre>
+     *=========JOIN REQUEST===========//
+     * </pre>
+     *
      * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
     sire.messages.Messages.ProtoEvidence getEvidence();
     /**
+     * <pre>
+     *=========JOIN REQUEST===========//
+     * </pre>
+     *
      * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
     sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder();
 
     /**
-     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+     * <code>bytes timestamp = 3;</code>
+     */
+    com.google.protobuf.ByteString getTimestamp();
+
+    /**
+     * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
      */
     boolean hasSignature();
     /**
-     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
      */
     sire.messages.Messages.ProtoSchnorr getSignature();
     /**
-     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
      */
     sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder();
 
     /**
-     * <code>bytes dataToSign = 4;</code>
+     * <code>bytes dataToSign = 5;</code>
      */
     com.google.protobuf.ByteString getDataToSign();
 
     /**
-     * <code>string key = 5;</code>
+     * <code>string key = 6;</code>
      */
     java.lang.String getKey();
     /**
-     * <code>string key = 5;</code>
+     * <code>string key = 6;</code>
      */
     com.google.protobuf.ByteString
         getKeyBytes();
@@ -1574,93 +1591,75 @@ public final class Messages {
      *also serves as newData
      * </pre>
      *
-     * <code>bytes value = 6;</code>
+     * <code>bytes value = 7;</code>
      */
     com.google.protobuf.ByteString getValue();
 
     /**
-     * <code>bytes oldData = 7;</code>
+     * <code>bytes oldData = 8;</code>
      */
     com.google.protobuf.ByteString getOldData();
 
     /**
-     * <code>string deviceId = 8;</code>
+     * <code>string deviceId = 9;</code>
      */
     java.lang.String getDeviceId();
     /**
-     * <code>string deviceId = 8;</code>
+     * <code>string deviceId = 9;</code>
      */
     com.google.protobuf.ByteString
         getDeviceIdBytes();
 
     /**
-     * <code>string appId = 9;</code>
+     * <code>string appId = 10;</code>
      */
     java.lang.String getAppId();
     /**
-     * <code>string appId = 9;</code>
+     * <code>string appId = 10;</code>
      */
     com.google.protobuf.ByteString
         getAppIdBytes();
 
     /**
-     * <code>string code = 10;</code>
+     * <code>string code = 11;</code>
      */
     java.lang.String getCode();
     /**
-     * <code>string code = 10;</code>
+     * <code>string code = 11;</code>
      */
     com.google.protobuf.ByteString
         getCodeBytes();
 
     /**
-     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
      */
     boolean hasPolicy();
     /**
-     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
      */
     sire.messages.Messages.ProxyMessage.ProtoPolicy getPolicy();
     /**
-     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
      */
     sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder();
 
     /**
-     * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
+     * <code>.sire.messages.ProtoDeviceType deviceType = 13;</code>
      */
     int getDeviceTypeValue();
     /**
-     * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
+     * <code>.sire.messages.ProtoDeviceType deviceType = 13;</code>
      */
     sire.messages.Messages.ProtoDeviceType getDeviceType();
 
     /**
      * <pre>
-     *========PREJOIN REQUEST==========//
+     *========INITIAL REQUEST==========//
      * </pre>
      *
-     * <code>bytes pubSesKey = 13;</code>
+     * <code>bytes pubKey = 14;</code>
      */
-    com.google.protobuf.ByteString getPubSesKey();
-
-    /**
-     * <code>.sire.messages.ProtoDeviceType type = 14;</code>
-     */
-    int getTypeValue();
-    /**
-     * <code>.sire.messages.ProtoDeviceType type = 14;</code>
-     */
-    sire.messages.Messages.ProtoDeviceType getType();
-
-    /**
-     * <pre>
-     *=========JOIN REQUEST===========//
-     * </pre>
-     *
-     * <code>bytes mac = 15;</code>
-     */
-    com.google.protobuf.ByteString getMac();
+    com.google.protobuf.ByteString getPubKey();
   }
   /**
    * Protobuf type {@code sire.messages.ProxyMessage}
@@ -1676,6 +1675,7 @@ public final class Messages {
     }
     private ProxyMessage() {
       operation_ = 0;
+      timestamp_ = com.google.protobuf.ByteString.EMPTY;
       dataToSign_ = com.google.protobuf.ByteString.EMPTY;
       key_ = "";
       value_ = com.google.protobuf.ByteString.EMPTY;
@@ -1684,9 +1684,7 @@ public final class Messages {
       appId_ = "";
       code_ = "";
       deviceType_ = 0;
-      pubSesKey_ = com.google.protobuf.ByteString.EMPTY;
-      type_ = 0;
-      mac_ = com.google.protobuf.ByteString.EMPTY;
+      pubKey_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -1733,6 +1731,11 @@ public final class Messages {
               break;
             }
             case 26: {
+
+              timestamp_ = input.readBytes();
+              break;
+            }
+            case 34: {
               sire.messages.Messages.ProtoSchnorr.Builder subBuilder = null;
               if (signature_ != null) {
                 subBuilder = signature_.toBuilder();
@@ -1745,46 +1748,46 @@ public final class Messages {
 
               break;
             }
-            case 34: {
+            case 42: {
 
               dataToSign_ = input.readBytes();
               break;
             }
-            case 42: {
+            case 50: {
               java.lang.String s = input.readStringRequireUtf8();
 
               key_ = s;
               break;
             }
-            case 50: {
+            case 58: {
 
               value_ = input.readBytes();
               break;
             }
-            case 58: {
+            case 66: {
 
               oldData_ = input.readBytes();
-              break;
-            }
-            case 66: {
-              java.lang.String s = input.readStringRequireUtf8();
-
-              deviceId_ = s;
               break;
             }
             case 74: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              appId_ = s;
+              deviceId_ = s;
               break;
             }
             case 82: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              code_ = s;
+              appId_ = s;
               break;
             }
             case 90: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              code_ = s;
+              break;
+            }
+            case 98: {
               sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder subBuilder = null;
               if (policy_ != null) {
                 subBuilder = policy_.toBuilder();
@@ -1797,26 +1800,15 @@ public final class Messages {
 
               break;
             }
-            case 96: {
+            case 104: {
               int rawValue = input.readEnum();
 
               deviceType_ = rawValue;
               break;
             }
-            case 106: {
+            case 114: {
 
-              pubSesKey_ = input.readBytes();
-              break;
-            }
-            case 112: {
-              int rawValue = input.readEnum();
-
-              type_ = rawValue;
-              break;
-            }
-            case 122: {
-
-              mac_ = input.readBytes();
+              pubKey_ = input.readBytes();
               break;
             }
             default: {
@@ -1913,57 +1905,65 @@ public final class Messages {
        *-----------MEMBERSHIP-----------
        * </pre>
        *
-       * <code>MEMBERSHIP_PREJOIN = 11;</code>
+       * <code>MEMBERSHIP_JOIN = 11;</code>
        */
-      MEMBERSHIP_PREJOIN(11),
+      MEMBERSHIP_JOIN(11),
       /**
-       * <code>MEMBERSHIP_JOIN = 12;</code>
+       * <code>MEMBERSHIP_LEAVE = 12;</code>
        */
-      MEMBERSHIP_JOIN(12),
+      MEMBERSHIP_LEAVE(12),
       /**
-       * <code>MEMBERSHIP_LEAVE = 13;</code>
+       * <code>MEMBERSHIP_VIEW = 13;</code>
        */
-      MEMBERSHIP_LEAVE(13),
+      MEMBERSHIP_VIEW(13),
       /**
-       * <code>MEMBERSHIP_VIEW = 14;</code>
+       * <code>MEMBERSHIP_PING = 14;</code>
        */
-      MEMBERSHIP_VIEW(14),
-      /**
-       * <code>MEMBERSHIP_PING = 15;</code>
-       */
-      MEMBERSHIP_PING(15),
+      MEMBERSHIP_PING(14),
       /**
        * <pre>
        *-----------EXTENSION------------
        * </pre>
        *
-       * <code>EXTENSION_ADD = 16;</code>
+       * <code>EXTENSION_ADD = 15;</code>
        */
-      EXTENSION_ADD(16),
+      EXTENSION_ADD(15),
       /**
-       * <code>EXTENSION_REMOVE = 17;</code>
+       * <code>EXTENSION_REMOVE = 16;</code>
        */
-      EXTENSION_REMOVE(17),
+      EXTENSION_REMOVE(16),
       /**
-       * <code>EXTENSION_GET = 18;</code>
+       * <code>EXTENSION_GET = 17;</code>
        */
-      EXTENSION_GET(18),
+      EXTENSION_GET(17),
       /**
        * <pre>
        *-------------POLICY-------------
        * </pre>
        *
-       * <code>POLICY_ADD = 19;</code>
+       * <code>POLICY_ADD = 18;</code>
        */
-      POLICY_ADD(19),
+      POLICY_ADD(18),
       /**
-       * <code>POLICY_REMOVE = 20;</code>
+       * <code>POLICY_REMOVE = 19;</code>
        */
-      POLICY_REMOVE(20),
+      POLICY_REMOVE(19),
       /**
-       * <code>POLICY_GET = 21;</code>
+       * <code>POLICY_GET = 20;</code>
        */
-      POLICY_GET(21),
+      POLICY_GET(20),
+      /**
+       * <pre>
+       *-----------TIMESTAMP------------
+       * </pre>
+       *
+       * <code>TIMESTAMP_GET = 21;</code>
+       */
+      TIMESTAMP_GET(21),
+      /**
+       * <code>TIMESTAMP_ATT = 22;</code>
+       */
+      TIMESTAMP_ATT(22),
       UNRECOGNIZED(-1),
       ;
 
@@ -2024,57 +2024,65 @@ public final class Messages {
        *-----------MEMBERSHIP-----------
        * </pre>
        *
-       * <code>MEMBERSHIP_PREJOIN = 11;</code>
+       * <code>MEMBERSHIP_JOIN = 11;</code>
        */
-      public static final int MEMBERSHIP_PREJOIN_VALUE = 11;
+      public static final int MEMBERSHIP_JOIN_VALUE = 11;
       /**
-       * <code>MEMBERSHIP_JOIN = 12;</code>
+       * <code>MEMBERSHIP_LEAVE = 12;</code>
        */
-      public static final int MEMBERSHIP_JOIN_VALUE = 12;
+      public static final int MEMBERSHIP_LEAVE_VALUE = 12;
       /**
-       * <code>MEMBERSHIP_LEAVE = 13;</code>
+       * <code>MEMBERSHIP_VIEW = 13;</code>
        */
-      public static final int MEMBERSHIP_LEAVE_VALUE = 13;
+      public static final int MEMBERSHIP_VIEW_VALUE = 13;
       /**
-       * <code>MEMBERSHIP_VIEW = 14;</code>
+       * <code>MEMBERSHIP_PING = 14;</code>
        */
-      public static final int MEMBERSHIP_VIEW_VALUE = 14;
-      /**
-       * <code>MEMBERSHIP_PING = 15;</code>
-       */
-      public static final int MEMBERSHIP_PING_VALUE = 15;
+      public static final int MEMBERSHIP_PING_VALUE = 14;
       /**
        * <pre>
        *-----------EXTENSION------------
        * </pre>
        *
-       * <code>EXTENSION_ADD = 16;</code>
+       * <code>EXTENSION_ADD = 15;</code>
        */
-      public static final int EXTENSION_ADD_VALUE = 16;
+      public static final int EXTENSION_ADD_VALUE = 15;
       /**
-       * <code>EXTENSION_REMOVE = 17;</code>
+       * <code>EXTENSION_REMOVE = 16;</code>
        */
-      public static final int EXTENSION_REMOVE_VALUE = 17;
+      public static final int EXTENSION_REMOVE_VALUE = 16;
       /**
-       * <code>EXTENSION_GET = 18;</code>
+       * <code>EXTENSION_GET = 17;</code>
        */
-      public static final int EXTENSION_GET_VALUE = 18;
+      public static final int EXTENSION_GET_VALUE = 17;
       /**
        * <pre>
        *-------------POLICY-------------
        * </pre>
        *
-       * <code>POLICY_ADD = 19;</code>
+       * <code>POLICY_ADD = 18;</code>
        */
-      public static final int POLICY_ADD_VALUE = 19;
+      public static final int POLICY_ADD_VALUE = 18;
       /**
-       * <code>POLICY_REMOVE = 20;</code>
+       * <code>POLICY_REMOVE = 19;</code>
        */
-      public static final int POLICY_REMOVE_VALUE = 20;
+      public static final int POLICY_REMOVE_VALUE = 19;
       /**
-       * <code>POLICY_GET = 21;</code>
+       * <code>POLICY_GET = 20;</code>
        */
-      public static final int POLICY_GET_VALUE = 21;
+      public static final int POLICY_GET_VALUE = 20;
+      /**
+       * <pre>
+       *-----------TIMESTAMP------------
+       * </pre>
+       *
+       * <code>TIMESTAMP_GET = 21;</code>
+       */
+      public static final int TIMESTAMP_GET_VALUE = 21;
+      /**
+       * <code>TIMESTAMP_ATT = 22;</code>
+       */
+      public static final int TIMESTAMP_ATT_VALUE = 22;
 
 
       public final int getNumber() {
@@ -2106,17 +2114,18 @@ public final class Messages {
           case 8: return MAP_GET;
           case 9: return MAP_LIST;
           case 10: return MAP_CAS;
-          case 11: return MEMBERSHIP_PREJOIN;
-          case 12: return MEMBERSHIP_JOIN;
-          case 13: return MEMBERSHIP_LEAVE;
-          case 14: return MEMBERSHIP_VIEW;
-          case 15: return MEMBERSHIP_PING;
-          case 16: return EXTENSION_ADD;
-          case 17: return EXTENSION_REMOVE;
-          case 18: return EXTENSION_GET;
-          case 19: return POLICY_ADD;
-          case 20: return POLICY_REMOVE;
-          case 21: return POLICY_GET;
+          case 11: return MEMBERSHIP_JOIN;
+          case 12: return MEMBERSHIP_LEAVE;
+          case 13: return MEMBERSHIP_VIEW;
+          case 14: return MEMBERSHIP_PING;
+          case 15: return EXTENSION_ADD;
+          case 16: return EXTENSION_REMOVE;
+          case 17: return EXTENSION_GET;
+          case 18: return POLICY_ADD;
+          case 19: return POLICY_REMOVE;
+          case 20: return POLICY_GET;
+          case 21: return TIMESTAMP_GET;
+          case 22: return TIMESTAMP_ATT;
           default: return null;
         }
       }
@@ -2823,58 +2832,79 @@ public final class Messages {
     public static final int EVIDENCE_FIELD_NUMBER = 2;
     private sire.messages.Messages.ProtoEvidence evidence_;
     /**
+     * <pre>
+     *=========JOIN REQUEST===========//
+     * </pre>
+     *
      * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
     public boolean hasEvidence() {
       return evidence_ != null;
     }
     /**
+     * <pre>
+     *=========JOIN REQUEST===========//
+     * </pre>
+     *
      * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
     public sire.messages.Messages.ProtoEvidence getEvidence() {
       return evidence_ == null ? sire.messages.Messages.ProtoEvidence.getDefaultInstance() : evidence_;
     }
     /**
+     * <pre>
+     *=========JOIN REQUEST===========//
+     * </pre>
+     *
      * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
      */
     public sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
       return getEvidence();
     }
 
-    public static final int SIGNATURE_FIELD_NUMBER = 3;
+    public static final int TIMESTAMP_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString timestamp_;
+    /**
+     * <code>bytes timestamp = 3;</code>
+     */
+    public com.google.protobuf.ByteString getTimestamp() {
+      return timestamp_;
+    }
+
+    public static final int SIGNATURE_FIELD_NUMBER = 4;
     private sire.messages.Messages.ProtoSchnorr signature_;
     /**
-     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
      */
     public boolean hasSignature() {
       return signature_ != null;
     }
     /**
-     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
      */
     public sire.messages.Messages.ProtoSchnorr getSignature() {
       return signature_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signature_;
     }
     /**
-     * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+     * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
      */
     public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
       return getSignature();
     }
 
-    public static final int DATATOSIGN_FIELD_NUMBER = 4;
+    public static final int DATATOSIGN_FIELD_NUMBER = 5;
     private com.google.protobuf.ByteString dataToSign_;
     /**
-     * <code>bytes dataToSign = 4;</code>
+     * <code>bytes dataToSign = 5;</code>
      */
     public com.google.protobuf.ByteString getDataToSign() {
       return dataToSign_;
     }
 
-    public static final int KEY_FIELD_NUMBER = 5;
+    public static final int KEY_FIELD_NUMBER = 6;
     private volatile java.lang.Object key_;
     /**
-     * <code>string key = 5;</code>
+     * <code>string key = 6;</code>
      */
     public java.lang.String getKey() {
       java.lang.Object ref = key_;
@@ -2889,7 +2919,7 @@ public final class Messages {
       }
     }
     /**
-     * <code>string key = 5;</code>
+     * <code>string key = 6;</code>
      */
     public com.google.protobuf.ByteString
         getKeyBytes() {
@@ -2905,32 +2935,32 @@ public final class Messages {
       }
     }
 
-    public static final int VALUE_FIELD_NUMBER = 6;
+    public static final int VALUE_FIELD_NUMBER = 7;
     private com.google.protobuf.ByteString value_;
     /**
      * <pre>
      *also serves as newData
      * </pre>
      *
-     * <code>bytes value = 6;</code>
+     * <code>bytes value = 7;</code>
      */
     public com.google.protobuf.ByteString getValue() {
       return value_;
     }
 
-    public static final int OLDDATA_FIELD_NUMBER = 7;
+    public static final int OLDDATA_FIELD_NUMBER = 8;
     private com.google.protobuf.ByteString oldData_;
     /**
-     * <code>bytes oldData = 7;</code>
+     * <code>bytes oldData = 8;</code>
      */
     public com.google.protobuf.ByteString getOldData() {
       return oldData_;
     }
 
-    public static final int DEVICEID_FIELD_NUMBER = 8;
+    public static final int DEVICEID_FIELD_NUMBER = 9;
     private volatile java.lang.Object deviceId_;
     /**
-     * <code>string deviceId = 8;</code>
+     * <code>string deviceId = 9;</code>
      */
     public java.lang.String getDeviceId() {
       java.lang.Object ref = deviceId_;
@@ -2945,7 +2975,7 @@ public final class Messages {
       }
     }
     /**
-     * <code>string deviceId = 8;</code>
+     * <code>string deviceId = 9;</code>
      */
     public com.google.protobuf.ByteString
         getDeviceIdBytes() {
@@ -2961,10 +2991,10 @@ public final class Messages {
       }
     }
 
-    public static final int APPID_FIELD_NUMBER = 9;
+    public static final int APPID_FIELD_NUMBER = 10;
     private volatile java.lang.Object appId_;
     /**
-     * <code>string appId = 9;</code>
+     * <code>string appId = 10;</code>
      */
     public java.lang.String getAppId() {
       java.lang.Object ref = appId_;
@@ -2979,7 +3009,7 @@ public final class Messages {
       }
     }
     /**
-     * <code>string appId = 9;</code>
+     * <code>string appId = 10;</code>
      */
     public com.google.protobuf.ByteString
         getAppIdBytes() {
@@ -2995,10 +3025,10 @@ public final class Messages {
       }
     }
 
-    public static final int CODE_FIELD_NUMBER = 10;
+    public static final int CODE_FIELD_NUMBER = 11;
     private volatile java.lang.Object code_;
     /**
-     * <code>string code = 10;</code>
+     * <code>string code = 11;</code>
      */
     public java.lang.String getCode() {
       java.lang.Object ref = code_;
@@ -3013,7 +3043,7 @@ public final class Messages {
       }
     }
     /**
-     * <code>string code = 10;</code>
+     * <code>string code = 11;</code>
      */
     public com.google.protobuf.ByteString
         getCodeBytes() {
@@ -3029,37 +3059,37 @@ public final class Messages {
       }
     }
 
-    public static final int POLICY_FIELD_NUMBER = 11;
+    public static final int POLICY_FIELD_NUMBER = 12;
     private sire.messages.Messages.ProxyMessage.ProtoPolicy policy_;
     /**
-     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
      */
     public boolean hasPolicy() {
       return policy_ != null;
     }
     /**
-     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
      */
     public sire.messages.Messages.ProxyMessage.ProtoPolicy getPolicy() {
       return policy_ == null ? sire.messages.Messages.ProxyMessage.ProtoPolicy.getDefaultInstance() : policy_;
     }
     /**
-     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+     * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
      */
     public sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder() {
       return getPolicy();
     }
 
-    public static final int DEVICETYPE_FIELD_NUMBER = 12;
+    public static final int DEVICETYPE_FIELD_NUMBER = 13;
     private int deviceType_;
     /**
-     * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
+     * <code>.sire.messages.ProtoDeviceType deviceType = 13;</code>
      */
     public int getDeviceTypeValue() {
       return deviceType_;
     }
     /**
-     * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
+     * <code>.sire.messages.ProtoDeviceType deviceType = 13;</code>
      */
     public sire.messages.Messages.ProtoDeviceType getDeviceType() {
       @SuppressWarnings("deprecation")
@@ -3067,47 +3097,17 @@ public final class Messages {
       return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
     }
 
-    public static final int PUBSESKEY_FIELD_NUMBER = 13;
-    private com.google.protobuf.ByteString pubSesKey_;
+    public static final int PUBKEY_FIELD_NUMBER = 14;
+    private com.google.protobuf.ByteString pubKey_;
     /**
      * <pre>
-     *========PREJOIN REQUEST==========//
+     *========INITIAL REQUEST==========//
      * </pre>
      *
-     * <code>bytes pubSesKey = 13;</code>
+     * <code>bytes pubKey = 14;</code>
      */
-    public com.google.protobuf.ByteString getPubSesKey() {
-      return pubSesKey_;
-    }
-
-    public static final int TYPE_FIELD_NUMBER = 14;
-    private int type_;
-    /**
-     * <code>.sire.messages.ProtoDeviceType type = 14;</code>
-     */
-    public int getTypeValue() {
-      return type_;
-    }
-    /**
-     * <code>.sire.messages.ProtoDeviceType type = 14;</code>
-     */
-    public sire.messages.Messages.ProtoDeviceType getType() {
-      @SuppressWarnings("deprecation")
-      sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(type_);
-      return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
-    }
-
-    public static final int MAC_FIELD_NUMBER = 15;
-    private com.google.protobuf.ByteString mac_;
-    /**
-     * <pre>
-     *=========JOIN REQUEST===========//
-     * </pre>
-     *
-     * <code>bytes mac = 15;</code>
-     */
-    public com.google.protobuf.ByteString getMac() {
-      return mac_;
+    public com.google.protobuf.ByteString getPubKey() {
+      return pubKey_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -3130,44 +3130,41 @@ public final class Messages {
       if (evidence_ != null) {
         output.writeMessage(2, getEvidence());
       }
+      if (!timestamp_.isEmpty()) {
+        output.writeBytes(3, timestamp_);
+      }
       if (signature_ != null) {
-        output.writeMessage(3, getSignature());
+        output.writeMessage(4, getSignature());
       }
       if (!dataToSign_.isEmpty()) {
-        output.writeBytes(4, dataToSign_);
+        output.writeBytes(5, dataToSign_);
       }
       if (!getKeyBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, key_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, key_);
       }
       if (!value_.isEmpty()) {
-        output.writeBytes(6, value_);
+        output.writeBytes(7, value_);
       }
       if (!oldData_.isEmpty()) {
-        output.writeBytes(7, oldData_);
+        output.writeBytes(8, oldData_);
       }
       if (!getDeviceIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, deviceId_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, deviceId_);
       }
       if (!getAppIdBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, appId_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, appId_);
       }
       if (!getCodeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, code_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 11, code_);
       }
       if (policy_ != null) {
-        output.writeMessage(11, getPolicy());
+        output.writeMessage(12, getPolicy());
       }
       if (deviceType_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
-        output.writeEnum(12, deviceType_);
+        output.writeEnum(13, deviceType_);
       }
-      if (!pubSesKey_.isEmpty()) {
-        output.writeBytes(13, pubSesKey_);
-      }
-      if (type_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
-        output.writeEnum(14, type_);
-      }
-      if (!mac_.isEmpty()) {
-        output.writeBytes(15, mac_);
+      if (!pubKey_.isEmpty()) {
+        output.writeBytes(14, pubKey_);
       }
       unknownFields.writeTo(output);
     }
@@ -3186,53 +3183,49 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getEvidence());
       }
+      if (!timestamp_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, timestamp_);
+      }
       if (signature_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getSignature());
+          .computeMessageSize(4, getSignature());
       }
       if (!dataToSign_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, dataToSign_);
+          .computeBytesSize(5, dataToSign_);
       }
       if (!getKeyBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, key_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, key_);
       }
       if (!value_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(6, value_);
+          .computeBytesSize(7, value_);
       }
       if (!oldData_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(7, oldData_);
+          .computeBytesSize(8, oldData_);
       }
       if (!getDeviceIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, deviceId_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, deviceId_);
       }
       if (!getAppIdBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, appId_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, appId_);
       }
       if (!getCodeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, code_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, code_);
       }
       if (policy_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(11, getPolicy());
+          .computeMessageSize(12, getPolicy());
       }
       if (deviceType_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(12, deviceType_);
+          .computeEnumSize(13, deviceType_);
       }
-      if (!pubSesKey_.isEmpty()) {
+      if (!pubKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(13, pubSesKey_);
-      }
-      if (type_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(14, type_);
-      }
-      if (!mac_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(15, mac_);
+          .computeBytesSize(14, pubKey_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3256,6 +3249,8 @@ public final class Messages {
         result = result && getEvidence()
             .equals(other.getEvidence());
       }
+      result = result && getTimestamp()
+          .equals(other.getTimestamp());
       result = result && (hasSignature() == other.hasSignature());
       if (hasSignature()) {
         result = result && getSignature()
@@ -3281,11 +3276,8 @@ public final class Messages {
             .equals(other.getPolicy());
       }
       result = result && deviceType_ == other.deviceType_;
-      result = result && getPubSesKey()
-          .equals(other.getPubSesKey());
-      result = result && type_ == other.type_;
-      result = result && getMac()
-          .equals(other.getMac());
+      result = result && getPubKey()
+          .equals(other.getPubKey());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -3303,6 +3295,8 @@ public final class Messages {
         hash = (37 * hash) + EVIDENCE_FIELD_NUMBER;
         hash = (53 * hash) + getEvidence().hashCode();
       }
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + getTimestamp().hashCode();
       if (hasSignature()) {
         hash = (37 * hash) + SIGNATURE_FIELD_NUMBER;
         hash = (53 * hash) + getSignature().hashCode();
@@ -3327,12 +3321,8 @@ public final class Messages {
       }
       hash = (37 * hash) + DEVICETYPE_FIELD_NUMBER;
       hash = (53 * hash) + deviceType_;
-      hash = (37 * hash) + PUBSESKEY_FIELD_NUMBER;
-      hash = (53 * hash) + getPubSesKey().hashCode();
-      hash = (37 * hash) + TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + type_;
-      hash = (37 * hash) + MAC_FIELD_NUMBER;
-      hash = (53 * hash) + getMac().hashCode();
+      hash = (37 * hash) + PUBKEY_FIELD_NUMBER;
+      hash = (53 * hash) + getPubKey().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3474,6 +3464,8 @@ public final class Messages {
           evidence_ = null;
           evidenceBuilder_ = null;
         }
+        timestamp_ = com.google.protobuf.ByteString.EMPTY;
+
         if (signatureBuilder_ == null) {
           signature_ = null;
         } else {
@@ -3502,11 +3494,7 @@ public final class Messages {
         }
         deviceType_ = 0;
 
-        pubSesKey_ = com.google.protobuf.ByteString.EMPTY;
-
-        type_ = 0;
-
-        mac_ = com.google.protobuf.ByteString.EMPTY;
+        pubKey_ = com.google.protobuf.ByteString.EMPTY;
 
         return this;
       }
@@ -3540,6 +3528,7 @@ public final class Messages {
         } else {
           result.evidence_ = evidenceBuilder_.build();
         }
+        result.timestamp_ = timestamp_;
         if (signatureBuilder_ == null) {
           result.signature_ = signature_;
         } else {
@@ -3558,9 +3547,7 @@ public final class Messages {
           result.policy_ = policyBuilder_.build();
         }
         result.deviceType_ = deviceType_;
-        result.pubSesKey_ = pubSesKey_;
-        result.type_ = type_;
-        result.mac_ = mac_;
+        result.pubKey_ = pubKey_;
         onBuilt();
         return result;
       }
@@ -3615,6 +3602,9 @@ public final class Messages {
         if (other.hasEvidence()) {
           mergeEvidence(other.getEvidence());
         }
+        if (other.getTimestamp() != com.google.protobuf.ByteString.EMPTY) {
+          setTimestamp(other.getTimestamp());
+        }
         if (other.hasSignature()) {
           mergeSignature(other.getSignature());
         }
@@ -3649,14 +3639,8 @@ public final class Messages {
         if (other.deviceType_ != 0) {
           setDeviceTypeValue(other.getDeviceTypeValue());
         }
-        if (other.getPubSesKey() != com.google.protobuf.ByteString.EMPTY) {
-          setPubSesKey(other.getPubSesKey());
-        }
-        if (other.type_ != 0) {
-          setTypeValue(other.getTypeValue());
-        }
-        if (other.getMac() != com.google.protobuf.ByteString.EMPTY) {
-          setMac(other.getMac());
+        if (other.getPubKey() != com.google.protobuf.ByteString.EMPTY) {
+          setPubKey(other.getPubKey());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -3736,12 +3720,20 @@ public final class Messages {
       private com.google.protobuf.SingleFieldBuilderV3<
           sire.messages.Messages.ProtoEvidence, sire.messages.Messages.ProtoEvidence.Builder, sire.messages.Messages.ProtoEvidenceOrBuilder> evidenceBuilder_;
       /**
+       * <pre>
+       *=========JOIN REQUEST===========//
+       * </pre>
+       *
        * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public boolean hasEvidence() {
         return evidenceBuilder_ != null || evidence_ != null;
       }
       /**
+       * <pre>
+       *=========JOIN REQUEST===========//
+       * </pre>
+       *
        * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public sire.messages.Messages.ProtoEvidence getEvidence() {
@@ -3752,6 +3744,10 @@ public final class Messages {
         }
       }
       /**
+       * <pre>
+       *=========JOIN REQUEST===========//
+       * </pre>
+       *
        * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public Builder setEvidence(sire.messages.Messages.ProtoEvidence value) {
@@ -3768,6 +3764,10 @@ public final class Messages {
         return this;
       }
       /**
+       * <pre>
+       *=========JOIN REQUEST===========//
+       * </pre>
+       *
        * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public Builder setEvidence(
@@ -3782,6 +3782,10 @@ public final class Messages {
         return this;
       }
       /**
+       * <pre>
+       *=========JOIN REQUEST===========//
+       * </pre>
+       *
        * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public Builder mergeEvidence(sire.messages.Messages.ProtoEvidence value) {
@@ -3800,6 +3804,10 @@ public final class Messages {
         return this;
       }
       /**
+       * <pre>
+       *=========JOIN REQUEST===========//
+       * </pre>
+       *
        * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public Builder clearEvidence() {
@@ -3814,6 +3822,10 @@ public final class Messages {
         return this;
       }
       /**
+       * <pre>
+       *=========JOIN REQUEST===========//
+       * </pre>
+       *
        * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public sire.messages.Messages.ProtoEvidence.Builder getEvidenceBuilder() {
@@ -3822,6 +3834,10 @@ public final class Messages {
         return getEvidenceFieldBuilder().getBuilder();
       }
       /**
+       * <pre>
+       *=========JOIN REQUEST===========//
+       * </pre>
+       *
        * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       public sire.messages.Messages.ProtoEvidenceOrBuilder getEvidenceOrBuilder() {
@@ -3833,6 +3849,10 @@ public final class Messages {
         }
       }
       /**
+       * <pre>
+       *=========JOIN REQUEST===========//
+       * </pre>
+       *
        * <code>.sire.messages.ProtoEvidence evidence = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
@@ -3849,17 +3869,46 @@ public final class Messages {
         return evidenceBuilder_;
       }
 
+      private com.google.protobuf.ByteString timestamp_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes timestamp = 3;</code>
+       */
+      public com.google.protobuf.ByteString getTimestamp() {
+        return timestamp_;
+      }
+      /**
+       * <code>bytes timestamp = 3;</code>
+       */
+      public Builder setTimestamp(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes timestamp = 3;</code>
+       */
+      public Builder clearTimestamp() {
+        
+        timestamp_ = getDefaultInstance().getTimestamp();
+        onChanged();
+        return this;
+      }
+
       private sire.messages.Messages.ProtoSchnorr signature_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
           sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> signatureBuilder_;
       /**
-       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
        */
       public boolean hasSignature() {
         return signatureBuilder_ != null || signature_ != null;
       }
       /**
-       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
        */
       public sire.messages.Messages.ProtoSchnorr getSignature() {
         if (signatureBuilder_ == null) {
@@ -3869,7 +3918,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
        */
       public Builder setSignature(sire.messages.Messages.ProtoSchnorr value) {
         if (signatureBuilder_ == null) {
@@ -3885,7 +3934,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
        */
       public Builder setSignature(
           sire.messages.Messages.ProtoSchnorr.Builder builderForValue) {
@@ -3899,7 +3948,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
        */
       public Builder mergeSignature(sire.messages.Messages.ProtoSchnorr value) {
         if (signatureBuilder_ == null) {
@@ -3917,7 +3966,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
        */
       public Builder clearSignature() {
         if (signatureBuilder_ == null) {
@@ -3931,7 +3980,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
        */
       public sire.messages.Messages.ProtoSchnorr.Builder getSignatureBuilder() {
         
@@ -3939,7 +3988,7 @@ public final class Messages {
         return getSignatureFieldBuilder().getBuilder();
       }
       /**
-       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
        */
       public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureOrBuilder() {
         if (signatureBuilder_ != null) {
@@ -3950,7 +3999,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>.sire.messages.ProtoSchnorr signature = 3;</code>
+       * <code>.sire.messages.ProtoSchnorr signature = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> 
@@ -3968,13 +4017,13 @@ public final class Messages {
 
       private com.google.protobuf.ByteString dataToSign_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes dataToSign = 4;</code>
+       * <code>bytes dataToSign = 5;</code>
        */
       public com.google.protobuf.ByteString getDataToSign() {
         return dataToSign_;
       }
       /**
-       * <code>bytes dataToSign = 4;</code>
+       * <code>bytes dataToSign = 5;</code>
        */
       public Builder setDataToSign(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -3986,7 +4035,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>bytes dataToSign = 4;</code>
+       * <code>bytes dataToSign = 5;</code>
        */
       public Builder clearDataToSign() {
         
@@ -3997,7 +4046,7 @@ public final class Messages {
 
       private java.lang.Object key_ = "";
       /**
-       * <code>string key = 5;</code>
+       * <code>string key = 6;</code>
        */
       public java.lang.String getKey() {
         java.lang.Object ref = key_;
@@ -4012,7 +4061,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>string key = 5;</code>
+       * <code>string key = 6;</code>
        */
       public com.google.protobuf.ByteString
           getKeyBytes() {
@@ -4028,7 +4077,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>string key = 5;</code>
+       * <code>string key = 6;</code>
        */
       public Builder setKey(
           java.lang.String value) {
@@ -4041,7 +4090,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>string key = 5;</code>
+       * <code>string key = 6;</code>
        */
       public Builder clearKey() {
         
@@ -4050,7 +4099,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>string key = 5;</code>
+       * <code>string key = 6;</code>
        */
       public Builder setKeyBytes(
           com.google.protobuf.ByteString value) {
@@ -4070,7 +4119,7 @@ public final class Messages {
        *also serves as newData
        * </pre>
        *
-       * <code>bytes value = 6;</code>
+       * <code>bytes value = 7;</code>
        */
       public com.google.protobuf.ByteString getValue() {
         return value_;
@@ -4080,7 +4129,7 @@ public final class Messages {
        *also serves as newData
        * </pre>
        *
-       * <code>bytes value = 6;</code>
+       * <code>bytes value = 7;</code>
        */
       public Builder setValue(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -4096,7 +4145,7 @@ public final class Messages {
        *also serves as newData
        * </pre>
        *
-       * <code>bytes value = 6;</code>
+       * <code>bytes value = 7;</code>
        */
       public Builder clearValue() {
         
@@ -4107,13 +4156,13 @@ public final class Messages {
 
       private com.google.protobuf.ByteString oldData_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>bytes oldData = 7;</code>
+       * <code>bytes oldData = 8;</code>
        */
       public com.google.protobuf.ByteString getOldData() {
         return oldData_;
       }
       /**
-       * <code>bytes oldData = 7;</code>
+       * <code>bytes oldData = 8;</code>
        */
       public Builder setOldData(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -4125,7 +4174,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>bytes oldData = 7;</code>
+       * <code>bytes oldData = 8;</code>
        */
       public Builder clearOldData() {
         
@@ -4136,7 +4185,7 @@ public final class Messages {
 
       private java.lang.Object deviceId_ = "";
       /**
-       * <code>string deviceId = 8;</code>
+       * <code>string deviceId = 9;</code>
        */
       public java.lang.String getDeviceId() {
         java.lang.Object ref = deviceId_;
@@ -4151,7 +4200,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>string deviceId = 8;</code>
+       * <code>string deviceId = 9;</code>
        */
       public com.google.protobuf.ByteString
           getDeviceIdBytes() {
@@ -4167,7 +4216,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>string deviceId = 8;</code>
+       * <code>string deviceId = 9;</code>
        */
       public Builder setDeviceId(
           java.lang.String value) {
@@ -4180,7 +4229,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>string deviceId = 8;</code>
+       * <code>string deviceId = 9;</code>
        */
       public Builder clearDeviceId() {
         
@@ -4189,7 +4238,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>string deviceId = 8;</code>
+       * <code>string deviceId = 9;</code>
        */
       public Builder setDeviceIdBytes(
           com.google.protobuf.ByteString value) {
@@ -4205,7 +4254,7 @@ public final class Messages {
 
       private java.lang.Object appId_ = "";
       /**
-       * <code>string appId = 9;</code>
+       * <code>string appId = 10;</code>
        */
       public java.lang.String getAppId() {
         java.lang.Object ref = appId_;
@@ -4220,7 +4269,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>string appId = 9;</code>
+       * <code>string appId = 10;</code>
        */
       public com.google.protobuf.ByteString
           getAppIdBytes() {
@@ -4236,7 +4285,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>string appId = 9;</code>
+       * <code>string appId = 10;</code>
        */
       public Builder setAppId(
           java.lang.String value) {
@@ -4249,7 +4298,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>string appId = 9;</code>
+       * <code>string appId = 10;</code>
        */
       public Builder clearAppId() {
         
@@ -4258,7 +4307,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>string appId = 9;</code>
+       * <code>string appId = 10;</code>
        */
       public Builder setAppIdBytes(
           com.google.protobuf.ByteString value) {
@@ -4274,7 +4323,7 @@ public final class Messages {
 
       private java.lang.Object code_ = "";
       /**
-       * <code>string code = 10;</code>
+       * <code>string code = 11;</code>
        */
       public java.lang.String getCode() {
         java.lang.Object ref = code_;
@@ -4289,7 +4338,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>string code = 10;</code>
+       * <code>string code = 11;</code>
        */
       public com.google.protobuf.ByteString
           getCodeBytes() {
@@ -4305,7 +4354,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>string code = 10;</code>
+       * <code>string code = 11;</code>
        */
       public Builder setCode(
           java.lang.String value) {
@@ -4318,7 +4367,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>string code = 10;</code>
+       * <code>string code = 11;</code>
        */
       public Builder clearCode() {
         
@@ -4327,7 +4376,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>string code = 10;</code>
+       * <code>string code = 11;</code>
        */
       public Builder setCodeBytes(
           com.google.protobuf.ByteString value) {
@@ -4345,13 +4394,13 @@ public final class Messages {
       private com.google.protobuf.SingleFieldBuilderV3<
           sire.messages.Messages.ProxyMessage.ProtoPolicy, sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder, sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder> policyBuilder_;
       /**
-       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
        */
       public boolean hasPolicy() {
         return policyBuilder_ != null || policy_ != null;
       }
       /**
-       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
        */
       public sire.messages.Messages.ProxyMessage.ProtoPolicy getPolicy() {
         if (policyBuilder_ == null) {
@@ -4361,7 +4410,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
        */
       public Builder setPolicy(sire.messages.Messages.ProxyMessage.ProtoPolicy value) {
         if (policyBuilder_ == null) {
@@ -4377,7 +4426,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
        */
       public Builder setPolicy(
           sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder builderForValue) {
@@ -4391,7 +4440,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
        */
       public Builder mergePolicy(sire.messages.Messages.ProxyMessage.ProtoPolicy value) {
         if (policyBuilder_ == null) {
@@ -4409,7 +4458,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
        */
       public Builder clearPolicy() {
         if (policyBuilder_ == null) {
@@ -4423,7 +4472,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
        */
       public sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder getPolicyBuilder() {
         
@@ -4431,7 +4480,7 @@ public final class Messages {
         return getPolicyFieldBuilder().getBuilder();
       }
       /**
-       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
        */
       public sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder getPolicyOrBuilder() {
         if (policyBuilder_ != null) {
@@ -4442,7 +4491,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 11;</code>
+       * <code>.sire.messages.ProxyMessage.ProtoPolicy policy = 12;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           sire.messages.Messages.ProxyMessage.ProtoPolicy, sire.messages.Messages.ProxyMessage.ProtoPolicy.Builder, sire.messages.Messages.ProxyMessage.ProtoPolicyOrBuilder> 
@@ -4460,13 +4509,13 @@ public final class Messages {
 
       private int deviceType_ = 0;
       /**
-       * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 13;</code>
        */
       public int getDeviceTypeValue() {
         return deviceType_;
       }
       /**
-       * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 13;</code>
        */
       public Builder setDeviceTypeValue(int value) {
         deviceType_ = value;
@@ -4474,7 +4523,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 13;</code>
        */
       public sire.messages.Messages.ProtoDeviceType getDeviceType() {
         @SuppressWarnings("deprecation")
@@ -4482,7 +4531,7 @@ public final class Messages {
         return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
       }
       /**
-       * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 13;</code>
        */
       public Builder setDeviceType(sire.messages.Messages.ProtoDeviceType value) {
         if (value == null) {
@@ -4494,7 +4543,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>.sire.messages.ProtoDeviceType deviceType = 12;</code>
+       * <code>.sire.messages.ProtoDeviceType deviceType = 13;</code>
        */
       public Builder clearDeviceType() {
         
@@ -4503,129 +4552,43 @@ public final class Messages {
         return this;
       }
 
-      private com.google.protobuf.ByteString pubSesKey_ = com.google.protobuf.ByteString.EMPTY;
+      private com.google.protobuf.ByteString pubKey_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       *========PREJOIN REQUEST==========//
+       *========INITIAL REQUEST==========//
        * </pre>
        *
-       * <code>bytes pubSesKey = 13;</code>
+       * <code>bytes pubKey = 14;</code>
        */
-      public com.google.protobuf.ByteString getPubSesKey() {
-        return pubSesKey_;
+      public com.google.protobuf.ByteString getPubKey() {
+        return pubKey_;
       }
       /**
        * <pre>
-       *========PREJOIN REQUEST==========//
+       *========INITIAL REQUEST==========//
        * </pre>
        *
-       * <code>bytes pubSesKey = 13;</code>
+       * <code>bytes pubKey = 14;</code>
        */
-      public Builder setPubSesKey(com.google.protobuf.ByteString value) {
+      public Builder setPubKey(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        pubSesKey_ = value;
+        pubKey_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       *========PREJOIN REQUEST==========//
+       *========INITIAL REQUEST==========//
        * </pre>
        *
-       * <code>bytes pubSesKey = 13;</code>
+       * <code>bytes pubKey = 14;</code>
        */
-      public Builder clearPubSesKey() {
+      public Builder clearPubKey() {
         
-        pubSesKey_ = getDefaultInstance().getPubSesKey();
-        onChanged();
-        return this;
-      }
-
-      private int type_ = 0;
-      /**
-       * <code>.sire.messages.ProtoDeviceType type = 14;</code>
-       */
-      public int getTypeValue() {
-        return type_;
-      }
-      /**
-       * <code>.sire.messages.ProtoDeviceType type = 14;</code>
-       */
-      public Builder setTypeValue(int value) {
-        type_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.sire.messages.ProtoDeviceType type = 14;</code>
-       */
-      public sire.messages.Messages.ProtoDeviceType getType() {
-        @SuppressWarnings("deprecation")
-        sire.messages.Messages.ProtoDeviceType result = sire.messages.Messages.ProtoDeviceType.valueOf(type_);
-        return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
-      }
-      /**
-       * <code>.sire.messages.ProtoDeviceType type = 14;</code>
-       */
-      public Builder setType(sire.messages.Messages.ProtoDeviceType value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        
-        type_ = value.getNumber();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.sire.messages.ProtoDeviceType type = 14;</code>
-       */
-      public Builder clearType() {
-        
-        type_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString mac_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <pre>
-       *=========JOIN REQUEST===========//
-       * </pre>
-       *
-       * <code>bytes mac = 15;</code>
-       */
-      public com.google.protobuf.ByteString getMac() {
-        return mac_;
-      }
-      /**
-       * <pre>
-       *=========JOIN REQUEST===========//
-       * </pre>
-       *
-       * <code>bytes mac = 15;</code>
-       */
-      public Builder setMac(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        mac_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       *=========JOIN REQUEST===========//
-       * </pre>
-       *
-       * <code>bytes mac = 15;</code>
-       */
-      public Builder clearMac() {
-        
-        mac_ = getDefaultInstance().getMac();
+        pubKey_ = getDefaultInstance().getPubKey();
         onChanged();
         return this;
       }
@@ -4759,73 +4722,47 @@ public final class Messages {
 
     /**
      * <pre>
-     *======PREJOIN RESPONSE==========//
+     *======TIMESTAMP RESPONSE========//
      * </pre>
      *
-     * <code>bytes verifierPubSesKey = 7;</code>
+     * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
      */
-    com.google.protobuf.ByteString getVerifierPubSesKey();
+    boolean hasSign();
+    /**
+     * <pre>
+     *======TIMESTAMP RESPONSE========//
+     * </pre>
+     *
+     * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
+     */
+    sire.messages.Messages.ProtoSchnorr getSign();
+    /**
+     * <pre>
+     *======TIMESTAMP RESPONSE========//
+     * </pre>
+     *
+     * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
+     */
+    sire.messages.Messages.ProtoSchnorrOrBuilder getSignOrBuilder();
 
     /**
      * <pre>
-     *V
+     *Can also be used for join response
      * </pre>
      *
-     * <code>bytes verifierPubKey = 8;</code>
+     * <code>bytes timestamp = 8;</code>
      */
-    com.google.protobuf.ByteString getVerifierPubKey();
+    com.google.protobuf.ByteString getTimestamp();
 
     /**
-     * <pre>
-     *Signv(Gv,Ga)
-     * </pre>
-     *
-     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+     * <code>bytes pubKey = 9;</code>
      */
-    boolean hasSignatureSessionKeys();
-    /**
-     * <pre>
-     *Signv(Gv,Ga)
-     * </pre>
-     *
-     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
-     */
-    sire.messages.Messages.ProtoSchnorr getSignatureSessionKeys();
-    /**
-     * <pre>
-     *Signv(Gv,Ga)
-     * </pre>
-     *
-     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
-     */
-    sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder();
+    com.google.protobuf.ByteString getPubKey();
 
     /**
-     * <pre>
-     *MAC_Km(content1)
-     * </pre>
-     *
-     * <code>bytes mac = 10;</code>
+     * <code>bytes hash = 10;</code>
      */
-    com.google.protobuf.ByteString getMac();
-
-    /**
-     * <pre>
-     *========JOIN RESPONSE===========//
-     * </pre>
-     *
-     * <code>bytes iv = 11;</code>
-     */
-    com.google.protobuf.ByteString getIv();
-
-    /**
-     * <pre>
-     *Sign_V(Enc_A(data))
-     * </pre>
-     *
-     * <code>bytes encryptedData = 12;</code>
-     */
-    com.google.protobuf.ByteString getEncryptedData();
+    com.google.protobuf.ByteString getHash();
   }
   /**
    * Protobuf type {@code sire.messages.ProxyResponse}
@@ -4846,11 +4783,9 @@ public final class Messages {
       members_ = java.util.Collections.emptyList();
       extension_ = "";
       policy_ = "";
-      verifierPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
-      verifierPubKey_ = com.google.protobuf.ByteString.EMPTY;
-      mac_ = com.google.protobuf.ByteString.EMPTY;
-      iv_ = com.google.protobuf.ByteString.EMPTY;
-      encryptedData_ = com.google.protobuf.ByteString.EMPTY;
+      timestamp_ = com.google.protobuf.ByteString.EMPTY;
+      pubKey_ = com.google.protobuf.ByteString.EMPTY;
+      hash_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -4918,41 +4853,31 @@ public final class Messages {
               break;
             }
             case 58: {
+              sire.messages.Messages.ProtoSchnorr.Builder subBuilder = null;
+              if (sign_ != null) {
+                subBuilder = sign_.toBuilder();
+              }
+              sign_ = input.readMessage(sire.messages.Messages.ProtoSchnorr.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(sign_);
+                sign_ = subBuilder.buildPartial();
+              }
 
-              verifierPubSesKey_ = input.readBytes();
               break;
             }
             case 66: {
 
-              verifierPubKey_ = input.readBytes();
+              timestamp_ = input.readBytes();
               break;
             }
             case 74: {
-              sire.messages.Messages.ProtoSchnorr.Builder subBuilder = null;
-              if (signatureSessionKeys_ != null) {
-                subBuilder = signatureSessionKeys_.toBuilder();
-              }
-              signatureSessionKeys_ = input.readMessage(sire.messages.Messages.ProtoSchnorr.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(signatureSessionKeys_);
-                signatureSessionKeys_ = subBuilder.buildPartial();
-              }
 
+              pubKey_ = input.readBytes();
               break;
             }
             case 82: {
 
-              mac_ = input.readBytes();
-              break;
-            }
-            case 90: {
-
-              iv_ = input.readBytes();
-              break;
-            }
-            case 98: {
-
-              encryptedData_ = input.readBytes();
+              hash_ = input.readBytes();
               break;
             }
             default: {
@@ -5173,20 +5098,15 @@ public final class Messages {
       sire.messages.Messages.ProtoDeviceType getDeviceType();
 
       /**
-       * <code>bytes certificate = 4;</code>
-       */
-      com.google.protobuf.ByteString getCertificate();
-
-      /**
-       * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
        */
       boolean hasCertExpTime();
       /**
-       * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
        */
       com.google.protobuf.Timestamp getCertExpTime();
       /**
-       * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
        */
       com.google.protobuf.TimestampOrBuilder getCertExpTimeOrBuilder();
     }
@@ -5205,7 +5125,6 @@ public final class Messages {
       private ProtoDeviceContext() {
         deviceId_ = "";
         deviceType_ = 0;
-        certificate_ = com.google.protobuf.ByteString.EMPTY;
       }
 
       @java.lang.Override
@@ -5258,11 +5177,6 @@ public final class Messages {
                 break;
               }
               case 34: {
-
-                certificate_ = input.readBytes();
-                break;
-              }
-              case 42: {
                 com.google.protobuf.Timestamp.Builder subBuilder = null;
                 if (certExpTime_ != null) {
                   subBuilder = certExpTime_.toBuilder();
@@ -5379,31 +5293,22 @@ public final class Messages {
         return result == null ? sire.messages.Messages.ProtoDeviceType.UNRECOGNIZED : result;
       }
 
-      public static final int CERTIFICATE_FIELD_NUMBER = 4;
-      private com.google.protobuf.ByteString certificate_;
-      /**
-       * <code>bytes certificate = 4;</code>
-       */
-      public com.google.protobuf.ByteString getCertificate() {
-        return certificate_;
-      }
-
-      public static final int CERTEXPTIME_FIELD_NUMBER = 5;
+      public static final int CERTEXPTIME_FIELD_NUMBER = 4;
       private com.google.protobuf.Timestamp certExpTime_;
       /**
-       * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
        */
       public boolean hasCertExpTime() {
         return certExpTime_ != null;
       }
       /**
-       * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
        */
       public com.google.protobuf.Timestamp getCertExpTime() {
         return certExpTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : certExpTime_;
       }
       /**
-       * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+       * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
        */
       public com.google.protobuf.TimestampOrBuilder getCertExpTimeOrBuilder() {
         return getCertExpTime();
@@ -5432,11 +5337,8 @@ public final class Messages {
         if (deviceType_ != sire.messages.Messages.ProtoDeviceType.CAMERA.getNumber()) {
           output.writeEnum(3, deviceType_);
         }
-        if (!certificate_.isEmpty()) {
-          output.writeBytes(4, certificate_);
-        }
         if (certExpTime_ != null) {
-          output.writeMessage(5, getCertExpTime());
+          output.writeMessage(4, getCertExpTime());
         }
         unknownFields.writeTo(output);
       }
@@ -5458,13 +5360,9 @@ public final class Messages {
           size += com.google.protobuf.CodedOutputStream
             .computeEnumSize(3, deviceType_);
         }
-        if (!certificate_.isEmpty()) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(4, certificate_);
-        }
         if (certExpTime_ != null) {
           size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(5, getCertExpTime());
+            .computeMessageSize(4, getCertExpTime());
         }
         size += unknownFields.getSerializedSize();
         memoizedSize = size;
@@ -5490,8 +5388,6 @@ public final class Messages {
               .equals(other.getTime());
         }
         result = result && deviceType_ == other.deviceType_;
-        result = result && getCertificate()
-            .equals(other.getCertificate());
         result = result && (hasCertExpTime() == other.hasCertExpTime());
         if (hasCertExpTime()) {
           result = result && getCertExpTime()
@@ -5516,8 +5412,6 @@ public final class Messages {
         }
         hash = (37 * hash) + DEVICETYPE_FIELD_NUMBER;
         hash = (53 * hash) + deviceType_;
-        hash = (37 * hash) + CERTIFICATE_FIELD_NUMBER;
-        hash = (53 * hash) + getCertificate().hashCode();
         if (hasCertExpTime()) {
           hash = (37 * hash) + CERTEXPTIME_FIELD_NUMBER;
           hash = (53 * hash) + getCertExpTime().hashCode();
@@ -5665,8 +5559,6 @@ public final class Messages {
           }
           deviceType_ = 0;
 
-          certificate_ = com.google.protobuf.ByteString.EMPTY;
-
           if (certExpTimeBuilder_ == null) {
             certExpTime_ = null;
           } else {
@@ -5706,7 +5598,6 @@ public final class Messages {
             result.time_ = timeBuilder_.build();
           }
           result.deviceType_ = deviceType_;
-          result.certificate_ = certificate_;
           if (certExpTimeBuilder_ == null) {
             result.certExpTime_ = certExpTime_;
           } else {
@@ -5769,9 +5660,6 @@ public final class Messages {
           }
           if (other.deviceType_ != 0) {
             setDeviceTypeValue(other.getDeviceTypeValue());
-          }
-          if (other.getCertificate() != com.google.protobuf.ByteString.EMPTY) {
-            setCertificate(other.getCertificate());
           }
           if (other.hasCertExpTime()) {
             mergeCertExpTime(other.getCertExpTime());
@@ -6036,46 +5924,17 @@ public final class Messages {
           return this;
         }
 
-        private com.google.protobuf.ByteString certificate_ = com.google.protobuf.ByteString.EMPTY;
-        /**
-         * <code>bytes certificate = 4;</code>
-         */
-        public com.google.protobuf.ByteString getCertificate() {
-          return certificate_;
-        }
-        /**
-         * <code>bytes certificate = 4;</code>
-         */
-        public Builder setCertificate(com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  
-          certificate_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>bytes certificate = 4;</code>
-         */
-        public Builder clearCertificate() {
-          
-          certificate_ = getDefaultInstance().getCertificate();
-          onChanged();
-          return this;
-        }
-
         private com.google.protobuf.Timestamp certExpTime_ = null;
         private com.google.protobuf.SingleFieldBuilderV3<
             com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> certExpTimeBuilder_;
         /**
-         * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
          */
         public boolean hasCertExpTime() {
           return certExpTimeBuilder_ != null || certExpTime_ != null;
         }
         /**
-         * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
          */
         public com.google.protobuf.Timestamp getCertExpTime() {
           if (certExpTimeBuilder_ == null) {
@@ -6085,7 +5944,7 @@ public final class Messages {
           }
         }
         /**
-         * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
          */
         public Builder setCertExpTime(com.google.protobuf.Timestamp value) {
           if (certExpTimeBuilder_ == null) {
@@ -6101,7 +5960,7 @@ public final class Messages {
           return this;
         }
         /**
-         * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
          */
         public Builder setCertExpTime(
             com.google.protobuf.Timestamp.Builder builderForValue) {
@@ -6115,7 +5974,7 @@ public final class Messages {
           return this;
         }
         /**
-         * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
          */
         public Builder mergeCertExpTime(com.google.protobuf.Timestamp value) {
           if (certExpTimeBuilder_ == null) {
@@ -6133,7 +5992,7 @@ public final class Messages {
           return this;
         }
         /**
-         * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
          */
         public Builder clearCertExpTime() {
           if (certExpTimeBuilder_ == null) {
@@ -6147,7 +6006,7 @@ public final class Messages {
           return this;
         }
         /**
-         * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
          */
         public com.google.protobuf.Timestamp.Builder getCertExpTimeBuilder() {
           
@@ -6155,7 +6014,7 @@ public final class Messages {
           return getCertExpTimeFieldBuilder().getBuilder();
         }
         /**
-         * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
          */
         public com.google.protobuf.TimestampOrBuilder getCertExpTimeOrBuilder() {
           if (certExpTimeBuilder_ != null) {
@@ -6166,7 +6025,7 @@ public final class Messages {
           }
         }
         /**
-         * <code>.google.protobuf.Timestamp certExpTime = 5;</code>
+         * <code>.google.protobuf.Timestamp certExpTime = 4;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<
             com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
@@ -6386,102 +6245,68 @@ public final class Messages {
       }
     }
 
-    public static final int VERIFIERPUBSESKEY_FIELD_NUMBER = 7;
-    private com.google.protobuf.ByteString verifierPubSesKey_;
+    public static final int SIGN_FIELD_NUMBER = 7;
+    private sire.messages.Messages.ProtoSchnorr sign_;
     /**
      * <pre>
-     *======PREJOIN RESPONSE==========//
+     *======TIMESTAMP RESPONSE========//
      * </pre>
      *
-     * <code>bytes verifierPubSesKey = 7;</code>
+     * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
      */
-    public com.google.protobuf.ByteString getVerifierPubSesKey() {
-      return verifierPubSesKey_;
+    public boolean hasSign() {
+      return sign_ != null;
+    }
+    /**
+     * <pre>
+     *======TIMESTAMP RESPONSE========//
+     * </pre>
+     *
+     * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
+     */
+    public sire.messages.Messages.ProtoSchnorr getSign() {
+      return sign_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : sign_;
+    }
+    /**
+     * <pre>
+     *======TIMESTAMP RESPONSE========//
+     * </pre>
+     *
+     * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
+     */
+    public sire.messages.Messages.ProtoSchnorrOrBuilder getSignOrBuilder() {
+      return getSign();
     }
 
-    public static final int VERIFIERPUBKEY_FIELD_NUMBER = 8;
-    private com.google.protobuf.ByteString verifierPubKey_;
+    public static final int TIMESTAMP_FIELD_NUMBER = 8;
+    private com.google.protobuf.ByteString timestamp_;
     /**
      * <pre>
-     *V
+     *Can also be used for join response
      * </pre>
      *
-     * <code>bytes verifierPubKey = 8;</code>
+     * <code>bytes timestamp = 8;</code>
      */
-    public com.google.protobuf.ByteString getVerifierPubKey() {
-      return verifierPubKey_;
+    public com.google.protobuf.ByteString getTimestamp() {
+      return timestamp_;
     }
 
-    public static final int SIGNATURESESSIONKEYS_FIELD_NUMBER = 9;
-    private sire.messages.Messages.ProtoSchnorr signatureSessionKeys_;
+    public static final int PUBKEY_FIELD_NUMBER = 9;
+    private com.google.protobuf.ByteString pubKey_;
     /**
-     * <pre>
-     *Signv(Gv,Ga)
-     * </pre>
-     *
-     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+     * <code>bytes pubKey = 9;</code>
      */
-    public boolean hasSignatureSessionKeys() {
-      return signatureSessionKeys_ != null;
-    }
-    /**
-     * <pre>
-     *Signv(Gv,Ga)
-     * </pre>
-     *
-     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
-     */
-    public sire.messages.Messages.ProtoSchnorr getSignatureSessionKeys() {
-      return signatureSessionKeys_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
-    }
-    /**
-     * <pre>
-     *Signv(Gv,Ga)
-     * </pre>
-     *
-     * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
-     */
-    public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder() {
-      return getSignatureSessionKeys();
+    public com.google.protobuf.ByteString getPubKey() {
+      return pubKey_;
     }
 
-    public static final int MAC_FIELD_NUMBER = 10;
-    private com.google.protobuf.ByteString mac_;
+    public static final int HASH_FIELD_NUMBER = 10;
+    private com.google.protobuf.ByteString hash_;
     /**
-     * <pre>
-     *MAC_Km(content1)
-     * </pre>
-     *
-     * <code>bytes mac = 10;</code>
+     * <code>bytes hash = 10;</code>
      */
-    public com.google.protobuf.ByteString getMac() {
-      return mac_;
-    }
-
-    public static final int IV_FIELD_NUMBER = 11;
-    private com.google.protobuf.ByteString iv_;
-    /**
-     * <pre>
-     *========JOIN RESPONSE===========//
-     * </pre>
-     *
-     * <code>bytes iv = 11;</code>
-     */
-    public com.google.protobuf.ByteString getIv() {
-      return iv_;
-    }
-
-    public static final int ENCRYPTEDDATA_FIELD_NUMBER = 12;
-    private com.google.protobuf.ByteString encryptedData_;
-    /**
-     * <pre>
-     *Sign_V(Enc_A(data))
-     * </pre>
-     *
-     * <code>bytes encryptedData = 12;</code>
-     */
-    public com.google.protobuf.ByteString getEncryptedData() {
-      return encryptedData_;
+    public com.google.protobuf.ByteString getHash() {
+      return hash_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -6516,23 +6341,17 @@ public final class Messages {
       if (!getPolicyBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, policy_);
       }
-      if (!verifierPubSesKey_.isEmpty()) {
-        output.writeBytes(7, verifierPubSesKey_);
+      if (sign_ != null) {
+        output.writeMessage(7, getSign());
       }
-      if (!verifierPubKey_.isEmpty()) {
-        output.writeBytes(8, verifierPubKey_);
+      if (!timestamp_.isEmpty()) {
+        output.writeBytes(8, timestamp_);
       }
-      if (signatureSessionKeys_ != null) {
-        output.writeMessage(9, getSignatureSessionKeys());
+      if (!pubKey_.isEmpty()) {
+        output.writeBytes(9, pubKey_);
       }
-      if (!mac_.isEmpty()) {
-        output.writeBytes(10, mac_);
-      }
-      if (!iv_.isEmpty()) {
-        output.writeBytes(11, iv_);
-      }
-      if (!encryptedData_.isEmpty()) {
-        output.writeBytes(12, encryptedData_);
+      if (!hash_.isEmpty()) {
+        output.writeBytes(10, hash_);
       }
       unknownFields.writeTo(output);
     }
@@ -6570,29 +6389,21 @@ public final class Messages {
       if (!getPolicyBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, policy_);
       }
-      if (!verifierPubSesKey_.isEmpty()) {
+      if (sign_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(7, verifierPubSesKey_);
+          .computeMessageSize(7, getSign());
       }
-      if (!verifierPubKey_.isEmpty()) {
+      if (!timestamp_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(8, verifierPubKey_);
+          .computeBytesSize(8, timestamp_);
       }
-      if (signatureSessionKeys_ != null) {
+      if (!pubKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(9, getSignatureSessionKeys());
+          .computeBytesSize(9, pubKey_);
       }
-      if (!mac_.isEmpty()) {
+      if (!hash_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(10, mac_);
-      }
-      if (!iv_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(11, iv_);
-      }
-      if (!encryptedData_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(12, encryptedData_);
+          .computeBytesSize(10, hash_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -6621,21 +6432,17 @@ public final class Messages {
           .equals(other.getExtension());
       result = result && getPolicy()
           .equals(other.getPolicy());
-      result = result && getVerifierPubSesKey()
-          .equals(other.getVerifierPubSesKey());
-      result = result && getVerifierPubKey()
-          .equals(other.getVerifierPubKey());
-      result = result && (hasSignatureSessionKeys() == other.hasSignatureSessionKeys());
-      if (hasSignatureSessionKeys()) {
-        result = result && getSignatureSessionKeys()
-            .equals(other.getSignatureSessionKeys());
+      result = result && (hasSign() == other.hasSign());
+      if (hasSign()) {
+        result = result && getSign()
+            .equals(other.getSign());
       }
-      result = result && getMac()
-          .equals(other.getMac());
-      result = result && getIv()
-          .equals(other.getIv());
-      result = result && getEncryptedData()
-          .equals(other.getEncryptedData());
+      result = result && getTimestamp()
+          .equals(other.getTimestamp());
+      result = result && getPubKey()
+          .equals(other.getPubKey());
+      result = result && getHash()
+          .equals(other.getHash());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -6663,20 +6470,16 @@ public final class Messages {
       hash = (53 * hash) + getExtension().hashCode();
       hash = (37 * hash) + POLICY_FIELD_NUMBER;
       hash = (53 * hash) + getPolicy().hashCode();
-      hash = (37 * hash) + VERIFIERPUBSESKEY_FIELD_NUMBER;
-      hash = (53 * hash) + getVerifierPubSesKey().hashCode();
-      hash = (37 * hash) + VERIFIERPUBKEY_FIELD_NUMBER;
-      hash = (53 * hash) + getVerifierPubKey().hashCode();
-      if (hasSignatureSessionKeys()) {
-        hash = (37 * hash) + SIGNATURESESSIONKEYS_FIELD_NUMBER;
-        hash = (53 * hash) + getSignatureSessionKeys().hashCode();
+      if (hasSign()) {
+        hash = (37 * hash) + SIGN_FIELD_NUMBER;
+        hash = (53 * hash) + getSign().hashCode();
       }
-      hash = (37 * hash) + MAC_FIELD_NUMBER;
-      hash = (53 * hash) + getMac().hashCode();
-      hash = (37 * hash) + IV_FIELD_NUMBER;
-      hash = (53 * hash) + getIv().hashCode();
-      hash = (37 * hash) + ENCRYPTEDDATA_FIELD_NUMBER;
-      hash = (53 * hash) + getEncryptedData().hashCode();
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + getTimestamp().hashCode();
+      hash = (37 * hash) + PUBKEY_FIELD_NUMBER;
+      hash = (53 * hash) + getPubKey().hashCode();
+      hash = (37 * hash) + HASH_FIELD_NUMBER;
+      hash = (53 * hash) + getHash().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -6827,21 +6630,17 @@ public final class Messages {
 
         policy_ = "";
 
-        verifierPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
-
-        verifierPubKey_ = com.google.protobuf.ByteString.EMPTY;
-
-        if (signatureSessionKeysBuilder_ == null) {
-          signatureSessionKeys_ = null;
+        if (signBuilder_ == null) {
+          sign_ = null;
         } else {
-          signatureSessionKeys_ = null;
-          signatureSessionKeysBuilder_ = null;
+          sign_ = null;
+          signBuilder_ = null;
         }
-        mac_ = com.google.protobuf.ByteString.EMPTY;
+        timestamp_ = com.google.protobuf.ByteString.EMPTY;
 
-        iv_ = com.google.protobuf.ByteString.EMPTY;
+        pubKey_ = com.google.protobuf.ByteString.EMPTY;
 
-        encryptedData_ = com.google.protobuf.ByteString.EMPTY;
+        hash_ = com.google.protobuf.ByteString.EMPTY;
 
         return this;
       }
@@ -6889,16 +6688,14 @@ public final class Messages {
         }
         result.extension_ = extension_;
         result.policy_ = policy_;
-        result.verifierPubSesKey_ = verifierPubSesKey_;
-        result.verifierPubKey_ = verifierPubKey_;
-        if (signatureSessionKeysBuilder_ == null) {
-          result.signatureSessionKeys_ = signatureSessionKeys_;
+        if (signBuilder_ == null) {
+          result.sign_ = sign_;
         } else {
-          result.signatureSessionKeys_ = signatureSessionKeysBuilder_.build();
+          result.sign_ = signBuilder_.build();
         }
-        result.mac_ = mac_;
-        result.iv_ = iv_;
-        result.encryptedData_ = encryptedData_;
+        result.timestamp_ = timestamp_;
+        result.pubKey_ = pubKey_;
+        result.hash_ = hash_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -6998,23 +6795,17 @@ public final class Messages {
           policy_ = other.policy_;
           onChanged();
         }
-        if (other.getVerifierPubSesKey() != com.google.protobuf.ByteString.EMPTY) {
-          setVerifierPubSesKey(other.getVerifierPubSesKey());
+        if (other.hasSign()) {
+          mergeSign(other.getSign());
         }
-        if (other.getVerifierPubKey() != com.google.protobuf.ByteString.EMPTY) {
-          setVerifierPubKey(other.getVerifierPubKey());
+        if (other.getTimestamp() != com.google.protobuf.ByteString.EMPTY) {
+          setTimestamp(other.getTimestamp());
         }
-        if (other.hasSignatureSessionKeys()) {
-          mergeSignatureSessionKeys(other.getSignatureSessionKeys());
+        if (other.getPubKey() != com.google.protobuf.ByteString.EMPTY) {
+          setPubKey(other.getPubKey());
         }
-        if (other.getMac() != com.google.protobuf.ByteString.EMPTY) {
-          setMac(other.getMac());
-        }
-        if (other.getIv() != com.google.protobuf.ByteString.EMPTY) {
-          setIv(other.getIv());
-        }
-        if (other.getEncryptedData() != com.google.protobuf.ByteString.EMPTY) {
-          setEncryptedData(other.getEncryptedData());
+        if (other.getHash() != com.google.protobuf.ByteString.EMPTY) {
+          setHash(other.getHash());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -7570,360 +7361,254 @@ public final class Messages {
         return this;
       }
 
-      private com.google.protobuf.ByteString verifierPubSesKey_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <pre>
-       *======PREJOIN RESPONSE==========//
-       * </pre>
-       *
-       * <code>bytes verifierPubSesKey = 7;</code>
-       */
-      public com.google.protobuf.ByteString getVerifierPubSesKey() {
-        return verifierPubSesKey_;
-      }
-      /**
-       * <pre>
-       *======PREJOIN RESPONSE==========//
-       * </pre>
-       *
-       * <code>bytes verifierPubSesKey = 7;</code>
-       */
-      public Builder setVerifierPubSesKey(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        verifierPubSesKey_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       *======PREJOIN RESPONSE==========//
-       * </pre>
-       *
-       * <code>bytes verifierPubSesKey = 7;</code>
-       */
-      public Builder clearVerifierPubSesKey() {
-        
-        verifierPubSesKey_ = getDefaultInstance().getVerifierPubSesKey();
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.ByteString verifierPubKey_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <pre>
-       *V
-       * </pre>
-       *
-       * <code>bytes verifierPubKey = 8;</code>
-       */
-      public com.google.protobuf.ByteString getVerifierPubKey() {
-        return verifierPubKey_;
-      }
-      /**
-       * <pre>
-       *V
-       * </pre>
-       *
-       * <code>bytes verifierPubKey = 8;</code>
-       */
-      public Builder setVerifierPubKey(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        verifierPubKey_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       *V
-       * </pre>
-       *
-       * <code>bytes verifierPubKey = 8;</code>
-       */
-      public Builder clearVerifierPubKey() {
-        
-        verifierPubKey_ = getDefaultInstance().getVerifierPubKey();
-        onChanged();
-        return this;
-      }
-
-      private sire.messages.Messages.ProtoSchnorr signatureSessionKeys_ = null;
+      private sire.messages.Messages.ProtoSchnorr sign_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
-          sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> signatureSessionKeysBuilder_;
+          sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> signBuilder_;
       /**
        * <pre>
-       *Signv(Gv,Ga)
+       *======TIMESTAMP RESPONSE========//
        * </pre>
        *
-       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+       * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
        */
-      public boolean hasSignatureSessionKeys() {
-        return signatureSessionKeysBuilder_ != null || signatureSessionKeys_ != null;
+      public boolean hasSign() {
+        return signBuilder_ != null || sign_ != null;
       }
       /**
        * <pre>
-       *Signv(Gv,Ga)
+       *======TIMESTAMP RESPONSE========//
        * </pre>
        *
-       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+       * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
        */
-      public sire.messages.Messages.ProtoSchnorr getSignatureSessionKeys() {
-        if (signatureSessionKeysBuilder_ == null) {
-          return signatureSessionKeys_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
+      public sire.messages.Messages.ProtoSchnorr getSign() {
+        if (signBuilder_ == null) {
+          return sign_ == null ? sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : sign_;
         } else {
-          return signatureSessionKeysBuilder_.getMessage();
+          return signBuilder_.getMessage();
         }
       }
       /**
        * <pre>
-       *Signv(Gv,Ga)
+       *======TIMESTAMP RESPONSE========//
        * </pre>
        *
-       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+       * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
        */
-      public Builder setSignatureSessionKeys(sire.messages.Messages.ProtoSchnorr value) {
-        if (signatureSessionKeysBuilder_ == null) {
+      public Builder setSign(sire.messages.Messages.ProtoSchnorr value) {
+        if (signBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          signatureSessionKeys_ = value;
+          sign_ = value;
           onChanged();
         } else {
-          signatureSessionKeysBuilder_.setMessage(value);
+          signBuilder_.setMessage(value);
         }
 
         return this;
       }
       /**
        * <pre>
-       *Signv(Gv,Ga)
+       *======TIMESTAMP RESPONSE========//
        * </pre>
        *
-       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+       * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
        */
-      public Builder setSignatureSessionKeys(
+      public Builder setSign(
           sire.messages.Messages.ProtoSchnorr.Builder builderForValue) {
-        if (signatureSessionKeysBuilder_ == null) {
-          signatureSessionKeys_ = builderForValue.build();
+        if (signBuilder_ == null) {
+          sign_ = builderForValue.build();
           onChanged();
         } else {
-          signatureSessionKeysBuilder_.setMessage(builderForValue.build());
+          signBuilder_.setMessage(builderForValue.build());
         }
 
         return this;
       }
       /**
        * <pre>
-       *Signv(Gv,Ga)
+       *======TIMESTAMP RESPONSE========//
        * </pre>
        *
-       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+       * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
        */
-      public Builder mergeSignatureSessionKeys(sire.messages.Messages.ProtoSchnorr value) {
-        if (signatureSessionKeysBuilder_ == null) {
-          if (signatureSessionKeys_ != null) {
-            signatureSessionKeys_ =
-              sire.messages.Messages.ProtoSchnorr.newBuilder(signatureSessionKeys_).mergeFrom(value).buildPartial();
+      public Builder mergeSign(sire.messages.Messages.ProtoSchnorr value) {
+        if (signBuilder_ == null) {
+          if (sign_ != null) {
+            sign_ =
+              sire.messages.Messages.ProtoSchnorr.newBuilder(sign_).mergeFrom(value).buildPartial();
           } else {
-            signatureSessionKeys_ = value;
+            sign_ = value;
           }
           onChanged();
         } else {
-          signatureSessionKeysBuilder_.mergeFrom(value);
+          signBuilder_.mergeFrom(value);
         }
 
         return this;
       }
       /**
        * <pre>
-       *Signv(Gv,Ga)
+       *======TIMESTAMP RESPONSE========//
        * </pre>
        *
-       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+       * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
        */
-      public Builder clearSignatureSessionKeys() {
-        if (signatureSessionKeysBuilder_ == null) {
-          signatureSessionKeys_ = null;
+      public Builder clearSign() {
+        if (signBuilder_ == null) {
+          sign_ = null;
           onChanged();
         } else {
-          signatureSessionKeys_ = null;
-          signatureSessionKeysBuilder_ = null;
+          sign_ = null;
+          signBuilder_ = null;
         }
 
         return this;
       }
       /**
        * <pre>
-       *Signv(Gv,Ga)
+       *======TIMESTAMP RESPONSE========//
        * </pre>
        *
-       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+       * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
        */
-      public sire.messages.Messages.ProtoSchnorr.Builder getSignatureSessionKeysBuilder() {
+      public sire.messages.Messages.ProtoSchnorr.Builder getSignBuilder() {
         
         onChanged();
-        return getSignatureSessionKeysFieldBuilder().getBuilder();
+        return getSignFieldBuilder().getBuilder();
       }
       /**
        * <pre>
-       *Signv(Gv,Ga)
+       *======TIMESTAMP RESPONSE========//
        * </pre>
        *
-       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+       * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
        */
-      public sire.messages.Messages.ProtoSchnorrOrBuilder getSignatureSessionKeysOrBuilder() {
-        if (signatureSessionKeysBuilder_ != null) {
-          return signatureSessionKeysBuilder_.getMessageOrBuilder();
+      public sire.messages.Messages.ProtoSchnorrOrBuilder getSignOrBuilder() {
+        if (signBuilder_ != null) {
+          return signBuilder_.getMessageOrBuilder();
         } else {
-          return signatureSessionKeys_ == null ?
-              sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : signatureSessionKeys_;
+          return sign_ == null ?
+              sire.messages.Messages.ProtoSchnorr.getDefaultInstance() : sign_;
         }
       }
       /**
        * <pre>
-       *Signv(Gv,Ga)
+       *======TIMESTAMP RESPONSE========//
        * </pre>
        *
-       * <code>.sire.messages.ProtoSchnorr signatureSessionKeys = 9;</code>
+       * <code>.sire.messages.ProtoSchnorr sign = 7;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder> 
-          getSignatureSessionKeysFieldBuilder() {
-        if (signatureSessionKeysBuilder_ == null) {
-          signatureSessionKeysBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          getSignFieldBuilder() {
+        if (signBuilder_ == null) {
+          signBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               sire.messages.Messages.ProtoSchnorr, sire.messages.Messages.ProtoSchnorr.Builder, sire.messages.Messages.ProtoSchnorrOrBuilder>(
-                  getSignatureSessionKeys(),
+                  getSign(),
                   getParentForChildren(),
                   isClean());
-          signatureSessionKeys_ = null;
+          sign_ = null;
         }
-        return signatureSessionKeysBuilder_;
+        return signBuilder_;
       }
 
-      private com.google.protobuf.ByteString mac_ = com.google.protobuf.ByteString.EMPTY;
+      private com.google.protobuf.ByteString timestamp_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       *MAC_Km(content1)
+       *Can also be used for join response
        * </pre>
        *
-       * <code>bytes mac = 10;</code>
+       * <code>bytes timestamp = 8;</code>
        */
-      public com.google.protobuf.ByteString getMac() {
-        return mac_;
+      public com.google.protobuf.ByteString getTimestamp() {
+        return timestamp_;
       }
       /**
        * <pre>
-       *MAC_Km(content1)
+       *Can also be used for join response
        * </pre>
        *
-       * <code>bytes mac = 10;</code>
+       * <code>bytes timestamp = 8;</code>
        */
-      public Builder setMac(com.google.protobuf.ByteString value) {
+      public Builder setTimestamp(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        mac_ = value;
+        timestamp_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       *MAC_Km(content1)
+       *Can also be used for join response
        * </pre>
        *
-       * <code>bytes mac = 10;</code>
+       * <code>bytes timestamp = 8;</code>
        */
-      public Builder clearMac() {
+      public Builder clearTimestamp() {
         
-        mac_ = getDefaultInstance().getMac();
+        timestamp_ = getDefaultInstance().getTimestamp();
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.ByteString iv_ = com.google.protobuf.ByteString.EMPTY;
+      private com.google.protobuf.ByteString pubKey_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <pre>
-       *========JOIN RESPONSE===========//
-       * </pre>
-       *
-       * <code>bytes iv = 11;</code>
+       * <code>bytes pubKey = 9;</code>
        */
-      public com.google.protobuf.ByteString getIv() {
-        return iv_;
+      public com.google.protobuf.ByteString getPubKey() {
+        return pubKey_;
       }
       /**
-       * <pre>
-       *========JOIN RESPONSE===========//
-       * </pre>
-       *
-       * <code>bytes iv = 11;</code>
+       * <code>bytes pubKey = 9;</code>
        */
-      public Builder setIv(com.google.protobuf.ByteString value) {
+      public Builder setPubKey(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        iv_ = value;
+        pubKey_ = value;
         onChanged();
         return this;
       }
       /**
-       * <pre>
-       *========JOIN RESPONSE===========//
-       * </pre>
-       *
-       * <code>bytes iv = 11;</code>
+       * <code>bytes pubKey = 9;</code>
        */
-      public Builder clearIv() {
+      public Builder clearPubKey() {
         
-        iv_ = getDefaultInstance().getIv();
+        pubKey_ = getDefaultInstance().getPubKey();
         onChanged();
         return this;
       }
 
-      private com.google.protobuf.ByteString encryptedData_ = com.google.protobuf.ByteString.EMPTY;
+      private com.google.protobuf.ByteString hash_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <pre>
-       *Sign_V(Enc_A(data))
-       * </pre>
-       *
-       * <code>bytes encryptedData = 12;</code>
+       * <code>bytes hash = 10;</code>
        */
-      public com.google.protobuf.ByteString getEncryptedData() {
-        return encryptedData_;
+      public com.google.protobuf.ByteString getHash() {
+        return hash_;
       }
       /**
-       * <pre>
-       *Sign_V(Enc_A(data))
-       * </pre>
-       *
-       * <code>bytes encryptedData = 12;</code>
+       * <code>bytes hash = 10;</code>
        */
-      public Builder setEncryptedData(com.google.protobuf.ByteString value) {
+      public Builder setHash(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        encryptedData_ = value;
+        hash_ = value;
         onChanged();
         return this;
       }
       /**
-       * <pre>
-       *Sign_V(Enc_A(data))
-       * </pre>
-       *
-       * <code>bytes encryptedData = 12;</code>
+       * <code>bytes hash = 10;</code>
        */
-      public Builder clearEncryptedData() {
+      public Builder clearHash() {
         
-        encryptedData_ = getDefaultInstance().getEncryptedData();
+        hash_ = getDefaultInstance().getHash();
         onChanged();
         return this;
       }
@@ -8024,52 +7709,49 @@ public final class Messages {
       "\022\r\n\005sigma\030\001 \001(\014\022\022\n\nsignPubKey\030\002 \001(\014\022\024\n\014r" +
       "andomPubKey\030\003 \001(\014\"Z\n\rProtoEvidence\022\016\n\006an" +
       "chor\030\001 \001(\014\022\023\n\013watzVersion\030\002 \001(\t\022\r\n\005claim" +
-      "\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"\326\007\n\014ProxyM" +
+      "\030\003 \001(\014\022\025\n\rservicePubKey\030\004 \001(\014\"\271\007\n\014ProxyM" +
       "essage\0228\n\toperation\030\001 \001(\0162%.sire.message" +
       "s.ProxyMessage.Operation\022.\n\010evidence\030\002 \001" +
-      "(\0132\034.sire.messages.ProtoEvidence\022.\n\tsign" +
-      "ature\030\003 \001(\0132\033.sire.messages.ProtoSchnorr" +
-      "\022\022\n\ndataToSign\030\004 \001(\014\022\013\n\003key\030\005 \001(\t\022\r\n\005val" +
-      "ue\030\006 \001(\014\022\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 " +
-      "\001(\t\022\r\n\005appId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0227\n\006poli" +
-      "cy\030\013 \001(\0132\'.sire.messages.ProxyMessage.Pr" +
-      "otoPolicy\0222\n\ndeviceType\030\014 \001(\0162\036.sire.mes" +
-      "sages.ProtoDeviceType\022\021\n\tpubSesKey\030\r \001(\014" +
-      "\022,\n\004type\030\016 \001(\0162\036.sire.messages.ProtoDevi" +
-      "ceType\022\013\n\003mac\030\017 \001(\014\032+\n\013ProtoPolicy\022\016\n\006po" +
-      "licy\030\001 \001(\t\022\014\n\004type\030\002 \001(\010\"\323\003\n\tOperation\022\037" +
-      "\n\033ATTEST_GENERATE_SIGNING_KEY\020\000\022\"\n\036ATTES" +
-      "T_GET_VERIFIER_PUBLIC_KEY\020\001\022\031\n\025ATTEST_GE" +
-      "T_PUBLIC_KEY\020\002\022\024\n\020ATTEST_SIGN_DATA\020\003\022\021\n\r" +
-      "ATTEST_VERIFY\020\004\022\034\n\030ATTEST_GET_RANDOM_NUM" +
-      "BER\020\005\022\013\n\007MAP_PUT\020\006\022\016\n\nMAP_DELETE\020\007\022\013\n\007MA" +
-      "P_GET\020\010\022\014\n\010MAP_LIST\020\t\022\013\n\007MAP_CAS\020\n\022\026\n\022ME" +
-      "MBERSHIP_PREJOIN\020\013\022\023\n\017MEMBERSHIP_JOIN\020\014\022" +
-      "\024\n\020MEMBERSHIP_LEAVE\020\r\022\023\n\017MEMBERSHIP_VIEW" +
-      "\020\016\022\023\n\017MEMBERSHIP_PING\020\017\022\021\n\rEXTENSION_ADD" +
-      "\020\020\022\024\n\020EXTENSION_REMOVE\020\021\022\021\n\rEXTENSION_GE" +
-      "T\020\022\022\016\n\nPOLICY_ADD\020\023\022\021\n\rPOLICY_REMOVE\020\024\022\016" +
-      "\n\nPOLICY_GET\020\025\"\244\005\n\rProxyResponse\0227\n\004type" +
-      "\030\001 \001(\0162).sire.messages.ProxyResponse.Res" +
-      "ponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022@" +
-      "\n\007members\030\004 \003(\0132/.sire.messages.ProxyRes" +
-      "ponse.ProtoDeviceContext\022\021\n\textension\030\005 " +
-      "\001(\t\022\016\n\006policy\030\006 \001(\t\022\031\n\021verifierPubSesKey" +
-      "\030\007 \001(\014\022\026\n\016verifierPubKey\030\010 \001(\014\0229\n\024signat" +
-      "ureSessionKeys\030\t \001(\0132\033.sire.messages.Pro" +
-      "toSchnorr\022\013\n\003mac\030\n \001(\014\022\n\n\002iv\030\013 \001(\014\022\025\n\ren" +
-      "cryptedData\030\014 \001(\014\032\312\001\n\022ProtoDeviceContext" +
-      "\022\020\n\010deviceId\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.googl" +
-      "e.protobuf.Timestamp\0222\n\ndeviceType\030\003 \001(\016" +
-      "2\036.sire.messages.ProtoDeviceType\022\023\n\013cert" +
-      "ificate\030\004 \001(\014\022/\n\013certExpTime\030\005 \001(\0132\032.goo" +
-      "gle.protobuf.Timestamp\"m\n\014ResponseType\022\013" +
-      "\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rE" +
-      "XTENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004\022\013\n\007PREJOI" +
-      "N\020\005\022\010\n\004JOIN\020\006*g\n\017ProtoDeviceType\022\n\n\006CAME" +
-      "RA\020\000\022\017\n\013THERMOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n\005LIDA" +
-      "R\020\003\022\020\n\014MOTIONSENSOR\020\004\022\017\n\013LIGHTSENSOR\020\005b\006" +
-      "proto3"
+      "(\0132\034.sire.messages.ProtoEvidence\022\021\n\ttime" +
+      "stamp\030\003 \001(\014\022.\n\tsignature\030\004 \001(\0132\033.sire.me" +
+      "ssages.ProtoSchnorr\022\022\n\ndataToSign\030\005 \001(\014\022" +
+      "\013\n\003key\030\006 \001(\t\022\r\n\005value\030\007 \001(\014\022\017\n\007oldData\030\010" +
+      " \001(\014\022\020\n\010deviceId\030\t \001(\t\022\r\n\005appId\030\n \001(\t\022\014\n" +
+      "\004code\030\013 \001(\t\0227\n\006policy\030\014 \001(\0132\'.sire.messa" +
+      "ges.ProxyMessage.ProtoPolicy\0222\n\ndeviceTy" +
+      "pe\030\r \001(\0162\036.sire.messages.ProtoDeviceType" +
+      "\022\016\n\006pubKey\030\016 \001(\014\032+\n\013ProtoPolicy\022\016\n\006polic" +
+      "y\030\001 \001(\t\022\014\n\004type\030\002 \001(\010\"\341\003\n\tOperation\022\037\n\033A" +
+      "TTEST_GENERATE_SIGNING_KEY\020\000\022\"\n\036ATTEST_G" +
+      "ET_VERIFIER_PUBLIC_KEY\020\001\022\031\n\025ATTEST_GET_P" +
+      "UBLIC_KEY\020\002\022\024\n\020ATTEST_SIGN_DATA\020\003\022\021\n\rATT" +
+      "EST_VERIFY\020\004\022\034\n\030ATTEST_GET_RANDOM_NUMBER" +
+      "\020\005\022\013\n\007MAP_PUT\020\006\022\016\n\nMAP_DELETE\020\007\022\013\n\007MAP_G" +
+      "ET\020\010\022\014\n\010MAP_LIST\020\t\022\013\n\007MAP_CAS\020\n\022\023\n\017MEMBE" +
+      "RSHIP_JOIN\020\013\022\024\n\020MEMBERSHIP_LEAVE\020\014\022\023\n\017ME" +
+      "MBERSHIP_VIEW\020\r\022\023\n\017MEMBERSHIP_PING\020\016\022\021\n\r" +
+      "EXTENSION_ADD\020\017\022\024\n\020EXTENSION_REMOVE\020\020\022\021\n" +
+      "\rEXTENSION_GET\020\021\022\016\n\nPOLICY_ADD\020\022\022\021\n\rPOLI" +
+      "CY_REMOVE\020\023\022\016\n\nPOLICY_GET\020\024\022\021\n\rTIMESTAMP" +
+      "_GET\020\025\022\021\n\rTIMESTAMP_ATT\020\026\"\315\004\n\rProxyRespo" +
+      "nse\0227\n\004type\030\001 \001(\0162).sire.messages.ProxyR" +
+      "esponse.ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005va" +
+      "lue\030\003 \001(\014\022@\n\007members\030\004 \003(\0132/.sire.messag" +
+      "es.ProxyResponse.ProtoDeviceContext\022\021\n\te" +
+      "xtension\030\005 \001(\t\022\016\n\006policy\030\006 \001(\t\022)\n\004sign\030\007" +
+      " \001(\0132\033.sire.messages.ProtoSchnorr\022\021\n\ttim" +
+      "estamp\030\010 \001(\014\022\016\n\006pubKey\030\t \001(\014\022\014\n\004hash\030\n \001" +
+      "(\014\032\265\001\n\022ProtoDeviceContext\022\020\n\010deviceId\030\001 " +
+      "\001(\t\022(\n\004time\030\002 \001(\0132\032.google.protobuf.Time" +
+      "stamp\0222\n\ndeviceType\030\003 \001(\0162\036.sire.message" +
+      "s.ProtoDeviceType\022/\n\013certExpTime\030\004 \001(\0132\032" +
+      ".google.protobuf.Timestamp\"m\n\014ResponseTy" +
+      "pe\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022" +
+      "\021\n\rEXTENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004\022\013\n\007PR" +
+      "EJOIN\020\005\022\010\n\004JOIN\020\006*g\n\017ProtoDeviceType\022\n\n\006" +
+      "CAMERA\020\000\022\017\n\013THERMOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n\005" +
+      "LIDAR\020\003\022\020\n\014MOTIONSENSOR\020\004\022\017\n\013LIGHTSENSOR" +
+      "\020\005b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -8101,7 +7783,7 @@ public final class Messages {
     internal_static_sire_messages_ProxyMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProxyMessage_descriptor,
-        new java.lang.String[] { "Operation", "Evidence", "Signature", "DataToSign", "Key", "Value", "OldData", "DeviceId", "AppId", "Code", "Policy", "DeviceType", "PubSesKey", "Type", "Mac", });
+        new java.lang.String[] { "Operation", "Evidence", "Timestamp", "Signature", "DataToSign", "Key", "Value", "OldData", "DeviceId", "AppId", "Code", "Policy", "DeviceType", "PubKey", });
     internal_static_sire_messages_ProxyMessage_ProtoPolicy_descriptor =
       internal_static_sire_messages_ProxyMessage_descriptor.getNestedTypes().get(0);
     internal_static_sire_messages_ProxyMessage_ProtoPolicy_fieldAccessorTable = new
@@ -8113,13 +7795,13 @@ public final class Messages {
     internal_static_sire_messages_ProxyResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProxyResponse_descriptor,
-        new java.lang.String[] { "Type", "List", "Value", "Members", "Extension", "Policy", "VerifierPubSesKey", "VerifierPubKey", "SignatureSessionKeys", "Mac", "Iv", "EncryptedData", });
+        new java.lang.String[] { "Type", "List", "Value", "Members", "Extension", "Policy", "Sign", "Timestamp", "PubKey", "Hash", });
     internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor =
       internal_static_sire_messages_ProxyResponse_descriptor.getNestedTypes().get(0);
     internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor,
-        new java.lang.String[] { "DeviceId", "Time", "DeviceType", "Certificate", "CertExpTime", });
+        new java.lang.String[] { "DeviceId", "Time", "DeviceType", "CertExpTime", });
     com.google.protobuf.TimestampProto.getDescriptor();
   }
 

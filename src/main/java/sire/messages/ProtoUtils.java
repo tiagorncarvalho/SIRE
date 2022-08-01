@@ -27,15 +27,14 @@ public class ProtoUtils {
 
     public static Evidence protoToEvidence(Messages.ProtoEvidence evidence) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Evidence evi = new Evidence (byteStringToByteArray(out, evidence.getAnchor()), evidence.getWatzVersion(),
-                byteStringToByteArray(out, evidence.getClaim()), byteStringToByteArray(out, evidence.getServicePubKey()));
+        Evidence evi = new Evidence ( evidence.getWatzVersion(), byteStringToByteArray(out, evidence.getClaim()),
+                byteStringToByteArray(out, evidence.getServicePubKey()));
         out.close();
         return evi;
     }
 
     public static Messages.ProtoEvidence evidenceToProto(Evidence evidence) {
         return Messages.ProtoEvidence.newBuilder()
-                .setAnchor(ByteString.copyFrom(evidence.getAnchor()))
                 .setWatzVersion(evidence.getVersion())
                 .setClaim(ByteString.copyFrom(evidence.getClaim()))
                 .setServicePubKey(ByteString.copyFrom(evidence.getPubKey()))
@@ -92,4 +91,6 @@ public class ProtoUtils {
         }
         return new String(hexChars, StandardCharsets.UTF_8);
     }
+
+
 }

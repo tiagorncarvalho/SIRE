@@ -45,14 +45,13 @@ public class DeviceStub {
     private static Cipher symmetricCipher;
     private BigInteger attesterPrivateKey;
     private ECPoint attesterPublicKey;
-    private BigInteger attesterSessionPrivateKey;
-    private ECPoint attesterSessionPublicKey;
-    private ECPoint verifierSessionPublicKey;
-    private BigInteger sharedSecret;
-    private SecretKey symmetricEncryptionKey;
-    private byte[] macKey;
+    private Timestamp attestationTime;
+    SchnorrSignatureScheme scheme;
+    ECPoint verifierPublicKey;
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    public DeviceStub() throws NoSuchAlgorithmException, NoSuchPaddingException {
+    public DeviceStub() throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, ClassNotFoundException {
+        System.out.println("Start!");
         this.port = 2500 + 1;
         secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         messageDigest = MessageDigest.getInstance("SHA256");
@@ -62,100 +61,57 @@ public class DeviceStub {
         order = new BigInteger("FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551", 16);
         BigInteger a = new BigInteger("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC", 16);
         BigInteger b = new BigInteger("5AC635D8AA3A93E7B3EBBD55769886BC651D06B0CC53B0F63BCE3C3E27D2604B", 16);
-
+        scheme = new SchnorrSignatureScheme();
         BigInteger cofactor = prime.divide(order);
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
+        System.out.println("Halfway through!");
         try {
             this.s = new Socket("localhost", port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
+            System.out.println("Done!");
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        verifierPublicKey = getVerifierPublicKey();
     }
 
     public void attest(String appId, DeviceType type, String waTZVersion, byte[] claim) {
         try {
 
-            SchnorrSignatureScheme signatureScheme = new SchnorrSignatureScheme();
-            ECPoint verifierPublicKey = getVerifierPublicKey();
-            ECPoint curveGenerator = signatureScheme.getGenerator();
+            ECPoint curveGenerator = scheme.getGenerator();
             attesterPrivateKey = new BigInteger("4049546346519992604730332816858472394381393488413156548605745581385");
             attesterPublicKey = curveGenerator.multiply(attesterPrivateKey);
 
-            attesterSessionPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
-            attesterSessionPublicKey = curveGenerator.multiply(attesterSessionPrivateKey);
 
-            ProxyResponse msg1 = preJoin(appId, type);
-
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            byte[] verifierPubSesKey = byteStringToByteArray(out, msg1.getVerifierPubSesKey());
-            byte[] sessionPublicKeysHash = computeHash(verifierPubSesKey,
-                    attesterSessionPublicKey.getEncoded(true));
-
-            //computing shared keys
-            verifierSessionPublicKey = signatureScheme.decodePublicKey(verifierPubSesKey);
-            ECPoint sharedPoint = verifierSessionPublicKey.multiply(attesterSessionPrivateKey);
-            sharedSecret = sharedPoint.normalize().getXCoord().toBigInteger();
-            symmetricEncryptionKey = createSecretKey(sharedSecret.toString().toCharArray(), sessionPublicKeysHash);
-            macKey = symmetricEncryptionKey.getEncoded();//sharedSecret.toByteArray();
-
-            //checking validity of the message1
-            SchnorrSignature signatureOfSessionKeys = protoToSchnorr(msg1.getSignatureSessionKeys());
-            boolean isValidSessionSignature = signatureScheme.verifySignature(sessionPublicKeysHash, verifierPublicKey,
-                    signatureScheme.decodePublicKey(signatureOfSessionKeys.getRandomPublicKey()),
-                    new BigInteger(signatureOfSessionKeys.getSigma()));
-
-            if (!isValidSessionSignature) {
-                throw new IllegalStateException("Session keys signature is invalid");
-            }
-
-            byte[] verifierMac = byteStringToByteArray(out, msg1.getMac());
-            boolean isValidMac = verifyMac(macKey, verifierMac, verifierSessionPublicKey.getEncoded(true),
-                    verifierPublicKey.getEncoded(true), signatureOfSessionKeys.getRandomPublicKey(),
-                    verifierPublicKey.getEncoded(true), signatureOfSessionKeys.getSigma());
-
-            if (!isValidMac) {
-                throw new IllegalStateException("Mac of message1 is invalid");
-            }
-
-            byte[] verifierPubKey = byteStringToByteArray(out, msg1.getVerifierPubKey());
-            boolean isValidVerifierPublicKey = verifierPublicKey.equals(signatureScheme.decodePublicKey(verifierPubKey));
-            if (!isValidVerifierPublicKey) {
-                throw new IllegalStateException("Verifier's public key is invalid");
-            }
-
-            //creating the message2
-            byte[] anchor = computeHash(attesterSessionPublicKey.getEncoded(true),
-                    verifierSessionPublicKey.getEncoded(true));
-            Evidence evidence = new Evidence(anchor, waTZVersion, claim, attesterPublicKey.getEncoded(true));
-
-            byte[] signingHash = computeHash(
-                    anchor,
-                    attesterPublicKey.getEncoded(true),
-                    waTZVersion.getBytes(),
-                    claim
-            );
             BigInteger randomPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
             ECPoint randomPublicKey = curveGenerator.multiply(randomPrivateKey);
-            SchnorrSignature signature = signatureScheme.computeSignature(signingHash, attesterPrivateKey,
+            SchnorrSignature signature = scheme.computeSignature(computeHash(attesterPublicKey.getEncoded(true)), attesterPrivateKey,
                     attesterPublicKey, randomPrivateKey, randomPublicKey);
 
-            byte[] mac = computeMac(
-                    macKey,
-                    attesterSessionPublicKey.getEncoded(true),
-                    anchor,
+            Timestamp ts = getTimestamp(signature); //used in message2
+
+            System.out.println(ts);
+
+            //creating the message2
+            Evidence evidence = new Evidence(waTZVersion, claim, attesterPublicKey.getEncoded(true));
+
+            byte[] signingHash = computeHash(
                     attesterPublicKey.getEncoded(true),
                     waTZVersion.getBytes(),
-                    claim
+                    claim,
+                    serialize(ts),
+                    appId.getBytes()
             );
+            randomPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
+            randomPublicKey = curveGenerator.multiply(randomPrivateKey);
+            signature = scheme.computeSignature(signingHash, attesterPrivateKey,
+                    attesterPublicKey, randomPrivateKey, randomPublicKey);
 
-            ProxyResponse msg3 = join(appId, evidence, signature, mac);
+            attestationTime = join(appId, evidence, ts, signature);
 
-            byte[] decryptedData = decryptData(symmetricEncryptionKey, byteStringToByteArray(out, msg3.getIv()),
-                    byteStringToByteArray(out, msg3.getEncryptedData()));
-            System.out.println("Verifier sent me: " + new String(decryptedData));
-        } catch (IOException | SireException | InvalidKeySpecException | ClassNotFoundException | NoSuchAlgorithmException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -218,53 +174,82 @@ public class DeviceStub {
         return rndBig;
     }
 
-    private ProxyResponse preJoin(String appId, DeviceType type) throws IOException, ClassNotFoundException {
-        /*ProtoMessage0 msg0 = ProtoMessage0.newBuilder()
-                .setAttesterId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
-                .setType(ProtoDeviceType.forNumber(type.ordinal()))
-                .setAppId(appId)
-                .setAttesterPubSesKey(ByteString.copyFrom(attesterSessionPublicKey.getEncoded(true)))
-                .build();*/
+    //Generic one
+    private Timestamp getTimestamp(String appId) {
+        try {
+            ProxyMessage msg = ProxyMessage.newBuilder()
+                    .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                    .setAppId(appId)
+                    .setOperation(ProxyMessage.Operation.TIMESTAMP_GET)
+                    .build();
 
-        ProxyMessage msg0 = ProxyMessage.newBuilder()
-                .setOperation(ProxyMessage.Operation.MEMBERSHIP_PREJOIN)
-                .setAppId(appId)
-                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
-                .setPubSesKey(ByteString.copyFrom(attesterSessionPublicKey.getEncoded(true)))
-                .setType(ProtoDeviceType.forNumber(type.ordinal()))
-                .build();
+            this.oos.writeObject(msg);
 
-        System.out.println("Attesting!");
-
-        this.oos.writeObject(msg0);
-        Object o = this.ois.readObject();
-        if(o instanceof ProxyResponse msg1) {
-            System.out.println("Message 1 received!");
-            return msg1;
+            Object o = this.ois.readObject();
+            if(o instanceof ProxyResponse res)
+                return (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp()));
+            return null;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    private ProxyResponse join(String appId, Evidence evidence, SchnorrSignature sign, byte[] mac)
-            throws IOException, ClassNotFoundException {
-        System.out.println("Sending Message 2!");
-        ProxyMessage msg2 = ProxyMessage.newBuilder()
-                .setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
-                .setPubSesKey(ByteString.copyFrom(attesterSessionPublicKey.getEncoded(true)))
-                .setEvidence(evidenceToProto(evidence))
-                .setSignature(schnorrToProto(sign))
-                .setMac(ByteString.copyFrom(mac))
-                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
-                .setAppId(appId)
-                .build();
+    //First step of attestation
+    private Timestamp getTimestamp(SchnorrSignature sign) {
+        try {
+            ProxyMessage msg = ProxyMessage.newBuilder()
+                    .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                    .setOperation(ProxyMessage.Operation.TIMESTAMP_ATT)
+                    .setPubKey(ByteString.copyFrom(attesterPublicKey.getEncoded(true)))
+                    .setSignature(schnorrToProto(sign))
+                    .build();
 
-        this.oos.writeObject(msg2);
-        Object o = this.ois.readObject();
-        if(o instanceof ProxyResponse msg3) {
-            System.out.println("Message 2 received!");
-            return msg3;
+            this.oos.writeObject(msg);
+
+            Object o = this.ois.readObject();
+            if(o instanceof ProxyResponse res) {
+                /*SchnorrSignature schnorrSignature = protoToSchnorr(res.getSign());
+                boolean isSignatureValid = scheme.verifySignature(computeHash(byteStringToByteArray(baos, res.getTimestamp()),
+                        byteStringToByteArray(baos, res.getPubKey())), scheme.decodePublicKey(schnorrSignature.getSigningPublicKey()),
+                        scheme.decodePublicKey(schnorrSignature.getRandomPublicKey()), new BigInteger(schnorrSignature.getSigma()));
+
+                return isSignatureValid ? (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp())) : null;*/
+
+                return (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp()));
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
+        return null;
+    }
 
+    private Timestamp join(String appId, Evidence evidence, Timestamp ts, SchnorrSignature sign)
+            throws IOException, ClassNotFoundException {
+        ProxyMessage joinMsg = ProxyMessage.newBuilder()
+                .setAppId(appId)
+                .setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
+                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setEvidence(evidenceToProto(evidence))
+                .setTimestamp(ByteString.copyFrom(serialize(ts)))
+                .setPubKey(ByteString.copyFrom(attesterPublicKey.getEncoded(true)))
+                .setSignature(schnorrToProto(sign))
+                .build();
+        this.oos.writeObject(joinMsg);
+
+        Object o = this.ois.readObject();
+        if(o instanceof ProxyResponse res) {
+            byte[] hash = computeHash(joinMsg.toByteArray());
+            //SchnorrSignature schnorrSignature = protoToSchnorr(res.getSign());
+            boolean isSignatureValid = true;/*scheme.verifySignature(computeHash(byteStringToByteArray(baos, res.getTimestamp()),
+                            byteStringToByteArray(baos, res.getHash()), byteStringToByteArray(baos, res.getPubKey())),
+                    scheme.decodePublicKey(schnorrSignature.getSigningPublicKey()),
+                    scheme.decodePublicKey(schnorrSignature.getRandomPublicKey()), new BigInteger(schnorrSignature.getSigma()));*/
+
+            boolean isHashValid = Arrays.equals(hash, byteStringToByteArray(baos, res.getHash()));
+
+            return isSignatureValid && isHashValid ? (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp())) : null;
+        }
         return null;
     }
 
@@ -280,7 +265,7 @@ public class DeviceStub {
         System.out.println("Putting!");
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_PUT)
-                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
+                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
                 .setAppId(appId)
                 .setKey(key)
                 .setValue(ByteString.copyFrom(value))
@@ -292,7 +277,7 @@ public class DeviceStub {
     public void delete(String appId, String key) throws IOException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_DELETE)
-                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
+                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
                 .setAppId(appId)
                 .setKey(key)
                 .build();
@@ -303,7 +288,7 @@ public class DeviceStub {
     public byte[] getData(String appId, String key) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_GET)
-                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
+                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
                 .setAppId(appId)
                 .setKey(key)
                 .build();
@@ -313,8 +298,7 @@ public class DeviceStub {
             if(pr.getValue().equals(ByteString.EMPTY))
                 return null;
             else {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                return byteStringToByteArray(out, pr.getValue());
+                return byteStringToByteArray(baos, pr.getValue());
             }
         }
         return null;
@@ -324,17 +308,16 @@ public class DeviceStub {
     public List<byte[]> getList(String appId) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_LIST)
-                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
+                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
                 .setAppId(appId)
                 .build();
         this.oos.writeObject(msg);
         Object o = this.ois.readObject();
         if(o instanceof ProxyResponse) {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
             List<ByteString> res = ((ProxyResponse) o).getListList();
             ArrayList<byte[]> tmp = new ArrayList<>();
             for(ByteString b : res)
-                tmp.add(byteStringToByteArray(out, b));
+                tmp.add(byteStringToByteArray(baos, b));
             return tmp;
         }
         return null;
@@ -345,7 +328,7 @@ public class DeviceStub {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_CAS)
                 .setAppId(appId)
-                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
+                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
                 .setKey(key)
                 .setValue(ByteString.copyFrom(newData))
                 .setOldData(ByteString.copyFrom(oldData))
@@ -357,7 +340,7 @@ public class DeviceStub {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MEMBERSHIP_LEAVE)
                 .setAppId(appId)
-                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
+                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
                 .build();
         this.oos.writeObject(msg);
     }
@@ -366,7 +349,7 @@ public class DeviceStub {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MEMBERSHIP_PING)
                 .setAppId(appId)
-                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
+                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
                 .build();
         this.oos.writeObject(msg);
     }
@@ -374,7 +357,7 @@ public class DeviceStub {
     public List<DeviceContext> getView(String appId) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MEMBERSHIP_VIEW)
-                .setDeviceId(bytesToHex(computeHash(attesterSessionPublicKey.getEncoded(true))))
+                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
                 .setAppId(appId)
                 .build();
         this.oos.writeObject(msg);
@@ -385,8 +368,7 @@ public class DeviceStub {
             ArrayList<DeviceContext> tmp = new ArrayList<>();
             for(ProxyResponse.ProtoDeviceContext d : res) {
                 DeviceContext dev = new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000),
-                        protoDevToDev(d.getDeviceType()), byteStringToByteArray(new ByteArrayOutputStream(),
-                        d.getCertificate()), new Timestamp(d.getCertExpTime().getSeconds() * 1000));
+                        protoDevToDev(d.getDeviceType()), new Timestamp(d.getCertExpTime().getSeconds() * 1000));
                 tmp.add(dev);
             }
             return tmp;

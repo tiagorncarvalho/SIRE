@@ -22,12 +22,11 @@ public class MembershipManager {
     }
 
 
-    public void join(String appId, String deviceId, Timestamp timestamp, DeviceContext.DeviceType deviceType,
-                     byte[] certificate) {
+    public void join(String appId, String deviceId, Timestamp timestamp, DeviceContext.DeviceType deviceType) {
         MemberParams res = extensionManager.runExtensionMember(appId, ExtensionType.EXT_JOIN, deviceId, new MemberParams(appId, deviceId));
         if(!membership.containsKey(appId))
             membership.put(appId, new AppContext(appId, timeout, certTimeout));
-        membership.get(res.getAppId()).addDevice(res.getDeviceId(), new DeviceContext(res.getDeviceId(), timestamp, deviceType, certificate,
+        membership.get(appId).addDevice(deviceId, new DeviceContext(deviceId, timestamp, deviceType,
                 new Timestamp(timestamp.getTime() + certTimeout)));
     }
 
@@ -40,13 +39,13 @@ public class MembershipManager {
 
     public void ping(String appId, String deviceId, Timestamp timestamp) {
         MemberParams res = extensionManager.runExtensionMember(appId, ExtensionType.EXT_PING, deviceId, new MemberParams(appId, deviceId));
-        membership.get(res.getAppId()).updateDeviceTimestamp(res.getDeviceId(), timestamp);
+        membership.get(appId).updateDeviceTimestamp(deviceId, timestamp);
     }
 
 
     public List<DeviceContext> getView(String appId) {
         MemberParams res = extensionManager.runExtensionMember(appId, ExtensionType.EXT_VIEW, "", new MemberParams(appId, null));
-        return membership.get(res.getAppId()).getMembership();
+        return membership.get(appId).getMembership();
     }
 
     public boolean containsApp(String appId) {

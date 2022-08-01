@@ -4,9 +4,13 @@ import org.bouncycastle.math.ec.ECPoint;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+
+import static sire.messages.ProtoUtils.serialize;
 
 public class VerifierManager {
     SchnorrSignatureScheme signatureScheme;
@@ -36,7 +40,7 @@ public class VerifierManager {
         policyManager = PolicyManager.getInstance();
     }
 
-    public boolean verifyEvidence(String appId, DeviceEvidence deviceEvidence) {
+    public boolean verifyEvidence(String appId, DeviceEvidence deviceEvidence, byte[] ts) throws IOException {
         Evidence evidence = deviceEvidence.getEvidence();
         ECPoint attesterPublicKey = signatureScheme.decodePublicKey(evidence
                 .getPubKey());
@@ -45,10 +49,11 @@ public class VerifierManager {
         }*/
 
         byte[] signingHash = computeHash(
-                evidence.getAnchor(),
                 attesterPublicKey.getEncoded(true),
                 evidence.getVersion().getBytes(),
-                evidence.getClaim()
+                evidence.getClaim(),
+                ts,
+                appId.getBytes()
         );
         SchnorrSignature evidenceSignature = deviceEvidence.getEvidenceSignature();
         boolean isValidSignature = signatureScheme.verifySignature(

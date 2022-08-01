@@ -101,49 +101,51 @@ message ProxyMessage {
     MAP_LIST = 9;
     MAP_CAS = 10;
     //-----------MEMBERSHIP-----------
-    MEMBERSHIP_PREJOIN = 11;
-    MEMBERSHIP_JOIN = 12;
-    MEMBERSHIP_LEAVE = 13;
-    MEMBERSHIP_VIEW = 14;
-    MEMBERSHIP_PING = 15;
+    MEMBERSHIP_JOIN = 11;
+    MEMBERSHIP_LEAVE = 12;
+    MEMBERSHIP_VIEW = 13;
+    MEMBERSHIP_PING = 14;
     //-----------EXTENSION------------
-    EXTENSION_ADD = 16;
-    EXTENSION_REMOVE = 17;
-    EXTENSION_GET = 18;
+    EXTENSION_ADD = 15;
+    EXTENSION_REMOVE = 16;
+    EXTENSION_GET = 17;
     //-------------POLICY-------------
-    POLICY_ADD = 19;
-    POLICY_REMOVE = 20;
-    POLICY_GET = 21;
+    POLICY_ADD = 18;
+    POLICY_REMOVE = 19;
+    POLICY_GET = 20;
+    //-----------TIMESTAMP------------
+    TIMESTAMP_GET = 21;
+    TIMESTAMP_ATT = 22;
   }
   Operation operation = 1;
+
+  //=========JOIN REQUEST===========//
   ProtoEvidence evidence = 2;
-  ProtoSchnorr signature = 3;
-  bytes dataToSign = 4;
+  bytes timestamp = 3;
+  ProtoSchnorr signature = 4;
 
-  string key = 5;
-  bytes value = 6; //also serves as newData
-  bytes oldData = 7;
 
-  string deviceId = 8;
-  string appId = 9;
+  bytes dataToSign = 5;
 
-  string code = 10;
+  string key = 6;
+  bytes value = 7; //also serves as newData
+  bytes oldData = 8;
+
+  string deviceId = 9;
+  string appId = 10;
+
+  string code = 11;
 
   message ProtoPolicy {
     string policy = 1;
     bool type = 2; //false = logic expression, true = script
   }
 
-  ProtoPolicy policy = 11;
-  ProtoDeviceType deviceType = 12;
+  ProtoPolicy policy = 12;
+  ProtoDeviceType deviceType = 13;
 
-  //========PREJOIN REQUEST==========//
-  bytes pubSesKey = 13;
-  ProtoDeviceType type = 14;
-
-  //=========JOIN REQUEST===========//
-  bytes mac = 15;
-
+  //========INITIAL REQUEST==========//
+  bytes pubKey = 14;
 }
 
 message ProxyResponse {
@@ -163,20 +165,15 @@ message ProxyResponse {
     string deviceId = 1;
     google.protobuf.Timestamp time = 2;
     ProtoDeviceType deviceType = 3;
-    bytes certificate = 4;
-    google.protobuf.Timestamp certExpTime = 5;
+    google.protobuf.Timestamp certExpTime = 4;
   }
   repeated ProtoDeviceContext members = 4;
   string extension = 5;
   string policy = 6;
 
-  //======PREJOIN RESPONSE==========//
-  bytes verifierPubSesKey = 7; //Gv
-  bytes verifierPubKey = 8; //V
-  ProtoSchnorr signatureSessionKeys = 9;  //Signv(Gv,Ga)
-  bytes mac = 10; //MAC_Km(content1)
-
-  //========JOIN RESPONSE===========//
-  bytes iv = 11; //iv
-  bytes encryptedData = 12; //Sign_V(Enc_A(data))
+  //======TIMESTAMP RESPONSE========//
+  ProtoSchnorr sign = 7;
+  bytes timestamp = 8; //Can also be used for join response
+  bytes pubKey = 9;
+  bytes hash = 10;
 }

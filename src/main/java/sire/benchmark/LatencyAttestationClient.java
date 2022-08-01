@@ -37,7 +37,7 @@ public class LatencyAttestationClient {
     private static final String appId = "app1";
     private static final String waTZVersion = "1.0";
 
-    public static void main(String[] args) throws InterruptedException, NoSuchPaddingException, NoSuchAlgorithmException, ClassNotFoundException {
+    public static void main(String[] args) throws InterruptedException, NoSuchPaddingException, NoSuchAlgorithmException, ClassNotFoundException, IOException {
         if (args.length != 5) {
             System.out.println("USAGE: benchmark.LatencyAttestationClient <initial client id> " +
                     "<num clients> <number of ops> <operation> <measurement leader?>");

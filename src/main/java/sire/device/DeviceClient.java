@@ -19,7 +19,7 @@ import static sire.messages.ProtoUtils.serialize;
  */
 public class DeviceClient {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException {
+	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, ClassNotFoundException {
 
 		String appId = "app1";
 		String waTZVersion = "1.0";

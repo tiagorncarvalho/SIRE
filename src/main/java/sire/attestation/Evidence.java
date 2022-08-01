@@ -11,22 +11,16 @@ import java.io.ObjectOutput;
  * @author robin
  */
 public class Evidence implements Externalizable {
-	private byte[] anchor;
 	private String version;
 	private byte[] claim;
 	private byte[] pubKey;
 
 	public Evidence() {}
 
-	public Evidence(byte[] anchor, String version, byte[] claim, byte[] pubKey) {
-		this.anchor = anchor;
+	public Evidence( String version, byte[] claim, byte[] pubKey) {
 		this.version = version;
 		this.claim = claim;
 		this.pubKey = pubKey;
-	}
-
-	public byte[] getAnchor() {
-		return anchor;
 	}
 
 	public String getVersion() {
@@ -43,7 +37,6 @@ public class Evidence implements Externalizable {
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
-		ProtoUtils.writeByteArray(out, anchor);
 		out.writeUTF(version);
 		ProtoUtils.writeByteArray(out, claim);
 		ProtoUtils.writeByteArray(out, pubKey);
@@ -51,7 +44,6 @@ public class Evidence implements Externalizable {
 
 	@Override
 	public void readExternal(ObjectInput in) throws IOException {
-		anchor = ProtoUtils.readByteArray(in);
 		version = in.readUTF();
 		claim = ProtoUtils.readByteArray(in);
 		pubKey = ProtoUtils.readByteArray(in);
