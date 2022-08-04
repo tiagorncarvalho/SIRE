@@ -568,6 +568,26 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	@Override
 	public ConfidentialMessage appExecuteUnordered(byte[] bytes, VerifiableShare[] verifiableShares, MessageContext messageContext) {
+		try {
+			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
+			ProxyMessage.Operation op = msg.getOperation();
+			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
+				membership.ping(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
+			if(op.toString().startsWith("MAP"))
+				return executeOrderedMap(msg);
+			else if(op.toString().startsWith("EXTENSION"))
+				return executeOrderedManagement(msg);
+			else if(op.toString().startsWith("POLICY"))
+				return executeOrderedPolicy(msg);
+			else if(op.toString().startsWith("MEMBERSHIP"))
+				return executeOrderedMembership(msg, messageContext);
+			else if(op.toString().startsWith("ATTEST"))
+				return executeOrderedAttestation(msg, messageContext);
+			else if(op.toString().startsWith("TIMESTAMP"))
+				return executeOrderedTimestamp(msg, messageContext);
+		} catch (IOException | SireException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 

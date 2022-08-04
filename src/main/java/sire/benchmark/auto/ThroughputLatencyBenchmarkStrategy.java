@@ -68,8 +68,8 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
         this.maxLatency = new double[totalRounds];
         this.maxThroughput = new double[totalRounds];
         this.sleepBetweenRounds = 10;
-        this.numRequests = 500;
-        this.operation = "mapGet";//attest or getKey
+        this.numRequests = 10_000_000;
+        this.operation = "mapGet";
         this.clients = configuration.getClientsPerRound();
         for (int i = 0; i < clients.length; i++) {
             clients[i]--;
@@ -79,11 +79,12 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
 
         String initialServerCommand = "java -Xmx28g -Djava.security.properties=./config/java" +
                 ".security -Dlogback.configurationFile=./config/logback.xml -cp lib/* ";
-        String initialClientCommand = "java -Xmx4g -Djava.security.properties=./config/java" +
+        String initialClientCommand = "java -Xmx28g -Djava.security.properties=./config/java" +
                 ".security -Dlogback.configurationFile=./config/logback.xml -cp lib/* ";
 
         this.serverCommand = initialServerCommand + "sire.benchmark.ThroughputLatencyVerifierServer ";
-        this.clientCommand = initialClientCommand + "sire.benchmark.LatencyAttestationClient ";
+        //this.clientCommand = initialClientCommand + "sire.benchmark.LatencyAttestationClient ";
+        this.clientCommand = initialClientCommand + "sire.benchmark.PreComputedProxy ";
     }
 
     @Override
@@ -110,6 +111,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                 }
                 serversMaster.startWorkers(0, serverCommands);
                 serversReadyCounter.await();
+                //System.in.read();
 
 
                 System.out.println("Starting clients");
@@ -118,8 +120,8 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                 WorkerCommands[] clientCommands = new WorkerCommands[1 + clientsPerPod.length];
                 clientCommands[0] = new WorkerCommands(
                         measurementClientId, new ProcessInfo[]{
-                        new ProcessInfo(clientCommand + clientId + " 1 " + numRequests + " "
-                                 + operation + " true", workingDirectory)
+                        //new ProcessInfo(clientCommand + "1 " + numRequests + " " + operation + " true", workingDirectory)
+                        new ProcessInfo(clientCommand + clientId + " 1 " + numRequests + " " + operation + " true", workingDirectory)
                 });
                 clientId++;
                 for (int i = 0; i < clientsPerPod.length; i++) {
@@ -130,8 +132,8 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
                     ProcessInfo[] processes = new ProcessInfo[numOfWorkers];
                     for (int j = 0; j < numOfWorkers; j++) {
                         int clientsPerWorker = Math.min(totalClientsPerPod, maxClientsPerWorker);
-                        String command = clientCommand + clientId + " " + clientsPerWorker + " " + numRequests + " "
-                                + operation + " false";
+                        //String command = clientCommand + j + " " + numRequests + " " + operation;
+                        String command = clientCommand + clientId + " "  + clientsPerWorker + " " + numRequests + " " + operation + " false";
                         totalClientsPerPod -= clientsPerWorker;
                         processes[j] = new ProcessInfo(command, workingDirectory);
                         clientId += clientsPerWorker;

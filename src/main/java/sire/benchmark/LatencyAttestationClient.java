@@ -1,21 +1,5 @@
 package sire.benchmark;
 
-/*import sire.device.DeviceStub;
-import sire.messages.Messages;
-import sire.membership.DeviceContext;
-
-import javax.crypto.NoSuchPaddingException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;*/
-
 import sire.device.DeviceStub;
 import sire.membership.DeviceContext;
 import sire.messages.Messages;
@@ -35,10 +19,10 @@ public class LatencyAttestationClient {
 
     //private static String initialId;
     private static final String appId = "app1";
-    private static final String waTZVersion = "1.0";
+    private static final String version = "1.0";
 
     public static void main(String[] args) throws InterruptedException, NoSuchPaddingException, NoSuchAlgorithmException, ClassNotFoundException, IOException {
-        if (args.length != 5) {
+        if (args.length != 4) {
             System.out.println("USAGE: benchmark.LatencyAttestationClient <initial client id> " +
                     "<num clients> <number of ops> <operation> <measurement leader?>");
             System.exit(-1);
@@ -46,24 +30,24 @@ public class LatencyAttestationClient {
         //initialId = args[0];
         DeviceContext.DeviceType type = DeviceContext.DeviceType.CAMERA;
         byte[] claim = "measure1".getBytes();
-        int numClients = Integer.parseInt(args[1]);
-        int numOperations = Integer.parseInt(args[2]);
+        int numClients = Integer.parseInt(args[0]);
+        int numOperations = Integer.parseInt(args[1]);
         Messages.ProxyMessage.Operation operation;
-        if((operation = operationFromString(args[3])) == null) {
+        if((operation = operationFromString(args[2])) == null) {
             System.out.println("Couldn't parse operation. Available operations:\n - attest\n - getKey");
             System.exit(-1);
         }
 
         System.out.println("Operation: " + operation);
 
-        boolean measurementLeader = Boolean.parseBoolean(args[4]);
+        boolean measurementLeader = Boolean.parseBoolean(args[3]);
 
         Random random = new Random(1L);
         byte[] value = new byte[1024];
         random.nextBytes(value);
 
         DeviceStub stub = new DeviceStub();
-        stub.attest(appId, type, waTZVersion, claim);
+        //stub.attest(appId, type, version, claim);
 
         Client[] clients = new Client[numClients];
         for (int i = 0; i < numClients; i++) {
@@ -72,7 +56,7 @@ public class LatencyAttestationClient {
 
             if (i > 0) {
                 stub = new DeviceStub();
-                stub.attest(appId, type, waTZVersion, claim);
+                //stub.attest(appId, type, version, claim);
             }
 
             String id = Integer.toString(i);
@@ -82,7 +66,7 @@ public class LatencyAttestationClient {
                     System.out.println("Sending op!");
                     try {
                         switch (operation) {
-                            case ATTEST_VERIFY -> stub.attest(appId, type, waTZVersion, claim);
+                            case ATTEST_VERIFY -> stub.attest(appId, type, version, claim);
                             case MAP_PUT -> stub.put(appId, id, value);
                             case MAP_GET -> stub.getData(appId, "key");
                         }

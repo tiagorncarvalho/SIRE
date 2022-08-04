@@ -8,6 +8,7 @@ public class CoordinationManager {
 
     public CoordinationManager() {
         storage = new TreeMap<>();
+        storage.put("app1j7dw0sr5dhh9itj87spjb9dvkb358u5t6jn95j6wdfl1", "wwehfuq652ru0ibdr79eddqmwmhpmcjfz0hx3ihee3gu".getBytes()); //just for benchmarking
         extensionManager = ExtensionManager.getInstance();
     }
 

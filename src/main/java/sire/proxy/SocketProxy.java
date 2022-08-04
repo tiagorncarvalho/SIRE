@@ -16,26 +16,16 @@ import sire.serverProxyUtils.*;
 import static sire.messages.ProtoUtils.*;
 
 import sire.messages.Messages.*;
-import sire.schnorr.PublicPartialSignature;
-import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
-import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.facade.SecretSharingException;
-import vss.secretsharing.Share;
-import vss.secretsharing.VerifiableShare;
 import javax.crypto.*;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.*;
 
 /**
@@ -43,22 +33,22 @@ import java.util.*;
  */
 
 public class SocketProxy implements Runnable {
-	//TODO Remove responsibility of combining shares... Rethink attestation protocol asap
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
 	private final MessageDigest messageDigest;
 	private final ECPoint verifierPublicKey;
 	private final SchnorrSignatureScheme signatureScheme;
-	private final Map<String, AttesterContext> attesters;
+/*	private final Map<String, AttesterContext> attesters;*/
 	private final SecureRandom rndGenerator = new SecureRandom("sire".getBytes());
 	private final CMac macEngine;
-	private final SecretKeyFactory secretKeyFactory;
+/*	private final SecretKeyFactory secretKeyFactory;
 	private final ECPoint curveGenerator;
-	private final Cipher symmetricCipher;
+	private final Cipher symmetricCipher;*/
 	private final int proxyId;
 	private final Object proxyLock;
 
 	public SocketProxy(int proxyId) throws SireException{
+		System.out.println("Proxy start!");
 		this.proxyId = proxyId;
 
 		try {
@@ -68,16 +58,17 @@ public class SocketProxy implements Runnable {
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to contact the distributed verifier", e);
 		}
+		System.out.println("Connection established!");
 		try {
 			messageDigest = MessageDigest.getInstance("SHA256");
 			BlockCipher aes = new AESEngine();
 
 			macEngine = new CMac(aes);
-			secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+			//secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			signatureScheme = new SchnorrSignatureScheme();
-			curveGenerator = signatureScheme.getGenerator();
-			symmetricCipher = Cipher.getInstance("AES/GCM/NoPadding");
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			//curveGenerator = signatureScheme.getGenerator();
+			//symmetricCipher = Cipher.getInstance("AES/GCM/NoPadding");
+		} catch (NoSuchAlgorithmException e) {
 			throw new SireException("Failed to initialize cryptographic tools", e);
 		}
 		Response response;
@@ -92,7 +83,7 @@ public class SocketProxy implements Runnable {
 		}
 		verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
 
-		attesters = new HashMap<>();
+		//attesters = new HashMap<>();
 	}
 
 	@Override
@@ -150,8 +141,12 @@ public class SocketProxy implements Runnable {
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {
 			Response res;
-			synchronized (proxyLock) {
-				res = serviceProxy.invokeOrdered(msg.toByteArray());
+			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW"))
+				res = serviceProxy.invokeUnordered(msg.toByteArray());
+			else {
+				synchronized (proxyLock) {
+					res = serviceProxy.invokeOrdered(msg.toByteArray());
+				}
 			}
 
 			return switch(msg.getOperation()) {
@@ -314,7 +309,7 @@ public class SocketProxy implements Runnable {
 		}
 
 
-		private SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {
+		/*private SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {
 			KeySpec spec = new PBEKeySpec(password, salt, 65536, AES_KEY_LENGTH);
 			return new SecretKeySpec(secretKeyFactory.generateSecret(spec).getEncoded(), "AES");
 		}
@@ -383,7 +378,7 @@ public class SocketProxy implements Runnable {
 				throw new SireException("Failed to combine partial signatures", e);
 			}
 
-		}
+		}*/
 
 		private byte[] computeHash(byte[]... contents) {
 			for (byte[] content : contents) {

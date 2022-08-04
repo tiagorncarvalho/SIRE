@@ -22,11 +22,11 @@ public class DeviceClient {
 	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, ClassNotFoundException {
 
 		String appId = "app1";
-		String waTZVersion = "1.0";
+		String version = "1.0";
 		DeviceType type = DeviceType.MOTIONSENSOR;
 		byte[] claim = "measure1".getBytes();
 		DeviceStub dummy = new DeviceStub();
-		dummy.attest(appId, type, waTZVersion, claim);
+		dummy.attest(appId, type, version, claim);
 		Random rng = new Random(1L);
 		int var = rng.nextInt();
 

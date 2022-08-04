@@ -5,6 +5,7 @@ import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.core.messages.TOMMessage;
+import com.google.protobuf.ByteString;
 import confidential.ConfidentialMessage;
 import confidential.facade.server.ConfidentialSingleExecutable;
 import confidential.polynomial.DistributedPolynomialManager;
@@ -17,18 +18,13 @@ import org.bouncycastle.math.ec.ECPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sire.attestation.DeviceEvidence;
-import sire.attestation.PolicyManager;
 import sire.attestation.VerifierManager;
 import sire.coordination.CoordinationManager;
-import sire.coordination.ExtParams;
-import sire.coordination.ExtensionManager;
-import sire.coordination.ExtensionType;
 import sire.membership.MembershipManager;
 import sire.messages.Messages;
 import sire.schnorr.PublicPartialSignature;
+import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
-import sire.membership.AppContext;
-import sire.membership.DeviceContext;
 import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.commitment.linear.LinearCommitments;
@@ -75,7 +71,6 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     private VerifiableShare verifierSigningPrivateKeyShare;
     private ECPoint verifierSigningPublicKey;
 
-    private final byte[] dummyDataForAttester = "Sire".getBytes();
     //private final ECPoint dummyAttesterPublicKey;
 
     //key value store for information concerning devices, applications and more
@@ -87,11 +82,13 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     private final MembershipManager membership;
 
     //runs and stores extensions
-    private final ExtensionManager extensionManager = ExtensionManager.getInstance();
+    MessageDigest messageDigest;
 
     //verifies the evidence
     private final VerifierManager verifierManager;
-    private static PolicyManager policyManager;
+
+    private final int timebound = 500; //in milliseconds
+    private final Map<String, Timestamp> devicesTimestamps;
 
 
     //For throughput measurement
@@ -123,12 +120,13 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         cr = new ConfidentialRecoverable(id, this);
         serviceReplica = new ServiceReplica(id, cr, cr, null, null, null, null, cr);
         verifierManager = new VerifierManager();
-        policyManager = PolicyManager.getInstance();
         serverCommunicationSystem = serviceReplica.getServerCommunicationSystem();
         distributedPolynomialManager = cr.getDistributedPolynomialManager();
         distributedPolynomialManager.setRandomPolynomialListener(this);
         distributedPolynomialManager.setRandomKeyPolynomialListener(this);
         schnorrSignatureScheme = new SchnorrSignatureScheme();
+        messageDigest = MessageDigest.getInstance("SHA256");
+        devicesTimestamps = new TreeMap<>();
 
         startTime = System.nanoTime();
     }
@@ -140,12 +138,39 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.parseFrom(bytes);
             Messages.ProxyMessage.Operation op = msg.getOperation();
+
             if(op.toString().startsWith("MAP"))
                 return executeOrderedMap(msg);
-            else if(op.toString().startsWith("ATTEST"))
-                return executeOrderedAttestation(msg, messageContext);
+            else if(op.toString().startsWith("TIMESTAMP"))
+                return executeOrderedTimestamp(msg, messageContext);
             else if(op.toString().startsWith("MEMBERSHIP"))
                 return executeOrderedMembership(msg, messageContext);
+            else if(op.toString().startsWith("ATTEST"))
+                return executeOrderedAttestation(msg, messageContext);
+        } catch (IOException | SireException e) {
+            e.printStackTrace();
+        } finally {
+            printMeasurement();
+        }
+        return null;
+    }
+
+    @Override
+    public ConfidentialMessage appExecuteUnordered(byte[] bytes, VerifiableShare[] verifiableShares, MessageContext messageContext) {
+        numRequests++;
+        senders.add(messageContext.getSender());
+        try {
+            Messages.ProxyMessage msg = Messages.ProxyMessage.parseFrom(bytes);
+            Messages.ProxyMessage.Operation op = msg.getOperation();
+
+            if(op.toString().startsWith("MAP"))
+                return executeOrderedMap(msg);
+            else if(op.toString().startsWith("TIMESTAMP"))
+                return executeOrderedTimestamp(msg, messageContext);
+            else if(op.toString().startsWith("MEMBERSHIP"))
+                return executeOrderedMembership(msg, messageContext);
+            else if(op.toString().startsWith("ATTEST"))
+                return executeOrderedAttestation(msg, messageContext);
         } catch (IOException | SireException e) {
             e.printStackTrace();
         } finally {
@@ -172,74 +197,74 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
 
     private ConfidentialMessage executeOrderedAttestation(Messages.ProxyMessage msg, MessageContext messageContext) throws IOException {
         Messages.ProxyMessage.Operation op = msg.getOperation();
-        switch(op) {
-            case ATTEST_GENERATE_SIGNING_KEY -> {
-                try {
-                    lock.lock();
-                    if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
-                        signingKeyRequests.add(messageContext);
-                        generateSigningKey();
-                    } else if (verifierSigningPrivateKeyShare != null) {
-                        logger.warn("I already have a signing key.");
-                        System.out.println("Signing key already created...");
-                        return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
-                    } else {
-                        logger.warn("Signing key is being created.");
-                    }
-                } finally {
-                    lock.unlock();
-                }
-            }
-            case ATTEST_GET_PUBLIC_KEY -> {
+        if (op == Messages.ProxyMessage.Operation.ATTEST_GENERATE_SIGNING_KEY) {
+            try {
+                lock.lock();
                 if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
                     signingKeyRequests.add(messageContext);
                     generateSigningKey();
-                } else if (verifierSigningPrivateKeyShare != null){
+                } else if (verifierSigningPrivateKeyShare != null) {
+                    logger.warn("I already have a signing key.");
+                    System.out.println("Signing key already created...");
                     return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
-                }
-            }
-            case ATTEST_SIGN_DATA -> {
-                lock.lock();
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                byte[] data = byteStringToByteArray(out, msg.getDataToSign());
-                signingData.put(messageContext.getSender(), data);
-                generateRandomKey(messageContext);
-                out.close();
-                lock.unlock();
-            }
-/*            case ATTEST_VERIFY -> {
-                DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
-                        protoToSchnorr(msg.getSignature()));
-                boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence);
-                byte[] plainData;
-                if (isValidEvidence) {
-                    plainData = new byte[dummyDataForAttester.length + 1];
-                    plainData[0] = 1;
-                    System.arraycopy(dummyDataForAttester, 0, plainData, 1,
-                            dummyDataForAttester.length);
                 } else {
-                    plainData = new byte[] {0};
+                    logger.warn("Signing key is being created.");
                 }
-
-                return new ConfidentialMessage(plainData);
-            }*/
-            case ATTEST_GET_RANDOM_NUMBER -> {
-                lock.lock();
-                VerifiableShare	share = data.get(messageContext.getSender());
-                if (share == null)
-                    generateRandomNumberFor(messageContext);
-                else {
-                    logger.debug("Sending existing random number share to {}", messageContext.getSender());
-                    sendRandomNumberShareTo(messageContext, share);
-                }
+            } finally {
                 lock.unlock();
             }
         }
         return null;
     }
 
+    private ConfidentialMessage executeOrderedTimestamp(Messages.ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
+        Messages.ProxyMessage.Operation op = msg.getOperation();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Timestamp ts = new Timestamp(messageContext.getTimestamp());
+        Messages.ProxyResponse response;
+        switch(op) {
+            case TIMESTAMP_GET -> {
+                lock.lock();
+                response = Messages.ProxyResponse.newBuilder()
+                        .setTimestamp(ByteString.copyFrom(serialize(ts)))
+                        .build();
+                lock.unlock();
+                return new ConfidentialMessage(response.toByteArray());
+            }
+            case TIMESTAMP_ATT -> {
+                lock.lock();
+                SchnorrSignature sign = protoToSchnorr(msg.getSignature());
+                boolean isValid = schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),
+                        schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey())),
+                        schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey()), new BigInteger(sign.getSigma()));
+                if(isValid) {
+                    //byte[] data = concat(serialize(ts), byteStringToByteArray(baos, msg.getPubKey()));
+                    devicesTimestamps.put(msg.getDeviceId(), ts);
+                    response = Messages.ProxyResponse.newBuilder()
+                            .setTimestamp(ByteString.copyFrom(serialize(ts)))
+                            .setPubKey(msg.getPubKey())
+                            //.setSign()
+                            .build();
+                    baos.close();
+                    lock.unlock();
+
+                    return new ConfidentialMessage(response.toByteArray());
+					/*
+					signingData.put(messageContext.getSender(), data);
+					System.out.println(Arrays.toString(data));
+					generateRandomKey(messageContext);*/
+
+                } else {
+                    throw new SireException("Invalid signature!");
+                }
+            }
+        }
+        return null;
+    }
+
     private ConfidentialMessage executeOrderedMembership(Messages.ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
-       Messages.ProxyMessage.Operation op = msg.getOperation();
+        Messages.ProxyMessage.Operation op = msg.getOperation();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if(op != Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
             throw new SireException("Unknown Device: Not attested or not in this app membership.");
         switch(op) {
@@ -247,52 +272,30 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
                         protoToSchnorr(msg.getSignature()));
                 boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence,
-                        byteStringToByteArray(new ByteArrayOutputStream(),msg.getTimestamp()));
-                byte[] plainData;
-                if (isValidEvidence) {
-                    plainData = new byte[dummyDataForAttester.length + 1];
-                    plainData[0] = 1;
-                    System.arraycopy(dummyDataForAttester, 0, plainData, 1,
-                            dummyDataForAttester.length);
+                        byteStringToByteArray(baos, msg.getTimestamp()));
+                boolean isTimedout = (new Timestamp(messageContext.getTimestamp())).before(
+                        new Timestamp(devicesTimestamps.get(msg.getDeviceId()).getTime() + timebound));
+
+                if (isValidEvidence && isTimedout) {
+                    Messages.ProxyResponse res = Messages.ProxyResponse.newBuilder()
+                            .setTimestamp(ByteString.copyFrom(serialize(new Timestamp(messageContext.getTimestamp()))))
+                            .setHash(ByteString.copyFrom(computeHash(msg.toByteArray())))
+                            .setPubKey(msg.getPubKey())
+                            //.setSign()
+                            .build();
                     membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
                             protoDevToDev(msg.getDeviceType()));
+
+                    return new ConfidentialMessage(res.toByteArray());
                 } else {
-                    plainData = new byte[] {0};
+                    return new ConfidentialMessage(new byte[]{0});
                 }
-
-                return new ConfidentialMessage(plainData);
-            }
-            case MEMBERSHIP_LEAVE -> {
-                lock.lock();
-                membership.leave(msg.getAppId(), msg.getDeviceId());
-
-                lock.unlock();
-                return new ConfidentialMessage();
-            }
-            case MEMBERSHIP_PING -> {
-                lock.lock();
-                membership.ping(msg.getAppId(), msg.getDeviceId(),
-                        new Timestamp(messageContext.getTimestamp()));
-
-                lock.unlock();
-                return new ConfidentialMessage();
-            }
-            case MEMBERSHIP_VIEW -> {
-                List<DeviceContext> members = membership.getView(msg.getAppId());
-                ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                ObjectOutputStream out = new ObjectOutputStream(bout);
-                out.writeObject(members);
-                out.close();
-                byte[] res = bout.toByteArray();
-                bout.close();
-
-                return new ConfidentialMessage(res);
             }
         }
         return null;
     }
 
-    private ConfidentialMessage executeOrderedMap(Messages.ProxyMessage msg) throws IOException {
+    private ConfidentialMessage executeOrderedMap(Messages.ProxyMessage msg) throws IOException, SireException {
         Messages.ProxyMessage.Operation op = msg.getOperation();
         switch(op) {
             case MAP_PUT -> {
@@ -301,95 +304,16 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 byte[] value = byteStringToByteArray(out, msg.getValue());
                 out.close();
                 storage.put(msg.getAppId(), msg.getKey(), value);
-                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_PUT, msg.getKey(),
-                        new ExtParams(msg.getAppId(), value, null));
                 lock.unlock();
 
-                return new ConfidentialMessage();
-            }
-            case MAP_DELETE -> {
-                lock.lock();
-                storage.remove(msg.getAppId(), msg.getKey());
-                lock.unlock();
-                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_DEL, msg.getKey(),
-                        new ExtParams(msg.getAppId() + msg.getKey(), null, null));
                 return new ConfidentialMessage();
             }
             case MAP_GET -> {
-                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_GET, msg.getKey(),
-                        new ExtParams(msg.getAppId() + msg.getKey(), null, null));
                 return new ConfidentialMessage(storage.get(msg.getAppId(), msg.getKey()));
-            }
-            case MAP_LIST -> {
-                ArrayList<byte []> lista = new ArrayList<>(storage.getValues(msg.getAppId()));
-                ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                ObjectOutputStream out = new ObjectOutputStream(bout);
-                out.writeObject(lista);
-                out.close();
-                byte[] result = bout.toByteArray();
-                bout.close();
-
-                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_LIST, "",
-                        new ExtParams(msg.getAppId() + msg.getKey(), null, null));
-
-                return new ConfidentialMessage(result);
-            }
-            case MAP_CAS -> {
-                lock.lock();
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                String key = msg.getKey();
-                byte[] oldValue = byteStringToByteArray(out, msg.getOldData());
-                byte[] newValue = byteStringToByteArray(out, msg.getValue());
-                out.close();
-                if(Arrays.equals(storage.get(msg.getAppId(), key), oldValue)) {
-                    storage.put(msg.getAppId(), key, newValue);
-                }
-                extensionManager.runExtension(msg.getAppId(), ExtensionType.EXT_CAS, msg.getKey(),
-                        new ExtParams(msg.getAppId() + msg.getKey(), oldValue, newValue));
-                lock.unlock();
-                return new ConfidentialMessage();
             }
         }
         return null;
     }
-
-
-/**
-     * Method used to generate a random number
-     * @param messageContext Message context of the client requesting the generation of a random number
-     */
-
-    private void generateRandomNumberFor(MessageContext messageContext) {
-        int id = distributedPolynomialManager.createRandomPolynomial(
-                serviceReplica.getReplicaContext().getCurrentView().getF(),
-                serviceReplica.getReplicaContext().getCurrentView().getProcesses());
-        requests.put(id, messageContext);
-    }
-
-
-/**
-     * Method used to generate a signing key.
-     */
-
-    private void generateSigningKey() {
-        signingKeyGenerationId = distributedPolynomialManager.createRandomKeyPolynomial(
-                serviceReplica.getReplicaContext().getCurrentView().getF(),
-                serviceReplica.getReplicaContext().getCurrentView().getProcesses());
-    }
-
-
-/**
-     * Method used to generate a random key used to sign data
-     * @param messageContext Message context of the client requesting to sign data
-     */
-
-    private void generateRandomKey(MessageContext messageContext) {
-        int id = distributedPolynomialManager.createRandomKeyPolynomial(
-                serviceReplica.getReplicaContext().getCurrentView().getF(),
-                serviceReplica.getReplicaContext().getCurrentView().getProcesses());
-        signingRequestContexts.put(id, messageContext);
-    }
-
 
 /**
      * Method used to asynchronously send the random number share
@@ -509,10 +433,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         lock.unlock();
     }
 
-    @Override
-    public ConfidentialMessage appExecuteUnordered(byte[] bytes, VerifiableShare[] verifiableShares, MessageContext messageContext) {
-        return null;
-    }
+
 
     @Override
     public ConfidentialSnapshot getConfidentialSnapshot() {
@@ -565,5 +486,17 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         }
     }
 
+    private byte[] computeHash(byte[]... contents) {
+        for (byte[] content : contents) {
+            messageDigest.update(content);
+        }
+        return messageDigest.digest();
+    }
+
+    private void generateSigningKey() {
+        signingKeyGenerationId = distributedPolynomialManager.createRandomKeyPolynomial(
+                serviceReplica.getReplicaContext().getCurrentView().getF(),
+                serviceReplica.getReplicaContext().getCurrentView().getProcesses());
+    }
 
 }

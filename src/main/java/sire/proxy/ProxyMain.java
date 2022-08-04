@@ -22,11 +22,11 @@ public class ProxyMain {
         try {
             int proxyId = Integer.parseInt(args[0]);
             proxy = new SocketProxy(proxyId);
-            restProxy = new RestProxy(proxyId + 1);
+            //restProxy = new RestProxy(proxyId + 1);
         } catch (SireException e) {
             e.printStackTrace();
         }
-        SpringApplication.run(ProxyMain.class, args);
+        //SpringApplication.run(ProxyMain.class, args);
         proxy.run();
     }
 

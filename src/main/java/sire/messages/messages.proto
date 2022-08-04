@@ -93,7 +93,7 @@ message ProxyMessage {
     ATTEST_GET_PUBLIC_KEY = 2;
     ATTEST_SIGN_DATA = 3;
     ATTEST_VERIFY = 4;
-    ATTEST_GET_RANDOM_NUMBER = 5;
+    ATTEST_GET_RANDOM_NUMBER = 5; //remove most of this
     //--------------MAP--------------
     MAP_PUT = 6;
     MAP_DELETE = 7;

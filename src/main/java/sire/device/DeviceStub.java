@@ -17,14 +17,10 @@ import sire.attestation.Evidence;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +47,6 @@ public class DeviceStub {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     public DeviceStub() throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, ClassNotFoundException {
-        System.out.println("Start!");
         this.port = 2500 + 1;
         secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         messageDigest = MessageDigest.getInstance("SHA256");
@@ -64,26 +59,22 @@ public class DeviceStub {
         scheme = new SchnorrSignatureScheme();
         BigInteger cofactor = prime.divide(order);
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
-        System.out.println("Halfway through!");
         try {
-            this.s = new Socket("localhost", port);
+            this.s = new Socket("192.168.2.29", port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
-            System.out.println("Done!");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        attesterPrivateKey = new BigInteger("4049546346519992604730332816858472394381393488413156548605745581385");
+        attesterPublicKey = scheme.getGenerator().multiply(attesterPrivateKey);
 
         verifierPublicKey = getVerifierPublicKey();
     }
 
     public void attest(String appId, DeviceType type, String waTZVersion, byte[] claim) {
         try {
-
             ECPoint curveGenerator = scheme.getGenerator();
-            attesterPrivateKey = new BigInteger("4049546346519992604730332816858472394381393488413156548605745581385");
-            attesterPublicKey = curveGenerator.multiply(attesterPrivateKey);
-
 
             BigInteger randomPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
             ECPoint randomPublicKey = curveGenerator.multiply(randomPrivateKey);
@@ -146,14 +137,14 @@ public class DeviceStub {
         return messageDigest.digest();
     }
 
-    private static SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {
+/*    private static SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {
         KeySpec spec = new PBEKeySpec(password, salt, 65536, AES_KEY_LENGTH);
         return new SecretKeySpec(secretKeyFactory.generateSecret(spec).getEncoded(), "AES");
     }
 
     private static boolean verifyMac(byte[] secretKey, byte[] mac, byte[]... contents) {
         return Arrays.equals(computeMac(secretKey, contents), mac);
-    }
+    }*/
 
     private static byte[] computeMac(byte[] secretKey, byte[]... contents) {
         macEngine.init(new KeyParameter(secretKey));
