@@ -16,17 +16,16 @@ import confidential.statemanagement.ConfidentialSnapshot;
 import org.bouncycastle.math.ec.ECPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sire.attestation.PolicyManager;
-import sire.coordination.CoordinationManager;
-import sire.attestation.VerifierManager;
 import sire.attestation.DeviceEvidence;
+import sire.attestation.PolicyManager;
+import sire.attestation.VerifierManager;
+import sire.coordination.CoordinationManager;
 import sire.coordination.ExtensionManager;
 import sire.membership.DeviceContext;
 import sire.membership.MembershipManager;
-import sire.messages.Messages.*;
-import sire.schnorr.PublicPartialSignature;
-import sire.schnorr.SchnorrSignature;
-import sire.schnorr.SchnorrSignatureScheme;
+import sire.messages.Messages.ProxyMessage;
+import sire.messages.Messages.ProxyResponse;
+import sire.schnorr.*;
 import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.commitment.linear.LinearCommitments;
@@ -73,9 +72,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private final Map<Integer, byte[]> signingData;// <client id, data for signing>
 
 	private final SchnorrSignatureScheme schnorrSignatureScheme;
-
-	private VerifiableShare verifierSigningPrivateKeyShare;
-	private ECPoint verifierSigningPublicKey;
+	private SchnorrKeyPair verifierSigningKeyPair;
+	//private VerifiableShare verifierSigningPrivateKeyShare;
+	//private ECPoint verifierSigningPublicKey;
 
 	MessageDigest messageDigest;
 	//private final ECPoint dummyAttesterPublicKey;
@@ -97,6 +96,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	private final int timebound = 500; //in milliseconds
 	private final Map<String, Timestamp> devicesTimestamps;
+
+	private final SchnorrNonceManager schnorrNonceManager;
 
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {
@@ -127,6 +128,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		schnorrSignatureScheme = new SchnorrSignatureScheme();
 		messageDigest = MessageDigest.getInstance("SHA256");
 		devicesTimestamps = new TreeMap<>();
+		schnorrNonceManager = new SchnorrNonceManager(id, serviceReplica.getReplicaContext().getCurrentView().getF(),
+				schnorrSignatureScheme.getCurve());
 	}
 
 	@Override
@@ -186,10 +189,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					lock.unlock();
 
 					return new ConfidentialMessage(response.toByteArray());
-					/*
-					signingData.put(messageContext.getSender(), data);
-					System.out.println(Arrays.toString(data));
-					generateRandomKey(messageContext);*/
 
 				} else {
 					throw new SireException("Invalid signature!");
@@ -213,13 +212,13 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			case ATTEST_GENERATE_SIGNING_KEY -> {
 				try {
 					lock.lock();
-					if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
+					if (verifierSigningKeyPair == null && signingKeyRequests.isEmpty()) {
 						signingKeyRequests.add(messageContext);
 						generateSigningKey();
-					} else if (verifierSigningPrivateKeyShare != null) {
+					} else if (verifierSigningKeyPair != null) {
 						logger.warn("I already have a signing key.");
 						System.out.println("Signing key already created...");
-						return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
+						return new ConfidentialMessage(verifierSigningKeyPair.getPublicKeyShare().getEncoded(true));
 					} else {
 						logger.warn("Signing key is being created.");
 					}
@@ -230,24 +229,25 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			case ATTEST_GET_PUBLIC_KEY -> {
 				try {
 					lock.lock();
-					if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
+					if (verifierSigningKeyPair == null && signingKeyRequests.isEmpty()) {
 						signingKeyRequests.add(messageContext);
 						generateSigningKey();
-					} else if (verifierSigningPrivateKeyShare != null){
-						return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
+					} else if (verifierSigningKeyPair != null){
+						return new ConfidentialMessage(verifierSigningKeyPair.getPublicKeyShare().getEncoded(true));
 					}
 				} finally {
 					lock.unlock();
 				}
 			}
 			case ATTEST_SIGN_DATA -> {
-				lock.lock();
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				byte[] data = byteStringToByteArray(out, msg.getDataToSign());
-				signingData.put(messageContext.getSender(), data);
-				generateRandomKey(messageContext);
-				out.close();
-				lock.unlock();
+				try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+					lock.lock();
+					byte[] data = byteStringToByteArray(out, msg.getDataToSign());
+					return sign(data, messageContext);
+				} finally {
+					lock.unlock();
+				}
+
 			}
 			case ATTEST_GET_RANDOM_NUMBER -> {
 				lock.lock();
@@ -504,12 +504,10 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		if (signingRequestContexts.containsKey(id)) {
 			logger.info("Received random signing key");
 			MessageContext messageContext = signingRequestContexts.remove(id);
-			signAndSend(messageContext, signingData.remove(messageContext.getSender()), verifierSigningPrivateKeyShare,
-					privateKeyShare, publicKey);
+			signAndSend(messageContext, signingData.remove(messageContext.getSender()));
 		} else if (signingKeyGenerationId == id) {
 			logger.info("Received service signing key");
-			verifierSigningPrivateKeyShare = privateKeyShare;
-			verifierSigningPublicKey = publicKey;
+			verifierSigningKeyPair = new SchnorrKeyPair(privateKeyShare, publicKey);
 			for (MessageContext messageContext : signingKeyRequests) {
 				sendPublicKeyTo(messageContext, publicKey);
 			}
@@ -525,13 +523,21 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		sendResponseTo(receiverContext, response);
 	}
 
-	private void signAndSend(MessageContext receiverContext, byte[] data, VerifiableShare signingPrivateKeyShare,
-							 VerifiableShare randomPrivateKeyShare, ECPoint randomPublicKey) {
+	private void signAndSend(MessageContext receiverContext, byte[] data) {
+		ConfidentialMessage response = sign(data, receiverContext);
+		sendResponseTo(receiverContext, response);
+	}
+
+	private ConfidentialMessage sign(byte[] data, MessageContext messageContext) {
+		VerifiableShare verifierSigningPrivateKeyShare = verifierSigningKeyPair.getPrivateKeyShare();
+		SchnorrKeyPair nonceKeyPair = schnorrNonceManager.getNonce(String.valueOf(messageContext.getConsensusId()).getBytes());
+		VerifiableShare randomPrivateKeyShare = nonceKeyPair.getPrivateKeyShare();
+		ECPoint randomPublicKey = nonceKeyPair.getPublicKeyShare();
 		BigInteger sigma = schnorrSignatureScheme.computePartialSignature(data,
-				signingPrivateKeyShare.getShare().getShare(), randomPrivateKeyShare.getShare().getShare(), randomPublicKey);
+				verifierSigningPrivateKeyShare.getShare().getShare(), randomPrivateKeyShare.getShare().getShare(), randomPublicKey);
 		byte[] plainData = null;
 		PublicPartialSignature publicPartialSignature = new PublicPartialSignature(
-				(EllipticCurveCommitment) signingPrivateKeyShare.getCommitments(),
+				(EllipticCurveCommitment) verifierSigningPrivateKeyShare.getCommitments(),
 				(EllipticCurveCommitment) randomPrivateKeyShare.getCommitments(), randomPublicKey);
 		try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			 ObjectOutput out = new ObjectOutputStream(bos)) {
@@ -548,8 +554,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			sigma = sigma.add(BigInteger.ONE);
 		VerifiableShare partialSignature = new VerifiableShare(new Share(shareholder, sigma),
 				new LinearCommitments(BigInteger.ZERO), null);
-		ConfidentialMessage response = new ConfidentialMessage(plainData, partialSignature);
-		sendResponseTo(receiverContext, response);
+		return new ConfidentialMessage(plainData, partialSignature);
 	}
 
 	/**
