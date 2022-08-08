@@ -58,7 +58,6 @@ public class SchnorrSignatureScheme {
 	public BigInteger computePartialSignature(byte[] data, BigInteger signingKeyShare,
 											  BigInteger randomKeyShare, ECPoint randomPublicKey) {
 		BigInteger hash = new BigInteger(computeHash(data, randomPublicKey.getEncoded(true)));
-
 		return randomKeyShare.add(hash.multiply(signingKeyShare));
 	}
 
@@ -72,7 +71,6 @@ public class SchnorrSignatureScheme {
 			if (!corruptedShareholders.contains(share.getShareholder()))
 				minimumShares[j++] = share;
 		}
-
 		BigInteger sigma;
 		Polynomial sigmaPolynomial = new Polynomial(order, minimumShares);
 		if (sigmaPolynomial.getDegree() != f) {
@@ -86,12 +84,15 @@ public class SchnorrSignatureScheme {
 				boolean isValid = verifyPartialSignature(hash, partialSignature, signingKeyCommitment.getCommitment(),
 						randomKeyCommitment.getCommitment());
 				if (counter <= f && isValid) {
+					System.out.println("Valid");
 					minimumShares[counter++] = partialSignature;
 				}
 				if (!isValid) {
+					System.out.println("Corrupted");
 					corruptedShareholders.add(partialSignature.getShareholder());
 				}
 			}
+
 			if (counter <= f) {
 				throw new SecretSharingException("Not enough valid shares!");
 			}
@@ -99,7 +100,6 @@ public class SchnorrSignatureScheme {
 		} else {
 			sigma = sigmaPolynomial.getConstant();
 		}
-
 		return sigma;
 	}
 

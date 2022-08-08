@@ -19,4 +19,6 @@ public class SchnorrKeyPair {
 	public ECPoint getPublicKeyShare() {
 		return publicKeyShare;
 	}
+
+
 }

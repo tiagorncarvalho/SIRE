@@ -60,7 +60,7 @@ public class DeviceStub {
         BigInteger cofactor = prime.divide(order);
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
         try {
-            this.s = new Socket("192.168.2.29", port);
+            this.s = new Socket("localhost", port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
         } catch (IOException e) {
@@ -86,7 +86,7 @@ public class DeviceStub {
             System.out.println(ts);
 
             //creating the message2
-            Evidence evidence = new Evidence(waTZVersion, claim, attesterPublicKey.getEncoded(true));
+            /*Evidence evidence = new Evidence(waTZVersion, claim, attesterPublicKey.getEncoded(true));
 
             byte[] signingHash = computeHash(
                     attesterPublicKey.getEncoded(true),
@@ -100,9 +100,9 @@ public class DeviceStub {
             signature = scheme.computeSignature(signingHash, attesterPrivateKey,
                     attesterPublicKey, randomPrivateKey, randomPublicKey);
 
-            attestationTime = join(appId, evidence, ts, signature);
+            attestationTime = join(appId, evidence, ts, signature);*/
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (/*IOException | ClassNotFoundException*/ Exception e) {
             e.printStackTrace();
         }
     }
@@ -177,6 +177,7 @@ public class DeviceStub {
             this.oos.writeObject(msg);
 
             Object o = this.ois.readObject();
+            System.out.println("Response received!");
             if(o instanceof ProxyResponse res)
                 return (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp()));
             return null;
@@ -199,6 +200,7 @@ public class DeviceStub {
             this.oos.writeObject(msg);
 
             Object o = this.ois.readObject();
+            System.out.println(o);
             if(o instanceof ProxyResponse res) {
                 /*SchnorrSignature schnorrSignature = protoToSchnorr(res.getSign());
                 boolean isSignatureValid = scheme.verifySignature(computeHash(byteStringToByteArray(baos, res.getTimestamp()),
@@ -206,6 +208,7 @@ public class DeviceStub {
                         scheme.decodePublicKey(schnorrSignature.getRandomPublicKey()), new BigInteger(schnorrSignature.getSigma()));
 
                 return isSignatureValid ? (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp())) : null;*/
+                System.out.println(res);
 
                 return (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp()));
             }

@@ -83,7 +83,8 @@ public class SchnorrNonceManager {
 		for (byte[] indexDatum : indexData) {
 			messageDigest.update(indexDatum);
 		}
-		int index = Arrays.hashCode(messageDigest.digest()) % tableSize;
+		int index = Math.abs(Arrays.hashCode(messageDigest.digest())) % tableSize;
+		System.out.println(index);
 		return nonces[index];
 	}
 

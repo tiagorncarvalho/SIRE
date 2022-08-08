@@ -69,7 +69,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy {
         this.maxThroughput = new double[totalRounds];
         this.sleepBetweenRounds = 10;
         this.numRequests = 10_000_000;
-        this.operation = "mapGet";
+        this.operation = "mapPut";
         this.clients = configuration.getClientsPerRound();
         for (int i = 0; i < clients.length; i++) {
             clients[i]--;

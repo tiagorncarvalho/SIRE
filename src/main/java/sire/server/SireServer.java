@@ -165,31 +165,22 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		ProxyResponse response;
 		switch(op) {
 			case TIMESTAMP_GET -> {
-				 response = ProxyResponse.newBuilder()
-						.setTimestamp(ByteString.copyFrom(serialize(ts)))
-						.build();
-				lock.unlock();
-				return new ConfidentialMessage(response.toByteArray());
+				return new ConfidentialMessage(serialize(ts));
 			}
 			case TIMESTAMP_ATT -> {
-				lock.lock();
+				//System.out.println("Timestamp att request!");
 				SchnorrSignature sign = protoToSchnorr(msg.getSignature());
 				boolean isValid = schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),
 						schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey())),
 						schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey()), new BigInteger(sign.getSigma()));
 				if(isValid) {
-					//byte[] data = concat(serialize(ts), byteStringToByteArray(baos, msg.getPubKey()));
-					devicesTimestamps.put(msg.getDeviceId(), ts);
-					response = ProxyResponse.newBuilder()
-							.setTimestamp(ByteString.copyFrom(serialize(ts)))
-							.setPubKey(msg.getPubKey())
-							//.setSign()
-							.build();
-					baos.close();
-					lock.unlock();
-
-					return new ConfidentialMessage(response.toByteArray());
-
+					byte[] tis = serialize(ts);
+					//System.out.println(ts);
+					byte[] pubKey = byteStringToByteArray(baos, msg.getPubKey());
+					byte[] data = concat(tis, pubKey);
+					//System.out.println(Arrays.toString(data));
+					//signAndSend(messageContext, data);
+					return sign(data, messageContext);//new ConfidentialMessage();
 				} else {
 					throw new SireException("Invalid signature!");
 				}
@@ -243,7 +234,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 					lock.lock();
 					byte[] data = byteStringToByteArray(out, msg.getDataToSign());
-					return sign(data, messageContext);
+					signAndSend(messageContext, data);
+					return new ConfidentialMessage();
 				} finally {
 					lock.unlock();
 				}
@@ -279,16 +271,14 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 						new Timestamp(devicesTimestamps.get(msg.getDeviceId()).getTime() + timebound));
 
 				if (isValidEvidence && isTimedout) {
-					ProxyResponse res = ProxyResponse.newBuilder()
-							.setTimestamp(ByteString.copyFrom(serialize(new Timestamp(messageContext.getTimestamp()))))
-							.setHash(ByteString.copyFrom(computeHash(msg.toByteArray())))
-							.setPubKey(msg.getPubKey())
-							//.setSign()
-							.build();
+					byte[] data = concat(serialize(new Timestamp(messageContext.getTimestamp())),
+							byteStringToByteArray(new ByteArrayOutputStream(), msg.getPubKey()), computeHash(msg.toByteArray()));
 					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
 							protoDevToDev(msg.getDeviceType()));
 
-					return new ConfidentialMessage(res.toByteArray());
+					signAndSend(messageContext, data);
+
+					return new ConfidentialMessage();
 				} else {
 					return new ConfidentialMessage(new byte[]{0});
 				}
@@ -542,18 +532,18 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			 ObjectOutput out = new ObjectOutputStream(bos)) {
 			publicPartialSignature.serialize(out);
-
 			out.flush();
 			bos.flush();
-			plainData = bos.toByteArray();
+
+
+			plainData = concat(bos.toByteArray(), data);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		BigInteger shareholder = cr.getShareholderId();
-		if (serviceReplica.getId() == 0)
-			sigma = sigma.add(BigInteger.ONE);
-		VerifiableShare partialSignature = new VerifiableShare(new Share(shareholder, sigma),
-				new LinearCommitments(BigInteger.ZERO), null);
+		Share s = new Share(shareholder, sigma);
+		VerifiableShare partialSignature = new VerifiableShare(s, new LinearCommitments(BigInteger.ZERO), null);
+		//System.out.println(Arrays.toString(plainData));
 		return new ConfidentialMessage(plainData, partialSignature);
 	}
 

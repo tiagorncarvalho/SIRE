@@ -3,6 +3,8 @@ package sire.proxy;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Timestamp;
+import confidential.ConfidentialExtractedResponse;
+import confidential.ConfidentialMessage;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import org.bouncycastle.crypto.BlockCipher;
@@ -11,13 +13,19 @@ import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.membership.DeviceContext;
+import sire.schnorr.PublicPartialSignature;
+import sire.schnorr.SchnorrSignature;
 import sire.serverProxyUtils.*;
 
 import static sire.messages.ProtoUtils.*;
 
 import sire.messages.Messages.*;
 import sire.schnorr.SchnorrSignatureScheme;
+import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.facade.SecretSharingException;
+import vss.secretsharing.Share;
+import vss.secretsharing.VerifiableShare;
+
 import javax.crypto.*;
 import java.io.*;
 import java.math.BigInteger;
@@ -135,7 +143,7 @@ public class SocketProxy implements Runnable {
 					}
 				}
 			} catch (IOException | ClassNotFoundException | SecretSharingException | SireException e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 
@@ -143,6 +151,10 @@ public class SocketProxy implements Runnable {
 			Response res;
 			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW"))
 				res = serviceProxy.invokeUnordered(msg.toByteArray());
+			else if(msg.getOperation() == ProxyMessage.Operation.TIMESTAMP_ATT)
+				return timestampAtt(serviceProxy.invokeOrdered2(msg.toByteArray()));
+			else if(msg.getOperation() == ProxyMessage.Operation.MEMBERSHIP_JOIN)
+				return join(serviceProxy.invokeOrdered2(msg.toByteArray()));
 			else {
 				synchronized (proxyLock) {
 					res = serviceProxy.invokeOrdered(msg.toByteArray());
@@ -156,50 +168,55 @@ public class SocketProxy implements Runnable {
 				case EXTENSION_GET -> extGet(res);
 				case POLICY_GET -> policyGet(res);
 				case TIMESTAMP_GET -> timestampGet(res);
-				case TIMESTAMP_ATT -> timestampAtt(res);
-				case MEMBERSHIP_JOIN -> join(res);
 				default -> null;
 			};
 		}
 
-		private ProxyResponse join(Response res) throws SecretSharingException, InvalidProtocolBufferException {
-			ProxyResponse proxyResponse = ProxyResponse.parseFrom(res.getPainData());
-			return proxyResponse;
+		private ProxyResponse join(ConfidentialExtractedResponse res) {
+			return null;
 		}
 
-		private ProxyResponse timestampAtt(Response res) throws SireException, SecretSharingException, IOException, ClassNotFoundException {
-			/*UncombinedConfidentialResponse signatureResponse;
-			try {
-				synchronized (proxyLock) {
-					signatureResponse = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered2(msg.toByteArray());
-				}
-			} catch (SecretSharingException e) {
-				throw new SireException("Verifier failed to sign", e);
-			}
-			byte[] data = signatureResponse.getPlainData();
-			System.out.println(Arrays.toString(data) + "\n" + data.length);
+		private ProxyResponse timestampAtt(ConfidentialExtractedResponse res) throws SireException {
+			System.out.println("In!");
+			SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
+			byte[] data = Arrays.copyOfRange(res.getPlainData(), 0, 124);
+			byte[] ts = Arrays.copyOfRange(data, 0, 91);
+			byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
+			System.out.println("Signatures combined");
+			return ProxyResponse.newBuilder()
+					.setPubKey(ByteString.copyFrom(pubKey))
+					.setTimestamp(ByteString.copyFrom(ts))
+					.setSign(schnorrToProto(sign))
+					.build();
+		}
 
+		private SchnorrSignature combineSignatures (UncombinedConfidentialResponse res) throws SireException {
 			PublicPartialSignature partialSignature;
-			try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
+			byte[] signs = Arrays.copyOfRange(res.getPlainData(), 0, 199);
+			//System.out.println(Arrays.toString(signs));
+			try (ByteArrayInputStream bis = new ByteArrayInputStream(signs);
 				 ObjectInput in = new ObjectInputStream(bis)) {
 				partialSignature = PublicPartialSignature.deserialize(signatureScheme, in);
 			} catch (IOException | ClassNotFoundException e) {
 				throw new SireException("Failed to deserialize public data of partial signatures");
 			}
-
 			EllipticCurveCommitment signingKeyCommitment = partialSignature.getSigningKeyCommitment();
 			EllipticCurveCommitment randomKeyCommitment = partialSignature.getRandomKeyCommitment();
 			ECPoint randomPublicKey = partialSignature.getRandomPublicKey();
-			VerifiableShare[] verifiableShares = signatureResponse.getVerifiableShares()[0];
+			VerifiableShare[] verifiableShares = res.getVerifiableShares()[0];
 			Share[] partialSignatures = new Share[verifiableShares.length];
 			for (int i = 0; i < verifiableShares.length; i++) {
 				partialSignatures[i] = verifiableShares[i].getShare();
 			}
+			System.out.println("Partials obtained!");
 
 			if (randomKeyCommitment == null)
 				throw new IllegalStateException("Random key commitment is null");
 
+			byte[] data = Arrays.copyOfRange(res.getPlainData(), 199, res.getPlainData().length);
+
 			try {
+				System.out.println("Combining partials!");
 				BigInteger sigma = signatureScheme.combinePartialSignatures(
 						serviceProxy.getCurrentF(),
 						data,
@@ -208,20 +225,12 @@ public class SocketProxy implements Runnable {
 						randomPublicKey,
 						partialSignatures
 				);
-				SchnorrSignature sign = new SchnorrSignature(sigma.toByteArray(), verifierPublicKey.getEncoded(true),
+				System.out.println("Partials combined!");
+				return new SchnorrSignature(sigma.toByteArray(), verifierPublicKey.getEncoded(true),
 						randomPublicKey.getEncoded(true));
-				return ProxyResponse.newBuilder()
-						.setTimestamp(ByteString.copyFrom(Arrays.copyOfRange(data, 0, 12)))
-						.setPubKey(ByteString.copyFrom(Arrays.copyOfRange(data, 12, data.length)))
-						.setSign(schnorrToProto(sign))
-						.build();
 			} catch (SecretSharingException e) {
-				e.printStackTrace();
+				throw new SireException("Failed to combine partial signatures", e);
 			}
-			return null;*/
-
-			ProxyResponse proxyResponse = ProxyResponse.parseFrom(res.getPainData());
-			return proxyResponse;
 		}
 
 		private ProxyResponse timestampGet(Response res) {

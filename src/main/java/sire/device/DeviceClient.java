@@ -30,7 +30,7 @@ public class DeviceClient {
 		Random rng = new Random(1L);
 		int var = rng.nextInt();
 
-		try {
+/*		try {
 			String key = "exampleKey" + var;
 			String key2 = "exampleKey2" + var;
 			ExampleObject value = new ExampleObject("exampleValue" + var);
@@ -75,15 +75,15 @@ public class DeviceClient {
 			for(DeviceContext d : dummy.getView(appId))
 				System.out.println(d.toString());
 			dummy.leave(appId);
-			/*System.out.println("Membership 3!");
+			*//*System.out.println("Membership 3!");
 			for(DeviceContext d : dummy.getView(appId))
-				System.out.println(d.toString());*/
+				System.out.println(d.toString());*//*
 			System.out.println("Done!");
 
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 			dummy.close();
-		}
+		}*/
 	}
 }
