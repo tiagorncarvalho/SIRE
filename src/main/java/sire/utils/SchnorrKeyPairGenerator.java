@@ -71,7 +71,7 @@ public class SchnorrKeyPairGenerator {
 			 ObjectOutput out = new ObjectOutputStream(fos)) {
 			out.writeInt(nKeys);
 			for (EllipticCurveCommitment commitment : commitments) {
-				out.writeObject(commitment);
+				commitment.writeExternal(out);
 			}
 			out.flush();
 			fos.flush();

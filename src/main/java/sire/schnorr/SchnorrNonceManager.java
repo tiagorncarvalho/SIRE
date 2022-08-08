@@ -48,7 +48,9 @@ public class SchnorrNonceManager {
 			int nKeys = in.readInt();
 			commitments = new EllipticCurveCommitment[nKeys];
 			for (int i = 0; i < nKeys; i++) {
-				commitments[i] = (EllipticCurveCommitment) in.readObject();
+				EllipticCurveCommitment c = new EllipticCurveCommitment(curve);
+				c.readExternal(in);
+				commitments[i] = c;
 			}
 		} catch (IOException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
