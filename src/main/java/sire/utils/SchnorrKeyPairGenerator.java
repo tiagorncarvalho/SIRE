@@ -13,7 +13,7 @@ import java.security.SecureRandom;
 public class SchnorrKeyPairGenerator {
 	public static void main(String[] args) {
 		int nKeys = 100;
-		int t = 3;
+		int t = 1;
 		int n = 3 * t + 1;
 
 		BigInteger[] shareholders = new BigInteger[n];
