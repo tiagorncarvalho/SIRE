@@ -63,7 +63,6 @@ public class ExtensionManager {
         if(extensions.containsKey(appId + ExtensionType.EXT_ATTEST)) {
             boolean execResult = (boolean) extensions.get(appId + ExtensionType.EXT_ATTEST).getScript().invokeMethod(
                     "verifyEvidence", evidence);
-            System.out.println(execResult);
             return execResult;
         }
 

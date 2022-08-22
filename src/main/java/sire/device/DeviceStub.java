@@ -86,7 +86,7 @@ public class DeviceStub {
             System.out.println(ts);
 
             //creating the message2
-            /*Evidence evidence = new Evidence(waTZVersion, claim, attesterPublicKey.getEncoded(true));
+            Evidence evidence = new Evidence(waTZVersion, claim, attesterPublicKey.getEncoded(true));
 
             byte[] signingHash = computeHash(
                     attesterPublicKey.getEncoded(true),
@@ -100,7 +100,9 @@ public class DeviceStub {
             signature = scheme.computeSignature(signingHash, attesterPrivateKey,
                     attesterPublicKey, randomPrivateKey, randomPublicKey);
 
-            attestationTime = join(appId, evidence, ts, signature);*/
+            attestationTime = join(appId, evidence, ts, signature);
+
+            System.out.println("Attested!");
 
         } catch (/*IOException | ClassNotFoundException*/ Exception e) {
             e.printStackTrace();
@@ -234,11 +236,11 @@ public class DeviceStub {
         Object o = this.ois.readObject();
         if(o instanceof ProxyResponse res) {
             byte[] hash = computeHash(joinMsg.toByteArray());
-            //SchnorrSignature schnorrSignature = protoToSchnorr(res.getSign());
-            boolean isSignatureValid = true;/*scheme.verifySignature(computeHash(byteStringToByteArray(baos, res.getTimestamp()),
+            SchnorrSignature schnorrSignature = protoToSchnorr(res.getSign());
+            boolean isSignatureValid = scheme.verifySignature(computeHash(byteStringToByteArray(baos, res.getTimestamp()),
                             byteStringToByteArray(baos, res.getHash()), byteStringToByteArray(baos, res.getPubKey())),
                     scheme.decodePublicKey(schnorrSignature.getSigningPublicKey()),
-                    scheme.decodePublicKey(schnorrSignature.getRandomPublicKey()), new BigInteger(schnorrSignature.getSigma()));*/
+                    scheme.decodePublicKey(schnorrSignature.getRandomPublicKey()), new BigInteger(schnorrSignature.getSigma()));
 
             boolean isHashValid = Arrays.equals(hash, byteStringToByteArray(baos, res.getHash()));
 

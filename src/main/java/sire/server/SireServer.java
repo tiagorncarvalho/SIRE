@@ -199,7 +199,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					lock.unlock();
 				}
 			} case ATTEST_TIMESTAMP -> {
-				//System.out.println("Timestamp att request!");
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				Timestamp ts = new Timestamp(messageContext.getTimestamp());
 				SchnorrSignature sign = protoToSchnorr(msg.getSignature());
@@ -208,11 +207,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 						schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey()), new BigInteger(sign.getSigma()));
 				if(isValid) {
 					byte[] tis = serialize(ts);
-					//System.out.println(ts);
 					byte[] pubKey = byteStringToByteArray(baos, msg.getPubKey());
 					byte[] data = concat(tis, pubKey);
-					//System.out.println(Arrays.toString(data));
-					//signAndSend(messageContext, data);
+					devicesTimestamps.put(msg.getDeviceId(), ts);
 					return sign(data, messageContext);//new ConfidentialMessage();
 				} else {
 					throw new SireException("Invalid signature!");
@@ -253,9 +250,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
 							protoDevToDev(msg.getDeviceType()));
 
-					signAndSend(messageContext, data);
-
-					return new ConfidentialMessage();
+					return sign(data, messageContext);
 				} else {
 					return new ConfidentialMessage(new byte[]{0});
 				}
@@ -509,10 +504,10 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			 ObjectOutput out = new ObjectOutputStream(bos)) {
 			publicPartialSignature.serialize(out);
+
+
 			out.flush();
 			bos.flush();
-
-
 			plainData = concat(bos.toByteArray(), data);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -520,7 +515,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		BigInteger shareholder = cr.getShareholderId();
 		Share s = new Share(shareholder, sigma);
 		VerifiableShare partialSignature = new VerifiableShare(s, new LinearCommitments(BigInteger.ZERO), null);
-		//System.out.println(Arrays.toString(plainData));
 		return new ConfidentialMessage(plainData, partialSignature);
 	}
 

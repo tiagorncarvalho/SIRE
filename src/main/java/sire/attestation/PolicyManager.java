@@ -67,7 +67,6 @@ public class PolicyManager {
         if(temp != null) {
             if (temp.getType()) {
                 boolean policyResult = extensionManager.runPolicy(appId, evidence);
-                System.out.println(policyResult);
                 return policyResult;
             } else
                 return true; //logical policy

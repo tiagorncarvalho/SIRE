@@ -128,7 +128,7 @@ public class SocketProxy implements Runnable {
 					//System.out.println("Running!");
 					Object o;
 					while ((o = ois.readObject()) != null) {
-						System.out.println("Object received! " + o);
+						//System.out.println("Object received! " + o);
 						if (o instanceof ProxyMessage msg) {
 							switch(msg.getOperation()) {
 								case ATTEST_GET_PUBLIC_KEY -> oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
@@ -171,17 +171,25 @@ public class SocketProxy implements Runnable {
 			};
 		}
 
-		private ProxyResponse join(ConfidentialExtractedResponse res) {
-			return null;
+		private ProxyResponse join(ConfidentialExtractedResponse res) throws SireException {
+			SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
+			byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 156, res.getPlainData().length);
+			byte[] ts = Arrays.copyOfRange(data, 0, 91);
+			byte[] pubKey = Arrays.copyOfRange(data, 91, 124);
+			byte[] hash = Arrays.copyOfRange(data, 124, data.length);
+			return ProxyResponse.newBuilder()
+					.setPubKey(ByteString.copyFrom(pubKey))
+					.setTimestamp(ByteString.copyFrom(ts))
+					.setHash(ByteString.copyFrom(hash))
+					.setSign(schnorrToProto(sign))
+					.build();
 		}
 
 		private ProxyResponse timestampAtt(ConfidentialExtractedResponse res) throws SireException {
-			System.out.println("In!");
 			SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
-			byte[] data = Arrays.copyOfRange(res.getPlainData(), 0, 124);
+			byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 124, res.getPlainData().length);
 			byte[] ts = Arrays.copyOfRange(data, 0, 91);
 			byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
-			System.out.println("Signatures combined");
 			return ProxyResponse.newBuilder()
 					.setPubKey(ByteString.copyFrom(pubKey))
 					.setTimestamp(ByteString.copyFrom(ts))
@@ -207,7 +215,6 @@ public class SocketProxy implements Runnable {
 			for (int i = 0; i < verifiableShares.length; i++) {
 				partialSignatures[i] = verifiableShares[i].getShare();
 			}
-			System.out.println("Partials obtained!");
 
 			if (randomKeyCommitment == null)
 				throw new IllegalStateException("Random key commitment is null");
@@ -215,7 +222,6 @@ public class SocketProxy implements Runnable {
 			byte[] data = Arrays.copyOfRange(res.getPlainData(), 199, res.getPlainData().length);
 
 			try {
-				System.out.println("Combining partials!");
 				BigInteger sigma = signatureScheme.combinePartialSignatures(
 						serviceProxy.getCurrentF(),
 						data,
@@ -224,7 +230,6 @@ public class SocketProxy implements Runnable {
 						randomPublicKey,
 						partialSignatures
 				);
-				System.out.println("Partials combined!");
 				return new SchnorrSignature(sigma.toByteArray(), verifierPublicKey.getEncoded(true),
 						randomPublicKey.getEncoded(true));
 			} catch (SecretSharingException e) {

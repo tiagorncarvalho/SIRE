@@ -74,25 +74,4 @@ public class VerifierManager {
         }
         return messageDigest.digest();
     }
-
-
-    /*private boolean verifyClaim(String appId, byte[] claim) {
-        for(byte[] c : refValues.get(appId)) {
-            if (Arrays.equals(c, claim))
-                return true;
-        }
-        return false;
-    }*/
-
-/*    public void setPolicy(String appId, String policy, boolean type) {
-        policyManager.setPolicy(appId, policy, type);
-    }
-
-    public void removePolicy(String appId) {
-        policyManager.removePolicy(appId);
-    }
-
-    public Policy getPolicy(String appId) {
-        return policyManager.getPolicy(appId);
-    }*/
 }
