@@ -197,7 +197,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
 
     private ConfidentialMessage executeOrderedAttestation(Messages.ProxyMessage msg, MessageContext messageContext) throws IOException {
         Messages.ProxyMessage.Operation op = msg.getOperation();
-        if (op == Messages.ProxyMessage.Operation.ATTEST_GENERATE_SIGNING_KEY) {
+        if (op == Messages.ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
             try {
                 lock.lock();
                 if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
@@ -231,7 +231,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 lock.unlock();
                 return new ConfidentialMessage(response.toByteArray());
             }
-            case TIMESTAMP_ATT -> {
+            case ATTEST_TIMESTAMP -> {
                 lock.lock();
                 SchnorrSignature sign = protoToSchnorr(msg.getSignature());
                 boolean isValid = schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),

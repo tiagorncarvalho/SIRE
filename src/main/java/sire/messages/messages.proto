@@ -18,64 +18,6 @@ message ProtoEvidence {
   bytes servicePubKey = 4;
 }
 
-//=======Messages=======
-/*message ProtoMessage0 {
-  string attesterId = 1;
-  string appId = 2;
-  bytes attesterPubSesKey = 3; //Ga
-  ProtoDeviceType type = 4;
-}
-
-message ProtoMessage1 {
-  bytes verifierPubSesKey = 1; //Gv
-  bytes verifierPubKey = 2; //V
-  ProtoSchnorr signatureSessionKeys = 3;  //Signv(Gv,Ga)
-  bytes mac = 4; //MAC_Km(content1)
-}
-
-message ProtoMessage2 {
-  string appId = 1;
-  bytes attesterPubSesKey = 2; //Ga
-  ProtoEvidence evidence = 3; //evidence
-  ProtoSchnorr signatureEvidence = 4; //Sign_A(Evidence)
-  bytes mac = 5; //MAC_Km(content2)
-  string attesterId = 6;
-}
-
-message ProtoMessage3 {
-  bytes iv = 1; //iv
-  bytes encryptedData = 2; //Sign_V(Enc_A(data))
-}*/
-
-//=======ProxyMsg=======
-/*message ProxyAttestationMessage {
-  enum AttOperation {
-      GENERATE_SIGNING_KEY = 0;
-      GET_PUBLIC_KEY = 1;
-      SIGN_DATA = 2;
-      VERIFY = 3;
-      GET_RANDOM_NUMBER = 4;
-  }
-  AttOperation operation = 1;
-  ProtoEvidence evidence = 2;
-  ProtoSchnorr signature = 3;
-  bytes dataToSign = 4;
-}
-
-message ProxyMapMessage {
-  enum MapOperation {
-    MAP_PUT = 0;
-    MAP_DELETE = 1;
-    MAP_GET = 2;
-    MAP_LIST = 3;
-    MAP_CAS = 4;
-  }
-  MapOperation operation = 1;
-  bytes key = 2;
-  bytes value = 3; //also serves as newData
-  bytes oldData = 4;
-}*/
-
 enum ProtoDeviceType {
   CAMERA = 0;
   THERMOMETER = 1;
@@ -88,34 +30,29 @@ enum ProtoDeviceType {
 message ProxyMessage {
   enum Operation {
     //----------ATTESTATION-----------
-    ATTEST_GENERATE_SIGNING_KEY = 0;
-    ATTEST_GET_VERIFIER_PUBLIC_KEY = 1;
-    ATTEST_GET_PUBLIC_KEY = 2;
-    ATTEST_SIGN_DATA = 3;
-    ATTEST_VERIFY = 4;
-    ATTEST_GET_RANDOM_NUMBER = 5; //remove most of this
+    ATTEST_GET_PUBLIC_KEY = 0;
+    ATTEST_TIMESTAMP = 1;
     //--------------MAP--------------
-    MAP_PUT = 6;
-    MAP_DELETE = 7;
-    MAP_GET = 8;
-    MAP_LIST = 9;
-    MAP_CAS = 10;
+    MAP_PUT = 2;
+    MAP_DELETE = 3;
+    MAP_GET = 4;
+    MAP_LIST = 5;
+    MAP_CAS = 6;
     //-----------MEMBERSHIP-----------
-    MEMBERSHIP_JOIN = 11;
-    MEMBERSHIP_LEAVE = 12;
-    MEMBERSHIP_VIEW = 13;
-    MEMBERSHIP_PING = 14;
+    MEMBERSHIP_JOIN = 7;
+    MEMBERSHIP_LEAVE = 8;
+    MEMBERSHIP_VIEW = 9;
+    MEMBERSHIP_PING = 10;
     //-----------EXTENSION------------
-    EXTENSION_ADD = 15;
-    EXTENSION_REMOVE = 16;
-    EXTENSION_GET = 17;
+    EXTENSION_ADD = 11;
+    EXTENSION_REMOVE = 12;
+    EXTENSION_GET = 13;
     //-------------POLICY-------------
-    POLICY_ADD = 18;
-    POLICY_REMOVE = 19;
-    POLICY_GET = 20;
+    POLICY_ADD = 14;
+    POLICY_REMOVE = 15;
+    POLICY_GET = 16;
     //-----------TIMESTAMP------------
-    TIMESTAMP_GET = 21;
-    TIMESTAMP_ATT = 22;
+    TIMESTAMP_GET = 17;
   }
   Operation operation = 1;
 
@@ -124,28 +61,25 @@ message ProxyMessage {
   bytes timestamp = 3;
   ProtoSchnorr signature = 4;
 
+  string key = 5;
+  bytes value = 6; //also serves as newData
+  bytes oldData = 7;
 
-  bytes dataToSign = 5;
+  string deviceId = 8;
+  string appId = 9;
 
-  string key = 6;
-  bytes value = 7; //also serves as newData
-  bytes oldData = 8;
-
-  string deviceId = 9;
-  string appId = 10;
-
-  string code = 11;
+  string code = 10;
 
   message ProtoPolicy {
     string policy = 1;
     bool type = 2; //false = logic expression, true = script
   }
 
-  ProtoPolicy policy = 12;
-  ProtoDeviceType deviceType = 13;
+  ProtoPolicy policy = 11;
+  ProtoDeviceType deviceType = 12;
 
   //========INITIAL REQUEST==========//
-  bytes pubKey = 14;
+  bytes pubKey = 13;
 }
 
 message ProxyResponse {
@@ -168,12 +102,11 @@ message ProxyResponse {
     google.protobuf.Timestamp certExpTime = 4;
   }
   repeated ProtoDeviceContext members = 4;
-  string extension = 5;
-  string policy = 6;
+  string extPolicy = 5;
 
   //======TIMESTAMP RESPONSE========//
-  ProtoSchnorr sign = 7;
-  bytes timestamp = 8; //Can also be used for join response
-  bytes pubKey = 9;
-  bytes hash = 10;
+  ProtoSchnorr sign = 6;
+  bytes timestamp = 7; //Can also be used for join response
+  bytes pubKey = 8;
+  bytes hash = 9;
 }

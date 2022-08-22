@@ -66,7 +66,7 @@ public class LatencyAttestationClient {
                     System.out.println("Sending op!");
                     try {
                         switch (operation) {
-                            case ATTEST_VERIFY -> stub.attest(appId, type, version, claim);
+                            case MEMBERSHIP_JOIN -> stub.attest(appId, type, version, claim);
                             case MAP_PUT -> stub.put(appId, id, value);
                             case MAP_GET -> stub.getData(appId, "key");
                         }
@@ -169,7 +169,7 @@ public class LatencyAttestationClient {
         return switch (str) {
             case "mapPut" -> Messages.ProxyMessage.Operation.MAP_PUT;
             case "mapGet" -> Messages.ProxyMessage.Operation.MAP_GET;
-            case "attest" -> Messages.ProxyMessage.Operation.ATTEST_VERIFY;
+            case "attest" -> Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN;
             default -> null;
         };
     }

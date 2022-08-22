@@ -118,7 +118,7 @@ public class PreComputedProxy {
         void sendOperation() {
             try {
                 switch (operation) {
-                    case ATTEST_VERIFY -> attest();
+                    case MEMBERSHIP_JOIN -> attest();
                     case MAP_PUT -> put();
                     case MAP_GET -> get();
                 }
@@ -215,7 +215,7 @@ public class PreComputedProxy {
         return switch (str) {
             case "mapPut" -> Messages.ProxyMessage.Operation.MAP_PUT;
             case "mapGet" -> Messages.ProxyMessage.Operation.MAP_GET;
-            case "attest" -> Messages.ProxyMessage.Operation.ATTEST_VERIFY;
+            case "attest" -> Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN;
             default -> null;
         };
     }

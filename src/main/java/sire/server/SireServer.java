@@ -160,15 +160,48 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	private ConfidentialMessage executeOrderedTimestamp(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Timestamp ts = new Timestamp(messageContext.getTimestamp());
 		ProxyResponse response;
 		switch(op) {
 			case TIMESTAMP_GET -> {
-				return new ConfidentialMessage(serialize(ts));
+				if(membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
+					return new ConfidentialMessage(serialize(ts));
 			}
-			case TIMESTAMP_ATT -> {
+		}
+		return null;
+	}
+
+	private byte[] concat(byte[]...content) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		for(byte[] b : content) {
+			baos.write(b);
+		}
+		return baos.toByteArray();
+	}
+
+	private ConfidentialMessage executeOrderedAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
+		ProxyMessage.Operation op = msg.getOperation();
+		switch(op) {
+			case ATTEST_GET_PUBLIC_KEY -> {
+				try {
+					lock.lock();
+					if (verifierSigningKeyPair == null && signingKeyRequests.isEmpty()) {
+						signingKeyRequests.add(messageContext);
+						generateSigningKey();
+					} else if (verifierSigningKeyPair != null) {
+						logger.warn("I already have a signing key.");
+						System.out.println("Signing key already created...");
+						return new ConfidentialMessage(verifierSigningKeyPair.getPublicKeyShare().getEncoded(true));
+					} else {
+						logger.warn("Signing key is being created.");
+					}
+				} finally {
+					lock.unlock();
+				}
+			} case ATTEST_TIMESTAMP -> {
 				//System.out.println("Timestamp att request!");
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				Timestamp ts = new Timestamp(messageContext.getTimestamp());
 				SchnorrSignature sign = protoToSchnorr(msg.getSignature());
 				boolean isValid = schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),
 						schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey())),
@@ -185,63 +218,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					throw new SireException("Invalid signature!");
 				}
 			}
-		}
-		return null;
-	}
-
-	private byte[] concat(byte[]...content) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		for(byte[] b : content) {
-			baos.write(b);
-		}
-		return baos.toByteArray();
-	}
-
-	private ConfidentialMessage executeOrderedAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException {
-		ProxyMessage.Operation op = msg.getOperation();
-		switch(op) {
-			case ATTEST_GENERATE_SIGNING_KEY -> {
-				try {
-					lock.lock();
-					if (verifierSigningKeyPair == null && signingKeyRequests.isEmpty()) {
-						signingKeyRequests.add(messageContext);
-						generateSigningKey();
-					} else if (verifierSigningKeyPair != null) {
-						logger.warn("I already have a signing key.");
-						System.out.println("Signing key already created...");
-						return new ConfidentialMessage(verifierSigningKeyPair.getPublicKeyShare().getEncoded(true));
-					} else {
-						logger.warn("Signing key is being created.");
-					}
-				} finally {
-					lock.unlock();
-				}
-			}
-			case ATTEST_GET_PUBLIC_KEY -> {
-				try {
-					lock.lock();
-					if (verifierSigningKeyPair == null && signingKeyRequests.isEmpty()) {
-						signingKeyRequests.add(messageContext);
-						generateSigningKey();
-					} else if (verifierSigningKeyPair != null){
-						return new ConfidentialMessage(verifierSigningKeyPair.getPublicKeyShare().getEncoded(true));
-					}
-				} finally {
-					lock.unlock();
-				}
-			}
-			case ATTEST_SIGN_DATA -> {
-				try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-					lock.lock();
-					byte[] data = byteStringToByteArray(out, msg.getDataToSign());
-					signAndSend(messageContext, data);
-					return new ConfidentialMessage();
-				} finally {
-					lock.unlock();
-				}
-
-			}
-			case ATTEST_GET_RANDOM_NUMBER -> {
+/*			case ATTEST_GET_RANDOM_NUMBER -> {
 				lock.lock();
 				VerifiableShare	share = data.get(messageContext.getSender());
 				if (share == null)
@@ -251,7 +228,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					sendRandomNumberShareTo(messageContext, share);
 				}
 				lock.unlock();
-			}
+			}*/
 		}
 		return null;
 	}

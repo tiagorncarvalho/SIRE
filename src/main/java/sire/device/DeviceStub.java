@@ -109,7 +109,7 @@ public class DeviceStub {
 
     public ECPoint getVerifierPublicKey() throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
-                .setOperation(ProxyMessage.Operation.ATTEST_GET_VERIFIER_PUBLIC_KEY)
+                .setOperation(ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY)
                 .build();
         this.oos.writeObject(msg);
         Object o = this.ois.readObject();
@@ -192,7 +192,7 @@ public class DeviceStub {
         try {
             ProxyMessage msg = ProxyMessage.newBuilder()
                     .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
-                    .setOperation(ProxyMessage.Operation.TIMESTAMP_ATT)
+                    .setOperation(ProxyMessage.Operation.ATTEST_TIMESTAMP)
                     .setPubKey(ByteString.copyFrom(attesterPublicKey.getEncoded(true)))
                     .setSignature(schnorrToProto(sign))
                     .build();

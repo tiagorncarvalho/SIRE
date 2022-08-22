@@ -82,7 +82,7 @@ public class SocketProxy implements Runnable {
 		Response response;
 		try {
 			ProxyMessage msg = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.ATTEST_GENERATE_SIGNING_KEY)
+					.setOperation(ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY)
 					.build();
 			byte[] b = msg.toByteArray();
 			response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
@@ -131,7 +131,7 @@ public class SocketProxy implements Runnable {
 						System.out.println("Object received! " + o);
 						if (o instanceof ProxyMessage msg) {
 							switch(msg.getOperation()) {
-								case ATTEST_GET_VERIFIER_PUBLIC_KEY -> oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
+								case ATTEST_GET_PUBLIC_KEY -> oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
 								default -> {
 									ProxyResponse result = runProxyMessage(msg);
 									if(result != null)
@@ -151,7 +151,7 @@ public class SocketProxy implements Runnable {
 			Response res;
 			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW"))
 				res = serviceProxy.invokeUnordered(msg.toByteArray());
-			else if(msg.getOperation() == ProxyMessage.Operation.TIMESTAMP_ATT)
+			else if(msg.getOperation() == ProxyMessage.Operation.ATTEST_TIMESTAMP)
 				return timestampAtt(serviceProxy.invokeOrdered2(msg.toByteArray()));
 			else if(msg.getOperation() == ProxyMessage.Operation.MEMBERSHIP_JOIN)
 				return join(serviceProxy.invokeOrdered2(msg.toByteArray()));
@@ -160,7 +160,6 @@ public class SocketProxy implements Runnable {
 					res = serviceProxy.invokeOrdered(msg.toByteArray());
 				}
 			}
-
 			return switch(msg.getOperation()) {
 				case MAP_GET -> mapGet(res);
 				case MAP_LIST -> mapList(res);
@@ -242,7 +241,7 @@ public class SocketProxy implements Runnable {
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()
 						.setType(ProxyResponse.ResponseType.POLICY_GET)
-						.setPolicy((String) deserialize(tmp))
+						.setExtPolicy((String) deserialize(tmp))
 						.build();
 			} else {
 				return ProxyResponse.newBuilder().build();
@@ -255,7 +254,7 @@ public class SocketProxy implements Runnable {
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()
 						.setType(ProxyResponse.ResponseType.EXTENSION_GET)
-						.setExtension((String) deserialize(tmp))
+						.setExtPolicy((String) deserialize(tmp))
 						.build();
 			} else {
 				return ProxyResponse.newBuilder().build();
