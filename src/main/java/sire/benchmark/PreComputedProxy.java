@@ -2,21 +2,27 @@ package sire.benchmark;
 
 
 import com.google.protobuf.ByteString;
+import confidential.ConfidentialExtractedResponse;
 import confidential.client.ConfidentialServiceProxy;
-import sire.device.DeviceStub;
-import sire.membership.DeviceContext;
+import confidential.client.Response;
+import org.bouncycastle.math.ec.ECPoint;
+import sire.attestation.Evidence;
 import sire.messages.Messages;
 import sire.proxy.ServersResponseHandlerWithoutCombine;
+import sire.schnorr.SchnorrSignature;
+import sire.schnorr.SchnorrSignatureScheme;
+import sire.serverProxyUtils.SireException;
 import vss.facade.SecretSharingException;
-
-import javax.crypto.NoSuchPaddingException;
-import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import static sire.messages.ProtoUtils.*;
 
 public class PreComputedProxy {
     private static ConfidentialServiceProxy serviceProxy;
@@ -25,6 +31,16 @@ public class PreComputedProxy {
     private static final String appId = "app1";
     private static final String version = "1.0";
     private static final Object proxyLock = new Object();
+    static SchnorrSignatureScheme scheme;
+
+    static {
+        try {
+            scheme = new SchnorrSignatureScheme();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static byte[] getMsg = Messages.ProxyMessage.newBuilder()
             .setOperation(Messages.ProxyMessage.Operation.MAP_GET)
             .setAppId("app1")
@@ -36,17 +52,48 @@ public class PreComputedProxy {
             .setKey("j7dw0sr5dhh9itj87spjb9dvkb358u5t6jn95j6wdfl1")
             .setValue(ByteString.copyFrom("wwehfuq652ru0ibdr79eddqmwmhpmcjfz0hx3ihee3gu".getBytes()))
             .build().toByteArray();
+    static BigInteger attesterPrivateKey = new BigInteger("4049546346519992604730332816858472394381393488413156548605745581385");
+    static ECPoint attesterPubKey = scheme.getGenerator().multiply(attesterPrivateKey);
+    static MessageDigest messageDigest;
+    static ECPoint verifierPublicKey;
 
-    public static void main(String[] args) throws InterruptedException, SecretSharingException {
+    static {
+        try {
+            messageDigest = MessageDigest.getInstance("SHA256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static BigInteger randomPrivateKey = new BigInteger("2673E6E0D6F66A15DB4FA597B8160F23AB8767ED0E46692E01E04D49BD154426", 16);
+    static ECPoint randomPublicKey = scheme.getGenerator().multiply(randomPrivateKey);
+
+    static SchnorrSignature signature = scheme.computeSignature(computeHash(attesterPubKey.getEncoded(true)), attesterPrivateKey,
+            attesterPubKey, randomPrivateKey, randomPublicKey);
+
+    private static byte[] msg0;
+
+
+    private static byte[] computeHash(byte[]... contents) {
+        for (byte[] content : contents) {
+            messageDigest.update(content);
+        }
+        return messageDigest.digest();
+    }
+
+
+    public PreComputedProxy() throws NoSuchAlgorithmException {
+    }
+
+    public static void main(String[] args) throws InterruptedException, SecretSharingException, SireException {
         if (args.length != 5) {
             System.out.println("USAGE: benchmark.LatencyAttestationClient <initial client id> " +
                     "<num clients> <number of ops> <operation> <measurement leader?>");
             System.exit(-1);
         }
         initialId = Integer.parseInt(args[0]);
-        DeviceContext.DeviceType type = DeviceContext.DeviceType.CAMERA;
-        byte[] claim = "measure1".getBytes();
         int numClients = Integer.parseInt(args[1]);
+        System.out.println(numClients);
         int numOperations = Integer.parseInt(args[2]);
         Messages.ProxyMessage.Operation operation;
         if((operation = operationFromString(args[3])) == null) {
@@ -105,14 +152,35 @@ public class PreComputedProxy {
         private final boolean measurementLeader;
 
 
-        Client(int id, int numOperations, Messages.ProxyMessage.Operation operation, boolean measurementLeader) throws SecretSharingException {
+        Client(int id, int numOperations, Messages.ProxyMessage.Operation operation, boolean measurementLeader) throws SecretSharingException, SireException {
             this.id = id;
             this.numOperations = numOperations;
             this.operation = operation;
             this.measurementLeader = measurementLeader;
             ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
 
+            msg0 = Messages.ProxyMessage.newBuilder()
+                    .setDeviceId("" + id)
+                    .setPubKey(ByteString.copyFrom(attesterPubKey.getEncoded(true)))
+                    .setSignature(schnorrToProto(signature))
+                    .setOperation(Messages.ProxyMessage.Operation.ATTEST_TIMESTAMP)
+                    .build().toByteArray();
+
             serviceProxy = new ConfidentialServiceProxy(id, responseHandler);
+
+            if(measurementLeader) {
+                Response response;
+                try {
+                    Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+                            .setOperation(Messages.ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY)
+                            .build();
+                    byte[] b = msg.toByteArray();
+                    response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
+                } catch (SecretSharingException e) {
+                    throw new SireException("Failed to obtain verifier's public key", e);
+                }
+                verifierPublicKey = scheme.decodePublicKey(response.getPainData());
+            }
         }
 
         void sendOperation() {
@@ -206,8 +274,34 @@ public class PreComputedProxy {
             serviceProxy.invokeOrdered(putMsg);
         }
 
-        private static void attest() {
+        private void attest() throws SecretSharingException {
+            ConfidentialExtractedResponse res = serviceProxy.invokeOrdered2(msg0);
+            byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 124, res.getPlainData().length);
+            byte[] ts = Arrays.copyOfRange(data, 0, 91);
 
+            Evidence evidence = new Evidence("1.0", "measure1".getBytes(), attesterPubKey.getEncoded(true));
+
+            byte[] signingHash = computeHash(
+                    attesterPubKey.getEncoded(true),
+                    "1.0".getBytes(),
+                    "measure1".getBytes(),
+                    ts,
+                    appId.getBytes()
+            );
+
+            signature = scheme.computeSignature(signingHash, attesterPrivateKey,
+                    attesterPubKey, randomPrivateKey, randomPublicKey);
+
+            Messages.ProxyMessage attReq = Messages.ProxyMessage.newBuilder()
+                    .setOperation(Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN)
+                    .setAppId("app1")
+                    .setDeviceId("" + id)
+                    .setTimestamp(ByteString.copyFrom(ts))
+                    .setEvidence(evidenceToProto(evidence))
+                    .setPubKey(ByteString.copyFrom(attesterPubKey.getEncoded(true)))
+                    .setSignature(schnorrToProto(signature))
+                    .build();
+            serviceProxy.invokeOrdered2(attReq.toByteArray());
         }
     }
 

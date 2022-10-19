@@ -1,16 +1,12 @@
 package sire.proxy;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Timestamp;
 import confidential.ConfidentialExtractedResponse;
-import confidential.ConfidentialMessage;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import org.bouncycastle.crypto.BlockCipher;
 import org.bouncycastle.crypto.engines.AESEngine;
-import org.bouncycastle.crypto.macs.CMac;
-import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.membership.DeviceContext;
 import sire.schnorr.PublicPartialSignature;
@@ -26,14 +22,11 @@ import vss.facade.SecretSharingException;
 import vss.secretsharing.Share;
 import vss.secretsharing.VerifiableShare;
 
-import javax.crypto.*;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.*;
 
 /**
@@ -43,15 +36,8 @@ import java.util.*;
 public class SocketProxy implements Runnable {
 	private static final int AES_KEY_LENGTH = 128;
 	private final ConfidentialServiceProxy serviceProxy;
-	private final MessageDigest messageDigest;
 	private final ECPoint verifierPublicKey;
 	private final SchnorrSignatureScheme signatureScheme;
-/*	private final Map<String, AttesterContext> attesters;*/
-	private final SecureRandom rndGenerator = new SecureRandom("sire".getBytes());
-	private final CMac macEngine;
-/*	private final SecretKeyFactory secretKeyFactory;
-	private final ECPoint curveGenerator;
-	private final Cipher symmetricCipher;*/
 	private final int proxyId;
 	private final Object proxyLock;
 
@@ -68,14 +54,9 @@ public class SocketProxy implements Runnable {
 		}
 		System.out.println("Connection established!");
 		try {
-			messageDigest = MessageDigest.getInstance("SHA256");
 			BlockCipher aes = new AESEngine();
 
-			macEngine = new CMac(aes);
-			//secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			signatureScheme = new SchnorrSignatureScheme();
-			//curveGenerator = signatureScheme.getGenerator();
-			//symmetricCipher = Cipher.getInstance("AES/GCM/NoPadding");
 		} catch (NoSuchAlgorithmException e) {
 			throw new SireException("Failed to initialize cryptographic tools", e);
 		}
@@ -91,7 +72,6 @@ public class SocketProxy implements Runnable {
 		}
 		verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
 
-		//attesters = new HashMap<>();
 	}
 
 	@Override
@@ -125,26 +105,23 @@ public class SocketProxy implements Runnable {
 				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 
 				while (!s.isClosed()) {
-					//System.out.println("Running!");
 					Object o;
 					while ((o = ois.readObject()) != null) {
-						//System.out.println("Object received! " + o);
 						if (o instanceof ProxyMessage msg) {
-							switch(msg.getOperation()) {
-								case ATTEST_GET_PUBLIC_KEY -> oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
-								default -> {
-									ProxyResponse result = runProxyMessage(msg);
-									if(result != null)
-										oos.writeObject(result);
-								}
+							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
+								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
+							} else {
+								ProxyResponse result = runProxyMessage(msg);
+								if (result != null)
+									oos.writeObject(result);
 							}
 						}
 
 					}
 				}
-			} catch (IOException | ClassNotFoundException | SecretSharingException | SireException e) {
+			} catch (ClassNotFoundException | SecretSharingException | SireException e) {
 				e.printStackTrace();
-			}
+			} catch (IOException ignored) {}
 		}
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {
@@ -319,104 +296,6 @@ public class SocketProxy implements Runnable {
 			} else {
 				return ProxyResponse.newBuilder().build();
 			}
-		}
-
-
-		/*private SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {
-			KeySpec spec = new PBEKeySpec(password, salt, 65536, AES_KEY_LENGTH);
-			return new SecretKeySpec(secretKeyFactory.generateSecret(spec).getEncoded(), "AES");
-		}
-
-		private byte[] encryptData(SecretKey key, byte[] data) throws SireException {
-			try {
-				symmetricCipher.init(Cipher.ENCRYPT_MODE, key);
-				return symmetricCipher.doFinal(data);
-			} catch (InvalidKeyException | IllegalBlockSizeException
-					| BadPaddingException e) {
-				throw new SireException("Failed to encrypt data", e);
-			}
-		}
-
-		private boolean verifyMac(byte[] secretKey, byte[] mac, byte[]... contents) {
-			return Arrays.equals(computeMac(secretKey, contents), mac);
-		}
-
-		private SchnorrSignature getSignatureFromVerifier(byte[] data) throws SireException {
-
-			ProxyMessage signingRequest = ProxyMessage.newBuilder()
-					.setOperation(ProxyMessage.Operation.ATTEST_SIGN_DATA)
-					.setDataToSign(ByteString.copyFrom(data))
-					.build();
-			UncombinedConfidentialResponse signatureResponse;
-			try {
-				synchronized (proxyLock) {
-					signatureResponse = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered2(signingRequest.toByteArray());
-				}
-			} catch (SecretSharingException e) {
-				throw new SireException("Verifier failed to sign", e);
-			}
-
-			PublicPartialSignature partialSignature;
-			try (ByteArrayInputStream bis = new ByteArrayInputStream(signatureResponse.getPlainData());
-				 ObjectInput in = new ObjectInputStream(bis)) {
-				partialSignature = PublicPartialSignature.deserialize(signatureScheme, in);
-			} catch (IOException | ClassNotFoundException e) {
-				throw new SireException("Failed to deserialize public data of partial signatures");
-			}
-
-			EllipticCurveCommitment signingKeyCommitment = partialSignature.getSigningKeyCommitment();
-			EllipticCurveCommitment randomKeyCommitment = partialSignature.getRandomKeyCommitment();
-			ECPoint randomPublicKey = partialSignature.getRandomPublicKey();
-			VerifiableShare[] verifiableShares = signatureResponse.getVerifiableShares()[0];
-			Share[] partialSignatures = new Share[verifiableShares.length];
-			for (int i = 0; i < verifiableShares.length; i++) {
-				partialSignatures[i] = verifiableShares[i].getShare();
-			}
-
-			if (randomKeyCommitment == null)
-				throw new IllegalStateException("Random key commitment is null");
-
-			try {
-				BigInteger sigma = signatureScheme.combinePartialSignatures(
-						serviceProxy.getCurrentF(),
-						data,
-						signingKeyCommitment,
-						randomKeyCommitment,
-						randomPublicKey,
-						partialSignatures
-				);
-				return new SchnorrSignature(sigma.toByteArray(), verifierPublicKey.getEncoded(true),
-						randomPublicKey.getEncoded(true));
-			} catch (SecretSharingException e) {
-				throw new SireException("Failed to combine partial signatures", e);
-			}
-
-		}*/
-
-		private byte[] computeHash(byte[]... contents) {
-			for (byte[] content : contents) {
-				messageDigest.update(content);
-			}
-			return messageDigest.digest();
-		}
-
-		private byte[] computeMac(byte[] secretKey, byte[]... contents) {
-			macEngine.init(new KeyParameter(secretKey));
-			for (byte[] content : contents) {
-				macEngine.update(content, 0, content.length);
-			}
-			byte[] mac = new byte[macEngine.getMacSize()];
-			macEngine.doFinal(mac, 0);
-			return mac;
-		}
-
-		private BigInteger getRandomNumber(BigInteger field) {
-			BigInteger rndBig = new BigInteger(field.bitLength() - 1, rndGenerator);
-			if (rndBig.compareTo(BigInteger.ZERO) == 0) {
-				rndBig = rndBig.add(BigInteger.ONE);
-			}
-
-			return rndBig;
 		}
 
 		private void close() {

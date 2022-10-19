@@ -61,9 +61,7 @@ public class ExtensionManager {
 
     public boolean runPolicy(String appId, Evidence evidence) {
         if(extensions.containsKey(appId + ExtensionType.EXT_ATTEST)) {
-            boolean execResult = (boolean) extensions.get(appId + ExtensionType.EXT_ATTEST).getScript().invokeMethod(
-                    "verifyEvidence", evidence);
-            return execResult;
+            return (boolean) extensions.get(appId + ExtensionType.EXT_ATTEST).getScript().invokeMethod("verifyEvidence", evidence);
         }
 
         return true;

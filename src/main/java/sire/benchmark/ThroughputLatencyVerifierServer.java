@@ -5,7 +5,6 @@ import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.core.messages.TOMMessage;
-import com.google.protobuf.ByteString;
 import confidential.ConfidentialMessage;
 import confidential.facade.server.ConfidentialSingleExecutable;
 import confidential.polynomial.DistributedPolynomialManager;
@@ -22,9 +21,7 @@ import sire.attestation.VerifierManager;
 import sire.coordination.CoordinationManager;
 import sire.membership.MembershipManager;
 import sire.messages.Messages;
-import sire.schnorr.PublicPartialSignature;
-import sire.schnorr.SchnorrSignature;
-import sire.schnorr.SchnorrSignatureScheme;
+import sire.schnorr.*;
 import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.commitment.linear.LinearCommitments;
@@ -67,10 +64,11 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     private final Map<Integer, byte[]> signingData;// <client id, data for signing>
 
     private final SchnorrSignatureScheme schnorrSignatureScheme;
+    private SchnorrKeyPair verifierSigningKeyPair;
+    //private VerifiableShare verifierSigningPrivateKeyShare;
+    //private ECPoint verifierSigningPublicKey;
 
-    private VerifiableShare verifierSigningPrivateKeyShare;
-    private ECPoint verifierSigningPublicKey;
-
+    MessageDigest messageDigest;
     //private final ECPoint dummyAttesterPublicKey;
 
     //key value store for information concerning devices, applications and more
@@ -81,14 +79,13 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     //private final Map<String, AppContext> membership;
     private final MembershipManager membership;
 
-    //runs and stores extensions
-    MessageDigest messageDigest;
-
     //verifies the evidence
     private final VerifierManager verifierManager;
 
     private final int timebound = 500; //in milliseconds
     private final Map<String, Timestamp> devicesTimestamps;
+
+    private final SchnorrNonceManager schnorrNonceManager;
 
 
     //For throughput measurement
@@ -127,6 +124,8 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         schnorrSignatureScheme = new SchnorrSignatureScheme();
         messageDigest = MessageDigest.getInstance("SHA256");
         devicesTimestamps = new TreeMap<>();
+        schnorrNonceManager = new SchnorrNonceManager(id, serviceReplica.getReplicaContext().getCurrentView().getF(),
+                schnorrSignatureScheme.getCurve());
 
         startTime = System.nanoTime();
     }
@@ -141,8 +140,6 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
 
             if(op.toString().startsWith("MAP"))
                 return executeOrderedMap(msg);
-            else if(op.toString().startsWith("TIMESTAMP"))
-                return executeOrderedTimestamp(msg, messageContext);
             else if(op.toString().startsWith("MEMBERSHIP"))
                 return executeOrderedMembership(msg, messageContext);
             else if(op.toString().startsWith("ATTEST"))
@@ -165,8 +162,6 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
 
             if(op.toString().startsWith("MAP"))
                 return executeOrderedMap(msg);
-            else if(op.toString().startsWith("TIMESTAMP"))
-                return executeOrderedTimestamp(msg, messageContext);
             else if(op.toString().startsWith("MEMBERSHIP"))
                 return executeOrderedMembership(msg, messageContext);
             else if(op.toString().startsWith("ATTEST"))
@@ -195,65 +190,51 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         }
     }
 
-    private ConfidentialMessage executeOrderedAttestation(Messages.ProxyMessage msg, MessageContext messageContext) throws IOException {
-        Messages.ProxyMessage.Operation op = msg.getOperation();
-        if (op == Messages.ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
-            try {
-                lock.lock();
-                if (verifierSigningPrivateKeyShare == null && signingKeyRequests.isEmpty()) {
-                    signingKeyRequests.add(messageContext);
-                    generateSigningKey();
-                } else if (verifierSigningPrivateKeyShare != null) {
-                    logger.warn("I already have a signing key.");
-                    System.out.println("Signing key already created...");
-                    return new ConfidentialMessage(verifierSigningPublicKey.getEncoded(true));
-                } else {
-                    logger.warn("Signing key is being created.");
-                }
-            } finally {
-                lock.unlock();
-            }
+    private byte[] concat(byte[]...content) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        for(byte[] b : content) {
+            baos.write(b);
         }
-        return null;
+        return baos.toByteArray();
     }
 
-    private ConfidentialMessage executeOrderedTimestamp(Messages.ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
+    private ConfidentialMessage executeOrderedAttestation(Messages.ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
         Messages.ProxyMessage.Operation op = msg.getOperation();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Timestamp ts = new Timestamp(messageContext.getTimestamp());
-        Messages.ProxyResponse response;
         switch(op) {
-            case TIMESTAMP_GET -> {
-                lock.lock();
-                response = Messages.ProxyResponse.newBuilder()
-                        .setTimestamp(ByteString.copyFrom(serialize(ts)))
-                        .build();
-                lock.unlock();
-                return new ConfidentialMessage(response.toByteArray());
-            }
-            case ATTEST_TIMESTAMP -> {
-                lock.lock();
-                SchnorrSignature sign = protoToSchnorr(msg.getSignature());
-                boolean isValid = schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),
-                        schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey())),
-                        schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey()), new BigInteger(sign.getSigma()));
-                if(isValid) {
-                    //byte[] data = concat(serialize(ts), byteStringToByteArray(baos, msg.getPubKey()));
-                    devicesTimestamps.put(msg.getDeviceId(), ts);
-                    response = Messages.ProxyResponse.newBuilder()
-                            .setTimestamp(ByteString.copyFrom(serialize(ts)))
-                            .setPubKey(msg.getPubKey())
-                            //.setSign()
-                            .build();
-                    baos.close();
+            case ATTEST_GET_PUBLIC_KEY -> {
+                try {
+                    lock.lock();
+                    if (verifierSigningKeyPair == null && signingKeyRequests.isEmpty()) {
+                        signingKeyRequests.add(messageContext);
+                        generateSigningKey();
+                    } else if (verifierSigningKeyPair != null) {
+                        logger.warn("I already have a signing key.");
+                        System.out.println("Signing key already created...");
+                        return new ConfidentialMessage(verifierSigningKeyPair.getPublicKeyShare().getEncoded(true));
+                    } else {
+                        logger.warn("Signing key is being created.");
+                    }
+                } finally {
                     lock.unlock();
-
-                    return new ConfidentialMessage(response.toByteArray());
-					/*
-					signingData.put(messageContext.getSender(), data);
-					System.out.println(Arrays.toString(data));
-					generateRandomKey(messageContext);*/
-
+                }
+            } case ATTEST_TIMESTAMP -> {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                Timestamp ts = new Timestamp(messageContext.getTimestamp());
+                SchnorrSignature sign = protoToSchnorr(msg.getSignature());
+                /*computeHash(byteStringToByteArray(baos, msg.getPubKey()));
+                schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey()));
+                schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey());
+                new BigInteger(sign.getSigma());*/
+                boolean isValid = true;
+                /*schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),
+                        schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey())),
+                        schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey()), new BigInteger(sign.getSigma()));*/
+                if(isValid) {
+                    byte[] tis = serialize(ts);
+                    byte[] pubKey = byteStringToByteArray(baos, msg.getPubKey());
+                    byte[] data = concat(tis, pubKey);
+                    devicesTimestamps.put(msg.getDeviceId(), ts);
+                    return sign(data, messageContext);//new ConfidentialMessage();
                 } else {
                     throw new SireException("Invalid signature!");
                 }
@@ -273,20 +254,19 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                         protoToSchnorr(msg.getSignature()));
                 boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence,
                         byteStringToByteArray(baos, msg.getTimestamp()));
-                boolean isTimedout = (new Timestamp(messageContext.getTimestamp())).before(
-                        new Timestamp(devicesTimestamps.get(msg.getDeviceId()).getTime() + timebound));
+                boolean isTimedout = false;
+                if(devicesTimestamps.containsKey(msg.getDeviceId())) {
+                    isTimedout = (new Timestamp(messageContext.getTimestamp())).before(
+                            new Timestamp(devicesTimestamps.get(msg.getDeviceId()).getTime() + timebound));
+                }
 
                 if (isValidEvidence && isTimedout) {
-                    Messages.ProxyResponse res = Messages.ProxyResponse.newBuilder()
-                            .setTimestamp(ByteString.copyFrom(serialize(new Timestamp(messageContext.getTimestamp()))))
-                            .setHash(ByteString.copyFrom(computeHash(msg.toByteArray())))
-                            .setPubKey(msg.getPubKey())
-                            //.setSign()
-                            .build();
+                    byte[] data = concat(serialize(new Timestamp(messageContext.getTimestamp())),
+                            byteStringToByteArray(new ByteArrayOutputStream(), msg.getPubKey()), computeHash(msg.toByteArray()));
                     membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
                             protoDevToDev(msg.getDeviceType()));
 
-                    return new ConfidentialMessage(res.toByteArray());
+                    return sign(data, messageContext);
                 } else {
                     return new ConfidentialMessage(new byte[]{0});
                 }
@@ -315,24 +295,21 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         return null;
     }
 
-/**
+    /**
      * Method used to asynchronously send the random number share
      * @param receiverContext Information about the requesting client
      * @param share Random number share
      */
-
     public void sendRandomNumberShareTo(MessageContext receiverContext, VerifiableShare share) {
         ConfidentialMessage response = new ConfidentialMessage(null, share);//maybe send encrypted if needed (e.g., when tls encryption is off)
         sendResponseTo(receiverContext, response);
     }
 
-
-/**
+    /**
      * Method used to send a response to a client
      * @param receiverContext Information about the requesting client
      * @param response The response
      */
-
     public void sendResponseTo(MessageContext receiverContext, ConfidentialMessage response) {
         TOMMessage tomMessage = new TOMMessage(
                 id,
@@ -346,13 +323,10 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         serverCommunicationSystem.send(new int[]{receiverContext.getSender()}, tomMessage);
     }
 
-
-
     /**
      * Method called by the polynomial generation manager when the requested random number is generated
      * @param context Random number share and its context
      */
-
     @Override
     public void onRandomPolynomialsCreation(RandomPolynomialContext context) {
         lock.lock();
@@ -369,18 +343,16 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         if (signingRequestContexts.containsKey(id)) {
             logger.info("Received random signing key");
             MessageContext messageContext = signingRequestContexts.remove(id);
-            signAndSend(messageContext, signingData.remove(messageContext.getSender()), verifierSigningPrivateKeyShare,
-                    privateKeyShare, publicKey);
+            signAndSend(messageContext, signingData.remove(messageContext.getSender()));
         } else if (signingKeyGenerationId == id) {
             logger.info("Received service signing key");
-            verifierSigningPrivateKeyShare = privateKeyShare;
-            verifierSigningPublicKey = publicKey;
+            verifierSigningKeyPair = new SchnorrKeyPair(privateKeyShare, publicKey);
             for (MessageContext messageContext : signingKeyRequests) {
                 sendPublicKeyTo(messageContext, publicKey);
             }
             signingKeyRequests.clear();
         } else {
-            logger.info("Received an unknown polynomial id {}", id);
+            logger.warn("Received an unknown polynomial id {}", id);
         }
     }
 
@@ -390,39 +362,43 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         sendResponseTo(receiverContext, response);
     }
 
-    private void signAndSend(MessageContext receiverContext, byte[] data, VerifiableShare signingPrivateKeyShare,
-                             VerifiableShare randomPrivateKeyShare, ECPoint randomPublicKey) {
+    private void signAndSend(MessageContext receiverContext, byte[] data) {
+        ConfidentialMessage response = sign(data, receiverContext);
+        sendResponseTo(receiverContext, response);
+    }
+
+    private ConfidentialMessage sign(byte[] data, MessageContext messageContext) {
+        VerifiableShare verifierSigningPrivateKeyShare = verifierSigningKeyPair.getPrivateKeyShare();
+        SchnorrKeyPair nonceKeyPair = schnorrNonceManager.getNonce(String.valueOf(messageContext.getConsensusId()).getBytes());
+        VerifiableShare randomPrivateKeyShare = nonceKeyPair.getPrivateKeyShare();
+        ECPoint randomPublicKey = nonceKeyPair.getPublicKeyShare();
         BigInteger sigma = schnorrSignatureScheme.computePartialSignature(data,
-                signingPrivateKeyShare.getShare().getShare(), randomPrivateKeyShare.getShare().getShare(), randomPublicKey);
+                verifierSigningPrivateKeyShare.getShare().getShare(), randomPrivateKeyShare.getShare().getShare(), randomPublicKey);
         byte[] plainData = null;
         PublicPartialSignature publicPartialSignature = new PublicPartialSignature(
-                (EllipticCurveCommitment) signingPrivateKeyShare.getCommitments(),
+                (EllipticCurveCommitment) verifierSigningPrivateKeyShare.getCommitments(),
                 (EllipticCurveCommitment) randomPrivateKeyShare.getCommitments(), randomPublicKey);
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutput out = new ObjectOutputStream(bos)) {
             publicPartialSignature.serialize(out);
 
+
             out.flush();
             bos.flush();
-            plainData = bos.toByteArray();
+            plainData = concat(bos.toByteArray(), data);
         } catch (IOException e) {
             e.printStackTrace();
         }
         BigInteger shareholder = cr.getShareholderId();
-        if (serviceReplica.getId() == 0)
-            sigma = sigma.add(BigInteger.ONE);
-        VerifiableShare partialSignature = new VerifiableShare(new Share(shareholder, sigma),
-                new LinearCommitments(BigInteger.ZERO), null);
-        ConfidentialMessage response = new ConfidentialMessage(plainData, partialSignature);
-        sendResponseTo(receiverContext, response);
+        Share s = new Share(shareholder, sigma);
+        VerifiableShare partialSignature = new VerifiableShare(s, new LinearCommitments(BigInteger.ZERO), null);
+        return new ConfidentialMessage(plainData, partialSignature);
     }
 
-
-/**
+    /**
      * Method called by the polynomial generation manager when the requested random key is generated
      * @param context Random number share and its context
      */
-
     @Override
     public void onRandomKeyPolynomialsCreation(RandomPolynomialContext context) {
         lock.lock();
@@ -493,6 +469,9 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         return messageDigest.digest();
     }
 
+    /**
+     * Method used to generate a signing key.
+     */
     private void generateSigningKey() {
         signingKeyGenerationId = distributedPolynomialManager.createRandomKeyPolynomial(
                 serviceReplica.getReplicaContext().getCurrentView().getF(),

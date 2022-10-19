@@ -59,8 +59,9 @@ public class DeviceStub {
         scheme = new SchnorrSignatureScheme();
         BigInteger cofactor = prime.divide(order);
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
+
         try {
-            this.s = new Socket("localhost", port);
+            this.s = new Socket("192.168.3.34", port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
         } catch (IOException e) {

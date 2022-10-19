@@ -8,35 +8,15 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
-
-import static sire.messages.ProtoUtils.serialize;
 
 public class VerifierManager {
     SchnorrSignatureScheme signatureScheme;
     MessageDigest messageDigest;
-    //private final Map<String, List<byte[]>> refValues;
-    //private final Map<String, Set<ECPoint>> endorsedKeys;
     private final PolicyManager policyManager;
-    //private final String WaTZVersion;
-
 
     public VerifierManager() throws NoSuchAlgorithmException {
         signatureScheme = new SchnorrSignatureScheme();
         messageDigest = MessageDigest.getInstance("SHA256");
-        /*refValues = new HashMap<>();
-        List<byte[]> tempValues =  new ArrayList<>(Arrays.asList(
-                "measure1".getBytes(),
-                "measure2".getBytes()
-        ));
-        refValues.put("app1", tempValues);*/
-        /*Set<ECPoint> tempKeys = new HashSet<>();
-        tempKeys.add(signatureScheme.decodePublicKey(new byte[] {3, -27, -103, 52, -58, -46, 91,
-                -103, -14, 0, 65, 73, -91, 31, -42, -97, 77, 19, -55, 8, 125, -9, -82, -117, -70, 102, -110, 88,
-                -121, -76, -88, 44, -75}));
-        endorsedKeys = new HashMap<>();
-        endorsedKeys.put("app1", tempKeys);*/
-        //WaTZVersion = "1.0";
         policyManager = PolicyManager.getInstance();
     }
 
@@ -44,9 +24,6 @@ public class VerifierManager {
         Evidence evidence = deviceEvidence.getEvidence();
         ECPoint attesterPublicKey = signatureScheme.decodePublicKey(evidence
                 .getPubKey());
-        /*if (!endorsedKeys.get(appId).contains(attesterPublicKey)) {
-            return false;
-        }*/
 
         byte[] signingHash = computeHash(
                 attesterPublicKey.getEncoded(true),

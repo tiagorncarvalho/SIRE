@@ -4,7 +4,6 @@ import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.core.messages.TOMMessage;
-import com.google.protobuf.ByteString;
 import confidential.ConfidentialMessage;
 import confidential.facade.server.ConfidentialSingleExecutable;
 import confidential.polynomial.DistributedPolynomialManager;
@@ -215,17 +214,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					throw new SireException("Invalid signature!");
 				}
 			}
-/*			case ATTEST_GET_RANDOM_NUMBER -> {
-				lock.lock();
-				VerifiableShare	share = data.get(messageContext.getSender());
-				if (share == null)
-					generateRandomNumberFor(messageContext);
-				else {
-					logger.debug("Sending existing random number share to {}", messageContext.getSender());
-					sendRandomNumberShareTo(messageContext, share);
-				}
-				lock.unlock();
-			}*/
 		}
 		return null;
 	}
@@ -387,34 +375,12 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	}
 
 	/**
-	 * Method used to generate a random number
-	 * @param messageContext Message context of the client requesting the generation of a random number
-	 */
-	private void generateRandomNumberFor(MessageContext messageContext) {
-		int id = distributedPolynomialManager.createRandomPolynomial(
-				serviceReplica.getReplicaContext().getCurrentView().getF(),
-				serviceReplica.getReplicaContext().getCurrentView().getProcesses());
-		requests.put(id, messageContext);
-	}
-
-	/**
 	 * Method used to generate a signing key.
 	 */
 	private void generateSigningKey() {
 		signingKeyGenerationId = distributedPolynomialManager.createRandomKeyPolynomial(
 				serviceReplica.getReplicaContext().getCurrentView().getF(),
 				serviceReplica.getReplicaContext().getCurrentView().getProcesses());
-	}
-
-	/**
-	 * Method used to generate a random key used to sign data
-	 * @param messageContext Message context of the client requesting to sign data
-	 */
-	private void generateRandomKey(MessageContext messageContext) {
-		int id = distributedPolynomialManager.createRandomKeyPolynomial(
-				serviceReplica.getReplicaContext().getCurrentView().getF(),
-				serviceReplica.getReplicaContext().getCurrentView().getProcesses());
-		signingRequestContexts.put(id, messageContext);
 	}
 
 	/**
