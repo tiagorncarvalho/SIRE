@@ -94,7 +94,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     private final Set<Integer> senders;
     private double maxThroughput;
 
-    public static void main(String[] args) throws NoSuchAlgorithmException {
+    public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
         if (args.length < 1) {
             System.out.println("Usage: sire.server.SireServer <server id>");
             System.exit(-1);
@@ -103,13 +103,13 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         new ThroughputLatencyVerifierServer(Integer.parseInt(args[0]));
     }
 
-    public ThroughputLatencyVerifierServer(int id) throws NoSuchAlgorithmException {
+    public ThroughputLatencyVerifierServer(int id) throws NoSuchAlgorithmException, IOException {
         this.id = id;
         senders = new HashSet<>(3000);
         lock = new ReentrantLock(true);
         requests = new TreeMap<>();
         data = new TreeMap<>();
-        storage = new CoordinationManager();
+        storage = CoordinationManager.getInstance();
         membership = new MembershipManager();
         signingKeyRequests = new LinkedList<>();
         signingRequestContexts = new TreeMap<>();

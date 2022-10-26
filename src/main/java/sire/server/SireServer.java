@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import sire.attestation.DeviceEvidence;
 import sire.attestation.PolicyManager;
 import sire.attestation.VerifierManager;
+import sire.avc.IntersectionRequest;
 import sire.coordination.CoordinationManager;
 import sire.coordination.ExtensionManager;
 import sire.membership.DeviceContext;
@@ -98,7 +99,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	private final SchnorrNonceManager schnorrNonceManager;
 
-	public static void main(String[] args) throws NoSuchAlgorithmException {
+	private List<IntersectionRequest> req;
+
+	public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
 		if (args.length < 1) {
 			System.out.println("Usage: sire.server.SireServer <server id>");
 			System.exit(-1);
@@ -106,12 +109,12 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		new SireServer(Integer.parseInt(args[0]));
 	}
 
-	public SireServer(int id) throws NoSuchAlgorithmException {
+	public SireServer(int id) throws NoSuchAlgorithmException, IOException {
 		this.id = id;
 		lock = new ReentrantLock(true);
 		requests = new TreeMap<>();
 		data = new TreeMap<>();
-		storage = new CoordinationManager();
+		storage = CoordinationManager.getInstance();
 		membership = new MembershipManager();
 		signingKeyRequests = new LinkedList<>();
 		signingRequestContexts = new TreeMap<>();
@@ -129,6 +132,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		devicesTimestamps = new TreeMap<>();
 		schnorrNonceManager = new SchnorrNonceManager(id, serviceReplica.getReplicaContext().getCurrentView().getF(),
 				schnorrSignatureScheme.getCurve());
+		req = new ArrayList<>();
 	}
 
 	@Override
@@ -140,7 +144,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
 				membership.ping(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 			if(op.toString().startsWith("MAP"))
-				return executeOrderedMap(msg);
+				return executeOrderedMap(messageContext, msg);
 			else if(op.toString().startsWith("EXTENSION"))
 				return executeOrderedManagement(msg);
 			else if(op.toString().startsWith("POLICY"))
@@ -323,7 +327,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		return null;
 	}
 
-	private ConfidentialMessage executeOrderedMap(ProxyMessage msg) throws IOException, SireException {
+	private ConfidentialMessage executeOrderedMap(MessageContext messageContext, ProxyMessage msg) throws IOException, SireException {
 		if(membership.isDeviceValid(msg.getAppId(), msg.getDeviceId())) {
 			throw new SireException("Unknown Device: Not attested or not in this app membership.");
 		}
@@ -334,10 +338,26 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				byte[] value = byteStringToByteArray(out, msg.getValue());
 				out.close();
-				storage.put(msg.getAppId(), msg.getKey(), value);
+				boolean canCross = storage.put(msg.getAppId(), msg.getKey(), value);
+/*				if(value[0] == 0) {
+					boolean bl;
+					List<IntersectionRequest> temp = new ArrayList<>();
+					for(IntersectionRequest r : req) {
+						bl = storage.put(r.getMsg().getAppId(), r.getMsg().getKey(), byteStringToByteArray(out, r.getMsg().getValue()));
+						if(bl) {
+							sendResponseTo(r.getMessageContext(), new ConfidentialMessage(new byte[]{(byte) 1}));
+						} else
+							temp.add(r);
+					}
+					req = temp;
+				}*/
 				lock.unlock();
+				System.out.println("Put! " + msg.getKey() + " " + Arrays.toString(value));
 
-				return new ConfidentialMessage();
+				/*if(!canCross)
+					req.add(new IntersectionRequest(messageContext, msg));*/
+
+				return new ConfidentialMessage(new byte[]{(byte) (canCross ? 1 : 0)});
 			}
 			case MAP_DELETE -> {
 				lock.lock();
@@ -506,7 +526,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
 				membership.ping(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 			if(op.toString().startsWith("MAP"))
-				return executeOrderedMap(msg);
+				return executeOrderedMap(messageContext, msg);
 			else if(op.toString().startsWith("EXTENSION"))
 				return executeOrderedManagement(msg);
 			else if(op.toString().startsWith("POLICY"))

@@ -61,7 +61,7 @@ public class DeviceStub {
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
 
         try {
-            this.s = new Socket("192.168.3.34", port);
+            this.s = new Socket("localhost", port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
         } catch (IOException e) {
@@ -258,7 +258,7 @@ public class DeviceStub {
 
 
 
-    public void put(String appId, String key, byte[] value) throws IOException {
+    public void put(String appId, String key, byte[] value) throws IOException, ClassNotFoundException {
         System.out.println("Putting!");
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_PUT)
@@ -268,6 +268,41 @@ public class DeviceStub {
                 .setValue(ByteString.copyFrom(value))
                 .build();
         this.oos.writeObject(msg);
+    }
+
+    public void accessIntersection(String appId, String lane) throws IOException, ClassNotFoundException, InterruptedException {
+        System.out.println("Requesting!");
+        ProxyMessage.Builder builder = ProxyMessage.newBuilder()
+                .setOperation(ProxyMessage.Operation.MAP_PUT)
+                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setAppId(appId)
+                .setKey(lane);
+        ProxyMessage request = builder.setValue(ByteString.copyFrom(new byte[]{1})).build();
+        ProxyMessage release = builder.setValue(ByteString.copyFrom(new byte[]{0})).build();
+        this.oos.writeObject(request);
+
+        Object o = this.ois.readObject();
+        if(o instanceof ProxyResponse pr) {
+            byte b = pr.getValue().byteAt(0);
+            if(b == 0) {
+                System.out.println("Idle...");
+                while(b == 0) {
+                    Thread.sleep(3000);
+                    System.out.println("Retrying...");
+                    this.oos.writeObject(request);
+                    o = this.ois.readObject();
+                    if(o instanceof ProxyResponse temp) {
+                        System.out.println(temp.getValue());
+                        b = temp.getValue().byteAt(0);
+                    }
+                }
+                Thread.sleep(3000);
+            } else {
+                Thread.sleep(5000);
+            }
+        }
+        System.out.println("Releasing!");
+        this.oos.writeObject(release);
     }
 
 

@@ -19,7 +19,7 @@ import static sire.messages.ProtoUtils.serialize;
  */
 public class DeviceClient {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, ClassNotFoundException {
+	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, ClassNotFoundException, InterruptedException {
 
 		String appId = "app1";
 		String version = "1.0";
@@ -27,10 +27,23 @@ public class DeviceClient {
 		byte[] claim = "measure1".getBytes();
 		DeviceStub dummy = new DeviceStub();
 		dummy.attest(appId, type, version, claim);
-		Random rng = new Random(1L);
-		int var = rng.nextInt();
 
-		try {
+		dummy.accessIntersection(appId, args[0]);
+
+		//dummy.accessIntersection(appId, "6");
+
+		//dummy.leaveIntersection(appId, "0");
+
+		/*dummy.put(appId, "0", new byte[]{1});
+
+		dummy.put(appId, "6", new byte[]{1});
+
+		dummy.put(appId, "0", new byte[]{0});
+
+		dummy.put(appId, "6", new byte[]{1});*/
+	}
+
+	/*try {
 			String key = "exampleKey" + var;
 			String key2 = "exampleKey2" + var;
 			ExampleObject value = new ExampleObject("exampleValue" + var);
@@ -77,14 +90,13 @@ public class DeviceClient {
 			/*dummy.leave(appId);
 			System.out.println("Membership 3!");
 			for(DeviceContext d : dummy.getView(appId))
-				System.out.println(d.toString());*/
+				System.out.println(d.toString());
 			System.out.println("Done!");
 
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
+} catch (IOException | ClassNotFoundException e) {
+		e.printStackTrace();
 		} finally {
-			dummy.leave(appId);
-			dummy.close();
-		}
-	}
+		dummy.leave(appId);
+		dummy.close();
+		}*/
 }

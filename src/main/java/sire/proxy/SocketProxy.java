@@ -40,6 +40,7 @@ public class SocketProxy implements Runnable {
 	private final SchnorrSignatureScheme signatureScheme;
 	private final int proxyId;
 	private final Object proxyLock;
+	private ServerSocket serverSocket;
 
 	public SocketProxy(int proxyId) throws SireException{
 		System.out.println("Proxy start!");
@@ -54,8 +55,6 @@ public class SocketProxy implements Runnable {
 		}
 		System.out.println("Connection established!");
 		try {
-			BlockCipher aes = new AESEngine();
-
 			signatureScheme = new SchnorrSignatureScheme();
 		} catch (NoSuchAlgorithmException e) {
 			throw new SireException("Failed to initialize cryptographic tools", e);
@@ -67,11 +66,11 @@ public class SocketProxy implements Runnable {
 					.build();
 			byte[] b = msg.toByteArray();
 			response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
+
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to obtain verifier's public key", e);
 		}
 		verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
-
 	}
 
 	@Override
@@ -107,6 +106,7 @@ public class SocketProxy implements Runnable {
 				while (!s.isClosed()) {
 					Object o;
 					while ((o = ois.readObject()) != null) {
+						System.out.println("Request!");
 						if (o instanceof ProxyMessage msg) {
 							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
 								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
@@ -125,6 +125,7 @@ public class SocketProxy implements Runnable {
 		}
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {
+			System.out.println("Request received!");
 			Response res;
 			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW"))
 				res = serviceProxy.invokeUnordered(msg.toByteArray());
@@ -139,6 +140,7 @@ public class SocketProxy implements Runnable {
 			}
 			return switch(msg.getOperation()) {
 				case MAP_GET -> mapGet(res);
+				case MAP_PUT -> mapPut(res);
 				case MAP_LIST -> mapList(res);
 				case MEMBERSHIP_VIEW -> memberView(res);
 				case EXTENSION_GET -> extGet(res);
@@ -287,7 +289,18 @@ public class SocketProxy implements Runnable {
 			return prBuilder.build();
 		}
 
-		private ProxyResponse mapGet(Response res) throws SecretSharingException {
+		private ProxyResponse mapGet(Response res) {
+			byte[] tmp = res.getPainData();
+			if (tmp != null) {
+				return ProxyResponse.newBuilder()
+						.setValue(ByteString.copyFrom(tmp))
+						.build();
+			} else {
+				return ProxyResponse.newBuilder().build();
+			}
+		}
+
+		private ProxyResponse mapPut(Response res) {
 			byte[] tmp = res.getPainData();
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()

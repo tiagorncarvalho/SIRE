@@ -16,6 +16,56 @@ public class ExtensionManager {
     public ExtensionManager() {
         this.sh = new GroovyShell();
         this.extensions = new TreeMap<>();
+        String keyRequest = "app1EXT_PUT";
+        String codeRequest = """
+                package sire.coordination
+                 
+                 def runExtension(ExtParams p) {
+                     def temp = new int[3]
+                     CoordinationManager store = CoordinationManager.getInstance()
+                     def laneList = store.get(p.getAppId(), "lanes")
+                     int lane = p.getKey() as int
+                     def b = p.getValue()[0]
+                 
+                     if(b == (1 as byte) && laneList[lane] == (1 as byte))
+                         return new ExtParams(p.getAppId(), "lanes", laneList, null)
+                 
+                     switch(lane) {
+                         case 0:
+                             temp = [0, 6, 7] as int[]
+                             break
+                         case 1:
+                             temp = [1, 2, 3] as int[]
+                             break
+                         case 2:
+                             temp = [0, 1, 2] as int[]
+                             break
+                         case 3:
+                             temp = [3, 4, 5] as int[]
+                             break
+                         case 4:
+                             temp = [2, 3, 4] as int[]
+                             break
+                         case 5:
+                             temp = [5, 6, 7] as int[]
+                             break
+                         case 6:
+                             temp = [4, 5, 6] as int[]
+                             break
+                         case 7:
+                             temp = [0, 1, 7] as int[]
+                             break
+                     }
+                 
+                     for(i in temp) {
+                         laneList[i] = b
+                     }
+                     ExtParams res = new ExtParams(p.getAppId(), "lanes", laneList as byte[], null)
+                 
+                     return res;
+                 }
+                """;
+        addExtension(keyRequest, codeRequest);
     }
 
     public static ExtensionManager getInstance() {

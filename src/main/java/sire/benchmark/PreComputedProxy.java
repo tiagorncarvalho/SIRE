@@ -49,8 +49,8 @@ public class PreComputedProxy {
     private static byte[] putMsg = Messages.ProxyMessage.newBuilder()
             .setOperation(Messages.ProxyMessage.Operation.MAP_PUT)
             .setAppId("app1")
-            .setKey("j7dw0sr5dhh9itj87spjb9dvkb358u5t6jn95j6wdfl1")
-            .setValue(ByteString.copyFrom("wwehfuq652ru0ibdr79eddqmwmhpmcjfz0hx3ihee3gu".getBytes()))
+/*            .setKey("j7dw0sr5dhh9itj87spjb9dvkb358u5t6jn95j6wdfl1")
+            .setValue(ByteString.copyFrom("wwehfuq652ru0ibdr79eddqmwmhpmcjfz0hx3ihee3gu".getBytes()))*/
             .build().toByteArray();
     static BigInteger attesterPrivateKey = new BigInteger("4049546346519992604730332816858472394381393488413156548605745581385");
     static ECPoint attesterPubKey = scheme.getGenerator().multiply(attesterPrivateKey);
