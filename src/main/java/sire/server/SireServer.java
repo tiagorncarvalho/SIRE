@@ -338,26 +338,38 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				byte[] value = byteStringToByteArray(out, msg.getValue());
 				out.close();
-				boolean canCross = storage.put(msg.getAppId(), msg.getKey(), value);
-/*				if(value[0] == 0) {
+				boolean isSuccessful = storage.put(msg.getAppId(), msg.getKey(), value);
+				if(msg.getKey().startsWith("lane") && value[0] == 0) {
 					boolean bl;
 					List<IntersectionRequest> temp = new ArrayList<>();
+					List<String> released = new ArrayList<>();
 					for(IntersectionRequest r : req) {
 						bl = storage.put(r.getMsg().getAppId(), r.getMsg().getKey(), byteStringToByteArray(out, r.getMsg().getValue()));
 						if(bl) {
-							sendResponseTo(r.getMessageContext(), new ConfidentialMessage(new byte[]{(byte) 1}));
+							released.add(r.getMsg().getDeviceId());
 						} else
 							temp.add(r);
 					}
 					req = temp;
-				}*/
+
+					released.forEach(System.out::println);
+
+					ByteArrayOutputStream bout = new ByteArrayOutputStream();
+					ObjectOutputStream oout = new ObjectOutputStream(bout);
+					oout.writeObject(released);
+					oout.close();
+					byte[] result = bout.toByteArray();
+					bout.close();
+
+					return new ConfidentialMessage(result);
+				}
 				lock.unlock();
 				System.out.println("Put! " + msg.getKey() + " " + Arrays.toString(value));
 
-				/*if(!canCross)
-					req.add(new IntersectionRequest(messageContext, msg));*/
+				if(!isSuccessful)
+					req.add(new IntersectionRequest(msg));
 
-				return new ConfidentialMessage(new byte[]{(byte) (canCross ? 1 : 0)});
+				return new ConfidentialMessage(new byte[]{(byte) (isSuccessful ? 1 : 0)});
 			}
 			case MAP_DELETE -> {
 				lock.lock();

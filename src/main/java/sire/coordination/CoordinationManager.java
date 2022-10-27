@@ -33,6 +33,7 @@ public class CoordinationManager {
         ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ExtParams(appId, key, value, null));
         storage.put(appId + p.getKey(), p.getValue());
         byte[] after = storage.get(appId + "lanes");
+        System.out.println(Arrays.toString(storage.get(appId + p.getKey())));
         System.out.println(Arrays.toString(before) + " " + Arrays.toString(after) + " " + !Arrays.equals(before, after));
         return !Arrays.equals(before, after);
     }

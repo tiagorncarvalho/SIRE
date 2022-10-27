@@ -276,7 +276,7 @@ public class DeviceStub {
                 .setOperation(ProxyMessage.Operation.MAP_PUT)
                 .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
                 .setAppId(appId)
-                .setKey(lane);
+                .setKey("lane" + lane);
         ProxyMessage request = builder.setValue(ByteString.copyFrom(new byte[]{1})).build();
         ProxyMessage release = builder.setValue(ByteString.copyFrom(new byte[]{0})).build();
         this.oos.writeObject(request);
@@ -286,19 +286,10 @@ public class DeviceStub {
             byte b = pr.getValue().byteAt(0);
             if(b == 0) {
                 System.out.println("Idle...");
-                while(b == 0) {
-                    Thread.sleep(3000);
-                    System.out.println("Retrying...");
-                    this.oos.writeObject(request);
-                    o = this.ois.readObject();
-                    if(o instanceof ProxyResponse temp) {
-                        System.out.println(temp.getValue());
-                        b = temp.getValue().byteAt(0);
-                    }
-                }
-                Thread.sleep(3000);
-            } else {
+                o = this.ois.readObject();
                 Thread.sleep(5000);
+            } else {
+                Thread.sleep(3000);
             }
         }
         System.out.println("Releasing!");

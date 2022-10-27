@@ -5,8 +5,6 @@ import com.google.protobuf.Timestamp;
 import confidential.ConfidentialExtractedResponse;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
-import org.bouncycastle.crypto.BlockCipher;
-import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.membership.DeviceContext;
 import sire.schnorr.PublicPartialSignature;
@@ -41,10 +39,12 @@ public class SocketProxy implements Runnable {
 	private final int proxyId;
 	private final Object proxyLock;
 	private ServerSocket serverSocket;
+	private Map<String, ObjectOutputStream> devices;
 
 	public SocketProxy(int proxyId) throws SireException{
 		System.out.println("Proxy start!");
 		this.proxyId = proxyId;
+		this.devices = new TreeMap<>();
 
 		try {
 			ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
@@ -81,7 +81,8 @@ public class SocketProxy implements Runnable {
 			while(true) {
 				s = ss.accept();
 				System.out.println("New client!");
-				new SireProxyThread(s).start();
+				SireProxyThread t = new SireProxyThread(s);
+				t.start();
 				System.out.println("Connection accepted");
 			}
 		} catch (IOException e) {
@@ -92,6 +93,7 @@ public class SocketProxy implements Runnable {
 	private class SireProxyThread extends Thread {
 
 		private final Socket s;
+		private boolean inMap = false;
 
 		public SireProxyThread(Socket s) {
 			this.s = s;
@@ -111,6 +113,10 @@ public class SocketProxy implements Runnable {
 							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
 								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
 							} else {
+								if(!inMap) {
+									inMap = true;
+									devices.put(msg.getDeviceId(), oos);
+								}
 								ProxyResponse result = runProxyMessage(msg);
 								if (result != null)
 									oos.writeObject(result);
@@ -126,6 +132,7 @@ public class SocketProxy implements Runnable {
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {
 			System.out.println("Request received!");
+
 			Response res;
 			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW"))
 				res = serviceProxy.invokeUnordered(msg.toByteArray());
@@ -140,7 +147,7 @@ public class SocketProxy implements Runnable {
 			}
 			return switch(msg.getOperation()) {
 				case MAP_GET -> mapGet(res);
-				case MAP_PUT -> mapPut(res);
+				case MAP_PUT -> mapPut(msg, res);
 				case MAP_LIST -> mapList(res);
 				case MEMBERSHIP_VIEW -> memberView(res);
 				case EXTENSION_GET -> extGet(res);
@@ -300,14 +307,26 @@ public class SocketProxy implements Runnable {
 			}
 		}
 
-		private ProxyResponse mapPut(Response res) {
+		private ProxyResponse mapPut(ProxyMessage msg, Response res) throws IOException, ClassNotFoundException {
 			byte[] tmp = res.getPainData();
-			if (tmp != null) {
-				return ProxyResponse.newBuilder()
-						.setValue(ByteString.copyFrom(tmp))
-						.build();
-			} else {
-				return ProxyResponse.newBuilder().build();
+			ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
+			if(msg.getKey().startsWith("lane") && tmp != null) {
+				if(msg.getValue().byteAt(0) == 1) {
+					return prBuilder.setValue(ByteString.copyFrom(tmp)).build();
+				} else {
+					ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
+					ObjectInputStream oin = new ObjectInputStream(bin);
+					ArrayList<String> lst = (ArrayList<String>) oin.readObject();
+					sendQueuedRequests(lst);
+				}
+			}
+			return prBuilder.build();
+		}
+
+		private void sendQueuedRequests(ArrayList<String> lst) throws IOException {
+			ProxyResponse response = ProxyResponse.newBuilder().setValue(ByteString.copyFrom(new byte[]{1})).build();
+			for(String str : lst) {
+				devices.get(str).writeObject(response);
 			}
 		}
 
