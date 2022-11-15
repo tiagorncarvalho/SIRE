@@ -18,85 +18,81 @@ import static sire.messages.ProtoUtils.serialize;
  * @author robin
  */
 public class DeviceClient {
+	static long initialTime;
+	static long latencyAvg;
+	static long latencyMin;
+	static long latencyMax;
+	static Integer counter;
+	static final Object lock = new Object();
+	static int numClients;
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, ClassNotFoundException, InterruptedException {
+	public static void main(String[] args) throws NoSuchPaddingException, NoSuchAlgorithmException, IOException, ClassNotFoundException, InterruptedException {
+		initialTime = System.nanoTime();
+		latencyAvg = 0;
+		latencyMin = Long.MAX_VALUE;
+		latencyMax = 0;
+		counter = 0;
+		numClients = 1800;
 
-		String appId = "app1";
-		String version = "1.0";
-		DeviceType type = DeviceType.MOTIONSENSOR;
-		byte[] claim = "measure1".getBytes();
-		DeviceStub dummy = new DeviceStub();
-		dummy.attest(appId, type, version, claim);
+		for (int i = 0; i < numClients; i++) {
+			new DeviceThread().start();
+			Thread.sleep(2000);
+		}
 
-		dummy.accessIntersection(appId, args[0]);
+		synchronized (lock) {
+			lock.wait();
+		}
 
-		//dummy.accessIntersection(appId, "6");
+		double average = (latencyAvg / (float) numClients) / 1_000_000.0;
+		long max = latencyMax / 1_000_000;
+		long min = latencyMin / 1_000_000;
+		long totalTime = System.nanoTime() - initialTime;
 
-		//dummy.leaveIntersection(appId, "0");
-
-		/*dummy.put(appId, "0", new byte[]{1});
-
-		dummy.put(appId, "6", new byte[]{1});
-
-		dummy.put(appId, "0", new byte[]{0});
-
-		dummy.put(appId, "6", new byte[]{1});*/
+		//double std = calculateStandardDeviation(latencies, average);
+		System.out.println("=============================");
+		System.out.printf("Avg: %.3f ms\n", average);
+		//System.out.printf("Std: %.3f ms\n", std);
+		System.out.printf("Min: %d ms\n", min);
+		System.out.printf("Max: %d ms\n", max);
+		System.out.printf("Duration: %d ms\n", totalTime);
+		System.out.println("=============================");
 	}
 
-	/*try {
-			String key = "exampleKey" + var;
-			String key2 = "exampleKey2" + var;
-			ExampleObject value = new ExampleObject("exampleValue" + var);
-			ExampleObject value2 = new ExampleObject("exampleValue2" + var);
-			ExampleObject newValue = new ExampleObject("exampleNewValue" + var);
+	private static class DeviceThread extends Thread {
+		String appId = "app1";
+		DeviceStub dummy;
 
-			System.out.println("Putting entry: " + key + " " + value.getValue());
-			dummy.put(appId, key, serialize(value));
-			ExampleObject aberration = (ExampleObject) deserialize(dummy.getData(appId, key));
-			System.out.println("Getting entry: " + key + " Value: " + aberration.getValue());
+		private DeviceThread() throws NoSuchPaddingException, NoSuchAlgorithmException, IOException, ClassNotFoundException {
+			dummy = new DeviceStub();
+			//dummy.attest(appId, type, version, claim);
+		}
 
-			System.out.println("Putting entry: " + key2 + " " + value2.getValue());
-			dummy.put(appId, key2, serialize(value2));
-			System.out.print("Getting all entries: [");
-			List<byte[]> res = dummy.getList(appId);
-			for(byte[] b : res)
-				System.out.print(((ExampleObject) deserialize(b)).getValue() + ",");
-			System.out.println("]");
+		@Override
+		public void run() {
+			try {
 
-			System.out.println("Delete entry: " + key2);
-			dummy.delete(appId, key2);
+				long t2;
+				long t1 = System.nanoTime();
+				dummy.accessIntersection(appId, new Random().nextInt(0, 8) + "");
+				t2 = System.nanoTime();
+				long latency = t2 - t1;
+				if (latency < latencyMin)
+					latencyMin = latency;
+				if (latency > latencyMax)
+					latencyMax = latency;
+				latencyAvg += latency;
 
-			System.out.print("Getting entry: " + key2 + " Value: ");
-			byte[] arr = dummy.getData(appId, key2);
-			if(arr == null)
-				System.out.println("null");
-			else
-				System.out.println(Arrays.toString(arr));
+			} catch (IOException | ClassNotFoundException | InterruptedException e) {
+				e.printStackTrace();
+			}
 
-			System.out.println("Cas, key: " + key + " oldValue: " + value.getValue() + " newValue: " + newValue.getValue());
-			dummy.cas(appId, key, serialize(value), serialize(newValue));
-
-			ExampleObject result = (ExampleObject) deserialize(dummy.getData(appId, key));
-
-			System.out.println("Getting entry: " + key + " Value: " + result.getValue());
-
-			System.out.println("Membership 1!");
-			for(DeviceContext d : dummy.getView(appId))
-				System.out.println(d.toString());
-			dummy.ping(appId);
-			System.out.println("Membership 2!");
-			for(DeviceContext d : dummy.getView(appId))
-				System.out.println(d.toString());
-			/*dummy.leave(appId);
-			System.out.println("Membership 3!");
-			for(DeviceContext d : dummy.getView(appId))
-				System.out.println(d.toString());
-			System.out.println("Done!");
-
-} catch (IOException | ClassNotFoundException e) {
-		e.printStackTrace();
-		} finally {
-		dummy.leave(appId);
-		dummy.close();
-		}*/
+			synchronized (lock) {
+				counter++;
+				System.out.println(counter);
+				if (counter >= numClients) {
+					lock.notify();
+				}
+			}
+		}
+	}
 }

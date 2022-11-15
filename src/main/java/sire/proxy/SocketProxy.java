@@ -42,7 +42,7 @@ public class SocketProxy implements Runnable {
 	private final Object proxyLock;
 	private ServerSocket serverSocket;
 	private Map<String, ObjectOutputStream> devices;
-	Map<String, Integer> responseCounter;
+	final Map<String, Integer> responseCounter;
 	MessageDigest messageDigest;
 
 	public SocketProxy(int proxyId) throws SireException, NoSuchAlgorithmException {
@@ -115,13 +115,6 @@ public class SocketProxy implements Runnable {
 			this.s = s;
 		}
 
-		private byte[] computeHash(byte[]... contents) {
-			for (byte[] content : contents) {
-				messageDigest.update(content);
-			}
-			return messageDigest.digest();
-		}
-
 		@Override
 		public void run() {
 			ProxyResponse response = ProxyResponse.newBuilder().setValue(ByteString.copyFrom(new byte[]{1})).build();
@@ -133,17 +126,16 @@ public class SocketProxy implements Runnable {
 					while ((o = ois.readObject()) != null) {
 						if(o instanceof ProxyResponse res) {
 							String deviceId = res.getDeviceId();
-							System.out.println("ID " + deviceId);
-							if(responseCounter.containsKey(deviceId))
-								responseCounter.put(deviceId, responseCounter.get(deviceId) + 1);
-							else
-								responseCounter.put(deviceId, 1);
-							if(responseCounter.get(deviceId) == 4) {
-								System.out.println("All reqs received");
-								responseCounter.remove(deviceId);
-								devices.get(deviceId).writeObject(response);
+							synchronized (responseCounter) {
+								if (responseCounter.containsKey(deviceId))
+									responseCounter.put(deviceId, responseCounter.get(deviceId) + 1);
+								else
+									responseCounter.put(deviceId, 1);
+								if (responseCounter.get(deviceId) == 4) {
+									responseCounter.remove(deviceId);
+									devices.get(deviceId).writeObject(response);
+								}
 							}
-							System.out.println(responseCounter.get(deviceId));
 						}
 					}
 				}

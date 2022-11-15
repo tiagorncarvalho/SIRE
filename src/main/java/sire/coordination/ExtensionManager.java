@@ -30,7 +30,7 @@ public class ExtensionManager {
                      def b = p.getValue()[0]
                  
                      if(b == (1 as byte) && laneList[lane] == (1 as byte))
-                         return new ExtParams(p.getAppId(), "lanes", laneList, null)
+                         return new ExtParams(p.getAppId(), "lanes", laneList, null, false)
                  
                      switch(lane) {
                          case 0:
@@ -62,7 +62,7 @@ public class ExtensionManager {
                      for(i in temp) {
                          laneList[i] = b
                      }
-                     ExtParams res = new ExtParams(p.getAppId(), "lanes", laneList as byte[], null)
+                     ExtParams res = new ExtParams(p.getAppId(), "lanes", laneList, null, true)
                  
                      return res;
                  }

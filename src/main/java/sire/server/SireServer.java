@@ -234,8 +234,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
-			throw new SireException("Unknown Device: Not attested or not in this app membership.");
+		/*if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
+			throw new SireException("Unknown Device: Not attested or not in this app membership.");*/
 		switch(op) {
 			case MEMBERSHIP_JOIN -> {
 				DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
@@ -337,9 +337,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	}
 
 	private ConfidentialMessage executeOrderedMap(MessageContext messageContext, ProxyMessage msg) throws IOException, SireException {
-		if(membership.isDeviceValid(msg.getAppId(), msg.getDeviceId())) {
+		/*if(membership.isDeviceValid(msg.getAppId(), msg.getDeviceId())) {
 			throw new SireException("Unknown Device: Not attested or not in this app membership.");
-		}
+		}*/
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
 			case MAP_PUT -> {
@@ -351,11 +351,9 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				if(msg.getKey().startsWith("lane") && value[0] == 0) {
 					boolean bl;
 					List<IntersectionRequest> temp = new ArrayList<>();
-					List<String> released = new ArrayList<>();
 					for(IntersectionRequest r : req) {
-						bl = storage.put(r.getMsg().getAppId(), r.getMsg().getKey(), byteStringToByteArray(out, r.getMsg().getValue()));
+						bl = storage.put(r.getMsg().getAppId(), r.getMsg().getKey(), new byte[]{1});
 						if(bl) {
-							released.add(r.getMsg().getAppId());
 							ProxyResponse res = ProxyResponse.newBuilder()
 									.setDeviceId(r.getMsg().getDeviceId())
 									.build();
@@ -364,8 +362,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 							temp.add(r);
 					}
 					req = temp;
-
-					released.forEach(System.out::println);
 
 					return new ConfidentialMessage();
 				}

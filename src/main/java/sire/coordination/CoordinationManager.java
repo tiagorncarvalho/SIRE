@@ -29,27 +29,24 @@ public class CoordinationManager {
     }
 
     public boolean put(String appId, String key, byte[] value) {
-        byte[] before = storage.get(appId + "lanes").clone();
-        ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ExtParams(appId, key, value, null));
+        ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ExtParams(appId, key, value, null, false));
         storage.put(appId + p.getKey(), p.getValue());
-        byte[] after = storage.get(appId + "lanes");
-        System.out.println(Arrays.toString(storage.get(appId + p.getKey())));
-        System.out.println(Arrays.toString(before) + " " + Arrays.toString(after) + " " + !Arrays.equals(before, after));
-        return !Arrays.equals(before, after);
+        System.out.println(key + " " + Arrays.toString(storage.get(appId + p.getKey())) + " " + value[0] + " " + p.getSuccess());
+        return p.getSuccess();
     }
 
     public void remove(String appId, String key) {
-        ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_DEL, key, new ExtParams(appId, key, null, null));
+        ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_DEL, key, new ExtParams(appId, key, null, null, false));
         storage.remove(appId + p.getKey());
     }
 
     public byte[] get(String appId, String key) {
-        ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_GET, key, new ExtParams(appId, key, null, null));
+        ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_GET, key, new ExtParams(appId, key, null, null, false));
         return storage.get(appId + p.getKey());
     }
 
     public Collection<byte[]> getValues(String appId) {
-        extensionManager.runExtension(appId, ExtensionType.EXT_LIST, "", new ExtParams(appId,null, null, null));
+        extensionManager.runExtension(appId, ExtensionType.EXT_LIST, "", new ExtParams(appId,null, null, null, false));
         List<byte[]> res = new ArrayList<>();
         for(Map.Entry<String, byte[]> e : storage.entrySet())
             if(e.getKey().startsWith(appId))
@@ -61,7 +58,7 @@ public class CoordinationManager {
         if(!storage.containsKey(appId))
             return;
         if(Arrays.equals(storage.get(appId + key), oldValue)) {
-            ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_CAS, key, new ExtParams(appId, key, oldValue, newValue));
+            ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_CAS, key, new ExtParams(appId, key, oldValue, newValue, false));
             storage.put(appId + p.getKey(), p.getNewValue());
         }
     }

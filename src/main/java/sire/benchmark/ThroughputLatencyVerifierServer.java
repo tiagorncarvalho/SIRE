@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sire.attestation.DeviceEvidence;
 import sire.attestation.VerifierManager;
+import sire.avc.IntersectionRequest;
 import sire.coordination.CoordinationManager;
 import sire.membership.MembershipManager;
 import sire.messages.Messages;
@@ -30,6 +31,7 @@ import vss.secretsharing.VerifiableShare;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.net.Socket;
 import java.security.*;
 import java.sql.Timestamp;
 import java.util.*;
@@ -87,12 +89,17 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
 
     private final SchnorrNonceManager schnorrNonceManager;
 
+    private List<IntersectionRequest> req;
+    private Map<Integer, ObjectOutputStream> proxies;
+
 
     //For throughput measurement
     private long startTime;
     private long numRequests;
     private final Set<Integer> senders;
     private double maxThroughput;
+
+    private int numRequestsTotal;
 
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
         if (args.length < 1) {
@@ -128,18 +135,25 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 schnorrSignatureScheme.getCurve());
 
         startTime = System.nanoTime();
+        req = new ArrayList<>();
+        proxies = new HashMap<>();
     }
 
     @Override
     public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares, MessageContext messageContext) {
         numRequests++;
+        numRequestsTotal++;
         senders.add(messageContext.getSender());
         try {
+            if(!proxies.containsKey(messageContext.getSender())) {
+                Socket s = new Socket("localhost", 5151 + messageContext.getSender());
+                proxies.put(messageContext.getSender(), new ObjectOutputStream(s.getOutputStream()));
+            }
             Messages.ProxyMessage msg = Messages.ProxyMessage.parseFrom(bytes);
             Messages.ProxyMessage.Operation op = msg.getOperation();
 
             if(op.toString().startsWith("MAP"))
-                return executeOrderedMap(msg);
+                return executeOrderedMap(messageContext, msg);
             else if(op.toString().startsWith("MEMBERSHIP"))
                 return executeOrderedMembership(msg, messageContext);
             else if(op.toString().startsWith("ATTEST"))
@@ -155,13 +169,14 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     @Override
     public ConfidentialMessage appExecuteUnordered(byte[] bytes, VerifiableShare[] verifiableShares, MessageContext messageContext) {
         numRequests++;
+        numRequestsTotal++;
         senders.add(messageContext.getSender());
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.parseFrom(bytes);
             Messages.ProxyMessage.Operation op = msg.getOperation();
 
             if(op.toString().startsWith("MAP"))
-                return executeOrderedMap(msg);
+                return executeOrderedMap(messageContext, msg);
             else if(op.toString().startsWith("MEMBERSHIP"))
                 return executeOrderedMembership(msg, messageContext);
             else if(op.toString().startsWith("ATTEST"))
@@ -182,8 +197,8 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
             double throughput = numRequests / deltaTime;
             if (throughput > maxThroughput)
                 maxThroughput = throughput;
-            logger.info("M:(clients[#]|requests[#]|delta[ns]|throughput[ops/s]|max[ops/s])>({}|{}|{}|{}|{})",
-                    senders.size(), numRequests, delta, throughput, maxThroughput);
+            logger.info("M:(clients[#]|requests[#]|delta[ns]|throughput[ops/s]|max[ops/s]|total requests[#])>({}|{}|{}|{}|{}|{})",
+                    senders.size(), numRequests, delta, throughput, maxThroughput, numRequestsTotal);
             numRequests = 0;
             startTime = currentTime;
             senders.clear();
@@ -275,7 +290,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         return null;
     }
 
-    private ConfidentialMessage executeOrderedMap(Messages.ProxyMessage msg) throws IOException, SireException {
+    private ConfidentialMessage executeOrderedMap(MessageContext messageContext, Messages.ProxyMessage msg) throws IOException, SireException {
         Messages.ProxyMessage.Operation op = msg.getOperation();
         switch(op) {
             case MAP_PUT -> {
@@ -283,10 +298,35 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 byte[] value = byteStringToByteArray(out, msg.getValue());
                 out.close();
-                storage.put(msg.getAppId(), msg.getKey(), value);
-                lock.unlock();
+                boolean isSuccessful = storage.put(msg.getAppId(), msg.getKey(), value);
+                if(msg.getKey().startsWith("lane") && value[0] == 0) {
+                    boolean bl;
+                    List<IntersectionRequest> temp = new ArrayList<>();
+                    List<String> released = new ArrayList<>();
+                    for(IntersectionRequest r : req) {
+                        bl = storage.put(r.getMsg().getAppId(), r.getMsg().getKey(), byteStringToByteArray(out, r.getMsg().getValue()));
+                        if(bl) {
+                            released.add(r.getMsg().getAppId());
+                            Messages.ProxyResponse res = Messages.ProxyResponse.newBuilder()
+                                    .setDeviceId(r.getMsg().getDeviceId())
+                                    .build();
+                            proxies.get(r.getProxyId()).writeObject(res);
+                        } else
+                            temp.add(r);
+                    }
+                    req = temp;
 
-                return new ConfidentialMessage();
+                    released.forEach(System.out::println);
+
+                    return new ConfidentialMessage();
+                }
+                lock.unlock();
+                System.out.println("Put! " + msg.getDeviceId() + " " + msg.getKey() + " " + Arrays.toString(value));
+
+                if(!isSuccessful)
+                    req.add(new IntersectionRequest(msg, messageContext.getSender()));
+
+                return new ConfidentialMessage(new byte[]{(byte) (isSuccessful ? 1 : 0)});
             }
             case MAP_GET -> {
                 return new ConfidentialMessage(storage.get(msg.getAppId(), msg.getKey()));
