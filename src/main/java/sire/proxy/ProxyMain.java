@@ -7,6 +7,8 @@ import sire.coordination.Extension;
 import sire.attestation.Policy;
 import sire.membership.DeviceContext;
 import sire.serverProxyUtils.SireException;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @SpringBootApplication
@@ -23,7 +25,7 @@ public class ProxyMain {
             int proxyId = Integer.parseInt(args[0]);
             proxy = new SocketProxy(proxyId);
             //restProxy = new RestProxy(proxyId + 1);
-        } catch (SireException e) {
+        } catch (SireException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         //SpringApplication.run(ProxyMain.class, args);

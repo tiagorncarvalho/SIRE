@@ -4642,6 +4642,16 @@ public final class Messages {
      * <code>bytes hash = 9;</code>
      */
     com.google.protobuf.ByteString getHash();
+
+    /**
+     * <code>string deviceId = 10;</code>
+     */
+    java.lang.String getDeviceId();
+    /**
+     * <code>string deviceId = 10;</code>
+     */
+    com.google.protobuf.ByteString
+        getDeviceIdBytes();
   }
   /**
    * Protobuf type {@code sire.messages.ProxyResponse}
@@ -4664,6 +4674,7 @@ public final class Messages {
       timestamp_ = com.google.protobuf.ByteString.EMPTY;
       pubKey_ = com.google.protobuf.ByteString.EMPTY;
       hash_ = com.google.protobuf.ByteString.EMPTY;
+      deviceId_ = "";
     }
 
     @java.lang.Override
@@ -4750,6 +4761,12 @@ public final class Messages {
             case 74: {
 
               hash_ = input.readBytes();
+              break;
+            }
+            case 82: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              deviceId_ = s;
               break;
             }
             default: {
@@ -6147,6 +6164,40 @@ public final class Messages {
       return hash_;
     }
 
+    public static final int DEVICEID_FIELD_NUMBER = 10;
+    private volatile java.lang.Object deviceId_;
+    /**
+     * <code>string deviceId = 10;</code>
+     */
+    public java.lang.String getDeviceId() {
+      java.lang.Object ref = deviceId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        deviceId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string deviceId = 10;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDeviceIdBytes() {
+      java.lang.Object ref = deviceId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        deviceId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -6187,6 +6238,9 @@ public final class Messages {
       }
       if (!hash_.isEmpty()) {
         output.writeBytes(9, hash_);
+      }
+      if (!getDeviceIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, deviceId_);
       }
       unknownFields.writeTo(output);
     }
@@ -6237,6 +6291,9 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(9, hash_);
       }
+      if (!getDeviceIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, deviceId_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -6273,6 +6330,8 @@ public final class Messages {
           .equals(other.getPubKey());
       result = result && getHash()
           .equals(other.getHash());
+      result = result && getDeviceId()
+          .equals(other.getDeviceId());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -6308,6 +6367,8 @@ public final class Messages {
       hash = (53 * hash) + getPubKey().hashCode();
       hash = (37 * hash) + HASH_FIELD_NUMBER;
       hash = (53 * hash) + getHash().hashCode();
+      hash = (37 * hash) + DEVICEID_FIELD_NUMBER;
+      hash = (53 * hash) + getDeviceId().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -6468,6 +6529,8 @@ public final class Messages {
 
         hash_ = com.google.protobuf.ByteString.EMPTY;
 
+        deviceId_ = "";
+
         return this;
       }
 
@@ -6521,6 +6584,7 @@ public final class Messages {
         result.timestamp_ = timestamp_;
         result.pubKey_ = pubKey_;
         result.hash_ = hash_;
+        result.deviceId_ = deviceId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -6627,6 +6691,10 @@ public final class Messages {
         }
         if (other.getHash() != com.google.protobuf.ByteString.EMPTY) {
           setHash(other.getHash());
+        }
+        if (!other.getDeviceId().isEmpty()) {
+          deviceId_ = other.deviceId_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -7364,6 +7432,75 @@ public final class Messages {
         onChanged();
         return this;
       }
+
+      private java.lang.Object deviceId_ = "";
+      /**
+       * <code>string deviceId = 10;</code>
+       */
+      public java.lang.String getDeviceId() {
+        java.lang.Object ref = deviceId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          deviceId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string deviceId = 10;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDeviceIdBytes() {
+        java.lang.Object ref = deviceId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          deviceId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string deviceId = 10;</code>
+       */
+      public Builder setDeviceId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        deviceId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string deviceId = 10;</code>
+       */
+      public Builder clearDeviceId() {
+        
+        deviceId_ = getDefaultInstance().getDeviceId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string deviceId = 10;</code>
+       */
+      public Builder setDeviceIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        deviceId_ = value;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -7481,24 +7618,25 @@ public final class Messages {
       "\017MEMBERSHIP_PING\020\n\022\021\n\rEXTENSION_ADD\020\013\022\024\n" +
       "\020EXTENSION_REMOVE\020\014\022\021\n\rEXTENSION_GET\020\r\022\016" +
       "\n\nPOLICY_ADD\020\016\022\021\n\rPOLICY_REMOVE\020\017\022\016\n\nPOL" +
-      "ICY_GET\020\020\022\021\n\rTIMESTAMP_GET\020\021\"\275\004\n\rProxyRe" +
+      "ICY_GET\020\020\022\021\n\rTIMESTAMP_GET\020\021\"\317\004\n\rProxyRe" +
       "sponse\0227\n\004type\030\001 \001(\0162).sire.messages.Pro" +
       "xyResponse.ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n" +
       "\005value\030\003 \001(\014\022@\n\007members\030\004 \003(\0132/.sire.mes" +
       "sages.ProxyResponse.ProtoDeviceContext\022\021" +
       "\n\textPolicy\030\005 \001(\t\022)\n\004sign\030\006 \001(\0132\033.sire.m" +
       "essages.ProtoSchnorr\022\021\n\ttimestamp\030\007 \001(\014\022" +
-      "\016\n\006pubKey\030\010 \001(\014\022\014\n\004hash\030\t \001(\014\032\265\001\n\022ProtoD" +
-      "eviceContext\022\020\n\010deviceId\030\001 \001(\t\022(\n\004time\030\002" +
-      " \001(\0132\032.google.protobuf.Timestamp\0222\n\ndevi" +
-      "ceType\030\003 \001(\0162\036.sire.messages.ProtoDevice" +
-      "Type\022/\n\013certExpTime\030\004 \001(\0132\032.google.proto" +
-      "buf.Timestamp\"m\n\014ResponseType\022\013\n\007MAP_GET" +
-      "\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_" +
-      "GET\020\003\022\016\n\nPOLICY_GET\020\004\022\013\n\007PREJOIN\020\005\022\010\n\004JO" +
-      "IN\020\006*g\n\017ProtoDeviceType\022\n\n\006CAMERA\020\000\022\017\n\013T" +
-      "HERMOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MO" +
-      "TIONSENSOR\020\004\022\017\n\013LIGHTSENSOR\020\005b\006proto3"
+      "\016\n\006pubKey\030\010 \001(\014\022\014\n\004hash\030\t \001(\014\022\020\n\010deviceI" +
+      "d\030\n \001(\t\032\265\001\n\022ProtoDeviceContext\022\020\n\010device" +
+      "Id\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.google.protobuf" +
+      ".Timestamp\0222\n\ndeviceType\030\003 \001(\0162\036.sire.me" +
+      "ssages.ProtoDeviceType\022/\n\013certExpTime\030\004 " +
+      "\001(\0132\032.google.protobuf.Timestamp\"m\n\014Respo" +
+      "nseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VI" +
+      "EW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004\022" +
+      "\013\n\007PREJOIN\020\005\022\010\n\004JOIN\020\006*g\n\017ProtoDeviceTyp" +
+      "e\022\n\n\006CAMERA\020\000\022\017\n\013THERMOMETER\020\001\022\t\n\005RADAR\020" +
+      "\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTIONSENSOR\020\004\022\017\n\013LIGHTS" +
+      "ENSOR\020\005b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -7542,7 +7680,7 @@ public final class Messages {
     internal_static_sire_messages_ProxyResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProxyResponse_descriptor,
-        new java.lang.String[] { "Type", "List", "Value", "Members", "ExtPolicy", "Sign", "Timestamp", "PubKey", "Hash", });
+        new java.lang.String[] { "Type", "List", "Value", "Members", "ExtPolicy", "Sign", "Timestamp", "PubKey", "Hash", "DeviceId", });
     internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor =
       internal_static_sire_messages_ProxyResponse_descriptor.getNestedTypes().get(0);
     internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_fieldAccessorTable = new

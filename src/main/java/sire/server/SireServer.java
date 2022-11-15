@@ -4,6 +4,7 @@ import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.core.messages.TOMMessage;
+import com.google.protobuf.ByteString;
 import confidential.ConfidentialMessage;
 import confidential.facade.server.ConfidentialSingleExecutable;
 import confidential.polynomial.DistributedPolynomialManager;
@@ -34,6 +35,7 @@ import vss.secretsharing.VerifiableShare;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
@@ -101,6 +103,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	private List<IntersectionRequest> req;
 
+	private Map<Integer, ObjectOutputStream> proxies;
+
 	public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
 		if (args.length < 1) {
 			System.out.println("Usage: sire.server.SireServer <server id>");
@@ -133,12 +137,17 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		schnorrNonceManager = new SchnorrNonceManager(id, serviceReplica.getReplicaContext().getCurrentView().getF(),
 				schnorrSignatureScheme.getCurve());
 		req = new ArrayList<>();
+		proxies = new HashMap<>();
 	}
 
 	@Override
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
 		try {
+			if(!proxies.containsKey(messageContext.getSender())) {
+				Socket s = new Socket("localhost", 5151 + messageContext.getSender());
+				proxies.put(messageContext.getSender(), new ObjectOutputStream(s.getOutputStream()));
+			}
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
 			ProxyMessage.Operation op = msg.getOperation();
 			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
@@ -346,7 +355,11 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					for(IntersectionRequest r : req) {
 						bl = storage.put(r.getMsg().getAppId(), r.getMsg().getKey(), byteStringToByteArray(out, r.getMsg().getValue()));
 						if(bl) {
-							released.add(r.getMsg().getDeviceId());
+							released.add(r.getMsg().getAppId());
+							ProxyResponse res = ProxyResponse.newBuilder()
+									.setDeviceId(r.getMsg().getDeviceId())
+									.build();
+							proxies.get(r.getProxyId()).writeObject(res);
 						} else
 							temp.add(r);
 					}
@@ -354,20 +367,13 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 					released.forEach(System.out::println);
 
-					ByteArrayOutputStream bout = new ByteArrayOutputStream();
-					ObjectOutputStream oout = new ObjectOutputStream(bout);
-					oout.writeObject(released);
-					oout.close();
-					byte[] result = bout.toByteArray();
-					bout.close();
-
-					return new ConfidentialMessage(result);
+					return new ConfidentialMessage();
 				}
 				lock.unlock();
 				System.out.println("Put! " + msg.getKey() + " " + Arrays.toString(value));
 
 				if(!isSuccessful)
-					req.add(new IntersectionRequest(msg));
+					req.add(new IntersectionRequest(msg, messageContext.getSender()));
 
 				return new ConfidentialMessage(new byte[]{(byte) (isSuccessful ? 1 : 0)});
 			}

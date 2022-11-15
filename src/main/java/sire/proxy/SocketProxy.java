@@ -1,5 +1,6 @@
 package sire.proxy;
 
+import bftsmart.tom.MessageContext;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
 import confidential.ConfidentialExtractedResponse;
@@ -24,6 +25,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -40,17 +42,33 @@ public class SocketProxy implements Runnable {
 	private final Object proxyLock;
 	private ServerSocket serverSocket;
 	private Map<String, ObjectOutputStream> devices;
+	Map<String, Integer> responseCounter;
+	MessageDigest messageDigest;
 
-	public SocketProxy(int proxyId) throws SireException{
+	public SocketProxy(int proxyId) throws SireException, NoSuchAlgorithmException {
 		System.out.println("Proxy start!");
 		this.proxyId = proxyId;
 		this.devices = new TreeMap<>();
+		responseCounter = new HashMap<>();
+		messageDigest = MessageDigest.getInstance("SHA256");
 
 		try {
 			ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
+			serverSocket = new ServerSocket(5151 + proxyId);
+			new Thread(() -> {
+				Socket s;
+				for (int i = 0; i < 4; i++) {
+					try {
+						s = serverSocket.accept();
+						new ReceivingProxyThread(s).start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
 			serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
 			proxyLock = new Object();
-		} catch (SecretSharingException e) {
+		} catch (SecretSharingException | IOException e) {
 			throw new SireException("Failed to contact the distributed verifier", e);
 		}
 		System.out.println("Connection established!");
@@ -90,6 +108,51 @@ public class SocketProxy implements Runnable {
 		}
 	}
 
+	private class ReceivingProxyThread extends Thread {
+		Socket s;
+
+		public ReceivingProxyThread(Socket s) {
+			this.s = s;
+		}
+
+		private byte[] computeHash(byte[]... contents) {
+			for (byte[] content : contents) {
+				messageDigest.update(content);
+			}
+			return messageDigest.digest();
+		}
+
+		@Override
+		public void run() {
+			ProxyResponse response = ProxyResponse.newBuilder().setValue(ByteString.copyFrom(new byte[]{1})).build();
+			try {
+				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+
+				while (!s.isClosed()) {
+					Object o;
+					while ((o = ois.readObject()) != null) {
+						if(o instanceof ProxyResponse res) {
+							String deviceId = res.getDeviceId();
+							System.out.println("ID " + deviceId);
+							if(responseCounter.containsKey(deviceId))
+								responseCounter.put(deviceId, responseCounter.get(deviceId) + 1);
+							else
+								responseCounter.put(deviceId, 1);
+							if(responseCounter.get(deviceId) == 4) {
+								System.out.println("All reqs received");
+								responseCounter.remove(deviceId);
+								devices.get(deviceId).writeObject(response);
+							}
+							System.out.println(responseCounter.get(deviceId));
+						}
+					}
+				}
+			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private class SireProxyThread extends Thread {
 
 		private final Socket s;
@@ -108,7 +171,6 @@ public class SocketProxy implements Runnable {
 				while (!s.isClosed()) {
 					Object o;
 					while ((o = ois.readObject()) != null) {
-						System.out.println("Request!");
 						if (o instanceof ProxyMessage msg) {
 							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
 								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
@@ -131,8 +193,6 @@ public class SocketProxy implements Runnable {
 		}
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {
-			System.out.println("Request received!");
-
 			Response res;
 			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW"))
 				res = serviceProxy.invokeUnordered(msg.toByteArray());
@@ -329,6 +389,7 @@ public class SocketProxy implements Runnable {
 				devices.get(str).writeObject(response);
 			}
 		}
+
 
 		private void close() {
 			synchronized (proxyLock) {

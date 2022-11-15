@@ -25,6 +25,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class DeviceStub {
     final int port;
@@ -45,6 +46,7 @@ public class DeviceStub {
     SchnorrSignatureScheme scheme;
     ECPoint verifierPublicKey;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    private final int id;
 
     public DeviceStub() throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, ClassNotFoundException {
         this.port = 2500 + 1;
@@ -59,6 +61,7 @@ public class DeviceStub {
         scheme = new SchnorrSignatureScheme();
         BigInteger cofactor = prime.divide(order);
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
+        id = new Random().nextInt();
 
         try {
             this.s = new Socket("localhost", port);
@@ -172,7 +175,7 @@ public class DeviceStub {
     private Timestamp getTimestamp(String appId) {
         try {
             ProxyMessage msg = ProxyMessage.newBuilder()
-                    .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                    .setDeviceId(this.id + "")
                     .setAppId(appId)
                     .setOperation(ProxyMessage.Operation.TIMESTAMP_GET)
                     .build();
@@ -194,7 +197,7 @@ public class DeviceStub {
     private Timestamp getTimestamp(SchnorrSignature sign) {
         try {
             ProxyMessage msg = ProxyMessage.newBuilder()
-                    .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                    .setDeviceId(this.id + "")
                     .setOperation(ProxyMessage.Operation.ATTEST_TIMESTAMP)
                     .setPubKey(ByteString.copyFrom(attesterPublicKey.getEncoded(true)))
                     .setSignature(schnorrToProto(sign))
@@ -226,7 +229,7 @@ public class DeviceStub {
         ProxyMessage joinMsg = ProxyMessage.newBuilder()
                 .setAppId(appId)
                 .setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
-                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setDeviceId(this.id + "")
                 .setEvidence(evidenceToProto(evidence))
                 .setTimestamp(ByteString.copyFrom(serialize(ts)))
                 .setPubKey(ByteString.copyFrom(attesterPublicKey.getEncoded(true)))
@@ -262,7 +265,7 @@ public class DeviceStub {
         System.out.println("Putting!");
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_PUT)
-                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setDeviceId(this.id + "")
                 .setAppId(appId)
                 .setKey(key)
                 .setValue(ByteString.copyFrom(value))
@@ -274,7 +277,7 @@ public class DeviceStub {
         System.out.println("Requesting!");
         ProxyMessage.Builder builder = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_PUT)
-                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setDeviceId(this.id + "")
                 .setAppId(appId)
                 .setKey("lane" + lane);
         ProxyMessage request = builder.setValue(ByteString.copyFrom(new byte[]{1})).build();
@@ -287,8 +290,10 @@ public class DeviceStub {
             if(b == 0) {
                 System.out.println("Idle...");
                 o = this.ois.readObject();
+                System.out.println("Crossing...");
                 Thread.sleep(5000);
             } else {
+                System.out.println("Crossing...");
                 Thread.sleep(3000);
             }
         }
@@ -300,7 +305,7 @@ public class DeviceStub {
     public void delete(String appId, String key) throws IOException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_DELETE)
-                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setDeviceId(this.id + "")
                 .setAppId(appId)
                 .setKey(key)
                 .build();
@@ -311,7 +316,7 @@ public class DeviceStub {
     public byte[] getData(String appId, String key) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_GET)
-                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setDeviceId(this.id + "")
                 .setAppId(appId)
                 .setKey(key)
                 .build();
@@ -331,7 +336,7 @@ public class DeviceStub {
     public List<byte[]> getList(String appId) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_LIST)
-                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setDeviceId(this.id + "")
                 .setAppId(appId)
                 .build();
         this.oos.writeObject(msg);
@@ -351,7 +356,7 @@ public class DeviceStub {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_CAS)
                 .setAppId(appId)
-                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setDeviceId(this.id + "")
                 .setKey(key)
                 .setValue(ByteString.copyFrom(newData))
                 .setOldData(ByteString.copyFrom(oldData))
@@ -363,7 +368,7 @@ public class DeviceStub {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MEMBERSHIP_LEAVE)
                 .setAppId(appId)
-                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setDeviceId(this.id + "")
                 .build();
         this.oos.writeObject(msg);
     }
@@ -372,7 +377,7 @@ public class DeviceStub {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MEMBERSHIP_PING)
                 .setAppId(appId)
-                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setDeviceId(this.id + "")
                 .build();
         this.oos.writeObject(msg);
     }
@@ -380,7 +385,7 @@ public class DeviceStub {
     public List<DeviceContext> getView(String appId) throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MEMBERSHIP_VIEW)
-                .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
+                .setDeviceId(this.id + "")
                 .setAppId(appId)
                 .build();
         this.oos.writeObject(msg);
