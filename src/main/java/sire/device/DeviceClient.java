@@ -32,11 +32,11 @@ public class DeviceClient {
 		latencyMin = Long.MAX_VALUE;
 		latencyMax = 0;
 		counter = 0;
-		numClients = 1800;
+		numClients = 5000;
 
 		for (int i = 0; i < numClients; i++) {
 			new DeviceThread().start();
-			Thread.sleep(2000);
+			Thread.sleep(720);
 		}
 
 		synchronized (lock) {

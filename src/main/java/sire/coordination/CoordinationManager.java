@@ -1,8 +1,6 @@
 package sire.coordination;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.*;
 
 public class CoordinationManager {
@@ -16,13 +14,12 @@ public class CoordinationManager {
         return instance;
     }
 
-    private CoordinationManager() throws IOException {
+    private CoordinationManager() {
         storage = new TreeMap<>();
         extensionManager = ExtensionManager.getInstance();
         byte[] lanes = new byte[8];
         Arrays.fill(lanes, (byte) 0);
         storage.put("app1lanes", lanes);
-        List<ExtParams> reqs = new LinkedList<>();
 
         /*storage.put("ldn9mm0tmiu89jo15s3tojer07keq91higztjvfoq5ic12fl6tkh5q17lyijgemtxud4gn59ca0bszjh9td1cankw9",
                 "wwehfuq652ru0ibdr79eddqmwmhpmcjfz0hx3ihee3gu".getBytes()); //just for benchmarking*/
@@ -31,7 +28,7 @@ public class CoordinationManager {
     public boolean put(String appId, String key, byte[] value) {
         ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ExtParams(appId, key, value, null, false));
         storage.put(appId + p.getKey(), p.getValue());
-        System.out.println(key + " " + Arrays.toString(storage.get(appId + p.getKey())) + " " + value[0] + " " + p.getSuccess());
+        //System.out.println(key + " " + Arrays.toString(storage.get(appId + p.getKey())) + " " + value[0] + " " + p.getSuccess());
         return p.getSuccess();
     }
 

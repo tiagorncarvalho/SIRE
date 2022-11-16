@@ -26,7 +26,6 @@ public class ExtensionManager {
                      def laneList = store.get(p.getAppId(), "lanes")
                      String str = p.getKey().charAt(p.getKey().length() - 1)
                      int lane = str as int
-                     println(lane)
                      def b = p.getValue()[0]
                  
                      if(b == (1 as byte) && laneList[lane] == (1 as byte))

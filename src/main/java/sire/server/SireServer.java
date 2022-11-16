@@ -366,7 +366,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					return new ConfidentialMessage();
 				}
 				lock.unlock();
-				System.out.println("Put! " + msg.getKey() + " " + Arrays.toString(value));
+				//System.out.println("Put! " + msg.getKey() + " " + Arrays.toString(value));
 
 				if(!isSuccessful)
 					req.add(new IntersectionRequest(msg, messageContext.getSender()));
