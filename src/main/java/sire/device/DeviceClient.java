@@ -39,7 +39,7 @@ public class DeviceClient {
 
 			System.out.println("Putting entry: " + key + " " + value.getValue());
 			dummy.put(appId, key, serialize(value));
-			ExampleObject aberration = (ExampleObject) deserialize(dummy.getData(appId, key));
+			/*ExampleObject aberration = (ExampleObject) deserialize(dummy.getData(appId, key));
 			System.out.println("Getting entry: " + key + " Value: " + aberration.getValue());
 
 			System.out.println("Putting entry: " + key2 + " " + value2.getValue());
@@ -73,14 +73,14 @@ public class DeviceClient {
 			dummy.ping(appId);
 			System.out.println("Membership 2!");
 			for(DeviceContext d : dummy.getView(appId))
-				System.out.println(d.toString());
+				System.out.println(d.toString());*/
 			/*dummy.leave(appId);
 			System.out.println("Membership 3!");
 			for(DeviceContext d : dummy.getView(appId))
 				System.out.println(d.toString());*/
 			System.out.println("Done!");
 
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException /*| ClassNotFoundException*/ e) {
 			e.printStackTrace();
 		} finally {
 			dummy.leave(appId);

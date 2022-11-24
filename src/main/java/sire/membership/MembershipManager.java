@@ -57,7 +57,8 @@ public class MembershipManager {
     }
 
     public boolean isDeviceValid(String appId, String deviceId) {
-        return membership.get(appId).isDeviceValid(deviceId);
+        return false;
+        //return membership.get(appId).isDeviceValid(deviceId);
     }
 
 }

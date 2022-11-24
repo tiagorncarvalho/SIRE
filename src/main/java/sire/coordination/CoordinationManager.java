@@ -25,7 +25,8 @@ public class CoordinationManager {
 
     public byte[] get(String appId, String key) {
         ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_GET, key, new ExtParams(key, null, null));
-        return storage.get(appId + p.getKey());
+        System.out.println("Babababbaba");
+        return p.getValue();
     }
 
     public Collection<byte[]> getValues(String appId) {

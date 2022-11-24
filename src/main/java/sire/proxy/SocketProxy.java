@@ -26,6 +26,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -96,16 +97,37 @@ public class SocketProxy implements Runnable {
 
 		public SireProxyThread(Socket s) {
 			this.s = s;
-			System.out.println("Proxy Thread started!");
+			System.out.println("Proxy Thread started~!");
 		}
 		@Override
 		public void run() {
 			try {
-				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+				OutputStream os = s.getOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(os);
+				DataOutputStream dos = new DataOutputStream(os);
+				InputStream is = s.getInputStream();
+				//ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 
 				while (!s.isClosed()) {
-					Object o;
+					int size = ByteBuffer.wrap(is.readNBytes(4)).getInt();
+					byte[] bytes = is.readNBytes(size);
+					ProxyMessage msg = ProxyMessage.parseFrom(bytes);
+					//System.out.println(msg.toString());
+
+					if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
+						oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
+					} else {
+						ProxyResponse result = runProxyMessage(msg);
+						if (result != null) {
+							byte[] bs = result.toByteArray();
+							System.out.println(bs.length);
+							//dos.writeInt(bs.length);
+							dos.write(bs);
+						}
+					}
+					os.flush();
+					is.reset();
+/*					Object o;
 					while ((o = ois.readObject()) != null) {
 						if (o instanceof ProxyMessage msg) {
 							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
@@ -116,23 +138,34 @@ public class SocketProxy implements Runnable {
 									oos.writeObject(result);
 							}
 						}
+						else {
+							System.out.println("Garbage received!");
+						}
 
-					}
+					}*/
 				}
-			} catch (ClassNotFoundException | SecretSharingException | SireException e) {
+			} catch (ClassNotFoundException | SecretSharingException | SireException  e) {
 				e.printStackTrace();
 			} catch (IOException ignored) {}
 		}
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {
 			Response res;
-			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW"))
-				res = serviceProxy.invokeUnordered(msg.toByteArray());
-			else if(msg.getOperation() == ProxyMessage.Operation.ATTEST_TIMESTAMP)
+			System.out.println("Request received: " + msg.getOperation());
+			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW")) {
+				System.out.println("Yaoooo1");
+				res = serviceProxy.invokeOrdered(msg.toByteArray());
+			}
+			else if(msg.getOperation() == ProxyMessage.Operation.ATTEST_TIMESTAMP) {
+				System.out.println("Yaoooo2");
 				return timestampAtt(serviceProxy.invokeOrdered2(msg.toByteArray()));
-			else if(msg.getOperation() == ProxyMessage.Operation.MEMBERSHIP_JOIN)
+			}
+			else if(msg.getOperation() == ProxyMessage.Operation.MEMBERSHIP_JOIN) {
+				System.out.println("Yaoooo3");
 				return join(serviceProxy.invokeOrdered2(msg.toByteArray()));
+			}
 			else {
+				System.out.println("Yaoooo4");
 				synchronized (proxyLock) {
 					res = serviceProxy.invokeOrdered(msg.toByteArray());
 				}
@@ -288,6 +321,7 @@ public class SocketProxy implements Runnable {
 		}
 
 		private ProxyResponse mapGet(Response res) throws SecretSharingException {
+			System.out.println("YaooooMap");
 			byte[] tmp = res.getPainData();
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()

@@ -16,6 +16,32 @@ public class ExtensionManager {
     public ExtensionManager() {
         this.sh = new GroovyShell();
         this.extensions = new TreeMap<>();
+        String code = """
+                package sire.coordination
+                
+                def runExtension(ExtParams p) {
+                    def str = "python extensionScript.py "
+                    //println p.getValue()
+                    def task = str.execute()
+                    def cmdOutputStream = new StringBuffer()
+                    task.waitForProcessOutput(cmdOutputStream, System.out)
+                    
+                    String value = new File("model.pickle").text
+                    ExtParams res = new ExtParams(p.key, value.getBytes())
+                    /*def str2 = "python extensionScript.py a"
+                    def task2 = str2.execute()
+                    cmdOutputStream2 = new StringBuffer()
+                    task2.waitForProcessOutput(cmdOutputStream2, System.out)
+                    println cmdOutputStream2.toString()*/
+                    
+                    //println "stderr: ${task2.err.text}"
+                    //println "result ${task.in.getText()}"
+                    
+                    
+                    return res
+                }
+                """;
+        this.extensions.put("app1", new Extension(code, sh.parse(code)));
     }
 
     public static ExtensionManager getInstance() {
@@ -42,6 +68,7 @@ public class ExtensionManager {
     }
 
     public ExtParams runExtension(String appId, ExtensionType type, String key, ExtParams params) {
+        System.out.println("Extension time!");
         String temp;
         if(extensions.containsKey(appId + type.name() + key))
             temp = appId + type.name() + key;

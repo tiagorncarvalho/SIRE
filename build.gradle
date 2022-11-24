@@ -136,4 +136,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    implementation "org.deeplearning4j:deeplearning4j-core:1.0.0-beta6"
+
 }
