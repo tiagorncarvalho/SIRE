@@ -115,18 +115,17 @@ public class SocketProxy implements Runnable {
 					//System.out.println(msg.toString());
 
 					if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
-						oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
+						//oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
+						System.out.println("Merda caralho foda-se");
 					} else {
 						ProxyResponse result = runProxyMessage(msg);
 						if (result != null) {
 							byte[] bs = result.toByteArray();
 							System.out.println(bs.length);
-							//dos.writeInt(bs.length);
+							dos.writeInt(bs.length);
 							dos.write(bs);
 						}
 					}
-					os.flush();
-					is.reset();
 /*					Object o;
 					while ((o = ois.readObject()) != null) {
 						if (o instanceof ProxyMessage msg) {
@@ -153,19 +152,15 @@ public class SocketProxy implements Runnable {
 			Response res;
 			System.out.println("Request received: " + msg.getOperation());
 			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW")) {
-				System.out.println("Yaoooo1");
 				res = serviceProxy.invokeOrdered(msg.toByteArray());
 			}
 			else if(msg.getOperation() == ProxyMessage.Operation.ATTEST_TIMESTAMP) {
-				System.out.println("Yaoooo2");
 				return timestampAtt(serviceProxy.invokeOrdered2(msg.toByteArray()));
 			}
 			else if(msg.getOperation() == ProxyMessage.Operation.MEMBERSHIP_JOIN) {
-				System.out.println("Yaoooo3");
 				return join(serviceProxy.invokeOrdered2(msg.toByteArray()));
 			}
 			else {
-				System.out.println("Yaoooo4");
 				synchronized (proxyLock) {
 					res = serviceProxy.invokeOrdered(msg.toByteArray());
 				}
@@ -321,7 +316,6 @@ public class SocketProxy implements Runnable {
 		}
 
 		private ProxyResponse mapGet(Response res) throws SecretSharingException {
-			System.out.println("YaooooMap");
 			byte[] tmp = res.getPainData();
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()

@@ -15,6 +15,8 @@ public class CoordinationManager {
 
     public void put(String appId, String key, byte[] value) {
         ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ExtParams(key, value, null));
+        if(key.contains("model"))
+            return;
         storage.put(appId + p.getKey(), p.getValue());
     }
 

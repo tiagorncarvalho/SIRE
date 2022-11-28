@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 from __future__ import print_function
 
-import pickle, sys
+from torchvision import datasets, transforms
+import pickle
+import sys
 
+import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
@@ -31,30 +34,59 @@ class Net(nn.Module):
         x = self.fc2(x)
         return F.log_softmax(x, dim=1)
 
-def aggregate(pickled_model, grads):
-    if pickled_model is None:
-        model = Net()
-    else:
-        model = pickled_model
-        print("Model :)\n")
+def aggregate(model, grads):
     if len(grads) == 0:
-        #with open('model.pickle', 'wb') as handle:
-        #    pickle.dump(model, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        torch.save(model.state_dict(), 'model.pt')
         return
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
     for name, param in model.named_parameters():
-        worker_grads = [grad[name] for grad in grads]
-        param.grad = sum(worker_grads)
+        param.grad = grads[name]
     optimizer.step()
     optimizer.zero_grad()
 
-    print(pickle.dumps(model))
+    test_loader = torch.utils.data.DataLoader(
+        datasets.MNIST('../data', train=False, download=True,
+                       transform=transforms.Compose([
+                           transforms.ToTensor(),
+                           transforms.Normalize((0.1307,), (0.3081,))
+                       ])),
+        batch_size=32, shuffle=True)
+
+    get_accuracy(test_loader, model)
+
+    torch.save(model.state_dict(), 'model.pt')
     return
 
+def get_accuracy(test_loader, model):
+    model.eval()
+    correct_sum = 0
+    # Use GPU to evaluate if possible
+    device = torch.device("cpu")
+    with torch.no_grad():
+        for i, (data, target) in enumerate(test_loader):
+            out = model(data)
+            pred = out.argmax(dim=1, keepdim=True)
+            pred, target = pred.to(device), target.to(device)
+            correct = pred.eq(target.view_as(pred)).sum().item()
+            correct_sum += correct
+
+    print(f"Accuracy {correct_sum / len(test_loader.dataset)}")
+
 def main():
-    with open('model.pickle', 'rb') as handle:
-        model = pickle.load(handle)
+    model_dict = torch.load('model.pt')
+    model = Net()
+    model.load_state_dict(model_dict)
+
+    if len(sys.argv) > 1:
+        rFile = open('temp.pt', 'rb')
+        contents = rFile.read()
+        grads = pickle.loads(contents)
+        aggregate(model, grads)
+
+
+    else:
         aggregate(model, [])
+
 
 if __name__ == "__main__":
     main()

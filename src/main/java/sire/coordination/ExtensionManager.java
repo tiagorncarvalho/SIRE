@@ -21,13 +21,24 @@ public class ExtensionManager {
                 
                 def runExtension(ExtParams p) {
                     def str = "python extensionScript.py "
+                    if(p.value != null) {
+                        final ByteArrayOutputStream os = new ByteArrayOutputStream()
+                        os.withCloseable {
+                            it << p.getValue()
+                        }
+                        
+                        new File("temp.pt").withOutputStream { stream ->
+                            os.writeTo(stream)
+                        }
+                        str = str + "temp.pt"
+                    }
                     //println p.getValue()
                     def task = str.execute()
                     def cmdOutputStream = new StringBuffer()
                     task.waitForProcessOutput(cmdOutputStream, System.out)
+                    println cmdOutputStream.toString()
                     
-                    String value = new File("model.pickle").text
-                    ExtParams res = new ExtParams(p.key, value.getBytes())
+                    ExtParams res = new ExtParams(p.key, new File("model.pt").bytes)
                     /*def str2 = "python extensionScript.py a"
                     def task2 = str2.execute()
                     cmdOutputStream2 = new StringBuffer()

@@ -1,16 +1,15 @@
 from __future__ import print_function
 
 import pickle
+from io import BytesIO
 
 import torch, messages_pb2
 import torch.utils.data
 import torch.nn as nn
 import torch.nn.functional as F
-from time import sleep
 import toolz, socket
 from torchvision import datasets, transforms
-
-from ParameterServer import PS
+from time import sleep
 from types import SimpleNamespace
 args = SimpleNamespace(batch_size=64, test_batch_size=1000,
                        epochs=2, lr=0.01, momentum=0.5,
@@ -59,46 +58,51 @@ def get_accuracy(test_loader, model):
 
     print(f"Accuracy {correct_sum / len(test_loader.dataset)}")
 
-def worker(ps, device, train_loader, test_loader, sock,
+def worker(device, train_loader, test_loader, sock,
            worker_id=0, num_workers=1,
-           iters=1):
+           iters=5):
     host = "localhost"
     port = 2500 + 1
     sock.connect((host, port))
-    #sleep(0.5)
+    # Request to get model
     model_request = messages_pb2.ProxyMessage()
     model_request.deviceId = str(worker_id)
     model_request.appId = "app1"
     model_request.operation = messages_pb2.ProxyMessage.MAP_GET
     model_request.key = "model"
 
-    #sock.send(model_request.SerializeToString())
-    #step_start, _model = ps.pull_latest()
-    #model_request.value = pickle.dumps(_model)
-    # print(model_request.SerializeToString())
+    # Sending get request
     byted = model_request.SerializeToString()
-    step_start = 0
     sock.send(len(byted).to_bytes(4, byteorder='big'))
     sock.send(byted)
-    # lenBytes = sock.recv(4)
-    # print(lenBytes)
-    # resSize = int.from_bytes(lenBytes, byteorder='big')
-    # print(resSize)
-    size = sock.recv(4)
-    resSize = int.from_bytes(size, byteorder='big')
-    print(resSize)
-    res = sock.recv(91084)
-    print(res)
+
+    #Receiving model
+    sock.recv(4)
+    bytedSize = sock.recv(4)
+    size = int.from_bytes(bytedSize, "big")
+    res = sock.recv(size)
     response = messages_pb2.ProxyResponse()
     response.ParseFromString(res)
-    _model = pickle.load(response.value)
+    inp_b = BytesIO(response.value)
+    model_dict = torch.load(inp_b)
+    _model = Net()
+    _model.load_state_dict(model_dict)
 
-    for step in range(step_start, step_start + iters):
-        while _model is None:
-            _model = ps.pull(key=step)
-            sleep(1e-4)
+    for step in range(0, iters):
+        if _model is None:
+            sock.send(len(byted).to_bytes(4, byteorder='big'))
+            sock.send(byted)
+            sock.recv(4)
+            bytedSize = sock.recv(4)
+            size = int.from_bytes(bytedSize, "big")
+            res = sock.recv(size)
+            response = messages_pb2.ProxyResponse()
+            response.ParseFromString(res)
+            inp_b = BytesIO(response.value)
+            model_dict = torch.load(inp_b)
+            _model = Net()
+            _model.load_state_dict(model_dict)
         model, _model = _model, None
-
         param_check = toolz.last(model.parameters())
         check = param_check.detach().numpy().flat[:4]
         print("worker {} iter {}, last params = {}".format(worker_id, step, check))
@@ -106,17 +110,29 @@ def worker(ps, device, train_loader, test_loader, sock,
         data, target = next(iter(train_loader))
         model = train(model, device, data, target)
         grads = {name: p.grad.data for name, p in model.named_parameters()}
+        # Request to put gradients
+        model_put = messages_pb2.ProxyMessage()
+        model_put.deviceId = str(worker_id)
+        model_put.appId = "app1"
+        model_put.operation = messages_pb2.ProxyMessage.MAP_PUT
+        model_put.key = "model"
+        model_put.value = pickle.dumps(grads)
         #print(grads)
-        ps.push(step, grads)
 
-    #get_accuracy(test_loader, model)
+        # Sending put request
+        byted_put = model_put.SerializeToString()
+        sock.send(len(byted_put).to_bytes(4, byteorder='big'))
+        sock.send(byted_put)
+
+    sock.close()
+    get_accuracy(test_loader, model)
 
 
 def main():
     print("Booting up...")
     device = torch.device("cpu")
     kwargs = {}
-    sock = socket.socket()
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     train_loader = torch.utils.data.DataLoader(
         datasets.MNIST('../data', train=True, download=True,
                        transform=transforms.Compose([
@@ -131,7 +147,7 @@ def main():
                            transforms.Normalize((0.1307,), (0.3081,))
                        ])),
         batch_size=32, shuffle=True)
-    worker(PS(Net()), device, train_loader, test_loader, sock)
+    worker(device, train_loader, test_loader, sock)
 
 
 if __name__ == "__main__":
