@@ -9,9 +9,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import toolz, socket
 from torchvision import datasets, transforms
-from time import sleep
 from types import SimpleNamespace
-args = SimpleNamespace(batch_size=64, test_batch_size=1000,
+args = SimpleNamespace(batch_size=32, test_batch_size=1000,
                        epochs=2, lr=0.01, momentum=0.5,
                        no_cuda=True, seed=42, log_interval=80)
 
@@ -34,7 +33,7 @@ class Net(nn.Module):
         return F.log_softmax(x, dim=1)
 
 def train(model, device, data, target):
-    print("Training...")
+    #print("Training...")
     model.train()
 
     data, target = data.to(device), target.to(device)
@@ -60,42 +59,48 @@ def get_accuracy(test_loader, model):
 
 def worker(device, train_loader, test_loader, sock,
            worker_id=0, num_workers=1,
-           iters=5):
+           iters=20):
     host = "localhost"
     port = 2500 + 1
     sock.connect((host, port))
+    _model = None
     # Request to get model
-    model_request = messages_pb2.ProxyMessage()
-    model_request.deviceId = str(worker_id)
-    model_request.appId = "app1"
-    model_request.operation = messages_pb2.ProxyMessage.MAP_GET
-    model_request.key = "model"
 
-    # Sending get request
-    byted = model_request.SerializeToString()
-    sock.send(len(byted).to_bytes(4, byteorder='big'))
-    sock.send(byted)
-
-    #Receiving model
-    sock.recv(4)
-    bytedSize = sock.recv(4)
-    size = int.from_bytes(bytedSize, "big")
-    res = sock.recv(size)
-    response = messages_pb2.ProxyResponse()
-    response.ParseFromString(res)
-    inp_b = BytesIO(response.value)
-    model_dict = torch.load(inp_b)
-    _model = Net()
-    _model.load_state_dict(model_dict)
+    # sock.send(len(byted).to_bytes(4, byteorder='big'))
+    # sock.send(byted)
+    #
+    # #Receiving model
+    # sock.recv(4)
+    # bytedSize = sock.recv(4)
+    # size = int.from_bytes(bytedSize, "big")
+    # res = sock.recv(size)
+    # response = messages_pb2.ProxyResponse()
+    # response.ParseFromString(res)
+    # inp_b = BytesIO(response.value)
+    # model_dict = torch.load(inp_b)
+    # _model = Net()
+    # _model.load_state_dict(model_dict)
 
     for step in range(0, iters):
-        if _model is None:
-            sock.send(len(byted).to_bytes(4, byteorder='big'))
+        while _model is None:
+            model_request = messages_pb2.ProxyMessage()
+            model_request.deviceId = str(worker_id)
+            model_request.appId = "app1"
+            model_request.operation = messages_pb2.ProxyMessage.MAP_GET
+            model_request.key = "model"
+
+            # Sending get request
+            byted = model_request.SerializeToString()
+            bytedSize = len(byted).to_bytes(4, byteorder='big')
+            #print(bytedSize)
+            sock.send(bytedSize)
             sock.send(byted)
-            sock.recv(4)
+            #print(sock.recv(4))
             bytedSize = sock.recv(4)
             size = int.from_bytes(bytedSize, "big")
+            #print(size)
             res = sock.recv(size)
+            #print(res)
             response = messages_pb2.ProxyResponse()
             response.ParseFromString(res)
             inp_b = BytesIO(response.value)

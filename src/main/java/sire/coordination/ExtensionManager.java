@@ -12,6 +12,7 @@ public class ExtensionManager {
     private static ExtensionManager instance = null;
     final Map<String, Extension> extensions;
     final GroovyShell sh;
+    int nExt = 0;
 
     public ExtensionManager() {
         this.sh = new GroovyShell();
@@ -20,8 +21,8 @@ public class ExtensionManager {
                 package sire.coordination
                 
                 def runExtension(ExtParams p) {
-                    def str = "python extensionScript.py "
-                    if(p.value != null) {
+                    def str = "python extensionScript.py"
+                    if(p.getValue() != null) {
                         final ByteArrayOutputStream os = new ByteArrayOutputStream()
                         os.withCloseable {
                             it << p.getValue()
@@ -30,15 +31,17 @@ public class ExtensionManager {
                         new File("temp.pt").withOutputStream { stream ->
                             os.writeTo(stream)
                         }
-                        str = str + "temp.pt"
+                        str = str + " temp.pt " + p.getKey()
                     }
-                    //println p.getValue()
+                    
                     def task = str.execute()
                     def cmdOutputStream = new StringBuffer()
                     task.waitForProcessOutput(cmdOutputStream, System.out)
-                    println cmdOutputStream.toString()
+                    print cmdOutputStream.toString()
                     
                     ExtParams res = new ExtParams(p.key, new File("model.pt").bytes)
+                    
+                    //new File('temp.pt').delete()
                     /*def str2 = "python extensionScript.py a"
                     def task2 = str2.execute()
                     cmdOutputStream2 = new StringBuffer()
@@ -79,7 +82,9 @@ public class ExtensionManager {
     }
 
     public ExtParams runExtension(String appId, ExtensionType type, String key, ExtParams params) {
-        System.out.println("Extension time!");
+        if(type == ExtensionType.EXT_PUT)
+            nExt++;
+        params.setKey("" + nExt);
         String temp;
         if(extensions.containsKey(appId + type.name() + key))
             temp = appId + type.name() + key;

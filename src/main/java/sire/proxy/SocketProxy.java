@@ -103,9 +103,9 @@ public class SocketProxy implements Runnable {
 		public void run() {
 			try {
 				OutputStream os = s.getOutputStream();
-				ObjectOutputStream oos = new ObjectOutputStream(os);
 				DataOutputStream dos = new DataOutputStream(os);
 				InputStream is = s.getInputStream();
+
 				//ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 
 				while (!s.isClosed()) {
@@ -116,16 +116,18 @@ public class SocketProxy implements Runnable {
 
 					if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
 						//oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
-						System.out.println("Merda caralho foda-se");
+						System.out.println("Wrong operation!");
 					} else {
 						ProxyResponse result = runProxyMessage(msg);
 						if (result != null) {
 							byte[] bs = result.toByteArray();
-							System.out.println(bs.length);
+							//System.out.println(bs.length);
 							dos.writeInt(bs.length);
 							dos.write(bs);
 						}
 					}
+					dos.flush();
+
 /*					Object o;
 					while ((o = ois.readObject()) != null) {
 						if (o instanceof ProxyMessage msg) {
@@ -143,9 +145,9 @@ public class SocketProxy implements Runnable {
 
 					}*/
 				}
-			} catch (ClassNotFoundException | SecretSharingException | SireException  e) {
+			} catch (ClassNotFoundException | SecretSharingException | SireException | IOException  e) {
 				e.printStackTrace();
-			} catch (IOException ignored) {}
+			} //catch ( IOException ignored) {}
 		}
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {

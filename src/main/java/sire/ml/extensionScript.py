@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 from __future__ import print_function
 
+from os.path import isfile
+
 from torchvision import datasets, transforms
 import pickle
 import sys
 
 import torch
+import torch.utils.data
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
@@ -24,6 +27,7 @@ class Net(nn.Module):
         self.conv2_drop = nn.Dropout2d()
         self.fc1 = nn.Linear(320, 50)
         self.fc2 = nn.Linear(50, 10)
+        self.optimizer = optim.SGD(self.parameters(), lr=args.lr, momentum=args.momentum)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
@@ -34,15 +38,15 @@ class Net(nn.Module):
         x = self.fc2(x)
         return F.log_softmax(x, dim=1)
 
-def aggregate(model, grads):
-    if len(grads) == 0:
-        torch.save(model.state_dict(), 'model.pt')
-        return
-    optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
+def aggregate(model, grads, nGrads):
+    optimizer = model.optimizer
     for name, param in model.named_parameters():
-        param.grad = grads[name]
+        worker_grads = [grad[name] for grad in grads]
+        param.grad = sum(worker_grads)
     optimizer.step()
     optimizer.zero_grad()
+
+    torch.save(model.state_dict(), 'model.pt')
 
     test_loader = torch.utils.data.DataLoader(
         datasets.MNIST('../data', train=False, download=True,
@@ -51,10 +55,8 @@ def aggregate(model, grads):
                            transforms.Normalize((0.1307,), (0.3081,))
                        ])),
         batch_size=32, shuffle=True)
-
-    get_accuracy(test_loader, model)
-
-    torch.save(model.state_dict(), 'model.pt')
+    if nGrads % 20 == 0:
+        get_accuracy(test_loader, model)
     return
 
 def get_accuracy(test_loader, model):
@@ -73,19 +75,18 @@ def get_accuracy(test_loader, model):
     print(f"Accuracy {correct_sum / len(test_loader.dataset)}")
 
 def main():
-    model_dict = torch.load('model.pt')
     model = Net()
-    model.load_state_dict(model_dict)
+    if isfile('model.pt'):
+        model_dict = torch.load('model.pt')
+        model.load_state_dict(model_dict)
 
     if len(sys.argv) > 1:
         rFile = open('temp.pt', 'rb')
         contents = rFile.read()
-        grads = pickle.loads(contents)
-        aggregate(model, grads)
-
-
+        tempGrads = pickle.loads(contents)
+        aggregate(model, [tempGrads], int(sys.argv[2]))
     else:
-        aggregate(model, [])
+        torch.save(model.state_dict(), 'model.pt')
 
 
 if __name__ == "__main__":

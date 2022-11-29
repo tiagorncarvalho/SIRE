@@ -1,7 +1,7 @@
 package sire.coordination;
 
 public class ExtParams {
-    private final String key;
+    private String key;
     private final byte[] value; //stands for newValue in cas operations
     private final byte[] newValue;
 
@@ -9,6 +9,10 @@ public class ExtParams {
         this.key = key;
         this.value = value;
         this.newValue = newValue;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getKey() {

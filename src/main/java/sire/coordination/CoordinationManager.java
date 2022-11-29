@@ -27,7 +27,6 @@ public class CoordinationManager {
 
     public byte[] get(String appId, String key) {
         ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_GET, key, new ExtParams(key, null, null));
-        System.out.println("Babababbaba");
         return p.getValue();
     }
 

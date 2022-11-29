@@ -136,7 +136,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 												 MessageContext messageContext) {
 		try {
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
-			System.out.println("Yo " + msg.toString());
 			ProxyMessage.Operation op = msg.getOperation();
 			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
 				membership.ping(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
@@ -348,7 +347,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				return new ConfidentialMessage();
 			}
 			case MAP_GET -> {
-				System.out.println("\n Yabadabadadeeeee\n");
 				return new ConfidentialMessage(storage.get(msg.getAppId(), msg.getKey()));
 			}
 			case MAP_LIST -> {
@@ -505,7 +503,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public ConfidentialMessage appExecuteUnordered(byte[] bytes, VerifiableShare[] verifiableShares, MessageContext messageContext) {
 		try {
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
-			System.out.println("Oy " + msg.toString());
 			ProxyMessage.Operation op = msg.getOperation();
 			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
 				membership.ping(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
