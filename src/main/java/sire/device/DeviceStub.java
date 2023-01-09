@@ -273,7 +273,7 @@ public class DeviceStub {
         this.oos.writeObject(msg);
     }
 
-    public void accessIntersection(String appId, String lane) throws IOException, ClassNotFoundException, InterruptedException {
+    public long[] accessIntersection(String appId, String lane) throws IOException, ClassNotFoundException, InterruptedException {
         System.out.println("Requesting!");
         ProxyMessage.Builder builder = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_PUT)
@@ -285,20 +285,29 @@ public class DeviceStub {
         this.oos.writeObject(request);
 
         Object o = this.ois.readObject();
+        long crossTime = 0;
+        long waitTime = 0;
         if(o instanceof ProxyResponse pr) {
             byte b = pr.getValue().byteAt(0);
             if(b == 0) {
+                long t2;
+                long t1 = System.nanoTime();
                 System.out.println("Idle...");
                 o = this.ois.readObject();
+                t2 = System.nanoTime();
+                waitTime = t2 - t1;
                 System.out.println("Crossing...");
                 Thread.sleep(5000);
+                crossTime = 5_000_000_000L;
             } else {
                 System.out.println("Crossing...");
                 Thread.sleep(3000);
+                crossTime = 3_000_000_000L;
             }
         }
         System.out.println("Releasing!");
         this.oos.writeObject(release);
+        return new long[] {crossTime, waitTime};
     }
 
 

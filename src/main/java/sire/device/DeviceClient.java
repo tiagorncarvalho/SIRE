@@ -1,59 +1,73 @@
 package sire.device;
 
-import sire.membership.DeviceContext;
-import sire.membership.DeviceContext.DeviceType;
-import sire.utils.ExampleObject;
-
 import javax.crypto.*;
 import java.io.IOException;
 import java.security.*;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
-
-import static sire.messages.ProtoUtils.deserialize;
-import static sire.messages.ProtoUtils.serialize;
-
 /**
  * @author robin
  */
 public class DeviceClient {
 	static long initialTime;
-	static long latencyAvg;
-	static long latencyMin;
-	static long latencyMax;
+	static long totalLatencyAvg;
+	static long totalLatencyMin;
+	static long totalLatencyMax;
+
+	static long systemLatencyAvg;
+	static long systemLatencyMin;
+	static long systemLatencyMax;
+
+	static long averageWaitTime;
+	static int numWaiters;
+
 	static Integer counter;
 	static final Object lock = new Object();
 	static int numClients;
 
 	public static void main(String[] args) throws NoSuchPaddingException, NoSuchAlgorithmException, IOException, ClassNotFoundException, InterruptedException {
 		initialTime = System.nanoTime();
-		latencyAvg = 0;
-		latencyMin = Long.MAX_VALUE;
-		latencyMax = 0;
+		totalLatencyAvg = 0;
+		totalLatencyMin = Long.MAX_VALUE;
+		totalLatencyMax = 0;
+		systemLatencyAvg = 0;
+		systemLatencyMin = Long.MAX_VALUE;
+		systemLatencyMax = 0;
+		averageWaitTime = 0;
+		numWaiters = 0;
 		counter = 0;
-		numClients = 5000;
+		numClients = 4000;
 
 		for (int i = 0; i < numClients; i++) {
 			new DeviceThread().start();
-			Thread.sleep(720);
+			Thread.sleep(450);
 		}
 
 		synchronized (lock) {
 			lock.wait();
 		}
 
-		double average = (latencyAvg / (float) numClients) / 1_000_000.0;
-		long max = latencyMax / 1_000_000;
-		long min = latencyMin / 1_000_000;
+		double totalAverage = (totalLatencyAvg / (float) numClients) / 1_000_000.0;
+		long totalMax = totalLatencyMax / 1_000_000;
+		long totalMin = totalLatencyMin / 1_000_000;
+
+		double systemAverage = (systemLatencyAvg / (float) numClients) / 1_000_000.0;
+		long systemMax = systemLatencyMax / 1_000_000;
+		long systemMin = systemLatencyMin / 1_000_000;
+
+		double waitAverage = (averageWaitTime / (float) numWaiters) / 1_000_000.0;
+
 		long totalTime = System.nanoTime() - initialTime;
 
-		//double std = calculateStandardDeviation(latencies, average);
 		System.out.println("=============================");
-		System.out.printf("Avg: %.3f ms\n", average);
-		//System.out.printf("Std: %.3f ms\n", std);
-		System.out.printf("Min: %d ms\n", min);
-		System.out.printf("Max: %d ms\n", max);
+		System.out.printf("Total Lat Avg: %.3f ms\n", totalAverage);
+		System.out.printf("Total Lat Min: %d ms\n", totalMin);
+		System.out.printf("Total Lat Max: %d ms\n", totalMax);
+		System.out.printf("System Lat Avg: %.3f ms\n", systemAverage);
+		System.out.printf("System Lat Min: %d ms\n", systemMin);
+		System.out.printf("System Lat Max: %d ms\n", systemMax);
+		System.out.printf("Wait Time Avg: %.3f ms\n", waitAverage);
+		System.out.printf("Percentage of waiting clients: %.1f (%d/%d)\n", (float) numWaiters/numClients * 100, numWaiters, numClients);
 		System.out.printf("Duration: %d ms\n", totalTime);
 		System.out.println("=============================");
 	}
@@ -73,14 +87,25 @@ public class DeviceClient {
 
 				long t2;
 				long t1 = System.nanoTime();
-				dummy.accessIntersection(appId, new Random().nextInt(0, 8) + "");
+				long[] times = dummy.accessIntersection(appId, new Random().nextInt(0, 8) + "");
 				t2 = System.nanoTime();
 				long latency = t2 - t1;
-				if (latency < latencyMin)
-					latencyMin = latency;
-				if (latency > latencyMax)
-					latencyMax = latency;
-				latencyAvg += latency;
+				long systemLatency = latency - times[0] - times[1];
+				if(times[1] != 0) {
+					averageWaitTime += times[1];
+					numWaiters++;
+				}
+				if (latency < totalLatencyMin)
+					totalLatencyMin = latency;
+				if (latency > totalLatencyMax)
+					totalLatencyMax = latency;
+				totalLatencyAvg += latency;
+
+				if (systemLatency < systemLatencyMin)
+					systemLatencyMin = systemLatency;
+				if (systemLatency > systemLatencyMax)
+					systemLatencyMax = systemLatency;
+				systemLatencyAvg += systemLatency;
 
 			} catch (IOException | ClassNotFoundException | InterruptedException e) {
 				e.printStackTrace();
