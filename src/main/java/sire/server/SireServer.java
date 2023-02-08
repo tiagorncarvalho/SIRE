@@ -4,6 +4,7 @@ import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.core.messages.TOMMessage;
+import com.google.protobuf.ByteString;
 import confidential.ConfidentialMessage;
 import confidential.facade.server.ConfidentialSingleExecutable;
 import confidential.polynomial.DistributedPolynomialManager;
@@ -24,6 +25,7 @@ import sire.membership.DeviceContext;
 import sire.membership.MembershipManager;
 import sire.messages.Messages.ProxyMessage;
 import sire.messages.Messages.ProxyResponse;
+import sire.ml.ModelRequest;
 import sire.schnorr.*;
 import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
@@ -33,6 +35,8 @@ import vss.secretsharing.VerifiableShare;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
@@ -98,6 +102,11 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	private final SchnorrNonceManager schnorrNonceManager;
 
+	private Map<Integer, ObjectOutputStream> proxies;
+	private int[] iterCounter;
+	private List<ModelRequest> reqs;
+	private final int numWorkers;
+
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		if (args.length < 1) {
 			System.out.println("Usage: sire.server.SireServer <server id>");
@@ -129,35 +138,44 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		devicesTimestamps = new TreeMap<>();
 		schnorrNonceManager = new SchnorrNonceManager(id, serviceReplica.getReplicaContext().getCurrentView().getF(),
 				schnorrSignatureScheme.getCurve());
+
+		proxies = new HashMap<>();
+		iterCounter = new int[500];
+		reqs = new ArrayList<>();
+		numWorkers = 3;
 	}
 
 	@Override
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
 		try {
+			if(!proxies.containsKey(messageContext.getSender())) {
+				Socket s = new Socket("localhost", 5151 + messageContext.getSender());
+				proxies.put(messageContext.getSender(), new ObjectOutputStream(s.getOutputStream()));
+			}
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
 			ProxyMessage.Operation op = msg.getOperation();
 			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
 				membership.ping(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 			if(op.toString().startsWith("MAP"))
-				return executeOrderedMap(msg);
+				return executeMap(msg, messageContext);
 			else if(op.toString().startsWith("EXTENSION"))
-				return executeOrderedManagement(msg);
+				return executeManagement(msg);
 			else if(op.toString().startsWith("POLICY"))
-				return executeOrderedPolicy(msg);
+				return executePolicy(msg);
 			else if(op.toString().startsWith("MEMBERSHIP"))
-				return executeOrderedMembership(msg, messageContext);
+				return executeMembership(msg, messageContext);
 			else if(op.toString().startsWith("ATTEST"))
-				return executeOrderedAttestation(msg, messageContext);
+				return executeAttestation(msg, messageContext);
 			else if(op.toString().startsWith("TIMESTAMP"))
-				return executeOrderedTimestamp(msg, messageContext);//new ConfidentialMessage(generateTimestamp(msg, messageContext).toByteArray());
+				return executeTimestamp(msg, messageContext);//new ConfidentialMessage(generateTimestamp(msg, messageContext).toByteArray());
 		} catch (IOException | SireException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	private ConfidentialMessage executeOrderedTimestamp(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
+	private ConfidentialMessage executeTimestamp(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
 		Timestamp ts = new Timestamp(messageContext.getTimestamp());
 		ProxyResponse response;
@@ -178,7 +196,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		return baos.toByteArray();
 	}
 
-	private ConfidentialMessage executeOrderedAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
+	private ConfidentialMessage executeAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
 			case ATTEST_GET_PUBLIC_KEY -> {
@@ -218,7 +236,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		return null;
 	}
 
-	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
+	private ConfidentialMessage executeMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
 		System.out.println(msg.getKey());
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -274,7 +292,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		return null;
 	}
 
-	private ConfidentialMessage executeOrderedManagement(ProxyMessage msg) throws IOException {
+	private ConfidentialMessage executeManagement(ProxyMessage msg) throws IOException {
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
 			case EXTENSION_ADD -> {
@@ -297,7 +315,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		return null;
 	}
 
-	private ConfidentialMessage executeOrderedPolicy(ProxyMessage msg) throws IOException {
+	private ConfidentialMessage executePolicy(ProxyMessage msg) throws IOException {
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
 			case POLICY_ADD -> {
@@ -324,7 +342,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		return null;
 	}
 
-	private ConfidentialMessage executeOrderedMap(ProxyMessage msg) throws IOException, SireException {
+	private ConfidentialMessage executeMap(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		if(membership.isDeviceValid(msg.getAppId(), msg.getDeviceId())) {
 			throw new SireException("Unknown Device: Not attested or not in this app membership.");
 		}
@@ -336,6 +354,26 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				byte[] value = byteStringToByteArray(out, msg.getValue());
 				out.close();
 				storage.put(msg.getAppId(), msg.getKey(), value);
+				if(msg.getKey().contains("model")) {
+					int index = ByteBuffer.wrap(byteStringToByteArray(new ByteArrayOutputStream(),
+							msg.getOldData())).getInt();
+					iterCounter[index]++;
+
+					if(iterCounter[index] == numWorkers) {
+						ProxyResponse res;
+						for(ModelRequest r : reqs) {
+							System.out.println("ID: " + r.getMsg().getDeviceId());
+							res = ProxyResponse.newBuilder()
+									.setDeviceId(r.getMsg().getDeviceId())
+									.setValue(ByteString.copyFrom(storage.get(r.getMsg().getAppId(),
+											r.getMsg().getKey())))
+									.build();
+
+							proxies.get(r.getProxyId()).writeObject(res);
+						}
+						reqs.clear();
+					}
+				}
 				lock.unlock();
 
 				return new ConfidentialMessage();
@@ -347,6 +385,14 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				return new ConfidentialMessage();
 			}
 			case MAP_GET -> {
+				if(msg.getKey().contains("model")) {
+					int iter = ByteBuffer.wrap(byteStringToByteArray(new ByteArrayOutputStream(), msg.getValue())).getInt();
+					if(iter > 0 && iterCounter[iter - 1] < numWorkers) {
+						System.out.println("Aqui! " + iterCounter[iter - 1] + " " + iter);
+						reqs.add(new ModelRequest(msg, messageContext.getSender()));
+						return new ConfidentialMessage();
+					}
+				}
 				return new ConfidentialMessage(storage.get(msg.getAppId(), msg.getKey()));
 			}
 			case MAP_LIST -> {
@@ -507,17 +553,17 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
 				membership.ping(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 			if(op.toString().startsWith("MAP"))
-				return executeOrderedMap(msg);
+				return executeMap(msg, messageContext);
 			else if(op.toString().startsWith("EXTENSION"))
-				return executeOrderedManagement(msg);
+				return executeManagement(msg);
 			else if(op.toString().startsWith("POLICY"))
-				return executeOrderedPolicy(msg);
+				return executePolicy(msg);
 			else if(op.toString().startsWith("MEMBERSHIP"))
-				return executeOrderedMembership(msg, messageContext);
+				return executeMembership(msg, messageContext);
 			else if(op.toString().startsWith("ATTEST"))
-				return executeOrderedAttestation(msg, messageContext);
+				return executeAttestation(msg, messageContext);
 			else if(op.toString().startsWith("TIMESTAMP"))
-				return executeOrderedTimestamp(msg, messageContext);
+				return executeTimestamp(msg, messageContext);
 		} catch (IOException | SireException e) {
 			e.printStackTrace();
 		}

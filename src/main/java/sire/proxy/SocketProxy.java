@@ -41,16 +41,33 @@ public class SocketProxy implements Runnable {
 	private final SchnorrSignatureScheme signatureScheme;
 	private final int proxyId;
 	private final Object proxyLock;
+	private ServerSocket serverSocket;
+	private Map<String, DataOutputStream> devices;
+	final Map<String, Integer> responseCounter;
 
 	public SocketProxy(int proxyId) throws SireException{
 		System.out.println("Proxy start!");
 		this.proxyId = proxyId;
+		this.devices = new TreeMap<>();
+		responseCounter = new HashMap<>();
 
 		try {
 			ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
+			serverSocket = new ServerSocket(5151 + proxyId);
+			new Thread(() -> {
+				Socket s;
+				for (int i = 0; i < 4; i++) {
+					try {
+						s = serverSocket.accept();
+						new ReceivingProxyThread(s).start();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
 			serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
 			proxyLock = new Object();
-		} catch (SecretSharingException e) {
+		} catch (SecretSharingException | IOException e) {
 			throw new SireException("Failed to contact the distributed verifier", e);
 		}
 		System.out.println("Connection established!");
@@ -91,22 +108,61 @@ public class SocketProxy implements Runnable {
 		}
 	}
 
+	private class ReceivingProxyThread extends Thread {
+		Socket s;
+
+		public ReceivingProxyThread(Socket s) {
+			this.s = s;
+		}
+
+		@Override
+		public void run() {
+			try {
+				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+
+				while (!s.isClosed()) {
+					Object o;
+					while ((o = ois.readObject()) != null) {
+						if(o instanceof ProxyResponse res) {
+							String deviceId = res.getDeviceId();
+							synchronized (responseCounter) {
+								if (responseCounter.containsKey(deviceId))
+									responseCounter.put(deviceId, responseCounter.get(deviceId) + 1);
+								else
+									responseCounter.put(deviceId, 1);
+								if (responseCounter.get(deviceId) == 4) {
+									responseCounter.remove(deviceId);
+									byte[] result = res.toByteArray();
+									DataOutputStream tempDos = devices.get(deviceId);
+									tempDos.writeInt(result.length);
+									tempDos.write(result);
+								}
+							}
+						}
+					}
+				}
+			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private class SireProxyThread extends Thread {
 
 		private final Socket s;
+		private boolean inMap = false;
 
 		public SireProxyThread(Socket s) {
 			this.s = s;
-			System.out.println("Proxy Thread started~!");
+			System.out.println("Proxy Thread started!");
 		}
+
 		@Override
 		public void run() {
 			try {
 				OutputStream os = s.getOutputStream();
 				DataOutputStream dos = new DataOutputStream(os);
 				InputStream is = s.getInputStream();
-
-				//ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 
 				while (!s.isClosed()) {
 					int size = ByteBuffer.wrap(is.readNBytes(4)).getInt();
@@ -118,6 +174,10 @@ public class SocketProxy implements Runnable {
 						//oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
 						System.out.println("Wrong operation!");
 					} else {
+						if(!inMap) {
+							inMap = true;
+							devices.put(msg.getDeviceId(), dos);
+						}
 						ProxyResponse result = runProxyMessage(msg);
 						if (result != null) {
 							byte[] bs = result.toByteArray();
@@ -127,28 +187,12 @@ public class SocketProxy implements Runnable {
 						}
 					}
 					dos.flush();
-
-/*					Object o;
-					while ((o = ois.readObject()) != null) {
-						if (o instanceof ProxyMessage msg) {
-							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
-								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
-							} else {
-								ProxyResponse result = runProxyMessage(msg);
-								if (result != null)
-									oos.writeObject(result);
-							}
-						}
-						else {
-							System.out.println("Garbage received!");
-						}
-
-					}*/
 				}
-			} catch (ClassNotFoundException | SecretSharingException | SireException | IOException  e) {
+			} catch (ClassNotFoundException | SecretSharingException | SireException e) {
 				e.printStackTrace();
-			} //catch ( IOException ignored) {}
+			} catch (IOException ignored) {}
 		}
+
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {
 			Response res;
@@ -323,8 +367,9 @@ public class SocketProxy implements Runnable {
 				return ProxyResponse.newBuilder()
 						.setValue(ByteString.copyFrom(tmp))
 						.build();
-			} else {
-				return ProxyResponse.newBuilder().build();
+			}
+			else {
+				return null;
 			}
 		}
 

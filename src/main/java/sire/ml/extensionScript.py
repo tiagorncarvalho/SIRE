@@ -40,22 +40,32 @@ class Net(nn.Module):
 
 def aggregate(model, grads, nGrads):
     optimizer = model.optimizer
+    #print("grads: ", grads)
     for name, param in model.named_parameters():
+        #print("name: ", name, "param: ", param)
         worker_grads = [grad[name] for grad in grads]
         param.grad = sum(worker_grads)
-    optimizer.step()
-    optimizer.zero_grad()
+    #print("named_parameters: ", model.named_parameters)
+    #model.curr_update_size += 1
+    #print(model.curr_update_size)
+    if nGrads % 3 == 0: #model.curr_update_size >= model.update_size:
+        for p in model.parameters():
+            p.grad /= 3
+        #model.curr_update_size = 0
+        optimizer.step()
+        optimizer.zero_grad()
 
     torch.save(model.state_dict(), 'model.pt')
 
-    test_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=False, download=True,
-                       transform=transforms.Compose([
-                           transforms.ToTensor(),
-                           transforms.Normalize((0.1307,), (0.3081,))
-                       ])),
-        batch_size=32, shuffle=True)
-    if nGrads % 20 == 0:
+
+    if nGrads % 15 == 0:
+        test_loader = torch.utils.data.DataLoader(
+            datasets.MNIST('../data', train=False, download=True,
+                           transform=transforms.Compose([
+                               transforms.ToTensor(),
+                               transforms.Normalize((0.1307,), (0.3081,))
+                           ])),
+            batch_size=32, shuffle=True)
         get_accuracy(test_loader, model)
     return
 

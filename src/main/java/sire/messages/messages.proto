@@ -109,4 +109,5 @@ message ProxyResponse {
   bytes timestamp = 7; //Can also be used for join response
   bytes pubKey = 8;
   bytes hash = 9;
+  string deviceId = 10;
 }

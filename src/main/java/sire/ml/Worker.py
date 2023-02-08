@@ -33,7 +33,6 @@ class Net(nn.Module):
         return F.log_softmax(x, dim=1)
 
 def train(model, device, data, target):
-    #print("Training...")
     model.train()
 
     data, target = data.to(device), target.to(device)
@@ -57,29 +56,12 @@ def get_accuracy(test_loader, model):
 
     print(f"Accuracy {correct_sum / len(test_loader.dataset)}")
 
-def worker(device, train_loader, test_loader, sock,
-           worker_id=0, num_workers=1,
-           iters=20):
+def worker(device, train_loader, test_loader, sock, worker_id=0, iters=5):
     host = "localhost"
     port = 2500 + 1
     sock.connect((host, port))
     _model = None
     # Request to get model
-
-    # sock.send(len(byted).to_bytes(4, byteorder='big'))
-    # sock.send(byted)
-    #
-    # #Receiving model
-    # sock.recv(4)
-    # bytedSize = sock.recv(4)
-    # size = int.from_bytes(bytedSize, "big")
-    # res = sock.recv(size)
-    # response = messages_pb2.ProxyResponse()
-    # response.ParseFromString(res)
-    # inp_b = BytesIO(response.value)
-    # model_dict = torch.load(inp_b)
-    # _model = Net()
-    # _model.load_state_dict(model_dict)
 
     for step in range(0, iters):
         while _model is None:
@@ -88,19 +70,20 @@ def worker(device, train_loader, test_loader, sock,
             model_request.appId = "app1"
             model_request.operation = messages_pb2.ProxyMessage.MAP_GET
             model_request.key = "model"
+            model_request.value = step.to_bytes(4, byteorder='big')
 
             # Sending get request
             byted = model_request.SerializeToString()
             bytedSize = len(byted).to_bytes(4, byteorder='big')
-            #print(bytedSize)
             sock.send(bytedSize)
             sock.send(byted)
-            #print(sock.recv(4))
             bytedSize = sock.recv(4)
             size = int.from_bytes(bytedSize, "big")
-            #print(size)
+            print("Size:", size)
             res = sock.recv(size)
-            #print(res)
+            # f = open('temporary.proto', 'wb')
+            # f.write(res)
+            # f.close()
             response = messages_pb2.ProxyResponse()
             response.ParseFromString(res)
             inp_b = BytesIO(response.value)
@@ -122,6 +105,7 @@ def worker(device, train_loader, test_loader, sock,
         model_put.operation = messages_pb2.ProxyMessage.MAP_PUT
         model_put.key = "model"
         model_put.value = pickle.dumps(grads)
+        model_put.oldData = step.to_bytes(4, byteorder='big')
         #print(grads)
 
         # Sending put request
