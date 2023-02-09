@@ -181,7 +181,6 @@ public class SocketProxy implements Runnable {
 						ProxyResponse result = runProxyMessage(msg);
 						if (result != null) {
 							byte[] bs = result.toByteArray();
-							//System.out.println(bs.length);
 							dos.writeInt(bs.length);
 							dos.write(bs);
 						}

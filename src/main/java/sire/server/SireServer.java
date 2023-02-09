@@ -362,7 +362,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					if(iterCounter[index] == numWorkers) {
 						ProxyResponse res;
 						for(ModelRequest r : reqs) {
-							System.out.println("ID: " + r.getMsg().getDeviceId());
 							res = ProxyResponse.newBuilder()
 									.setDeviceId(r.getMsg().getDeviceId())
 									.setValue(ByteString.copyFrom(storage.get(r.getMsg().getAppId(),
@@ -388,7 +387,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				if(msg.getKey().contains("model")) {
 					int iter = ByteBuffer.wrap(byteStringToByteArray(new ByteArrayOutputStream(), msg.getValue())).getInt();
 					if(iter > 0 && iterCounter[iter - 1] < numWorkers) {
-						System.out.println("Aqui! " + iterCounter[iter - 1] + " " + iter);
 						reqs.add(new ModelRequest(msg, messageContext.getSender()));
 						return new ConfidentialMessage();
 					}

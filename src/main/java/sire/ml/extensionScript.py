@@ -28,6 +28,7 @@ class Net(nn.Module):
         self.fc1 = nn.Linear(320, 50)
         self.fc2 = nn.Linear(50, 10)
         self.optimizer = optim.SGD(self.parameters(), lr=args.lr, momentum=args.momentum)
+        self._grads = {}
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
@@ -40,20 +41,17 @@ class Net(nn.Module):
 
 def aggregate(model, grads, nGrads):
     optimizer = model.optimizer
-    #print("grads: ", grads)
-    for name, param in model.named_parameters():
-        #print("name: ", name, "param: ", param)
-        worker_grads = [grad[name] for grad in grads]
-        param.grad = sum(worker_grads)
-    #print("named_parameters: ", model.named_parameters)
-    #model.curr_update_size += 1
-    #print(model.curr_update_size)
+    model._grads[nGrads % 3] = grads
+
     if nGrads % 3 == 0: #model.curr_update_size >= model.update_size:
-        for p in model.parameters():
-            p.grad /= 3
-        #model.curr_update_size = 0
+        for key, gs in model._grads.items():
+            for name, param in model.named_parameters():
+                worker_grads = [grad[name] for grad in gs]
+                param.grad = sum(worker_grads)
+
         optimizer.step()
         optimizer.zero_grad()
+        model._grads = {}
 
     torch.save(model.state_dict(), 'model.pt')
 
