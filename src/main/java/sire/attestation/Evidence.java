@@ -17,7 +17,7 @@ public class Evidence implements Externalizable {
 
 	public Evidence() {}
 
-	public Evidence( String version, byte[] claim, byte[] pubKey) {
+	public Evidence(String version, byte[] claim, byte[] pubKey) {
 		this.version = version;
 		this.claim = claim;
 		this.pubKey = pubKey;

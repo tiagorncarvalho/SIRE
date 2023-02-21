@@ -12,10 +12,9 @@ message ProtoSchnorr {
 }
 
 message ProtoEvidence {
-  bytes anchor = 1;
-  string watzVersion = 2;
-  bytes claim = 3;
-  bytes servicePubKey = 4;
+  string watzVersion = 1;
+  bytes claim = 2;
+  bytes servicePubKey = 3;
 }
 
 enum ProtoDeviceType {

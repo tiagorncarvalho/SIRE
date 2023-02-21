@@ -3,10 +3,15 @@ package sire.proxy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
+import sire.attestation.Evidence;
 import sire.coordination.Extension;
 import sire.attestation.Policy;
 import sire.membership.DeviceContext;
+import sire.messages.Messages;
+import sire.schnorr.SchnorrSignature;
 import sire.serverProxyUtils.SireException;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 @SpringBootApplication
@@ -93,14 +98,19 @@ public class ProxyMain {
 
         //====================MEMBER====================
 
-        @PutMapping("/member")
-        public void preJoin() {
-            //TODO
+        @GetMapping("/timestamp")
+        public Messages.ProxyResponse getTimestamp(@RequestParam(value = "appId") String appId, @RequestParam(value = "deviceId") String deviceId,
+                                                   byte[] attesterPubKey, byte[] sigma, byte[] signPubKey, byte[] randomPubKey) {
+            return restProxy.getTimestamp(appId, deviceId, attesterPubKey, new SchnorrSignature(sigma, signPubKey, randomPubKey));
         }
 
         @PostMapping("/member")
-        public void join() {
-            //TODO
+        public void join(@RequestParam(value = "appId") String appId, String version, byte[] claim,
+                         byte[] pubKey, Timestamp ts, byte[] sigma, byte[] signPubKey, byte[] randomPubKey,
+                         byte[] attesterPubKey) {
+            Evidence e = new Evidence(version, claim, pubKey);
+            SchnorrSignature sign = new SchnorrSignature(sigma, signPubKey, randomPubKey);
+            restProxy.join(appId, e, ts, sign, attesterPubKey);
         }
 
         @DeleteMapping("/member")

@@ -1,34 +1,71 @@
 package sire.proxy;
 
 import com.google.protobuf.ByteString;
+import confidential.ConfidentialExtractedResponse;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
+import org.bouncycastle.crypto.BlockCipher;
+import org.bouncycastle.crypto.engines.AESEngine;
+import org.bouncycastle.math.ec.ECPoint;
+import sire.attestation.Evidence;
 import sire.management.AppManager;
 import sire.attestation.Policy;
 import sire.messages.Messages;
 import sire.membership.DeviceContext;
+import sire.schnorr.PublicPartialSignature;
+import sire.schnorr.SchnorrSignature;
+import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.SireException;
+import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.facade.SecretSharingException;
+import vss.secretsharing.Share;
+import vss.secretsharing.VerifiableShare;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static sire.messages.ProtoUtils.deserialize;
+import static sire.messages.ProtoUtils.*;
 
 public class RestProxy  {
     private final ConfidentialServiceProxy serviceProxy;
+    private static MessageDigest messageDigest;
+    private final ECPoint verifierPublicKey;
+    private final SchnorrSignatureScheme signatureScheme;
 
     public RestProxy(int proxyId) throws SireException {
         try {
             ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
             serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
-        } catch (SecretSharingException e) {
+            messageDigest = MessageDigest.getInstance("SHA256");
+        } catch (SecretSharingException | NoSuchAlgorithmException e) {
             throw new SireException("Failed to contact the distributed verifier", e);
         }
+
+        try {
+            signatureScheme = new SchnorrSignatureScheme();
+        } catch (NoSuchAlgorithmException e) {
+            throw new SireException("Failed to initialize cryptographic tools", e);
+        }
+        Response response;
+        try {
+            Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+                    .setOperation(Messages.ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY)
+                    .build();
+            byte[] b = msg.toByteArray();
+            response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
+        } catch (SecretSharingException e) {
+            throw new SireException("Failed to obtain verifier's public key", e);
+        }
+        verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
     }
 
     public void addExtension(String key, String code) {
@@ -119,14 +156,94 @@ public class RestProxy  {
     }
 
 
+    public Messages.ProxyResponse getTimestamp(String appId, String deviceId, byte[] attesterPubKey, SchnorrSignature schnorrSignature) {
+        try {
+            Messages.ProxyMessage timestampMsg = Messages.ProxyMessage.newBuilder()
+                    .setAppId(appId)
+                    .setOperation(Messages.ProxyMessage.Operation.ATTEST_TIMESTAMP)
+                    .setDeviceId(deviceId)
+                    .setPubKey(ByteString.copyFrom(attesterPubKey))
+                    .setSignature(schnorrToProto(schnorrSignature))
+                    .build();
 
-    public void join(String appId, String deviceId) {
-        //TODO
+            ConfidentialExtractedResponse res = serviceProxy.invokeOrdered2(timestampMsg.toByteArray());
+            SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
+            byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 124, res.getPlainData().length);
+            byte[] ts = Arrays.copyOfRange(data, 0, 91);
+            byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
+            return Messages.ProxyResponse.newBuilder()
+                    .setPubKey(ByteString.copyFrom(pubKey))
+                    .setTimestamp(ByteString.copyFrom(ts))
+                    .setSign(schnorrToProto(sign))
+                    .build();
+        } catch(SecretSharingException | SireException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private SchnorrSignature combineSignatures (UncombinedConfidentialResponse res) throws SireException {
+        PublicPartialSignature partialSignature;
+        byte[] signs = Arrays.copyOfRange(res.getPlainData(), 0, 199);
+        //System.out.println(Arrays.toString(signs));
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(signs);
+             ObjectInput in = new ObjectInputStream(bis)) {
+            partialSignature = PublicPartialSignature.deserialize(signatureScheme, in);
+        } catch (IOException | ClassNotFoundException e) {
+            throw new SireException("Failed to deserialize public data of partial signatures");
+        }
+        EllipticCurveCommitment signingKeyCommitment = partialSignature.getSigningKeyCommitment();
+        EllipticCurveCommitment randomKeyCommitment = partialSignature.getRandomKeyCommitment();
+        ECPoint randomPublicKey = partialSignature.getRandomPublicKey();
+        VerifiableShare[] verifiableShares = res.getVerifiableShares()[0];
+        Share[] partialSignatures = new Share[verifiableShares.length];
+        for (int i = 0; i < verifiableShares.length; i++) {
+            partialSignatures[i] = verifiableShares[i].getShare();
+        }
+
+        if (randomKeyCommitment == null)
+            throw new IllegalStateException("Random key commitment is null");
+
+        byte[] data = Arrays.copyOfRange(res.getPlainData(), 199, res.getPlainData().length);
+
+        try {
+            BigInteger sigma = signatureScheme.combinePartialSignatures(
+                    serviceProxy.getCurrentF(),
+                    data,
+                    signingKeyCommitment,
+                    randomKeyCommitment,
+                    randomPublicKey,
+                    partialSignatures
+            );
+            return new SchnorrSignature(sigma.toByteArray(), verifierPublicKey.getEncoded(true),
+                    randomPublicKey.getEncoded(true));
+        } catch (SecretSharingException e) {
+            throw new SireException("Failed to combine partial signatures", e);
+        }
     }
 
 
-    public void preJoin(String appId, String deviceId, Timestamp timestamp, DeviceContext.DeviceType deviceType) {
-        //TODO
+    public void join(String appId, Evidence evidence, Timestamp ts, SchnorrSignature sign, byte[] attesterPublicKey) {
+        try {
+            Messages.ProxyMessage joinMsg = Messages.ProxyMessage.newBuilder()
+                    .setAppId(appId)
+                    .setOperation(Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN)
+                    .setDeviceId(bytesToHex(computeHash(attesterPublicKey)))
+                    .setEvidence(evidenceToProto(evidence))
+                    .setTimestamp(ByteString.copyFrom(serialize(ts)))
+                    .setPubKey(ByteString.copyFrom(attesterPublicKey))
+                    .setSignature(schnorrToProto(sign))
+                    .build();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static byte[] computeHash(byte[]... contents) {
+        for (byte[] content : contents) {
+            messageDigest.update(content);
+        }
+        return messageDigest.digest();
     }
 
 
@@ -269,4 +386,6 @@ public class RestProxy  {
             e.printStackTrace();
         }
     }
+
+
 }

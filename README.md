@@ -25,5 +25,5 @@ smartrun.sh [path to class]
 List of paths for each entity:
 - Server: ``sire.server.SireServer`` (Requires a number id as an argument, starting from 0. Is configured for 4 replicas.)
 - Proxy: ``sire.proxy.ProxyMain`` (requires a number id as an argument. Is configured for proxyId = 1.)
-- Attester: ``sire.device.AttesterClient`` (requires a number id as an argument.)
+- Attester: ``sire.device.DeviceClient`` (requires a number id as an argument.)
 - App Admin: ``sire.management.ManagementClient``
