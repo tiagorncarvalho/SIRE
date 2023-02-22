@@ -7,12 +7,16 @@ import sire.attestation.Evidence;
 import sire.coordination.Extension;
 import sire.attestation.Policy;
 import sire.membership.DeviceContext;
-import sire.messages.Messages;
+import sire.messages.*;
 import sire.schnorr.SchnorrSignature;
 import sire.serverProxyUtils.SireException;
 
+import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.List;
+
+import static sire.messages.ProtoUtils.deserialize;
 
 @SpringBootApplication
 public class ProxyMain {
@@ -27,11 +31,11 @@ public class ProxyMain {
         try {
             int proxyId = Integer.parseInt(args[0]);
             proxy = new SocketProxy(proxyId);
-            //restProxy = new RestProxy(proxyId + 1);
+            restProxy = new RestProxy(proxyId + 1);
         } catch (SireException e) {
             e.printStackTrace();
         }
-        //SpringApplication.run(ProxyMain.class, args);
+        SpringApplication.run(ProxyMain.class, args);
         proxy.run();
     }
 
@@ -98,19 +102,29 @@ public class ProxyMain {
 
         //====================MEMBER====================
 
-        @GetMapping("/timestamp")
-        public Messages.ProxyResponse getTimestamp(@RequestParam(value = "appId") String appId, @RequestParam(value = "deviceId") String deviceId,
-                                                   byte[] attesterPubKey, byte[] sigma, byte[] signPubKey, byte[] randomPubKey) {
-            return restProxy.getTimestamp(appId, deviceId, attesterPubKey, new SchnorrSignature(sigma, signPubKey, randomPubKey));
+        @PostMapping("/timestamp")
+        public AttTimestampResponse getAttTimestamp(@RequestParam(value = "appId") String appId, @RequestBody AttTimestampRequest sign) {
+            Base64.Decoder dec = Base64.getDecoder();
+            byte[] key = dec.decode(sign.getAttesterPubKey());
+            SchnorrSignature schnorrSign = new SchnorrSignature(dec.decode(sign.getSigma()), dec.decode(sign.getSigningPublicKey()),
+                    dec.decode(sign.getRandomPublicKey()));
+            return restProxy.getTimestamp(appId, key, schnorrSign);
         }
 
         @PostMapping("/member")
-        public void join(@RequestParam(value = "appId") String appId, String version, byte[] claim,
-                         byte[] pubKey, Timestamp ts, byte[] sigma, byte[] signPubKey, byte[] randomPubKey,
-                         byte[] attesterPubKey) {
-            Evidence e = new Evidence(version, claim, pubKey);
-            SchnorrSignature sign = new SchnorrSignature(sigma, signPubKey, randomPubKey);
-            restProxy.join(appId, e, ts, sign, attesterPubKey);
+        public JoinResponse join(@RequestParam(value = "appId") String appId, @RequestBody JoinRequest req) {
+            try {
+                Base64.Decoder dec = Base64.getDecoder();
+                Evidence e = new Evidence(req.getVersion(), dec.decode(req.getClaim()), dec.decode(req.getPubKey()));
+                Timestamp ts = (Timestamp) deserialize(dec.decode(req.getTimestamp()));
+                SchnorrSignature sign = new SchnorrSignature(dec.decode(req.getSigma()), dec.decode(req.getSigningPublicKey()),
+                        dec.decode(req.getRandomPublicKey()));
+                byte[] attesterPubKey = dec.decode(req.getAttesterPubKey());
+                return restProxy.join(appId, e, ts, sign, attesterPubKey);
+            } catch(IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
         @DeleteMapping("/member")
@@ -132,6 +146,7 @@ public class ProxyMain {
         }
 
         //====================MAP====================
+        //TODO Needs to be changed
 
         @PutMapping("/map")
         public void mapPut(@RequestParam(value = "appId") String appId, @RequestBody String deviceId,

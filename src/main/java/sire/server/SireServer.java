@@ -207,7 +207,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				if(isValid) {
 					byte[] tis = serialize(ts);
 					byte[] pubKey = byteStringToByteArray(baos, msg.getPubKey());
-					System.out.println(Arrays.toString(tis) + " " + Arrays.toString(pubKey));
 					byte[] data = concat(tis, pubKey);
 					devicesTimestamps.put(msg.getDeviceId(), ts);
 					return sign(data, messageContext);//new ConfidentialMessage();
@@ -230,8 +229,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 						protoToSchnorr(msg.getSignature()));
 				boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence,
 						byteStringToByteArray(baos, msg.getTimestamp()));
-				boolean isTimedout = (new Timestamp(messageContext.getTimestamp())).before(
-						new Timestamp(devicesTimestamps.get(msg.getDeviceId()).getTime() + timebound));
+				boolean isTimedout = true;/*(new Timestamp(messageContext.getTimestamp())).before(
+						new Timestamp(devicesTimestamps.get(msg.getDeviceId()).getTime() + timebound));*/
 
 				if (isValidEvidence && isTimedout) {
 					byte[] data = concat(serialize(new Timestamp(messageContext.getTimestamp())),

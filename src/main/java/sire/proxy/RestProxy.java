@@ -10,6 +10,8 @@ import org.bouncycastle.math.ec.ECPoint;
 import sire.attestation.Evidence;
 import sire.management.AppManager;
 import sire.attestation.Policy;
+import sire.messages.AttTimestampResponse;
+import sire.messages.JoinResponse;
 import sire.messages.Messages;
 import sire.membership.DeviceContext;
 import sire.schnorr.PublicPartialSignature;
@@ -31,6 +33,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 import static sire.messages.ProtoUtils.*;
@@ -156,12 +159,11 @@ public class RestProxy  {
     }
 
 
-    public Messages.ProxyResponse getTimestamp(String appId, String deviceId, byte[] attesterPubKey, SchnorrSignature schnorrSignature) {
+    public AttTimestampResponse getTimestamp(String appId, byte[] attesterPubKey, SchnorrSignature schnorrSignature) {
         try {
             Messages.ProxyMessage timestampMsg = Messages.ProxyMessage.newBuilder()
                     .setAppId(appId)
                     .setOperation(Messages.ProxyMessage.Operation.ATTEST_TIMESTAMP)
-                    .setDeviceId(deviceId)
                     .setPubKey(ByteString.copyFrom(attesterPubKey))
                     .setSignature(schnorrToProto(schnorrSignature))
                     .build();
@@ -171,11 +173,9 @@ public class RestProxy  {
             byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 124, res.getPlainData().length);
             byte[] ts = Arrays.copyOfRange(data, 0, 91);
             byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
-            return Messages.ProxyResponse.newBuilder()
-                    .setPubKey(ByteString.copyFrom(pubKey))
-                    .setTimestamp(ByteString.copyFrom(ts))
-                    .setSign(schnorrToProto(sign))
-                    .build();
+            Base64.Encoder enc = Base64.getEncoder();
+            return new AttTimestampResponse(enc.encodeToString(pubKey), enc.encodeToString(ts), enc.encodeToString(sign.getSigma()),
+                    enc.encodeToString(sign.getSigningPublicKey()), enc.encodeToString(sign.getRandomPublicKey()));
         } catch(SecretSharingException | SireException e) {
             e.printStackTrace();
         }
@@ -223,7 +223,7 @@ public class RestProxy  {
     }
 
 
-    public void join(String appId, Evidence evidence, Timestamp ts, SchnorrSignature sign, byte[] attesterPublicKey) {
+    public JoinResponse join(String appId, Evidence evidence, Timestamp ts, SchnorrSignature sign, byte[] attesterPublicKey) {
         try {
             Messages.ProxyMessage joinMsg = Messages.ProxyMessage.newBuilder()
                     .setAppId(appId)
@@ -234,9 +234,20 @@ public class RestProxy  {
                     .setPubKey(ByteString.copyFrom(attesterPublicKey))
                     .setSignature(schnorrToProto(sign))
                     .build();
-        } catch (IOException e) {
+            ConfidentialExtractedResponse res = serviceProxy.invokeOrdered2(joinMsg.toByteArray());
+
+            byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 156, res.getPlainData().length);
+            byte[] time = Arrays.copyOfRange(data, 0, 91);
+            byte[] pubKey = Arrays.copyOfRange(data, 91, 124);
+            byte[] hash = Arrays.copyOfRange(data, 124, data.length);
+            Base64.Encoder enc = Base64.getEncoder();
+            return new JoinResponse(enc.encodeToString(pubKey), enc.encodeToString(time), enc.encodeToString(hash),
+                    enc.encodeToString(sign.getSigma()), enc.encodeToString(sign.getSigningPublicKey()),
+                    enc.encodeToString(sign.getRandomPublicKey()));
+        } catch (IOException | SecretSharingException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private static byte[] computeHash(byte[]... contents) {

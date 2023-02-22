@@ -104,7 +104,6 @@ public class SchnorrSignatureScheme {
 	public boolean verifySignature(byte[] data, ECPoint signingPublicKey, ECPoint randomPublicKey,
 									BigInteger sigma) {
 		if (sigma.compareTo(order) >= 0) {
-			System.out.println("Aqui");
 			return false;
 		}
 		BigInteger hash = new BigInteger(computeHash(data, randomPublicKey.getEncoded(true)));

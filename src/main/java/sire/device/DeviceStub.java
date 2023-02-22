@@ -1,5 +1,6 @@
 package sire.device;
 
+import com.google.gson.Gson;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
@@ -11,7 +12,6 @@ import com.google.protobuf.ByteString;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.membership.DeviceContext;
-import sire.membership.DeviceContext.DeviceType;
 import sire.serverProxyUtils.SireException;
 import sire.attestation.Evidence;
 
@@ -24,10 +24,11 @@ import java.security.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
+import java.util.Properties;
 
 public class DeviceStub {
-    final int port;
     Socket s;
     ObjectOutputStream oos;
     ObjectInputStream ois;
@@ -47,7 +48,18 @@ public class DeviceStub {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     public DeviceStub() throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, ClassNotFoundException {
-        this.port = 2500 + 1;
+        String ip = "";
+        Properties prop;
+        int port = 0;
+        try (InputStream input = new FileInputStream("config/proxy.properties")){
+            prop = new Properties();
+            prop.load(input);
+            port = Integer.parseInt(prop.getProperty("port"));
+            ip = prop.getProperty("ip");
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+
         secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         messageDigest = MessageDigest.getInstance("SHA256");
         macEngine = new CMac(new AESEngine());
@@ -61,7 +73,7 @@ public class DeviceStub {
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
 
         try {
-            this.s = new Socket("127.0.0.1", port);
+            this.s = new Socket(ip, port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
         } catch (IOException e) {
@@ -73,7 +85,7 @@ public class DeviceStub {
         verifierPublicKey = getVerifierPublicKey();
     }
 
-    public void attest(String appId, String waTZVersion, byte[] claim) {
+    public void attest(String appId, String version, byte[] claim) {
         try {
             ECPoint curveGenerator = scheme.getGenerator();
 
@@ -84,14 +96,14 @@ public class DeviceStub {
 
             Timestamp ts = getTimestamp(signature); //used in message2
 
-            System.out.println(ts);
 
             //creating the message2
-            Evidence evidence = new Evidence(waTZVersion, claim, attesterPublicKey.getEncoded(true));
+            Evidence evidence = new Evidence(version, claim, attesterPublicKey.getEncoded(true));
+            Base64.Encoder enc = Base64.getEncoder();
 
             byte[] signingHash = computeHash(
                     attesterPublicKey.getEncoded(true),
-                    waTZVersion.getBytes(),
+                    version.getBytes(),
                     claim,
                     serialize(ts),
                     appId.getBytes()
@@ -109,6 +121,27 @@ public class DeviceStub {
             e.printStackTrace();
         }
     }
+
+    /*public void cheatMethod() {
+        ECPoint curveGenerator = scheme.getGenerator();
+        byte[] signingHash = computeHash(
+                attesterPublicKey.getEncoded(true),
+                "1.0".getBytes(),
+                "measure1".getBytes(),
+                Base64.getDecoder().decode("rO0ABXNyABJqYXZhLnNxbC5UaW1lc3RhbXAmGNXIAVO/ZQIAAUkABW5hbm9zeHIADmphdmEudXRpbC5EYXRlaGqBAUtZdBkDAAB4cHcIAAABhnou7Ih4FyBpAA=="),
+                "app1".getBytes()
+        );
+        BigInteger randomPrivateKey = getRandomNumber(curveGenerator.getCurve().getOrder());
+        ECPoint randomPublicKey = curveGenerator.multiply(randomPrivateKey);
+        SchnorrSignature signature = scheme.computeSignature(signingHash, attesterPrivateKey,
+                attesterPublicKey, randomPrivateKey, randomPublicKey);
+        Base64.Encoder enc = Base64.getEncoder();
+        System.out.println(enc.encodeToString(signature.getSigma()));
+        System.out.println();
+        System.out.println(enc.encodeToString(signature.getSigningPublicKey()));
+        System.out.println();
+        System.out.println(enc.encodeToString(signature.getRandomPublicKey()));
+    }*/
 
     public ECPoint getVerifierPublicKey() throws IOException, ClassNotFoundException {
         ProxyMessage msg = ProxyMessage.newBuilder()

@@ -12,18 +12,9 @@ message ProtoSchnorr {
 }
 
 message ProtoEvidence {
-  string watzVersion = 1;
+  string version = 1;
   bytes claim = 2;
   bytes servicePubKey = 3;
-}
-
-enum ProtoDeviceType {
-  CAMERA = 0;
-  THERMOMETER = 1;
-  RADAR = 2;
-  LIDAR = 3;
-  MOTIONSENSOR = 4;
-  LIGHTSENSOR = 5;
 }
 
 message ProxyMessage {
@@ -75,10 +66,9 @@ message ProxyMessage {
   }
 
   ProtoPolicy policy = 11;
-  ProtoDeviceType deviceType = 12;
 
   //========INITIAL REQUEST==========//
-  bytes pubKey = 13;
+  bytes pubKey = 12;
 }
 
 message ProxyResponse {
@@ -97,8 +87,7 @@ message ProxyResponse {
   message ProtoDeviceContext {
     string deviceId = 1;
     google.protobuf.Timestamp time = 2;
-    ProtoDeviceType deviceType = 3;
-    google.protobuf.Timestamp certExpTime = 4;
+    google.protobuf.Timestamp certExpTime = 3;
   }
   repeated ProtoDeviceContext members = 4;
   string extPolicy = 5;
