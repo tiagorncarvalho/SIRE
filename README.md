@@ -1,10 +1,17 @@
 # SIRE
-SIRE is a replicated infrastructure that supports remote attestation, application membership management, auditable integrity-protected storage and coordination primitives.  
-SIRE is composed by 4 main entities:
+SIRE is an infrastructure that supports remote attestation, application membership management, auditable integrity-protected logging and coordination primitives. This project was developed by the LaSIGE research unit at the University of Lisbon.
+
+This package contains the source code (src/), dependencies (/lib), running scripts (/runscripts), and configuration files (/config). SIRE requires Java 17.0.1 or later.
+
+
+SIRE is composed by 3 main entities:
 - Server (``rep*`` folders)
 - Proxy (``pro*`` folders)
-- Attester (``cli*`` folders)
-- App Admin (``man*`` folders)
+- Device/Attester (``cli*`` folders)
+
+#Quick Start
+
+
 # How to Compile
 To compile, use the following command:
 ```

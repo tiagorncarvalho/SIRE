@@ -61,7 +61,7 @@ public class DeviceStub {
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
 
         try {
-            this.s = new Socket("192.168.3.34", port);
+            this.s = new Socket("127.0.0.1", port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());
         } catch (IOException e) {
@@ -73,7 +73,7 @@ public class DeviceStub {
         verifierPublicKey = getVerifierPublicKey();
     }
 
-    public void attest(String appId, DeviceType type, String waTZVersion, byte[] claim) {
+    public void attest(String appId, String waTZVersion, byte[] claim) {
         try {
             ECPoint curveGenerator = scheme.getGenerator();
 
@@ -203,22 +203,27 @@ public class DeviceStub {
             this.oos.writeObject(msg);
 
             Object o = this.ois.readObject();
-            System.out.println(o);
             if(o instanceof ProxyResponse res) {
-                /*SchnorrSignature schnorrSignature = protoToSchnorr(res.getSign());
-                boolean isSignatureValid = scheme.verifySignature(computeHash(byteStringToByteArray(baos, res.getTimestamp()),
+                SchnorrSignature schnorrSignature = protoToSchnorr(res.getSign());
+                boolean isSignatureValid = scheme.verifySignature(concat(byteStringToByteArray(baos, res.getTimestamp()),
                         byteStringToByteArray(baos, res.getPubKey())), scheme.decodePublicKey(schnorrSignature.getSigningPublicKey()),
                         scheme.decodePublicKey(schnorrSignature.getRandomPublicKey()), new BigInteger(schnorrSignature.getSigma()));
 
-                return isSignatureValid ? (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp())) : null;*/
-                System.out.println(res);
 
-                return (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp()));
+                return isSignatureValid ? (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp())) : null;
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private byte[] concat(byte[]...content) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        for(byte[] b : content) {
+            baos.write(b);
+        }
+        return baos.toByteArray();
     }
 
     private Timestamp join(String appId, Evidence evidence, Timestamp ts, SchnorrSignature sign)
@@ -259,7 +264,6 @@ public class DeviceStub {
 
 
     public void put(String appId, String key, byte[] value) throws IOException {
-        System.out.println("Putting!");
         ProxyMessage msg = ProxyMessage.newBuilder()
                 .setOperation(ProxyMessage.Operation.MAP_PUT)
                 .setDeviceId(bytesToHex(computeHash(attesterPublicKey.getEncoded(true))))
@@ -365,7 +369,7 @@ public class DeviceStub {
             ArrayList<DeviceContext> tmp = new ArrayList<>();
             for(ProxyResponse.ProtoDeviceContext d : res) {
                 DeviceContext dev = new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000),
-                        protoDevToDev(d.getDeviceType()), new Timestamp(d.getCertExpTime().getSeconds() * 1000));
+                        new Timestamp(d.getCertExpTime().getSeconds() * 1000));
                 tmp.add(dev);
             }
             return tmp;

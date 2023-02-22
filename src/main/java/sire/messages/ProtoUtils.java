@@ -27,7 +27,7 @@ public class ProtoUtils {
 
     public static Evidence protoToEvidence(Messages.ProtoEvidence evidence) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Evidence evi = new Evidence ( evidence.getWatzVersion(), byteStringToByteArray(out, evidence.getClaim()),
+        Evidence evi = new Evidence ( evidence.getVersion(), byteStringToByteArray(out, evidence.getClaim()),
                 byteStringToByteArray(out, evidence.getServicePubKey()));
         out.close();
         return evi;
@@ -35,7 +35,7 @@ public class ProtoUtils {
 
     public static Messages.ProtoEvidence evidenceToProto(Evidence evidence) {
         return Messages.ProtoEvidence.newBuilder()
-                .setWatzVersion(evidence.getVersion())
+                .setVersion(evidence.getVersion())
                 .setClaim(ByteString.copyFrom(evidence.getClaim()))
                 .setServicePubKey(ByteString.copyFrom(evidence.getPubKey()))
                 .build();
@@ -75,10 +75,6 @@ public class ProtoUtils {
             return result;
         }
         return null;
-    }
-
-    public static DeviceContext.DeviceType protoDevToDev(Messages.ProtoDeviceType deviceType) {
-        return DeviceContext.DeviceType.values()[deviceType.getNumber()];
     }
 
     private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);

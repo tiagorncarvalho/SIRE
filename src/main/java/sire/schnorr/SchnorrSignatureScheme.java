@@ -84,11 +84,9 @@ public class SchnorrSignatureScheme {
 				boolean isValid = verifyPartialSignature(hash, partialSignature, signingKeyCommitment.getCommitment(),
 						randomKeyCommitment.getCommitment());
 				if (counter <= f && isValid) {
-					System.out.println("Valid");
 					minimumShares[counter++] = partialSignature;
 				}
 				if (!isValid) {
-					System.out.println("Corrupted");
 					corruptedShareholders.add(partialSignature.getShareholder());
 				}
 			}
@@ -106,12 +104,14 @@ public class SchnorrSignatureScheme {
 	public boolean verifySignature(byte[] data, ECPoint signingPublicKey, ECPoint randomPublicKey,
 									BigInteger sigma) {
 		if (sigma.compareTo(order) >= 0) {
+			System.out.println("Aqui");
 			return false;
 		}
 		BigInteger hash = new BigInteger(computeHash(data, randomPublicKey.getEncoded(true)));
 
 		ECPoint leftSide = generator.multiply(sigma);
 		ECPoint rightSide = randomPublicKey.add(signingPublicKey.multiply(hash));
+
 		return leftSide.equals(rightSide);
 	}
 

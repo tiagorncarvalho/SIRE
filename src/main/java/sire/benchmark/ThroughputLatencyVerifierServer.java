@@ -263,8 +263,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 if (isValidEvidence && isTimedout) {
                     byte[] data = concat(serialize(new Timestamp(messageContext.getTimestamp())),
                             byteStringToByteArray(new ByteArrayOutputStream(), msg.getPubKey()), computeHash(msg.toByteArray()));
-                    membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
-                            protoDevToDev(msg.getDeviceType()));
+                    membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 
                     return sign(data, messageContext);
                 } else {

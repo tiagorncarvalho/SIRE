@@ -22,12 +22,11 @@ public class MembershipManager {
     }
 
 
-    public void join(String appId, String deviceId, Timestamp timestamp, DeviceContext.DeviceType deviceType) {
+    public void join(String appId, String deviceId, Timestamp timestamp) {
         MemberParams res = extensionManager.runExtensionMember(appId, ExtensionType.EXT_JOIN, deviceId, new MemberParams(appId, deviceId));
         if(!membership.containsKey(appId))
             membership.put(appId, new AppContext(appId, timeout, certTimeout));
-        membership.get(appId).addDevice(deviceId, new DeviceContext(deviceId, timestamp, deviceType,
-                new Timestamp(timestamp.getTime() + certTimeout)));
+        membership.get(appId).addDevice(deviceId, new DeviceContext(deviceId, timestamp, new Timestamp(timestamp.getTime() + certTimeout)));
     }
 
 

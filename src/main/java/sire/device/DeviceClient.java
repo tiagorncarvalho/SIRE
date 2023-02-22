@@ -1,7 +1,6 @@
 package sire.device;
 
 import sire.membership.DeviceContext;
-import sire.membership.DeviceContext.DeviceType;
 import sire.utils.ExampleObject;
 
 import javax.crypto.*;
@@ -23,10 +22,9 @@ public class DeviceClient {
 
 		String appId = "app1";
 		String version = "1.0";
-		DeviceType type = DeviceType.MOTIONSENSOR;
 		byte[] claim = "measure1".getBytes();
 		DeviceStub dummy = new DeviceStub();
-		dummy.attest(appId, type, version, claim);
+		dummy.attest(appId, version, claim);
 		Random rng = new Random(1L);
 		int var = rng.nextInt();
 

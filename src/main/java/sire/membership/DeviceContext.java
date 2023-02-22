@@ -6,13 +6,11 @@ import java.sql.Timestamp;
 public class DeviceContext implements Serializable {
     private final String deviceId;
     private Timestamp lastPing;
-    private final DeviceType deviceType;
     private final Timestamp certExpTime;
 
-    public DeviceContext(String deviceId, Timestamp lastPing, DeviceType deviceType, Timestamp certExpTime) {
+    public DeviceContext(String deviceId, Timestamp lastPing, Timestamp certExpTime) {
         this.deviceId = deviceId;
         this.lastPing = lastPing;
-        this.deviceType = deviceType;
         this.certExpTime = certExpTime;
     }
 
@@ -33,13 +31,8 @@ public class DeviceContext implements Serializable {
         return "DeviceContext{" +
                 "deviceId='" + deviceId + '\'' +
                 ", lastPing=" + lastPing +
-                ", deviceType=" + deviceType +
                 ", certExpTime=" + certExpTime +
                 '}';
-    }
-
-    public DeviceType getDeviceType() {
-        return deviceType;
     }
 
     public Timestamp getCertExpTime() {

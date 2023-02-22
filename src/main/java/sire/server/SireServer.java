@@ -207,6 +207,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				if(isValid) {
 					byte[] tis = serialize(ts);
 					byte[] pubKey = byteStringToByteArray(baos, msg.getPubKey());
+					System.out.println(Arrays.toString(tis) + " " + Arrays.toString(pubKey));
 					byte[] data = concat(tis, pubKey);
 					devicesTimestamps.put(msg.getDeviceId(), ts);
 					return sign(data, messageContext);//new ConfidentialMessage();
@@ -235,8 +236,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				if (isValidEvidence && isTimedout) {
 					byte[] data = concat(serialize(new Timestamp(messageContext.getTimestamp())),
 							byteStringToByteArray(new ByteArrayOutputStream(), msg.getPubKey()), computeHash(msg.toByteArray()));
-					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()),
-							protoDevToDev(msg.getDeviceType()));
+					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 
 					return sign(data, messageContext);
 				} else {
@@ -463,6 +463,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		ECPoint randomPublicKey = nonceKeyPair.getPublicKeyShare();
 		BigInteger sigma = schnorrSignatureScheme.computePartialSignature(data,
 				verifierSigningPrivateKeyShare.getShare().getShare(), randomPrivateKeyShare.getShare().getShare(), randomPublicKey);
+
 		byte[] plainData = null;
 		PublicPartialSignature publicPartialSignature = new PublicPartialSignature(
 				(EllipticCurveCommitment) verifierSigningPrivateKeyShare.getCommitments(),

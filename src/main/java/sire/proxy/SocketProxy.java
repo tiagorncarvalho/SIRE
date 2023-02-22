@@ -177,7 +177,6 @@ public class SocketProxy implements Runnable {
 		private SchnorrSignature combineSignatures (UncombinedConfidentialResponse res) throws SireException {
 			PublicPartialSignature partialSignature;
 			byte[] signs = Arrays.copyOfRange(res.getPlainData(), 0, 199);
-			//System.out.println(Arrays.toString(signs));
 			try (ByteArrayInputStream bis = new ByteArrayInputStream(signs);
 				 ObjectInput in = new ObjectInputStream(bis)) {
 				partialSignature = PublicPartialSignature.deserialize(signatureScheme, in);
