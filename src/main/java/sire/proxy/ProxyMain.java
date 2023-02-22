@@ -102,8 +102,9 @@ public class ProxyMain {
 
         //====================MEMBER====================
 
-        @PostMapping("/timestamp")
-        public AttTimestampResponse getAttTimestamp(@RequestParam(value = "appId") String appId, @RequestBody AttTimestampRequest sign) {
+        @PostMapping("/member")
+        public RESTResponses.preJoinResponse preJoin(@RequestParam(value = "appId") String appId,
+                                                     @RequestBody RESTRequests.preJoinRequest sign) {
             Base64.Decoder dec = Base64.getDecoder();
             byte[] key = dec.decode(sign.getAttesterPubKey());
             SchnorrSignature schnorrSign = new SchnorrSignature(dec.decode(sign.getSigma()), dec.decode(sign.getSigningPublicKey()),
@@ -111,8 +112,8 @@ public class ProxyMain {
             return restProxy.getTimestamp(appId, key, schnorrSign);
         }
 
-        @PostMapping("/member")
-        public JoinResponse join(@RequestParam(value = "appId") String appId, @RequestBody JoinRequest req) {
+        @PutMapping("/member")
+        public RESTResponses.JoinResponse join(@RequestParam(value = "appId") String appId, @RequestBody RESTRequests.JoinRequest req) {
             try {
                 Base64.Decoder dec = Base64.getDecoder();
                 Evidence e = new Evidence(req.getVersion(), dec.decode(req.getClaim()), dec.decode(req.getPubKey()));
@@ -146,36 +147,35 @@ public class ProxyMain {
         }
 
         //====================MAP====================
-        //TODO Needs to be changed
 
         @PutMapping("/map")
-        public void mapPut(@RequestParam(value = "appId") String appId, @RequestBody String deviceId,
-                           @RequestBody String key, @RequestBody byte[] value) throws SireException {
+        public void mapPut(@RequestParam(value = "appId") String appId, @RequestBody RESTRequests.PutRequest req) throws SireException {
             if(appId == null || appId.equals(""))
                 throw new SireException("Malformed appId");
-            else if(deviceId == null || deviceId.equals(""))
+            else if(req.getDeviceId() == null || req.getDeviceId().equals(""))
                 throw new SireException("Malformed deviceId");
-            restProxy.put(appId, deviceId, key, value);
+            restProxy.put(appId, req.getDeviceId(), req.getKey(), Base64.getDecoder().decode(req.getValue()));
         }
 
         @GetMapping("/map")
-        public byte[] mapGet(@RequestParam(value = "appId") String appId, @RequestBody String deviceId,
+        public String mapGet(@RequestParam(value = "appId") String appId, @RequestBody String deviceId,
                              @RequestBody String key) throws SireException {
             if(appId == null || appId.equals(""))
                 throw new SireException("Malformed appId");
             else if(deviceId == null || deviceId.equals(""))
                 throw new SireException("Malformed deviceId");
-            return restProxy.get(appId, deviceId, key);
+            return Base64.getEncoder().encodeToString(restProxy.get(appId, deviceId, key));
         }
 
         @PostMapping("/map")
         public void mapCas(@RequestParam(value = "appId") String appId, @RequestBody String deviceId,
-                           @RequestBody String key, @RequestBody byte[] oldValue, @RequestBody byte[] newValue) throws SireException {
+                           @RequestBody RESTRequests.CasRequest req) throws SireException {
             if(appId == null || appId.equals(""))
                 throw new SireException("Malformed appId");
             else if(deviceId == null || deviceId.equals(""))
                 throw new SireException("Malformed deviceId");
-            restProxy.cas(appId, deviceId, key, oldValue, newValue);
+            Base64.Decoder dec = Base64.getDecoder();
+            restProxy.cas(appId, deviceId, req.getKey(), dec.decode(req.getOldValue()), dec.decode(req.getNewValue()));
 
         }
 
