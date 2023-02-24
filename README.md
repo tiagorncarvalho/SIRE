@@ -76,7 +76,7 @@ addExtension(appId, type, key, code) | Adds extension for app with id *appId* to
 removeExtension(appId, type, key) | Removes extension associated with extensionKey (appId + type + key, in this order). The given type/key can be null.
 getExtension(appId, type, key) | Gets the code of the extension associated with extensionKey (appId + type + key). The given type/key can be null.
 
-These operations can be accessed either through REST requests, through regular sockets or through a user-friendly web interface.
+These operations can be accessed either through REST requests, through regular sockets or through a user-friendly web interface (see the ``api\management_login.html`` file, user is 'admin', password is 'appadmin').
 All these interfaces are made available through the proxy.
 
 Both the policy and extensions must be implemented in Groovy.
