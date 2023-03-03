@@ -43,7 +43,8 @@ Inside there will be multiple folders corresponding to each of SIRE's entities:
 - App Administrator (``man*`` folders)
 
 # How to Run
-First, change your current directory according to what entity you want to run; e.g., to run server 0, you should change your current directory to ``Desktop\SIRE\rep0``.  
+Before executing any client (device or app admin), all the server replicas and proxy should be up and running.
+To run an entity, first, change your current directory according to what entity you want to run; e.g., to run server 0, you should change your current directory to ``Desktop\SIRE\rep0``.  
 Then, use the following command:  
 (Command Line)
 ```
@@ -60,6 +61,8 @@ The ``path`` parameter must be determined based on the entity that you want to r
 - App Admin: ``sire.management.ManagementClient`` (Does not need any argument.)
 
 The existent client is a mock device that executes various operations to demonstrate the usage of SIRE.
+This mock device starts by attesting itself and then executes a series of operations on the Coordination Manager (puts, gets, deletes) as well as some operations on the Membership Manager(ping, getView).
+The management client simply adds and fetches an extension.
 
 # How to Configure Applications
 You can configure remote attestation policies and extensions for your own applications.
@@ -68,13 +71,16 @@ The following operations are available to app administrators:
 
 Function | Description |
 -------- | ----------- |
-setPolicy(appId, policy) | Sets policy from app with id *appId* |
-deletePolicy(appId) | Deletes policy from app with id *appId* |
-getPolicy(appId) | Gets policy from app with id *appId* |
- |  |
-addExtension(appId, type, key, code) | Adds extension for app with id *appId* to be executed when an operation of a given type is called with the given key. The given type and key can be null. The code will be stored associated with extensionKey (appId + type + key, in this order).
-removeExtension(appId, type, key) | Removes extension associated with extensionKey (appId + type + key, in this order). The given type/key can be null.
-getExtension(appId, type, key) | Gets the code of the extension associated with extensionKey (appId + type + key). The given type/key can be null.
+ addExtension(appId, type, key, code) | Adds extension for app with id *appId* to be executed when an operation of a given type is called with the given key. The given type and key can be null. The code will be stored associated with extensionKey (appId + type + key, in this order).
+ removeExtension(appId, type, key) | Removes extension associated with extensionKey (appId + type + key, in this order). The given type/key can be null.
+ getExtension(appId, type, key) | Gets the code of the extension associated with extensionKey (appId + type + key). The given type/key can be null.
+|  |
+ setPolicy(appId, policy) | Sets policy from app with id *appId* |
+ deletePolicy(appId) | Deletes policy from app with id *appId* |
+ getPolicy(appId) | Gets policy from app with id *appId* |
+|  |
+ getView(appId) | Get current membership of application |
+
 
 These operations can be accessed through REST requests, regular sockets, or a user-friendly web interface (see the ``src\...\sire\api\management_login.html`` file, user is 'admin', password is 'appadmin').
 All these interfaces are made available through the proxy.
@@ -82,8 +88,96 @@ All these interfaces are made available through the proxy.
 Both the policy and extensions must be implemented in Groovy.
 In the case of the policy, the Groovy script should have a ``verifyEvidence`` method that takes an ``Evidence`` object as input
 (see file ``src\...\sire\attestation\Evidence.java``).
+
+<details><summary>Example Policy</summary>
+<p>
+
+```groovy
+package sire.attestation
+                                
+def verifyEvidence(Evidence e) {
+    def refValues = ["measure1".bytes, "measure2".bytes]
+    def isClaimValid = false
+    for(value in refValues) {
+        if(value == e.getClaim())
+            isClaimValid = true
+        }
+        def endorsedKeys = [[3, -27, -103, 52, -58, -46, 91, -103, -14, 0, 65, 73, -91, 31, -42, -97,
+                                         77, 19, -55, 8, 125, -9, -82, -117, -70, 102, -110, 88, -121, -76, -88, 44, -75] as byte[]]
+        def isKeyValid = false
+        for(key in endorsedKeys) {
+            if(key == e.getPubKey())
+                isKeyValid = true
+            }
+        def expectedVersion = "1.0"
+        return isClaimValid && isKeyValid && expectedVersion.equals(e.getVersion())
+}
+```
+</p>
+</details>
+
 In the case of the extension, the script should have a ``runExtension`` method that takes an ``ExtParams`` object as input
 (see file ``src\...\sire\coordination\ExtParams.java``).
+
+<details><summary>Example Extension</summary>
+<p>
+This is an example extension that is used to perform intersection management for the autonomous vehicle scenario.
+
+Example key: ``app1EXT_PUT``
+
+Example extension:
+```groovy
+ package sire.coordination
+
+def runExtension(ExtParams p) {
+ def temp = new int[3]
+ CoordinationManager store = CoordinationManager.getInstance()
+ def laneList = store.get(p.getAppId(), "lanes")
+ String str = p.getKey().charAt(p.getKey().length() - 1)
+ int lane = str as int
+ def b = p.getValue()[0]
+
+ if (b == (1 as byte) && laneList[lane] == (1 as byte))
+  return new ExtParams(p.getAppId(), "lanes", laneList, null, false)
+
+ switch (lane) {
+  case 0:
+   temp = [0, 6, 7] as int[]
+   break
+  case 1:
+   temp = [1, 2, 3] as int[]
+   break
+  case 2:
+   temp = [0, 1, 2] as int[]
+   break
+  case 3:
+   temp = [3, 4, 5] as int[]
+   break
+  case 4:
+   temp = [2, 3, 4] as int[]
+   break
+  case 5:
+   temp = [5, 6, 7] as int[]
+   break
+  case 6:
+   temp = [4, 5, 6] as int[]
+   break
+  case 7:
+   temp = [0, 1, 7] as int[]
+   break
+ }
+
+ for (i in temp) {
+  laneList[i] = b
+ }
+ ExtParams res = new ExtParams(p.getAppId(), "lanes", laneList, null, true)
+
+ return res;
+}
+```
+
+</p>
+</details>
 
 # How to Use
 Here, we will explain how to use SIRE with your own devices.
@@ -114,7 +208,7 @@ The structure of these requests (``ProxyMessage``) can be found in the file ``me
 contains the structure of the responses (``ProxyResponse``) provided by SIRE.
 
 ## REST ##
-Communication through REST can be done through the address defined for the proxy (``http:\\127.0.0.1:8080`` by default).
+Communication through REST can be done through the endpoint address defined for the proxy (``http:\\127.0.0.1:8080`` by default).
 Each operation can be accessed as follows:
 
 Function | Path |

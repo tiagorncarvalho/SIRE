@@ -25,7 +25,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+
+import static sire.messages.ProtoUtils.bytesToHex;
 
 public class ManagementStub implements ManagementInterface {
 
@@ -145,6 +149,27 @@ public class ManagementStub implements ManagementInterface {
 
     @Override
     public List<DeviceContext> getView(String appId) {
+        Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+                .setOperation(Messages.ProxyMessage.Operation.MEMBERSHIP_VIEW)
+                .setAppId(appId)
+                .build();
+        try {
+            this.oos.writeObject(msg);
+
+            Object o = this.ois.readObject();
+            if (o instanceof Messages.ProxyResponse) {
+                List<Messages.ProxyResponse.ProtoDeviceContext> res = ((Messages.ProxyResponse) o).getMembersList();
+                ArrayList<DeviceContext> tmp = new ArrayList<>();
+                for (Messages.ProxyResponse.ProtoDeviceContext d : res) {
+                    DeviceContext dev = new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000),
+                            new Timestamp(d.getCertExpTime().getSeconds() * 1000));
+                    tmp.add(dev);
+                }
+                return tmp;
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
