@@ -1,11 +1,13 @@
 # SIRE
 SIRE is a project to establish an infrastructure that supports remote attestation, application membership management, auditable integrity-protected logging, and coordination primitives. This project was developed by the LASIGE research unit at the University of Lisbon.
 
-This repository contains SIRE's implementation in Java, requiring Java 17.0.1 or later. It contains four main folders: 
+This repository contains SIRE's implementation in Java, requiring Java 17.0.1[^1]. It contains four main folders: 
 - the source code (``\src``)
 - dependencies (``\lib``)
 - running scripts (``\runscripts``)
 - configuration files (``\config``).
+
+[^1]: Later versions might have some incompatibilities, namely with Gradle.
 
 # Quick Start
 Before running SIRE, some configuration must be done regarding the location of each server (replica) and proxy.
