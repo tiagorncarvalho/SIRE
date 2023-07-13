@@ -9,14 +9,12 @@ import org.bouncycastle.crypto.BlockCipher;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.membership.DeviceContext;
+import sire.messages.Messages.ProxyMessage;
+import sire.messages.Messages.ProxyResponse;
 import sire.schnorr.PublicPartialSignature;
 import sire.schnorr.SchnorrSignature;
-import sire.serverProxyUtils.*;
-
-import static sire.messages.ProtoUtils.*;
-
-import sire.messages.Messages.*;
 import sire.schnorr.SchnorrSignatureScheme;
+import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
 import vss.facade.SecretSharingException;
 import vss.secretsharing.Share;
@@ -30,6 +28,9 @@ import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+import static sire.messages.ProtoUtils.deserialize;
+import static sire.messages.ProtoUtils.schnorrToProto;
+
 /**
  * @author robin
  */
@@ -41,33 +42,18 @@ public class SocketProxy implements Runnable {
 	private final SchnorrSignatureScheme signatureScheme;
 	private final int proxyId;
 	private final Object proxyLock;
-	private ServerSocket serverSocket;
-	private Map<String, DataOutputStream> devices;
 	final Map<String, Integer> responseCounter;
 
 	public SocketProxy(int proxyId) throws SireException{
 		System.out.println("Proxy start!");
 		this.proxyId = proxyId;
-		this.devices = new TreeMap<>();
 		responseCounter = new HashMap<>();
 
 		try {
 			ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
-			serverSocket = new ServerSocket(5151 + proxyId);
-			new Thread(() -> {
-				Socket s;
-				for (int i = 0; i < 4; i++) {
-					try {
-						s = serverSocket.accept();
-						new ReceivingProxyThread(s).start();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}).start();
 			serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
 			proxyLock = new Object();
-		} catch (SecretSharingException | IOException e) {
+		} catch (SecretSharingException e) {
 			throw new SireException("Failed to contact the distributed verifier", e);
 		}
 		System.out.println("Connection established!");
@@ -108,49 +94,9 @@ public class SocketProxy implements Runnable {
 		}
 	}
 
-	private class ReceivingProxyThread extends Thread {
-		Socket s;
-
-		public ReceivingProxyThread(Socket s) {
-			this.s = s;
-		}
-
-		@Override
-		public void run() {
-			try {
-				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-
-				while (!s.isClosed()) {
-					Object o;
-					while ((o = ois.readObject()) != null) {
-						if(o instanceof ProxyResponse res) {
-							String deviceId = res.getDeviceId();
-							synchronized (responseCounter) {
-								if (responseCounter.containsKey(deviceId))
-									responseCounter.put(deviceId, responseCounter.get(deviceId) + 1);
-								else
-									responseCounter.put(deviceId, 1);
-								if (responseCounter.get(deviceId) == 4) {
-									responseCounter.remove(deviceId);
-									byte[] result = res.toByteArray();
-									DataOutputStream tempDos = devices.get(deviceId);
-									tempDos.writeInt(result.length);
-									tempDos.write(result);
-								}
-							}
-						}
-					}
-				}
-			} catch (IOException | ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	private class SireProxyThread extends Thread {
 
 		private final Socket s;
-		private boolean inMap = false;
 
 		public SireProxyThread(Socket s) {
 			this.s = s;
@@ -174,10 +120,6 @@ public class SocketProxy implements Runnable {
 						//oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
 						System.out.println("Wrong operation!");
 					} else {
-						if(!inMap) {
-							inMap = true;
-							devices.put(msg.getDeviceId(), dos);
-						}
 						ProxyResponse result = runProxyMessage(msg);
 						if (result != null) {
 							byte[] bs = result.toByteArray();

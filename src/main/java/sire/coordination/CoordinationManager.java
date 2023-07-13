@@ -1,5 +1,6 @@
 package sire.coordination;
 
+import java.math.BigInteger;
 import java.util.*;
 
 public class CoordinationManager {
@@ -14,9 +15,18 @@ public class CoordinationManager {
     }
 
     public void put(String appId, String key, byte[] value) {
+        if(key.contains("model")) {
+            int count;
+            if(storage.containsKey(key))
+                 count = (new BigInteger(storage.get(key))).intValue()+1;
+            else
+                count = 1;
+            if(count < 1)
+                return;
+            else
+                storage.put(appId + key, BigInteger.valueOf(count).toByteArray());
+        }
         ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ExtParams(key, value, null));
-        if(key.contains("model"))
-            return;
         storage.put(appId + p.getKey(), p.getValue());
     }
 

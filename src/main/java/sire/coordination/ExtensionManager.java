@@ -21,38 +21,22 @@ public class ExtensionManager {
                 package sire.coordination
                 
                 def runExtension(ExtParams p) {
-                    def str = "python extensionScript.py"
-                    if(p.getValue() != null) {
-                        final ByteArrayOutputStream os = new ByteArrayOutputStream()
-                        os.withCloseable {
-                            it << p.getValue()
-                        }
-                        
-                        new File("temp.pt").withOutputStream { stream ->
-                            os.writeTo(stream)
-                        }
-                        str = str + " temp.pt " + p.getKey()
-                    }
-                    
+                    println p.getValue();
+                    int[] bs = new byte[p.getValue().length]
+                    for(int i = 0; i < bs.length; i++)
+                        bs[i] = p.getValue()[i] & 0xff
+                    println bs
+                    def str = "python extensionScript.py --lista " + bs
+                    str = str.replace("[", "")
+                    str = str.replace("]", "")
+                    str = str.replace(",", "")
                     def task = str.execute()
                     def cmdOutputStream = new StringBuffer()
                     task.waitForProcessOutput(cmdOutputStream, System.out)
-                    print cmdOutputStream.toString()
+                    def result = cmdOutputStream.toString()
+                    print result
+                    return new ExtParams(p.key, result.getBytes())
                     
-                    ExtParams res = new ExtParams(p.key, new File("model.pt").bytes)
-                    
-                    //new File('temp.pt').delete()
-                    /*def str2 = "python extensionScript.py a"
-                    def task2 = str2.execute()
-                    cmdOutputStream2 = new StringBuffer()
-                    task2.waitForProcessOutput(cmdOutputStream2, System.out)
-                    println cmdOutputStream2.toString()*/
-                    
-                    //println "stderr: ${task2.err.text}"
-                    //println "result ${task.in.getText()}"
-                    
-                    
-                    return res
                 }
                 """;
         this.extensions.put("app1", new Extension(code, sh.parse(code)));
@@ -82,9 +66,6 @@ public class ExtensionManager {
     }
 
     public ExtParams runExtension(String appId, ExtensionType type, String key, ExtParams params) {
-        if(type == ExtensionType.EXT_PUT)
-            nExt++;
-        params.setKey("" + nExt);
         String temp;
         if(extensions.containsKey(appId + type.name() + key))
             temp = appId + type.name() + key;

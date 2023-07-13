@@ -1,144 +1,68 @@
-from __future__ import print_function
+import random
 
-import pickle
-from io import BytesIO
+import numpy as np
+import tensorflow.compat.v1 as tf
+import sys
+import pickle, socket, codecs
+import messages_pb2
+from random import sample
 
-import torch, messages_pb2
-import torch.utils.data
-import torch.nn as nn
-import torch.nn.functional as F
-import toolz, socket
-from torchvision import datasets, transforms
-from types import SimpleNamespace
-args = SimpleNamespace(batch_size=32, test_batch_size=1000,
-                       epochs=2, lr=0.01, momentum=0.5,
-                       no_cuda=True, seed=42, log_interval=80)
+tf.disable_v2_behavior()
 
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
-        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
-        self.conv2_drop = nn.Dropout2d()
-        self.fc1 = nn.Linear(320, 50)
-        self.fc2 = nn.Linear(50, 10)
+class WorkerType:
+    Correct = 1
+    Byzantine = 2
 
-    def forward(self, x):
-        x = F.relu(F.max_pool2d(self.conv1(x), 2))
-        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
-        x = x.view(-1, 320)
-        x = F.relu(self.fc1(x))
-        x = F.dropout(x, training=self.training)
-        x = self.fc2(x)
-        return F.log_softmax(x, dim=1)
+def linear_regression(worker_type, X, y, learning_rate=0.1, num_iterations=10, initial_theta=None):
+    if initial_theta is None:
+        theta = tf.Variable(tf.zeros([2, 1]), dtype=tf.float32)
+    else:
+        theta = tf.Variable(initial_theta, dtype=tf.float32)
+    X_ph = tf.placeholder(tf.float32, shape=[None, 2])
+    y_ph = tf.placeholder(tf.float32, shape=[None])
 
-def train(model, device, data, target):
-    model.train()
+    # Define the model and cost function
+    y_hat = tf.squeeze(tf.matmul(X_ph, theta))
+    cost = tf.reduce_mean(tf.square(y_hat - y_ph)) / 2
 
-    data, target = data.to(device), target.to(device)
-    output = model(data)
-    loss = F.nll_loss(output, target)
-    loss.backward()
-    return model
+    # Define the optimizer and training operation
+    optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+    train_op = optimizer.minimize(cost)
 
-def get_accuracy(test_loader, model):
-    model.eval()
-    correct_sum = 0
-    # Use GPU to evaluate if possible
-    device = torch.device("cpu")
-    with torch.no_grad():
-        for i, (data, target) in enumerate(test_loader):
-            out = model(data)
-            pred = out.argmax(dim=1, keepdim=True)
-            pred, target = pred.to(device), target.to(device)
-            correct = pred.eq(target.view_as(pred)).sum().item()
-            correct_sum += correct
+    # Initialize the session and variables
+    sess = tf.Session()
+    sess.run(tf.global_variables_initializer())
 
-    print(f"Accuracy {correct_sum / len(test_loader.dataset)}")
+    # Perform the gradient descent optimization
+    for i in range(num_iterations):
+        feed_dict = {X_ph: X, y_ph: y}
+        _, cost_val, theta_val = sess.run([train_op, cost, theta], feed_dict=feed_dict)
 
-def worker(device, train_loader, test_loader, sock, worker_id=0, iters=5):
+    if worker_type == WorkerType.Correct:
+        return theta_val
+    else:
+        return sess.run(tf.cast(tf.random.normal([2, 1], mean=0.0, stddev=1.0), dtype=theta_val.dtype))
+
+if __name__ == '__main__':
+    worker_id = int(sys.argv[1])
+    worker_type = sys.argv[2]
+    num_rounds = int(sys.argv[3])
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = "localhost"
-    port = 2500 + 1
+    port = 2500 + worker_id
     sock.connect((host, port))
-    _model = None
-    # Request to get model
-
-    for step in range(0, iters):
-        while _model is None:
-            model_request = messages_pb2.ProxyMessage()
-            model_request.deviceId = str(worker_id)
-            model_request.appId = "app1"
-            model_request.operation = messages_pb2.ProxyMessage.MAP_GET
-            model_request.key = "model"
-            model_request.value = step.to_bytes(4, byteorder='big')
-
-            # Sending get request
-            byted = model_request.SerializeToString()
-            bytedSize = len(byted).to_bytes(4, byteorder='big')
-            sock.send(bytedSize)
-            sock.send(byted)
-            bytedSize = sock.recv(4)
-            size = int.from_bytes(bytedSize, "big")
-            print("Size:", size)
-            res = sock.recv(size)
-            # f = open('temporary.proto', 'wb')
-            # f.write(res)
-            # f.close()
-            response = messages_pb2.ProxyResponse()
-            response.ParseFromString(res)
-            inp_b = BytesIO(response.value)
-            model_dict = torch.load(inp_b)
-            _model = Net()
-            _model.load_state_dict(model_dict)
-        model, _model = _model, None
-        param_check = toolz.last(model.parameters())
-        check = param_check.detach().numpy().flat[:4]
-        print("worker {} iter {}, last params = {}".format(worker_id, step, check))
-
-        data, target = next(iter(train_loader))
-        model = train(model, device, data, target)
-        grads = {name: p.grad.data for name, p in model.named_parameters()}
-        # Request to put gradients
+    np.random.seed(51)
+    X = np.random.rand(100, 2)
+    y = np.dot(X, [3, 4]) + np.random.randn(100) * 0.1
+    current_theta = None
+    for i in range(num_rounds):
+        current_theta = linear_regression(worker_type, X, y)
         model_put = messages_pb2.ProxyMessage()
         model_put.deviceId = str(worker_id)
         model_put.appId = "app1"
         model_put.operation = messages_pb2.ProxyMessage.MAP_PUT
         model_put.key = "model"
-        model_put.value = pickle.dumps(grads)
-        model_put.oldData = step.to_bytes(4, byteorder='big')
-        #print(grads)
-
-        # Sending put request
-        byted_put = model_put.SerializeToString()
-        sock.send(len(byted_put).to_bytes(4, byteorder='big'))
-        sock.send(byted_put)
-
-    sock.close()
-    get_accuracy(test_loader, model)
-
-
-def main():
-    print("Booting up...")
-    device = torch.device("cpu")
-    kwargs = {}
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    train_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=True, download=True,
-                       transform=transforms.Compose([
-                           transforms.ToTensor(),
-                           transforms.Normalize((0.1307,), (0.3081,))
-                       ])),
-        batch_size=args.batch_size, shuffle=True, **kwargs)
-    test_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=False, download=True,
-                       transform=transforms.Compose([
-                           transforms.ToTensor(),
-                           transforms.Normalize((0.1307,), (0.3081,))
-                       ])),
-        batch_size=32, shuffle=True)
-    worker(device, train_loader, test_loader, sock)
-
-
-if __name__ == "__main__":
-    main()
+        print(current)
+        model_put.value = codecs.encode(pickle.dumps(current_theta), "base64").decode()
+        sock.send
 
