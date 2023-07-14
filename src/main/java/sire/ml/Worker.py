@@ -45,7 +45,7 @@ def linear_regression(worker_type, X, y, learning_rate=0.1, num_iterations=10, i
 
 if __name__ == '__main__':
     worker_id = int(sys.argv[1])
-    worker_type = sys.argv[2]
+    worker_type = 1
     num_rounds = int(sys.argv[3])
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = "localhost"
@@ -56,13 +56,15 @@ if __name__ == '__main__':
     y = np.dot(X, [3, 4]) + np.random.randn(100) * 0.1
     current_theta = None
     for i in range(num_rounds):
-        current_theta = linear_regression(worker_type, X, y)
+        current_theta = linear_regression(worker_type, X, y, initial_theta=current_theta)
+        print(current_theta)
         model_put = messages_pb2.ProxyMessage()
         model_put.deviceId = str(worker_id)
         model_put.appId = "app1"
         model_put.operation = messages_pb2.ProxyMessage.MAP_PUT
         model_put.key = "model"
-        print(current)
-        model_put.value = codecs.encode(pickle.dumps(current_theta), "base64").decode()
-        sock.send
+        model_put.value = pickle.dumps(current_theta)
+        byted_put = model_put.SerializeToString()
+        sock.send(len(byted_put).to_bytes(4, byteorder='big'))
+        sock.send(byted_put)
 

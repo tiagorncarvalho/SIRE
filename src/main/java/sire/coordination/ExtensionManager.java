@@ -21,11 +21,9 @@ public class ExtensionManager {
                 package sire.coordination
                 
                 def runExtension(ExtParams p) {
-                    println p.getValue();
                     int[] bs = new byte[p.getValue().length]
                     for(int i = 0; i < bs.length; i++)
                         bs[i] = p.getValue()[i] & 0xff
-                    println bs
                     def str = "python extensionScript.py --lista " + bs
                     str = str.replace("[", "")
                     str = str.replace("]", "")

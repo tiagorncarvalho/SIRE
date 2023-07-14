@@ -34,10 +34,11 @@ class ParameterServer:
             scores.append((s, i))
         scores = sorted(scores)
         krum_index = scores[0][1]
-        return weights[krum_index].flatten()
+        return weights[krum_index]
 
 
 if __name__ == '__main__':
     args = CLI.parse_args()
-    res = ParameterServer.krum(pickle.loads(bytes(args.lista)))
-    print(res)
+    res = ParameterServer.krum([pickle.loads(bytes(args.lista))])
+    fl = res.flatten()
+    print(fl)
