@@ -19,24 +19,66 @@ public class ExtensionManager {
         this.extensions = new TreeMap<>();
         String code = """
                 package sire.coordination
+                import java.util.ArrayList
+                import java.util.Collections
+                import java.util.List
+                import java.nio.ByteBuffer
+                import java.nio.file.Files
+                import java.nio.file.Paths
                 
-                def runExtension(ExtParams p) {
-                    int[] bs = new byte[p.getValue().length]
-                    for(int i = 0; i < bs.length; i++)
-                        bs[i] = p.getValue()[i] & 0xff
-                    def str = "python extensionScript.py --lista " + bs
-                    str = str.replace("[", "")
-                    str = str.replace("]", "")
-                    str = str.replace(",", "")
-                    def task = str.execute()
-                    def cmdOutputStream = new StringBuffer()
-                    task.waitForProcessOutput(cmdOutputStream, System.out)
-                    def result = cmdOutputStream.toString()
-                    print result
-                    return new ExtParams(p.key, result.getBytes())
-                    
+                static double euclideanDistance(double[] x, double[] y) {
+                    double sum = 0.0;
+                    for (int i = 0; i < x.length; i++) {
+                        double diff = x[i] - y[i];
+                        sum += diff * diff;
+                    }
+                    Math.sqrt(sum)
+                }
+                                
+                static double[] krum(double[][] weights, int k) {
+                    int n = weights.size()
+                    println(weights)
+                    double[][] distances = new double[n][n]
+                    for (int i = 0; i < n; i++) {
+                        for (int j = i + 1; j < n; j++) {
+                            distances[i][j] = euclideanDistance(weights[i], weights[j])
+                            distances[j][i] = distances[i][j]
+                        }
+                    }
+                    List<ScoreIndex> scores = []
+                    for (int i = 0; i < n; i++) {
+                        double[] d = distances[i]
+                        double sum = d.sum()
+                        scores.add(new ScoreIndex(sum, i))
+                    }
+                    int krumIndex = scores[0].index
+                    return weights[krumIndex]
+                }
+                            
+                class ScoreIndex implements Comparable<ScoreIndex> {
+                    double score
+                    int index
+                            
+                    ScoreIndex(double score, int index) {
+                        this.score = score
+                        this.index = index
+                    }
+                            
+                    int compareTo(ScoreIndex other) {
+                        Double.compare(score, other.score)
+                    }
+                }
+                
+                def runExtension(ModelParams p) {
+                    double[][] temp = new double[1][1]
+                    temp[0] = p.getValue()
+                    println(p.getValue())
+                    double[] newVal = krum(temp, 2)
+                    print(newVal)
+                    return new ModelParams(p.getKey(), newVal)
                 }
                 """;
+
         this.extensions.put("app1", new Extension(code, sh.parse(code)));
     }
 
@@ -75,6 +117,20 @@ public class ExtensionManager {
             return params;
         }
         return (ExtParams) extensions.get(temp).getScript().invokeMethod("runExtension", params);
+    }
+
+    public ModelParams runExtension(String appId, ExtensionType type, String key, ModelParams params) {
+        String temp;
+        if(extensions.containsKey(appId + type.name() + key))
+            temp = appId + type.name() + key;
+        else if(extensions.containsKey(appId + type.name()))
+            temp = appId + type.name();
+        else if (extensions.containsKey(appId))
+            temp = appId;
+        else {
+            return params;
+        }
+        return (ModelParams) extensions.get(temp).getScript().invokeMethod("runExtension", params);
     }
 
     public void removeExtension(String key) {

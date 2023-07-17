@@ -13,12 +13,11 @@ public class CoordinationManager {
                 "wwehfuq652ru0ibdr79eddqmwmhpmcjfz0hx3ihee3gu".getBytes()); //just for benchmarking
         extensionManager = ExtensionManager.getInstance();
     }
-
-    public void put(String appId, String key, byte[] value) {
+    public void put(String appId, String key, double[] value) {
         if(key.contains("model")) {
             int count;
             if(storage.containsKey(key))
-                 count = (new BigInteger(storage.get(key))).intValue()+1;
+                count = (new BigInteger(storage.get(key))).intValue()+1;
             else
                 count = 1;
             if(count < 1)
@@ -26,6 +25,10 @@ public class CoordinationManager {
             else
                 storage.put(appId + key, BigInteger.valueOf(count).toByteArray());
         }
+        extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ModelParams(key, value));
+    }
+
+    public void put(String appId, String key, byte[] value) {
         ExtParams p = extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ExtParams(key, value, null));
         storage.put(appId + p.getKey(), p.getValue());
     }

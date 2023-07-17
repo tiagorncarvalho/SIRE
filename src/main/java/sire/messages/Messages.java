@@ -1655,6 +1655,19 @@ public final class Messages {
      * <code>bytes pubKey = 13;</code>
      */
     com.google.protobuf.ByteString getPubKey();
+
+    /**
+     * <code>repeated double theta = 14;</code>
+     */
+    java.util.List<java.lang.Double> getThetaList();
+    /**
+     * <code>repeated double theta = 14;</code>
+     */
+    int getThetaCount();
+    /**
+     * <code>repeated double theta = 14;</code>
+     */
+    double getTheta(int index);
   }
   /**
    * Protobuf type {@code sire.messages.ProxyMessage}
@@ -1679,6 +1692,7 @@ public final class Messages {
       code_ = "";
       deviceType_ = 0;
       pubKey_ = com.google.protobuf.ByteString.EMPTY;
+      theta_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -1800,6 +1814,27 @@ public final class Messages {
               pubKey_ = input.readBytes();
               break;
             }
+            case 113: {
+              if (!((mutable_bitField0_ & 0x00002000) == 0x00002000)) {
+                theta_ = new java.util.ArrayList<java.lang.Double>();
+                mutable_bitField0_ |= 0x00002000;
+              }
+              theta_.add(input.readDouble());
+              break;
+            }
+            case 114: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00002000) == 0x00002000) && input.getBytesUntilLimit() > 0) {
+                theta_ = new java.util.ArrayList<java.lang.Double>();
+                mutable_bitField0_ |= 0x00002000;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                theta_.add(input.readDouble());
+              }
+              input.popLimit(limit);
+              break;
+            }
             default: {
               if (!parseUnknownFieldProto3(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -1815,6 +1850,9 @@ public final class Messages {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00002000) == 0x00002000)) {
+          theta_ = java.util.Collections.unmodifiableList(theta_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -2756,6 +2794,7 @@ public final class Messages {
 
     }
 
+    private int bitField0_;
     public static final int OPERATION_FIELD_NUMBER = 1;
     private int operation_;
     /**
@@ -3045,6 +3084,29 @@ public final class Messages {
       return pubKey_;
     }
 
+    public static final int THETA_FIELD_NUMBER = 14;
+    private java.util.List<java.lang.Double> theta_;
+    /**
+     * <code>repeated double theta = 14;</code>
+     */
+    public java.util.List<java.lang.Double>
+        getThetaList() {
+      return theta_;
+    }
+    /**
+     * <code>repeated double theta = 14;</code>
+     */
+    public int getThetaCount() {
+      return theta_.size();
+    }
+    /**
+     * <code>repeated double theta = 14;</code>
+     */
+    public double getTheta(int index) {
+      return theta_.get(index);
+    }
+    private int thetaMemoizedSerializedSize = -1;
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3059,6 +3121,7 @@ public final class Messages {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (operation_ != sire.messages.Messages.ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY.getNumber()) {
         output.writeEnum(1, operation_);
       }
@@ -3097,6 +3160,13 @@ public final class Messages {
       }
       if (!pubKey_.isEmpty()) {
         output.writeBytes(13, pubKey_);
+      }
+      if (getThetaList().size() > 0) {
+        output.writeUInt32NoTag(114);
+        output.writeUInt32NoTag(thetaMemoizedSerializedSize);
+      }
+      for (int i = 0; i < theta_.size(); i++) {
+        output.writeDoubleNoTag(theta_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -3155,6 +3225,17 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(13, pubKey_);
       }
+      {
+        int dataSize = 0;
+        dataSize = 8 * getThetaList().size();
+        size += dataSize;
+        if (!getThetaList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        thetaMemoizedSerializedSize = dataSize;
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -3204,6 +3285,8 @@ public final class Messages {
       result = result && deviceType_ == other.deviceType_;
       result = result && getPubKey()
           .equals(other.getPubKey());
+      result = result && getThetaList()
+          .equals(other.getThetaList());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -3247,6 +3330,10 @@ public final class Messages {
       hash = (53 * hash) + deviceType_;
       hash = (37 * hash) + PUBKEY_FIELD_NUMBER;
       hash = (53 * hash) + getPubKey().hashCode();
+      if (getThetaCount() > 0) {
+        hash = (37 * hash) + THETA_FIELD_NUMBER;
+        hash = (53 * hash) + getThetaList().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3418,6 +3505,8 @@ public final class Messages {
 
         pubKey_ = com.google.protobuf.ByteString.EMPTY;
 
+        theta_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00002000);
         return this;
       }
 
@@ -3444,6 +3533,8 @@ public final class Messages {
       @java.lang.Override
       public sire.messages.Messages.ProxyMessage buildPartial() {
         sire.messages.Messages.ProxyMessage result = new sire.messages.Messages.ProxyMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         result.operation_ = operation_;
         if (evidenceBuilder_ == null) {
           result.evidence_ = evidence_;
@@ -3469,6 +3560,12 @@ public final class Messages {
         }
         result.deviceType_ = deviceType_;
         result.pubKey_ = pubKey_;
+        if (((bitField0_ & 0x00002000) == 0x00002000)) {
+          theta_ = java.util.Collections.unmodifiableList(theta_);
+          bitField0_ = (bitField0_ & ~0x00002000);
+        }
+        result.theta_ = theta_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -3560,6 +3657,16 @@ public final class Messages {
         if (other.getPubKey() != com.google.protobuf.ByteString.EMPTY) {
           setPubKey(other.getPubKey());
         }
+        if (!other.theta_.isEmpty()) {
+          if (theta_.isEmpty()) {
+            theta_ = other.theta_;
+            bitField0_ = (bitField0_ & ~0x00002000);
+          } else {
+            ensureThetaIsMutable();
+            theta_.addAll(other.theta_);
+          }
+          onChanged();
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -3588,6 +3695,7 @@ public final class Messages {
         }
         return this;
       }
+      private int bitField0_;
 
       private int operation_ = 0;
       /**
@@ -4478,6 +4586,72 @@ public final class Messages {
       public Builder clearPubKey() {
         
         pubKey_ = getDefaultInstance().getPubKey();
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Double> theta_ = java.util.Collections.emptyList();
+      private void ensureThetaIsMutable() {
+        if (!((bitField0_ & 0x00002000) == 0x00002000)) {
+          theta_ = new java.util.ArrayList<java.lang.Double>(theta_);
+          bitField0_ |= 0x00002000;
+         }
+      }
+      /**
+       * <code>repeated double theta = 14;</code>
+       */
+      public java.util.List<java.lang.Double>
+          getThetaList() {
+        return java.util.Collections.unmodifiableList(theta_);
+      }
+      /**
+       * <code>repeated double theta = 14;</code>
+       */
+      public int getThetaCount() {
+        return theta_.size();
+      }
+      /**
+       * <code>repeated double theta = 14;</code>
+       */
+      public double getTheta(int index) {
+        return theta_.get(index);
+      }
+      /**
+       * <code>repeated double theta = 14;</code>
+       */
+      public Builder setTheta(
+          int index, double value) {
+        ensureThetaIsMutable();
+        theta_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double theta = 14;</code>
+       */
+      public Builder addTheta(double value) {
+        ensureThetaIsMutable();
+        theta_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double theta = 14;</code>
+       */
+      public Builder addAllTheta(
+          java.lang.Iterable<? extends java.lang.Double> values) {
+        ensureThetaIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, theta_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double theta = 14;</code>
+       */
+      public Builder clearTheta() {
+        theta_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00002000);
         onChanged();
         return this;
       }
@@ -7599,7 +7773,7 @@ public final class Messages {
       "Key\030\002 \001(\014\022\024\n\014randomPubKey\030\003 \001(\014\"Z\n\rProto" +
       "Evidence\022\016\n\006anchor\030\001 \001(\014\022\023\n\013watzVersion\030" +
       "\002 \001(\t\022\r\n\005claim\030\003 \001(\014\022\025\n\rservicePubKey\030\004 " +
-      "\001(\014\"\234\006\n\014ProxyMessage\0228\n\toperation\030\001 \001(\0162" +
+      "\001(\014\"\253\006\n\014ProxyMessage\0228\n\toperation\030\001 \001(\0162" +
       "%.sire.messages.ProxyMessage.Operation\022." +
       "\n\010evidence\030\002 \001(\0132\034.sire.messages.ProtoEv" +
       "idence\022\021\n\ttimestamp\030\003 \001(\014\022.\n\tsignature\030\004" +
@@ -7609,34 +7783,35 @@ public final class Messages {
       "\n \001(\t\0227\n\006policy\030\013 \001(\0132\'.sire.messages.Pr" +
       "oxyMessage.ProtoPolicy\0222\n\ndeviceType\030\014 \001" +
       "(\0162\036.sire.messages.ProtoDeviceType\022\016\n\006pu" +
-      "bKey\030\r \001(\014\032+\n\013ProtoPolicy\022\016\n\006policy\030\001 \001(" +
-      "\t\022\014\n\004type\030\002 \001(\010\"\330\002\n\tOperation\022\031\n\025ATTEST_" +
-      "GET_PUBLIC_KEY\020\000\022\024\n\020ATTEST_TIMESTAMP\020\001\022\013" +
-      "\n\007MAP_PUT\020\002\022\016\n\nMAP_DELETE\020\003\022\013\n\007MAP_GET\020\004" +
-      "\022\014\n\010MAP_LIST\020\005\022\013\n\007MAP_CAS\020\006\022\023\n\017MEMBERSHI" +
-      "P_JOIN\020\007\022\024\n\020MEMBERSHIP_LEAVE\020\010\022\023\n\017MEMBER" +
-      "SHIP_VIEW\020\t\022\023\n\017MEMBERSHIP_PING\020\n\022\021\n\rEXTE" +
-      "NSION_ADD\020\013\022\024\n\020EXTENSION_REMOVE\020\014\022\021\n\rEXT" +
-      "ENSION_GET\020\r\022\016\n\nPOLICY_ADD\020\016\022\021\n\rPOLICY_R" +
-      "EMOVE\020\017\022\016\n\nPOLICY_GET\020\020\022\021\n\rTIMESTAMP_GET" +
-      "\020\021\"\317\004\n\rProxyResponse\0227\n\004type\030\001 \001(\0162).sir" +
-      "e.messages.ProxyResponse.ResponseType\022\014\n" +
-      "\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(\014\022@\n\007members\030\004 " +
-      "\003(\0132/.sire.messages.ProxyResponse.ProtoD" +
-      "eviceContext\022\021\n\textPolicy\030\005 \001(\t\022)\n\004sign\030" +
-      "\006 \001(\0132\033.sire.messages.ProtoSchnorr\022\021\n\tti" +
-      "mestamp\030\007 \001(\014\022\016\n\006pubKey\030\010 \001(\014\022\014\n\004hash\030\t " +
-      "\001(\014\022\020\n\010deviceId\030\n \001(\t\032\265\001\n\022ProtoDeviceCon" +
-      "text\022\020\n\010deviceId\030\001 \001(\t\022(\n\004time\030\002 \001(\0132\032.g" +
-      "oogle.protobuf.Timestamp\0222\n\ndeviceType\030\003" +
-      " \001(\0162\036.sire.messages.ProtoDeviceType\022/\n\013" +
-      "certExpTime\030\004 \001(\0132\032.google.protobuf.Time" +
-      "stamp\"m\n\014ResponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MA" +
-      "P_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n" +
-      "\nPOLICY_GET\020\004\022\013\n\007PREJOIN\020\005\022\010\n\004JOIN\020\006*g\n\017" +
-      "ProtoDeviceType\022\n\n\006CAMERA\020\000\022\017\n\013THERMOMET" +
-      "ER\020\001\022\t\n\005RADAR\020\002\022\t\n\005LIDAR\020\003\022\020\n\014MOTIONSENS" +
-      "OR\020\004\022\017\n\013LIGHTSENSOR\020\005b\006proto3"
+      "bKey\030\r \001(\014\022\r\n\005theta\030\016 \003(\001\032+\n\013ProtoPolicy" +
+      "\022\016\n\006policy\030\001 \001(\t\022\014\n\004type\030\002 \001(\010\"\330\002\n\tOpera" +
+      "tion\022\031\n\025ATTEST_GET_PUBLIC_KEY\020\000\022\024\n\020ATTES" +
+      "T_TIMESTAMP\020\001\022\013\n\007MAP_PUT\020\002\022\016\n\nMAP_DELETE" +
+      "\020\003\022\013\n\007MAP_GET\020\004\022\014\n\010MAP_LIST\020\005\022\013\n\007MAP_CAS" +
+      "\020\006\022\023\n\017MEMBERSHIP_JOIN\020\007\022\024\n\020MEMBERSHIP_LE" +
+      "AVE\020\010\022\023\n\017MEMBERSHIP_VIEW\020\t\022\023\n\017MEMBERSHIP" +
+      "_PING\020\n\022\021\n\rEXTENSION_ADD\020\013\022\024\n\020EXTENSION_" +
+      "REMOVE\020\014\022\021\n\rEXTENSION_GET\020\r\022\016\n\nPOLICY_AD" +
+      "D\020\016\022\021\n\rPOLICY_REMOVE\020\017\022\016\n\nPOLICY_GET\020\020\022\021" +
+      "\n\rTIMESTAMP_GET\020\021\"\317\004\n\rProxyResponse\0227\n\004t" +
+      "ype\030\001 \001(\0162).sire.messages.ProxyResponse." +
+      "ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(" +
+      "\014\022@\n\007members\030\004 \003(\0132/.sire.messages.Proxy" +
+      "Response.ProtoDeviceContext\022\021\n\textPolicy" +
+      "\030\005 \001(\t\022)\n\004sign\030\006 \001(\0132\033.sire.messages.Pro" +
+      "toSchnorr\022\021\n\ttimestamp\030\007 \001(\014\022\016\n\006pubKey\030\010" +
+      " \001(\014\022\014\n\004hash\030\t \001(\014\022\020\n\010deviceId\030\n \001(\t\032\265\001\n" +
+      "\022ProtoDeviceContext\022\020\n\010deviceId\030\001 \001(\t\022(\n" +
+      "\004time\030\002 \001(\0132\032.google.protobuf.Timestamp\022" +
+      "2\n\ndeviceType\030\003 \001(\0162\036.sire.messages.Prot" +
+      "oDeviceType\022/\n\013certExpTime\030\004 \001(\0132\032.googl" +
+      "e.protobuf.Timestamp\"m\n\014ResponseType\022\013\n\007" +
+      "MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXT" +
+      "ENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004\022\013\n\007PREJOIN\020" +
+      "\005\022\010\n\004JOIN\020\006*g\n\017ProtoDeviceType\022\n\n\006CAMERA" +
+      "\020\000\022\017\n\013THERMOMETER\020\001\022\t\n\005RADAR\020\002\022\t\n\005LIDAR\020" +
+      "\003\022\020\n\014MOTIONSENSOR\020\004\022\017\n\013LIGHTSENSOR\020\005b\006pr" +
+      "oto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -7668,7 +7843,7 @@ public final class Messages {
     internal_static_sire_messages_ProxyMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProxyMessage_descriptor,
-        new java.lang.String[] { "Operation", "Evidence", "Timestamp", "Signature", "Key", "Value", "OldData", "DeviceId", "AppId", "Code", "Policy", "DeviceType", "PubKey", });
+        new java.lang.String[] { "Operation", "Evidence", "Timestamp", "Signature", "Key", "Value", "OldData", "DeviceId", "AppId", "Code", "Policy", "DeviceType", "PubKey", "Theta", });
     internal_static_sire_messages_ProxyMessage_ProtoPolicy_descriptor =
       internal_static_sire_messages_ProxyMessage_descriptor.getNestedTypes().get(0);
     internal_static_sire_messages_ProxyMessage_ProtoPolicy_fieldAccessorTable = new

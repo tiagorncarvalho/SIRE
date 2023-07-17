@@ -63,8 +63,8 @@ if __name__ == '__main__':
         model_put.appId = "app1"
         model_put.operation = messages_pb2.ProxyMessage.MAP_PUT
         model_put.key = "model"
-        model_put.value = pickle.dumps(current_theta)
+        for i in range(len(current_theta)):
+            model_put.theta.append(current_theta[i])
         byted_put = model_put.SerializeToString()
         sock.send(len(byted_put).to_bytes(4, byteorder='big'))
         sock.send(byted_put)
-

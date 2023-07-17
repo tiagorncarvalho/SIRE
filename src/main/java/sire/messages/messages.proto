@@ -80,6 +80,8 @@ message ProxyMessage {
 
   //========INITIAL REQUEST==========//
   bytes pubKey = 13;
+
+  repeated double theta = 14;
 }
 
 message ProxyResponse {
