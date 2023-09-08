@@ -33,10 +33,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 import static sire.messages.ProtoUtils.*;
 
@@ -120,6 +117,7 @@ public class PreComputedProxy {
         System.out.println("Operation: " + operation);
 
         boolean measurementLeader = Boolean.parseBoolean(args[4]);
+        CountDownLatch latch = new CountDownLatch(numClients);
 
         Random random = new Random(1L);
         byte[] value = new byte[1024];
@@ -133,30 +131,10 @@ public class PreComputedProxy {
             Thread.sleep(sleepTime);
 
             int id = initialId + i;
-            clients[i] = new Client(id, numOperations, operation, measurementLeader);
+            clients[i] = new Client(id, numOperations, operation, measurementLeader, latch);
         }
-        ExecutorService executorService = Executors.newFixedThreadPool(numClients);
-        Collection<Future<?>> tasks = new LinkedList<>();
-        for (Client client : clients) {
-            try {
-                Thread.sleep(random.nextInt(50));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            tasks.add(executorService.submit(client));
-        }
-        Runtime.getRuntime().addShutdownHook(new Thread(executorService::shutdownNow));
-        for (Future<?> task : tasks) {
-            try {
-                task.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                executorService.shutdownNow();
-                System.exit(-1);
-            }
-        }
-        executorService.shutdown();
-        System.out.println("Experiment ended");
+        latch.await();
+        System.out.println("Executing experiment");
     }
 
     private static class Client extends Thread {
@@ -166,13 +144,15 @@ public class PreComputedProxy {
         ConfidentialServiceProxy serviceProxy;
         Messages.ProxyMessage.Operation operation;
         private final boolean measurementLeader;
+        private final CountDownLatch latch;
 
 
-        Client(int id, int numOperations, Messages.ProxyMessage.Operation operation, boolean measurementLeader) throws SecretSharingException, SireException {
+        Client(int id, int numOperations, Messages.ProxyMessage.Operation operation, boolean measurementLeader, CountDownLatch latch) throws SecretSharingException, SireException {
             this.id = id;
             this.numOperations = numOperations;
             this.operation = operation;
             this.measurementLeader = measurementLeader;
+            this.latch = latch;
             ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
 
             msg0 = Messages.ProxyMessage.newBuilder()
@@ -213,29 +193,13 @@ public class PreComputedProxy {
 
         @Override
         public void run() {
-            if (id == initialId) {
-                if (measurementLeader)
-                    System.out.println("I'm measurement leader");
-                System.out.println("Sending test data...");
-            }
-            sendOperation();
-            if (id == initialId) {
-                System.out.println("Executing experiment for " + numOperations + " ops");
-            }
-            long latencyAvg = 0;
-            long latencyMin = Long.MAX_VALUE;
-            long latencyMax = 0;
+            latch.countDown();
             for (int i = 1; i < numOperations; i++) {
                 long t2;
                 long t1 = System.nanoTime();
                 sendOperation();
                 t2 = System.nanoTime();
                 long latency = t2 - t1;
-                if(latency < latencyMin)
-                    latencyMin = latency;
-                if(latency > latencyMax)
-                    latencyMax = latency;
-                latencyAvg += latency;
                 if (id == initialId && measurementLeader)
                     System.out.println("M: " + latency);
 
@@ -247,21 +211,6 @@ public class PreComputedProxy {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-
-            if (id == initialId && measurementLeader) {
-                //LongSummaryStatistics statistics = Arrays.stream(latencies).summaryStatistics();
-                double average = (latencyAvg / (float) numOperations) / 1_000_000.0;
-                long max = latencyMax / 1_000_000;
-                long min = latencyMin / 1_000_000;
-
-                //double std = calculateStandardDeviation(latencies, average);
-                System.out.println("=============================");
-                System.out.printf("Avg: %.3f ms\n", average);
-                //System.out.printf("Std: %.3f ms\n", std);
-                System.out.printf("Min: %d ms\n", min);
-                System.out.printf("Max: %d ms\n", max);
-                System.out.println("=============================");
             }
 
             serviceProxy.close();

@@ -245,10 +245,10 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 						protoToSchnorr(msg.getSignature()));
 				boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence,
 						byteStringToByteArray(baos, msg.getTimestamp()));
-				boolean isTimedout = true;/*(new Timestamp(messageContext.getTimestamp())).before(
+				boolean isntTimedout = true;/*(new Timestamp(messageContext.getTimestamp())).before(
 						new Timestamp(devicesTimestamps.get(msg.getDeviceId()).getTime() + timebound));*/
 
-				if (isValidEvidence && isTimedout) {
+				if (isValidEvidence && isntTimedout) {
 					byte[] data = concat(serialize(new Timestamp(messageContext.getTimestamp())),
 							byteStringToByteArray(new ByteArrayOutputStream(), msg.getPubKey()), computeHash(msg.toByteArray()));
 					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));

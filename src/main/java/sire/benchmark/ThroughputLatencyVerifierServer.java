@@ -198,7 +198,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
             double throughput = numRequests / deltaTime;
             if (throughput > maxThroughput)
                 maxThroughput = throughput;
-            logger.info("M:(clients[#]|requests[#]|delta[ns]|throughput[ops/s]|max[ops/s])>({}|{}|{}|{}|{})",
+            logger.info("M:(clients[#]|requests[#]|delta[ns]|throughput[ops/s], max[ops/s])>({}|{}|{}|{}|{})",
                     senders.size(), numRequests, delta, throughput, maxThroughput);
             numRequests = 0;
             startTime = currentTime;
