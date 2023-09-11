@@ -127,11 +127,14 @@ public class PreComputedProxy {
 
         Client[] clients = new Client[numClients];
         for (int i = 0; i < numClients; i++) {
+            System.out.println("Client " + i);
             int sleepTime = random.nextInt(2000);
             Thread.sleep(sleepTime);
 
             int id = initialId + i;
             clients[i] = new Client(id, numOperations, operation, measurementLeader, latch);
+            clients[i].start();
+            Thread.sleep(10);
         }
         latch.await();
         System.out.println("Executing experiment");
@@ -194,6 +197,7 @@ public class PreComputedProxy {
         @Override
         public void run() {
             latch.countDown();
+            System.out.println(latch.getCount());
             for (int i = 1; i < numOperations; i++) {
                 long t2;
                 long t1 = System.nanoTime();

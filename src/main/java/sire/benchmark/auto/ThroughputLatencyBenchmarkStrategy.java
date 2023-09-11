@@ -55,8 +55,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
     private WorkerHandler[] serverWorkers;
     private WorkerHandler[] clientWorkers;
     private final Map<Integer, WorkerHandler> measurementWorkers;
-    private int dataSize;
-    private boolean isWrite;
+    private String operation;
     private ArrayList<Integer> numMaxRealClients;
     private ArrayList<Double> avgLatency;
     private ArrayList<Double> latencyDev;
@@ -89,13 +88,12 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
         long startTime = System.currentTimeMillis();
         f = Integer.parseInt(benchmarkParameters.getProperty("experiment.f"));
         String[] tokens = benchmarkParameters.getProperty("experiment.clients_per_round").split(" ");
-        dataSize = Integer.parseInt(benchmarkParameters.getProperty("experiment.data_size"));
-        isWrite = Boolean.parseBoolean(benchmarkParameters.getProperty("experiment.is_write"));
+        operation = benchmarkParameters.getProperty("experiment.operation");
         measureResources = Boolean.parseBoolean(benchmarkParameters.getProperty("experiment.measure_resources"));
 
         int nServerWorkers = 3 * f + 1;
         int nClientWorkers = workers.length - nServerWorkers;
-        int maxClientsPerProcess = 30;
+        int maxClientsPerProcess = 50;
         int nRequests = 10_000_000;
         int sleepBetweenRounds = 10;
         int[] clientsPerRound = new int[tokens.length];
@@ -125,8 +123,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
                 lock.lock();
                 logger.info("============ Round {} out of {} ============", round, nRounds);
                 measurementWorkers.clear();
-                storageFileNamePrefix = String.format("f_%d_%d_bytes_%s_round_%d_", f, dataSize,
-                        isWrite ? "write" : "read", round);
+                storageFileNamePrefix = String.format("f_%d_%s_round_%d_", f, operation, round);
                 int nClients = clientsPerRound[round - 1];
 
                 //Distribute clients per workers
@@ -136,10 +133,10 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
                 logger.info("Clients per worker: {} -> Total: {}", vector, total);
 
                 //Start servers
-                startServers(dataSize, nServerWorkers, serverWorkers);
+                startServers(nServerWorkers, serverWorkers);
 
                 //Start clients
-                startClients(nServerWorkers, maxClientsPerProcess, nRequests, dataSize, isWrite,
+                startClients(nServerWorkers, maxClientsPerProcess, nRequests, operation,
                         clientWorkers, clientsPerWorker);
 
                 //Wait for system to stabilize
@@ -184,9 +181,10 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
         //Stop measurements
         measurementWorkers.values().forEach(WorkerHandler::stopProcessing);
 
-        //Get measurement results
         int nMeasurements;
-        if (measurementWorkers.size() == 3) {
+        if(!measureResources) {
+            nMeasurements = 2;
+        } else if (measurementWorkers.size() == 3) {
             nMeasurements = 5;
         } else {
             nMeasurements = 6;
@@ -200,7 +198,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
     }
 
     private void startClients(int nServerWorkers, int maxClientsPerProcess, int nRequests,
-                              int dataSize, boolean isWrite, WorkerHandler[] clientWorkers,
+                              String operation, WorkerHandler[] clientWorkers,
                               int[] clientsPerWorker) throws InterruptedException {
         logger.info("Starting clients...");
         clientsReadyCounter = new CountDownLatch(clientsPerWorker.length);
@@ -220,7 +218,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
             for (int j = 0; j < nProcesses; j++) {
                 int clientsPerProcess = Math.min(totalClientsPerWorker, maxClientsPerProcess);
                 String command = clientCommand + clientInitialId + " " + clientsPerProcess
-                        + " " + nRequests + " " + dataSize + " " + isWrite + " " + isMeasurementWorker;
+                        + " " + nRequests + " " + operation + " " + isMeasurementWorker;
                 commands[j] = new ProcessInformation(command, ".");
                 totalClientsPerWorker -= clientsPerProcess;
                 clientInitialId += clientsPerProcess;
@@ -233,15 +231,14 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
         clientsReadyCounter.await();
     }
 
-    private void startServers(int dataSize, int nServerWorkers,
-                              WorkerHandler[] serverWorkers) throws InterruptedException {
+    private void startServers(int nServerWorkers, WorkerHandler[] serverWorkers) throws InterruptedException {
         logger.info("Starting servers...");
         serversReadyCounter = new CountDownLatch(nServerWorkers);
         measurementWorkers.put(serverWorkers[0].getWorkerId(), serverWorkers[0]);
         if (measureResources)
             measurementWorkers.put(serverWorkers[1].getWorkerId(), serverWorkers[1]);
         for (int i = 0; i < serverWorkers.length; i++) {
-            String command = serverCommand + i + " " + dataSize;
+            String command = serverCommand + i;
             int nCommands = measureResources && i < 2 ? 2 : 1;
             ProcessInformation[] commands = new ProcessInformation[nCommands];
             commands[0] = new ProcessInformation(command, ".");
@@ -365,7 +362,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
     private void storeResumedMeasurements(ArrayList<Integer> numMaxRealClients, ArrayList<Double> avgLatency, ArrayList<Double> latencyDev,
                                           ArrayList<Double> avgThroughput, ArrayList<Double> throughputDev, ArrayList<Double> maxLatency,
                                           ArrayList<Double> maxThroughput) {
-        String fileName = "measurements_f_" + f + "_"  + dataSize + "_bytes_" + (isWrite ? "write" : "read") +".csv";
+        String fileName = "measurements_f_" + f + "_"  + operation +".csv";
         try (BufferedWriter resultFile = new BufferedWriter(new OutputStreamWriter(
                 Files.newOutputStream(Paths.get(fileName))))) {
             resultFile.write("clients(#),avgLatency(ns),latencyDev(ns),avgThroughput(ops/s)," +
