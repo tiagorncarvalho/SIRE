@@ -50,14 +50,14 @@ To run an entity, first, change your current directory according to what entity 
 Then, use the following command:  
 (Command Line)
 ```
-.\run.cmd path [argument]
+./run.cmd path [argument]
 ```
 (Terminal)
 ```
 smartrun.sh path
 ```
 The ``path`` parameter must be determined based on the entity that you want to run:
-- Server: ``sire.server.SireServer`` (Requires a server id as ``argument``, ranging from 0 to the greatest server id. e.g., ``.\run.cmd sire.server.SireServer 0``)
+- Server: ``sire.server.SireServer`` (Requires a server id as ``argument``, ranging from 0 to the greatest server id. e.g., ``./run.cmd sire.server.SireServer 0``)
 - Proxy: ``sire.proxy.ProxyMain`` (Requires a proxy id as ``argument`` and should match the port specified in the configuration file. Default configuration is for id 1.)
 - Attester/Device: ``sire.device.DeviceClient`` (Does not need any argument.)
 - App Admin: ``sire.management.ManagementClient`` (Does not need any argument.)
