@@ -1,3 +1,19 @@
+/*
+ * Copyright 2023 Tiago Carvalho
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package sire.benchmark;
 
 
@@ -22,18 +38,19 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 import static sire.messages.ProtoUtils.*;
 
 public class PreComputedProxy {
+    private static ConfidentialServiceProxy serviceProxy;
 
     private static int initialId;
     private static final String appId = "app1";
+    private static final String version = "1.0";
+    private static final Object proxyLock = new Object();
     static SchnorrSignatureScheme scheme;
+
     private static Map<String, Integer> responseCounter;
     private static final Object counterLock = new Object();
 
@@ -53,8 +70,8 @@ public class PreComputedProxy {
     private static byte[] putMsg = Messages.ProxyMessage.newBuilder()
             .setOperation(Messages.ProxyMessage.Operation.MAP_PUT)
             .setAppId("app1")
-/*            .setKey("j7dw0sr5dhh9itj87spjb9dvkb358u5t6jn95j6wdfl1")
-            .setValue(ByteString.copyFrom("wwehfuq652ru0ibdr79eddqmwmhpmcjfz0hx3ihee3gu".getBytes()))*/
+            //.setKey("j7dw0sr5dhh9itj87spjb9dvkb358u5t6jn95j6wdfl1")
+            //.setValue(ByteString.copyFrom("wwehfuq652ru0ibdr79eddqmwmhpmcjfz0hx3ihee3gu".getBytes()))
             .build().toByteArray();
     static BigInteger attesterPrivateKey = new BigInteger("4049546346519992604730332816858472394381393488413156548605745581385");
     static ECPoint attesterPubKey = scheme.getGenerator().multiply(attesterPrivateKey);
@@ -86,7 +103,7 @@ public class PreComputedProxy {
     }
 
 
-    public PreComputedProxy() {
+    public PreComputedProxy() throws NoSuchAlgorithmException {
     }
 
     public static void main(String[] args) throws InterruptedException, SecretSharingException, SireException, IOException {
@@ -108,6 +125,7 @@ public class PreComputedProxy {
         System.out.println("Operation: " + operation);
 
         boolean measurementLeader = Boolean.parseBoolean(args[4]);
+        CountDownLatch latch = new CountDownLatch(numClients);
 
         Random random = new Random(1L);
         byte[] value = new byte[1024];
@@ -118,34 +136,17 @@ public class PreComputedProxy {
 
         Client[] clients = new Client[numClients];
         for (int i = 0; i < numClients; i++) {
+            System.out.println("Client " + i);
             int sleepTime = random.nextInt(2000);
             Thread.sleep(sleepTime);
 
             int id = initialId + i;
-            clients[i] = new Client(id, numOperations, operation, measurementLeader);
+            clients[i] = new Client(id, numOperations, operation, measurementLeader, latch);
+            clients[i].start();
+            Thread.sleep(10);
         }
-        ExecutorService executorService = Executors.newFixedThreadPool(numClients);
-        Collection<Future<?>> tasks = new LinkedList<>();
-        for (Client client : clients) {
-            try {
-                Thread.sleep(random.nextInt(50));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            tasks.add(executorService.submit(client));
-        }
-        Runtime.getRuntime().addShutdownHook(new Thread(executorService::shutdownNow));
-        for (Future<?> task : tasks) {
-            try {
-                task.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-                executorService.shutdownNow();
-                System.exit(-1);
-            }
-        }
-        executorService.shutdown();
-        System.out.println("Experiment ended");
+        latch.await();
+        System.out.println("Executing experiment");
     }
 
     private static class Client extends Thread {
@@ -155,15 +156,16 @@ public class PreComputedProxy {
         ConfidentialServiceProxy serviceProxy;
         Messages.ProxyMessage.Operation operation;
         private final boolean measurementLeader;
+        private final CountDownLatch latch;
         private ServerSocket serverSocket;
 
 
-
-        Client(int id, int numOperations, Messages.ProxyMessage.Operation operation, boolean measurementLeader) throws SecretSharingException, SireException, IOException {
+        Client(int id, int numOperations, Messages.ProxyMessage.Operation operation, boolean measurementLeader, CountDownLatch latch) throws SecretSharingException, SireException, IOException {
             this.id = id;
             this.numOperations = numOperations;
             this.operation = operation;
             this.measurementLeader = measurementLeader;
+            this.latch = latch;
             ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
             serverSocket = new ServerSocket(5151 + id);
             new Thread(() -> {
@@ -207,7 +209,7 @@ public class PreComputedProxy {
                 switch (operation) {
                     case MEMBERSHIP_JOIN -> attest();
                     case MAP_PUT -> {
-                        accessIntersection(new Random().nextInt(0, 7));
+                        accessIntersection(new Random().nextInt(9) - 1);
                     }
                     case MAP_GET -> get();
                 }
@@ -218,30 +220,13 @@ public class PreComputedProxy {
 
         @Override
         public void run() {
-            if (id == initialId) {
-                if (measurementLeader)
-                    System.out.println("I'm measurement leader");
-                System.out.println("Sending test data...");
-            }
-            sendOperation();
-            if (id == initialId) {
-                System.out.println("Executing experiment for " + numOperations + " ops");
-            }
-            long initialTime = System.nanoTime();
-            long latencyAvg = 0;
-            long latencyMin = Long.MAX_VALUE;
-            long latencyMax = 0;
+            latch.countDown();
             for (int i = 1; i < numOperations; i++) {
                 long t2;
                 long t1 = System.nanoTime();
                 sendOperation();
                 t2 = System.nanoTime();
                 long latency = t2 - t1;
-                if(latency < latencyMin)
-                    latencyMin = latency;
-                if(latency > latencyMax)
-                    latencyMax = latency;
-                latencyAvg += latency;
                 if (id == initialId && measurementLeader)
                     System.out.println("M: " + latency);
 
@@ -250,27 +235,9 @@ public class PreComputedProxy {
                         Thread.sleep(rampup);
                         rampup -= 100;
                     }
-                    //Thread.sleep(450);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-
-            if (id == initialId && measurementLeader) {
-                //LongSummaryStatistics statistics = Arrays.stream(latencies).summaryStatistics();
-                double average = (latencyAvg / (float) numOperations) / 1_000_000.0;
-                long max = latencyMax / 1_000_000;
-                long min = latencyMin / 1_000_000;
-                long totalTime = System.nanoTime() - initialTime;
-
-                //double std = calculateStandardDeviation(latencies, average);
-                System.out.println("=============================");
-                System.out.printf("Avg: %.3f ms\n", average);
-                //System.out.printf("Std: %.3f ms\n", std);
-                System.out.printf("Min: %d ms\n", min);
-                System.out.printf("Max: %d ms\n", max);
-                System.out.printf("Duration: %d ms\n", totalTime);
-                System.out.println("=============================");
             }
 
             serviceProxy.close();
@@ -361,34 +328,33 @@ public class PreComputedProxy {
                     .build();
             serviceProxy.invokeOrdered2(attReq.toByteArray());
         }
+    }
 
-        private class ReceivingProxyThread extends Thread {
-            Socket s;
+    private static class ReceivingProxyThread extends Thread {
+        Socket s;
 
-            public ReceivingProxyThread(Socket s) {
-                this.s = s;
-            }
+        public ReceivingProxyThread(Socket s) {
+            this.s = s;
+        }
 
-            @Override
-            public void run() {
-                try {
-                    ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+        @Override
+        public void run() {
+            try {
+                ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 
-                    while (!s.isClosed()) {
-                        Object o;
-                        while ((o = ois.readObject()) != null) {
-                            if(o instanceof Messages.ProxyResponse res) {
-                                String deviceId = res.getDeviceId();
-                                synchronized (counterLock) {
-                                    responseCounter.put(deviceId, responseCounter.get(deviceId) + 1);
-                                }
-                                System.out.println("ID: " + deviceId + " Counter: " + responseCounter.get(deviceId));
+                while (!s.isClosed()) {
+                    Object o;
+                    while ((o = ois.readObject()) != null) {
+                        if(o instanceof Messages.ProxyResponse res) {
+                            String deviceId = res.getDeviceId();
+                            synchronized (counterLock) {
+                                responseCounter.put(deviceId, responseCounter.get(deviceId) + 1);
                             }
                         }
                     }
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
                 }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -402,4 +368,3 @@ public class PreComputedProxy {
         };
     }
 }
-

@@ -87,7 +87,7 @@ public class DeviceClient {
 
 				long t2;
 				long t1 = System.nanoTime();
-				long[] times = dummy.accessIntersection(appId, new Random().nextInt(0, 8) + "");
+				long[] times = dummy.accessIntersection(appId, new Random().nextInt(9) - 1 + "");
 				t2 = System.nanoTime();
 				long latency = t2 - t1;
 				long systemLatency = latency - times[0] - times[1];
@@ -113,7 +113,7 @@ public class DeviceClient {
 
 			synchronized (lock) {
 				counter++;
-				System.out.println(counter);
+				//System.out.println(counter);
 				if (counter >= numClients) {
 					lock.notify();
 				}

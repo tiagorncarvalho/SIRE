@@ -1,4 +1,20 @@
 
+/*
+ * Copyright 2023 Tiago Carvalho
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package sire.benchmark;
 
 import bftsmart.communication.ServerCommunicationSystem;
@@ -99,8 +115,6 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     private final Set<Integer> senders;
     private double maxThroughput;
 
-    private int numRequestsTotal;
-
     public static void main(String[] args) throws NoSuchAlgorithmException, IOException {
         if (args.length < 1) {
             System.out.println("Usage: sire.server.SireServer <server id>");
@@ -142,7 +156,6 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     @Override
     public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares, MessageContext messageContext) {
         numRequests++;
-        numRequestsTotal++;
         senders.add(messageContext.getSender());
         try {
             if(!proxies.containsKey(messageContext.getSender())) {
@@ -169,7 +182,6 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     @Override
     public ConfidentialMessage appExecuteUnordered(byte[] bytes, VerifiableShare[] verifiableShares, MessageContext messageContext) {
         numRequests++;
-        numRequestsTotal++;
         senders.add(messageContext.getSender());
         try {
             Messages.ProxyMessage msg = Messages.ProxyMessage.parseFrom(bytes);
@@ -197,8 +209,8 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
             double throughput = numRequests / deltaTime;
             if (throughput > maxThroughput)
                 maxThroughput = throughput;
-            logger.info("M:(clients[#]|requests[#]|delta[ns]|throughput[ops/s]|max[ops/s]|total requests[#])>({}|{}|{}|{}|{}|{})",
-                    senders.size(), numRequests, delta, throughput, maxThroughput, numRequestsTotal);
+            logger.info("M:(clients[#]|requests[#]|delta[ns]|throughput[ops/s], max[ops/s])>({}|{}|{}|{}|{})",
+                    senders.size(), numRequests, delta, throughput, maxThroughput);
             numRequests = 0;
             startTime = currentTime;
             senders.clear();
@@ -316,12 +328,11 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                     }
                     req = temp;
 
-                    released.forEach(System.out::println);
+                    //released.forEach(System.out::println);
 
                     return new ConfidentialMessage();
                 }
                 lock.unlock();
-                System.out.println("Put! " + msg.getDeviceId() + " " + msg.getKey() + " " + Arrays.toString(value));
 
                 if(!isSuccessful)
                     req.add(new IntersectionRequest(msg, messageContext.getSender()));

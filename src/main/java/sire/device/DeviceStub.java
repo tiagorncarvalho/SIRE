@@ -206,7 +206,7 @@ public class DeviceStub {
             this.oos.writeObject(msg);
 
             Object o = this.ois.readObject();
-            System.out.println(o);
+            //System.out.println(o);
             if(o instanceof ProxyResponse res) {
                 /*SchnorrSignature schnorrSignature = protoToSchnorr(res.getSign());
                 boolean isSignatureValid = scheme.verifySignature(computeHash(byteStringToByteArray(baos, res.getTimestamp()),
@@ -214,7 +214,7 @@ public class DeviceStub {
                         scheme.decodePublicKey(schnorrSignature.getRandomPublicKey()), new BigInteger(schnorrSignature.getSigma()));
 
                 return isSignatureValid ? (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp())) : null;*/
-                System.out.println(res);
+                //System.out.println(res);
 
                 return (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp()));
             }
