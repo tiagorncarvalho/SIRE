@@ -124,7 +124,8 @@ public class SocketProxy implements Runnable {
 				while (!s.isClosed()) {
 					Object o;
 					while ((o = ois.readObject()) != null) {
-						if(o instanceof ProxyResponse res) {
+						if(o instanceof ProxyResponse) {
+							ProxyResponse res = (ProxyResponse) o;
 							String deviceId = res.getDeviceId();
 							synchronized (responseCounter) {
 								if (responseCounter.containsKey(deviceId))
@@ -163,7 +164,8 @@ public class SocketProxy implements Runnable {
 				while (!s.isClosed()) {
 					Object o;
 					while ((o = ois.readObject()) != null) {
-						if (o instanceof ProxyMessage msg) {
+						if (o instanceof ProxyMessage) {
+							ProxyMessage msg = (ProxyMessage) o;
 							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
 								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
 							} else {
@@ -197,16 +199,16 @@ public class SocketProxy implements Runnable {
 					res = serviceProxy.invokeOrdered(msg.toByteArray());
 				}
 			}
-			return switch(msg.getOperation()) {
-				case MAP_GET -> mapGet(res);
-				case MAP_PUT -> mapPut(msg, res);
-				case MAP_LIST -> mapList(res);
-				case MEMBERSHIP_VIEW -> memberView(res);
-				case EXTENSION_GET -> extGet(res);
-				case POLICY_GET -> policyGet(res);
-				case TIMESTAMP_GET -> timestampGet(res);
-				default -> null;
-			};
+			switch(msg.getOperation()) {
+				case MAP_GET: return mapGet(res);
+				case MAP_PUT: return mapPut(msg, res);
+				case MAP_LIST: return mapList(res);
+				case MEMBERSHIP_VIEW: return memberView(res);
+				case EXTENSION_GET: return extGet(res);
+				case POLICY_GET: return policyGet(res);
+				case TIMESTAMP_GET: return timestampGet(res);
+				default: return null;
+			}
 		}
 
 		private ProxyResponse join(ConfidentialExtractedResponse res) throws SireException {

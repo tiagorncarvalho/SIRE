@@ -70,8 +70,10 @@ public class ManagementStub implements ManagementInterface {
         try {
             this.oos.writeObject(msg);
             Object o = this.ois.readObject();
-            if(o instanceof Messages.ProxyResponse p && p.getType() == Messages.ProxyResponse.ResponseType.EXTENSION_GET) {
-                return p.getExtPolicy();
+            if(o instanceof Messages.ProxyResponse) {
+                Messages.ProxyResponse res = (Messages.ProxyResponse) o;
+                if( res.getType() == Messages.ProxyResponse.ResponseType.EXTENSION_GET)
+                    return res.getExtPolicy();
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -118,8 +120,10 @@ public class ManagementStub implements ManagementInterface {
         try {
             this.oos.writeObject(msg);
             Object o = this.ois.readObject();
-            if(o instanceof Messages.ProxyResponse p && p.getType() == Messages.ProxyResponse.ResponseType.POLICY_GET) {
-                return new Policy(p.getExtPolicy(), false);
+            if(o instanceof Messages.ProxyResponse) {
+                Messages.ProxyResponse res = (Messages.ProxyResponse) o;
+                if(res.getType() == Messages.ProxyResponse.ResponseType.POLICY_GET)
+                    return new Policy(res.getExtPolicy(), false);
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

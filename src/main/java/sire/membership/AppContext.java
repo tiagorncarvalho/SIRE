@@ -4,9 +4,11 @@ import sire.attestation.Policy;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class AppContext implements Serializable {
     final String id;
@@ -43,7 +45,7 @@ public class AppContext implements Serializable {
         for(Map.Entry<String, DeviceContext> e : devices.entrySet())
             if(e.getValue().isTimedout(this.timeout))
                 devices.remove(e.getKey());
-        return devices.values().stream().toList();
+        return new ArrayList<>(devices.values());
     }
 
     public void addDevice(String deviceId, DeviceContext device){

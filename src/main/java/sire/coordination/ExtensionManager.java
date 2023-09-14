@@ -17,6 +17,8 @@ public class ExtensionManager {
         this.sh = new GroovyShell();
         this.extensions = new TreeMap<>();
         String keyRequest = "app1EXT_PUT";
+        String codeRequest = "package sire.coordination\n                                  def runExtension(ExtParams p) {\n                     def temp = new int[3]\n                    CoordinationManager store = CoordinationManager.getInstance()\n                     def laneList = store.get(p.getAppId(), \"lanes\")\n                     String str = p.getKey().charAt(p.getKey().length() - 1)\n                     int lane = str as int\n                     def b = p.getValue()[0]\n                                      if(b == (1 as byte) && laneList[lane] == (1 as byte))\n                         return new ExtParams(p.getAppId(), \"lanes\", laneList, null, false)\n                                      switch(lane) {\n                         case 0:\n                             temp = [0, 6, 7] as int[]\n                             break\n                         case 1:\n                             temp = [1, 2, 3] as int[]\n                             break\n                         case 2:\n                             temp = [0, 1, 2] as int[]\n                             break\n                         case 3:\n                             temp = [3, 4, 5] as int[]\n                             break\n                         case 4:\n                             temp = [2, 3, 4] as int[]\n                             break\n                         case 5:\n                             temp = [5, 6, 7] as int[]\n                             break\n                         case 6:\n                             temp = [4, 5, 6] as int[]\n                             break\n                         case 7:\n                             temp = [0, 1, 7] as int[]\n                             break\n                     }\n                                      for(i in temp) {\n                         laneList[i] = b\n                     }\n                     ExtParams res = new ExtParams(p.getAppId(), \"lanes\", laneList, null, true)\n                                      return res;\n                 }";
+        /*
         String codeRequest = """
                 package sire.coordination
                  
@@ -65,7 +67,7 @@ public class ExtensionManager {
                  
                      return res;
                  }
-                """;
+                """; */
         addExtension(keyRequest, codeRequest);
     }
 

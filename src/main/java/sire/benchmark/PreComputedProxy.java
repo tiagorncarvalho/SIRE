@@ -207,11 +207,9 @@ public class PreComputedProxy {
         void sendOperation() {
             try {
                 switch (operation) {
-                    case MEMBERSHIP_JOIN -> attest();
-                    case MAP_PUT -> {
-                        accessIntersection(new Random().nextInt(9) - 1);
-                    }
-                    case MAP_GET -> get();
+                    case MEMBERSHIP_JOIN: attest();
+                    case MAP_PUT: accessIntersection(new Random().nextInt(9) - 1);
+                    case MAP_GET: get();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -345,10 +343,14 @@ public class PreComputedProxy {
                 while (!s.isClosed()) {
                     Object o;
                     while ((o = ois.readObject()) != null) {
-                        if(o instanceof Messages.ProxyResponse res) {
+                        if(o instanceof Messages.ProxyResponse) {
+                            Messages.ProxyResponse res = (Messages.ProxyResponse) o;
                             String deviceId = res.getDeviceId();
                             synchronized (counterLock) {
-                                responseCounter.put(deviceId, responseCounter.get(deviceId) + 1);
+                                if(responseCounter.containsKey(deviceId))
+                                    responseCounter.put(deviceId, responseCounter.get(deviceId) + 1);
+                                else
+                                    responseCounter.put(deviceId, 1);
                             }
                         }
                     }
@@ -360,11 +362,11 @@ public class PreComputedProxy {
     }
 
     private static Messages.ProxyMessage.Operation operationFromString(String str) {
-        return switch (str) {
-            case "mapPut" -> Messages.ProxyMessage.Operation.MAP_PUT;
-            case "mapGet" -> Messages.ProxyMessage.Operation.MAP_GET;
-            case "attest" -> Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN;
-            default -> null;
-        };
+        switch (str) {
+            case "mapPut": return Messages.ProxyMessage.Operation.MAP_PUT;
+            case "mapGet": return Messages.ProxyMessage.Operation.MAP_GET;
+            case "attest": return Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN;
+            default: return null;
+        }
     }
 }
