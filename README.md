@@ -1,7 +1,7 @@
 # SIRE
 SIRE is a project to establish an infrastructure that supports remote attestation, application membership management, auditable integrity-protected logging, and coordination primitives. This project was developed by the LASIGE research unit at the University of Lisbon.
 
-This repository contains SIRE's implementation in Java 17.0.1[^1]. It contains four main folders: 
+This repository contains SIRE's implementation in Java 11[^1]. It contains four main folders: 
 - the source code (``\src``)
 - dependencies (``\lib``)
 - running scripts (``\runscripts``)
@@ -71,17 +71,17 @@ You can configure remote attestation policies and extensions for your own applic
 
 The following operations are available to app administrators:
 
-Function | Description |
--------- | ----------- |
- addExtension(appId, type, key, code) | Adds extension for app with id *appId* to be executed when an operation of a given type is called with the given key. The given type and key can be null. The code will be stored associated with extensionKey (appId + type + key, in this order).
- removeExtension(appId, type, key) | Removes extension associated with extensionKey (appId + type + key, in this order). The given type/key can be null.
- getExtension(appId, type, key) | Gets the code of the extension associated with extensionKey (appId + type + key). The given type/key can be null.
-|  |
- setPolicy(appId, policy) | Sets policy from app with id *appId* |
- deletePolicy(appId) | Deletes policy from app with id *appId* |
- getPolicy(appId) | Gets policy from app with id *appId* |
-|  |
- getView(appId) | Get current membership of application |
+| Function                             | Description                                                                                                                                                                                                                                         |
+|--------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| addExtension(appId, type, key, code) | Adds extension for app with id *appId* to be executed when an operation of a given type is called with the given key. The given type and key can be null. The code will be stored associated with extensionKey (appId + type + key, in this order). |
+| removeExtension(appId, type, key)    | Removes extension associated with extensionKey (appId + type + key, in this order). The given type/key can be null.                                                                                                                                 |
+| getExtension(appId, type, key)       | Gets the code of the extension associated with extensionKey (appId + type + key). The given type/key can be null.                                                                                                                                   |
+|                                      |                                                                                                                                                                                                                                                     |
+| setPolicy(appId, policy)             | Sets policy from app with id *appId*                                                                                                                                                                                                                |
+| deletePolicy(appId)                  | Deletes policy from app with id *appId*                                                                                                                                                                                                             |
+| getPolicy(appId)                     | Gets policy from app with id *appId*                                                                                                                                                                                                                |
+|                                      |                                                                                                                                                                                                                                                     |
+| getView(appId)                       | Get current membership of application                                                                                                                                                                                                               |
 
 
 These operations can be accessed through REST requests, regular sockets, or a user-friendly web interface (see the ``src\...\sire\api\management_login.html`` file, user is 'admin', password is 'appadmin').
@@ -186,19 +186,19 @@ Here, we will explain how to use SIRE with your own devices.
 
 SIRE has the following operations available to devices:
 
-Function | Description |
--------- | ----------- |
-put(appId, deviceId, key, value) | Adds a new entry to storage |
-delete(appId, deviceId, key) | Deletes an entry from storage |
-getData(appId, deviceId, key) | Gets data associated with key from storage |
-getList(appId, deviceId) | Gets list of all entries |
-cas(appId, deviceId, key, oldValue, newValue) | If value of key is equal to oldValue, replace it with newValue. |
- |  |
-preJoin(appId, deviceId, pubKey, signature) | Start the attestation protocol |
-join(appId, deviceId, pubKey, evidence, signature) | Finish the attestation protocol and join the application’s membership |
-leave(appId, deviceId) | Leave the system |
-ping(appId, deviceId) | Assures the system that the device is still running |
-getView(appId, deviceId) | Get current membership of application |
+| Function                                           | Description                                                           |
+|----------------------------------------------------|-----------------------------------------------------------------------|
+| put(appId, deviceId, key, value)                   | Adds a new entry to storage                                           |
+| delete(appId, deviceId, key)                       | Deletes an entry from storage                                         |
+| getData(appId, deviceId, key)                      | Gets data associated with key from storage                            |
+| getList(appId, deviceId)                           | Gets list of all entries                                              |
+| cas(appId, deviceId, key, oldValue, newValue)      | If value of key is equal to oldValue, replace it with newValue.       |
+ |                                                    |                                                                       |
+| preJoin(appId, deviceId, pubKey, signature)        | Start the attestation protocol                                        |
+| join(appId, deviceId, pubKey, evidence, signature) | Finish the attestation protocol and join the application’s membership |
+| leave(appId, deviceId)                             | Leave the system                                                      |
+| ping(appId, deviceId)                              | Assures the system that the device is still running                   |
+| getView(appId, deviceId)                           | Get current membership of application                                 |
 
 These operations can be accessed either through REST requests or regular sockets.
 Both interfaces are made available through the proxy.
@@ -213,19 +213,19 @@ contains the structure of the responses (``ProxyResponse``) provided by SIRE.
 Communication through REST can be done through the endpoint address defined for the proxy (``http:\\127.0.0.1:8080`` by default).
 Each operation can be accessed as follows:
 
-Function | Path |
--------- | ----------- |
-put | PUT request on *sireaddress*/map?appId=*app* |
-delete | DELETE request on *sireaddress*/map?appId=*app* |
-getData | GET request on *sireaddress*/map?appId=*app* |
-getList | GET request on *sireaddress*/mapList?appId=*app* |
-cas | POST request on *sireaddress*/map?appId=*app* |
-|  |
-preJoin | POST request on *sireaddress*/member?appId=*app* |
-join | PUT request on *sireaddress*/member?appId=*app* |
-leave | DELETE request on *sireaddress*/member?appId=*app* |
-ping | PUT request on *sireaddress*/ping?appId=*app* |
-getView | GET request on *sireaddress*/view?appId=*app* |
+| Function | Path                                               |
+|----------|----------------------------------------------------|
+| put      | PUT request on *sireaddress*/map?appId=*app*       |
+| delete   | DELETE request on *sireaddress*/map?appId=*app*    |
+| getData  | GET request on *sireaddress*/map?appId=*app*       |
+| getList  | GET request on *sireaddress*/mapList?appId=*app*   |
+| cas      | POST request on *sireaddress*/map?appId=*app*      |
+|          |                                                    |
+| preJoin  | POST request on *sireaddress*/member?appId=*app*   |
+| join     | PUT request on *sireaddress*/member?appId=*app*    |
+| leave    | DELETE request on *sireaddress*/member?appId=*app* |
+| ping     | PUT request on *sireaddress*/ping?appId=*app*      |
+| getView  | GET request on *sireaddress*/view?appId=*app*      |
 
 The body of the requests should be in JSON format, and all byte array values are expected to be encoded in Base64.
 The format of the requests and responses can be found in the ``RESTRequests.java`` and ``RESTResponses.java``, respectively.

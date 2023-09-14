@@ -217,7 +217,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
     private ConfidentialMessage executeOrderedAttestation(Messages.ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
         Messages.ProxyMessage.Operation op = msg.getOperation();
         switch(op) {
-            case ATTEST_GET_PUBLIC_KEY -> {
+            case ATTEST_GET_PUBLIC_KEY:
                 try {
                     lock.lock();
                     if (verifierSigningKeyPair == null && signingKeyRequests.isEmpty()) {
@@ -233,7 +233,8 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 } finally {
                     lock.unlock();
                 }
-            } case ATTEST_TIMESTAMP -> {
+                break;
+            case ATTEST_TIMESTAMP:
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 Timestamp ts = new Timestamp(messageContext.getTimestamp());
                 SchnorrSignature sign = protoToSchnorr(msg.getSignature());
@@ -254,7 +255,6 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 } else {
                     throw new SireException("Invalid signature!");
                 }
-            }
         }
         return null;
     }
@@ -265,7 +265,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         if(op != Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
             throw new SireException("Unknown Device: Not attested or not in this app membership.");
         switch(op) {
-            case MEMBERSHIP_JOIN -> {
+            case MEMBERSHIP_JOIN:
                 DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
                         protoToSchnorr(msg.getSignature()));
                 boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence,
@@ -285,27 +285,22 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 } else {
                     return new ConfidentialMessage(new byte[]{0});
                 }
-            }
+            default: return null;
         }
-        return null;
     }
 
     private ConfidentialMessage executeOrderedMap(Messages.ProxyMessage msg) throws IOException, SireException {
         Messages.ProxyMessage.Operation op = msg.getOperation();
         switch(op) {
-            case MAP_PUT -> {
-                lock.lock();
+            case MAP_PUT:
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 byte[] value = byteStringToByteArray(out, msg.getValue());
                 out.close();
                 storage.put(msg.getAppId(), msg.getKey(), value);
-                lock.unlock();
 
                 return new ConfidentialMessage();
-            }
-            case MAP_GET -> {
+            case MAP_GET:
                 return new ConfidentialMessage(storage.get(msg.getAppId(), msg.getKey()));
-            }
         }
         return null;
     }

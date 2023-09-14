@@ -230,8 +230,10 @@ public class DeviceStub {
 
             Object o = this.ois.readObject();
             System.out.println("Response received!");
-            if(o instanceof ProxyResponse res)
+            if(o instanceof ProxyResponse) {
+                ProxyResponse res = (ProxyResponse) o;
                 return (Timestamp) deserialize(byteStringToByteArray(baos, res.getTimestamp()));
+            }
             return null;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -252,7 +254,8 @@ public class DeviceStub {
             this.oos.writeObject(msg);
 
             Object o = this.ois.readObject();
-            if(o instanceof ProxyResponse res) {
+            if(o instanceof ProxyResponse) {
+                ProxyResponse res = (ProxyResponse) o;
                 SchnorrSignature schnorrSignature = protoToSchnorr(res.getSign());
                 boolean isSignatureValid = scheme.verifySignature(concat(byteStringToByteArray(baos, res.getTimestamp()),
                         byteStringToByteArray(baos, res.getPubKey())), scheme.decodePublicKey(schnorrSignature.getSigningPublicKey()),
@@ -289,7 +292,8 @@ public class DeviceStub {
         this.oos.writeObject(joinMsg);
 
         Object o = this.ois.readObject();
-        if(o instanceof ProxyResponse res) {
+        if(o instanceof ProxyResponse) {
+            ProxyResponse res = (ProxyResponse) o;
             byte[] hash = computeHash(joinMsg.toByteArray());
             SchnorrSignature schnorrSignature = protoToSchnorr(res.getSign());
             boolean isSignatureValid = scheme.verifySignature(computeHash(byteStringToByteArray(baos, res.getTimestamp()),
@@ -344,11 +348,12 @@ public class DeviceStub {
                 .build();
         this.oos.writeObject(msg);
         Object o = this.ois.readObject();
-        if(o instanceof ProxyResponse pr) {
-            if(pr.getValue().equals(ByteString.EMPTY))
+        if(o instanceof ProxyResponse) {
+            ProxyResponse res = (ProxyResponse) o;
+            if(res.getValue().equals(ByteString.EMPTY))
                 return null;
             else {
-                return byteStringToByteArray(baos, pr.getValue());
+                return byteStringToByteArray(baos, res.getValue());
             }
         }
         return null;
