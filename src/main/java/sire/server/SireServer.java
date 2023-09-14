@@ -162,12 +162,11 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		Timestamp ts = new Timestamp(messageContext.getTimestamp());
 		ProxyResponse response;
 		switch(op) {
-			case TIMESTAMP_GET -> {
+			case TIMESTAMP_GET:
 				if(membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
 					return new ConfidentialMessage(serialize(ts));
-			}
+			default: return null;
 		}
-		return null;
 	}
 
 	private byte[] concat(byte[]...content) throws IOException {
@@ -181,7 +180,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private ConfidentialMessage executeAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
-			case ATTEST_GET_PUBLIC_KEY -> {
+			case ATTEST_GET_PUBLIC_KEY:
 				try {
 					lock.lock();
 					if (verifierSigningKeyPair == null && signingKeyRequests.isEmpty()) {
@@ -197,7 +196,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				} finally {
 					lock.unlock();
 				}
-			} case ATTEST_TIMESTAMP -> {
+			case ATTEST_TIMESTAMP:
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				Timestamp ts = new Timestamp(messageContext.getTimestamp());
 				SchnorrSignature sign = protoToSchnorr(msg.getSignature());
@@ -213,9 +212,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				} else {
 					throw new SireException("Invalid signature!");
 				}
-			}
+			default: return null;
 		}
-		return null;
 	}
 
 	private ConfidentialMessage executeMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
@@ -225,7 +223,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
 			throw new SireException("Unknown Device: Not attested or not in this app membership.");
 		switch(op) {
-			case MEMBERSHIP_JOIN -> {
+			case MEMBERSHIP_JOIN:
 				DeviceEvidence deviceEvidence = new DeviceEvidence(protoToEvidence(msg.getEvidence()),
 						protoToSchnorr(msg.getSignature()));
 				boolean isValidEvidence = verifierManager.verifyEvidence(msg.getAppId(), deviceEvidence,
@@ -243,23 +241,20 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				} else {
 					return new ConfidentialMessage(new byte[]{0});
 				}
-			}
-			case MEMBERSHIP_LEAVE -> {
+			case MEMBERSHIP_LEAVE:
 				lock.lock();
 				membership.leave(msg.getAppId(), msg.getDeviceId());
 
 				lock.unlock();
 				return new ConfidentialMessage();
-			}
-			case MEMBERSHIP_PING -> {
+			case MEMBERSHIP_PING:
 				lock.lock();
 				membership.ping(msg.getAppId(), msg.getDeviceId(),
 						new Timestamp(messageContext.getTimestamp()));
 
 				lock.unlock();
 				return new ConfidentialMessage();
-			}
-			case MEMBERSHIP_VIEW -> {
+			case MEMBERSHIP_VIEW:
 				List<DeviceContext> members = membership.getView(msg.getAppId());
 				ByteArrayOutputStream bout = new ByteArrayOutputStream();
 				ObjectOutputStream out = new ObjectOutputStream(bout);
@@ -269,59 +264,52 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				bout.close();
 
 				return new ConfidentialMessage(res);
-			}
+			default: return null;
 		}
-		return null;
 	}
 
 	private ConfidentialMessage executeManagement(ProxyMessage msg) throws IOException {
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
-			case EXTENSION_ADD -> {
+			case EXTENSION_ADD:
 				lock.lock();
 				extensionManager.addExtension(msg.getKey(), msg.getCode());
 				lock.unlock();
 				return new ConfidentialMessage();
-			}
-			case EXTENSION_REMOVE -> {
+			case EXTENSION_REMOVE:
 				lock.lock();
 				extensionManager.removeExtension(msg.getKey());
 				lock.unlock();
 				return new ConfidentialMessage();
-			}
-			case EXTENSION_GET -> {
+			case EXTENSION_GET:
 				String code = extensionManager.getExtensionCode(msg.getKey());
 				return new ConfidentialMessage(serialize(code != null ? code : "NOT FOUND"));
-			}
+			default: return null;
 		}
-		return null;
 	}
 
 	private ConfidentialMessage executePolicy(ProxyMessage msg) throws IOException {
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
-			case POLICY_ADD -> {
+			case POLICY_ADD:
 				lock.lock();
 				policyManager.setPolicy(msg.getAppId(), msg.getPolicy().getPolicy(), msg.getPolicy().getType());
 				lock.unlock();
 				return new ConfidentialMessage();
-			}
-			case POLICY_REMOVE -> {
+			case POLICY_REMOVE:
 				if (!membership.containsApp(msg.getAppId()))
 					return new ConfidentialMessage(serialize("NOT FOUND"));
 				lock.lock();
 				policyManager.removePolicy(msg.getAppId());
 				lock.unlock();
 				return new ConfidentialMessage();
-			}
-			case POLICY_GET -> {
+			case POLICY_GET:
 				if (!membership.containsApp(msg.getAppId()))
 					return new ConfidentialMessage(serialize("NOT FOUND"));
 				else
 					return new ConfidentialMessage(serialize(policyManager.getPolicy(msg.getAppId())));
-			}
+			default: return null;
 		}
-		return null;
 	}
 
 	private ConfidentialMessage executeMap(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
@@ -330,7 +318,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		}
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
-			case MAP_PUT -> {
+			case MAP_PUT:
 				lock.lock();
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				byte[] value = byteStringToByteArray(out, msg.getValue());
@@ -342,40 +330,35 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				lock.unlock();
 
 				return new ConfidentialMessage();
-			}
-			case MAP_DELETE -> {
+			case MAP_DELETE:
 				lock.lock();
 				storage.remove(msg.getAppId(), msg.getKey());
 				lock.unlock();
 				return new ConfidentialMessage();
-			}
-			case MAP_GET -> {
+			case MAP_GET:
 				return new ConfidentialMessage(storage.get(msg.getAppId(), msg.getKey()));
-			}
-			case MAP_LIST -> {
+			case MAP_LIST:
 				List<byte []> lista = new ArrayList<>(storage.getValues(msg.getAppId()));
 				ByteArrayOutputStream bout = new ByteArrayOutputStream();
-				ObjectOutputStream out = new ObjectOutputStream(bout);
-				out.writeObject(lista);
-				out.close();
+				ObjectOutputStream oout = new ObjectOutputStream(bout);
+				oout.writeObject(lista);
+				oout.close();
 				byte[] result = bout.toByteArray();
 				bout.close();
 
 				return new ConfidentialMessage(result);
-			}
-			case MAP_CAS -> {
+			case MAP_CAS:
 				lock.lock();
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				ByteArrayOutputStream baout = new ByteArrayOutputStream();
 				String key = msg.getKey();
-				byte[] oldValue = byteStringToByteArray(out, msg.getOldData());
-				byte[] newValue = byteStringToByteArray(out, msg.getValue());
-				out.close();
+				byte[] oldValue = byteStringToByteArray(baout, msg.getOldData());
+				byte[] newValue = byteStringToByteArray(baout, msg.getValue());
+				baout.close();
 				storage.cas(msg.getAppId(), key, oldValue, newValue);
 				lock.unlock();
 				return new ConfidentialMessage();
-			}
+			default: return null;
 		}
-		return null;
 	}
 
 	/**

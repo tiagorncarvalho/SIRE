@@ -137,3 +137,5 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 }
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11

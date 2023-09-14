@@ -66,9 +66,9 @@ public class LatencyAttestationClient {
                     System.out.println("Sending op!");
                     try {
                         switch (operation) {
-                            case MEMBERSHIP_JOIN -> stub.attest(appId, type, version, claim);
-                            case MAP_PUT -> stub.put(appId, id, value);
-                            case MAP_GET -> stub.getData(appId, "key");
+                            case MEMBERSHIP_JOIN: stub.attest(appId, type, version, claim);
+                            case MAP_PUT: stub.put(appId, id, value);
+                            case MAP_GET: stub.getData(appId, "key");
                         }
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
@@ -166,11 +166,11 @@ public class LatencyAttestationClient {
     }
 
     private static Messages.ProxyMessage.Operation operationFromString(String str) {
-        return switch (str) {
-            case "mapPut" -> Messages.ProxyMessage.Operation.MAP_PUT;
-            case "mapGet" -> Messages.ProxyMessage.Operation.MAP_GET;
-            case "attest" -> Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN;
-            default -> null;
-        };
+        switch (str) {
+            case "mapPut": return Messages.ProxyMessage.Operation.MAP_PUT;
+            case "mapGet": return Messages.ProxyMessage.Operation.MAP_GET;
+            case "attest": return Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN;
+            default: return null;
+        }
     }
 }

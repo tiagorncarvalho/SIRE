@@ -152,15 +152,15 @@ public class SocketProxy implements Runnable {
 					res = serviceProxy.invokeOrdered(msg.toByteArray());
 				}
 			}
-			return switch(msg.getOperation()) {
-				case MAP_GET -> mapGet(res);
-				case MAP_LIST -> mapList(res);
-				case MEMBERSHIP_VIEW -> memberView(res);
-				case EXTENSION_GET -> extGet(res);
-				case POLICY_GET -> policyGet(res);
-				case TIMESTAMP_GET -> timestampGet(res);
-				default -> null;
-			};
+			switch(msg.getOperation()) {
+				case MAP_GET: return mapGet(res);
+				case MAP_LIST: return mapList(res);
+				case MEMBERSHIP_VIEW: return memberView(res);
+				case EXTENSION_GET: return extGet(res);
+				case POLICY_GET: return policyGet(res);
+				case TIMESTAMP_GET: return timestampGet(res);
+				default: return null;
+			}
 		}
 
 		private ProxyResponse join(ConfidentialExtractedResponse res) throws SireException {

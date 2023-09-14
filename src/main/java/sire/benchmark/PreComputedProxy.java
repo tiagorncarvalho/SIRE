@@ -186,9 +186,9 @@ public class PreComputedProxy {
         void sendOperation() {
             try {
                 switch (operation) {
-                    case MEMBERSHIP_JOIN -> attest();
-                    case MAP_PUT -> put();
-                    case MAP_GET -> get();
+                    case MEMBERSHIP_JOIN: attest();
+                    case MAP_PUT: put();
+                    case MAP_GET: get();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -306,12 +306,12 @@ public class PreComputedProxy {
     }
 
     private static Messages.ProxyMessage.Operation operationFromString(String str) {
-        return switch (str) {
-            case "mapPut" -> Messages.ProxyMessage.Operation.MAP_PUT;
-            case "mapGet" -> Messages.ProxyMessage.Operation.MAP_GET;
-            case "attest" -> Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN;
-            default -> null;
-        };
+        switch (str) {
+            case "mapPut": return Messages.ProxyMessage.Operation.MAP_PUT;
+            case "mapGet": return Messages.ProxyMessage.Operation.MAP_GET;
+            case "attest": return Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN;
+            default: return null;
+        }
     }
 }
 

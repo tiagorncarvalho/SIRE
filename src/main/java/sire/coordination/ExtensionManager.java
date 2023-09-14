@@ -17,67 +17,8 @@ public class ExtensionManager {
     public ExtensionManager() {
         this.sh = new GroovyShell();
         this.extensions = new TreeMap<>();
-        String code = """
-                package sire.coordination
-                import java.util.ArrayList
-                import java.util.Collections
-                import java.util.List
-                import java.nio.ByteBuffer
-                import java.nio.file.Files
-                import java.nio.file.Paths
-                
-                static double euclideanDistance(double[] x, double[] y) {
-                    double sum = 0.0;
-                    for (int i = 0; i < x.length; i++) {
-                        double diff = x[i] - y[i];
-                        sum += diff * diff;
-                    }
-                    Math.sqrt(sum)
-                }
-                                
-                static double[] krum(double[][] weights, int k) {
-                    int n = weights.size()
-                    println(weights)
-                    double[][] distances = new double[n][n]
-                    for (int i = 0; i < n; i++) {
-                        for (int j = i + 1; j < n; j++) {
-                            distances[i][j] = euclideanDistance(weights[i], weights[j])
-                            distances[j][i] = distances[i][j]
-                        }
-                    }
-                    List<ScoreIndex> scores = []
-                    for (int i = 0; i < n; i++) {
-                        double[] d = distances[i]
-                        double sum = d.sum()
-                        scores.add(new ScoreIndex(sum, i))
-                    }
-                    int krumIndex = scores[0].index
-                    return weights[krumIndex]
-                }
-                            
-                class ScoreIndex implements Comparable<ScoreIndex> {
-                    double score
-                    int index
-                            
-                    ScoreIndex(double score, int index) {
-                        this.score = score
-                        this.index = index
-                    }
-                            
-                    int compareTo(ScoreIndex other) {
-                        Double.compare(score, other.score)
-                    }
-                }
-                
-                def runExtension(ModelParams p) {
-                    double[][] temp = new double[1][1]
-                    temp[0] = p.getValue()
-                    println(p.getValue())
-                    double[] newVal = krum(temp, 2)
-                    print(newVal)
-                    return new ModelParams(p.getKey(), newVal)
-                }
-                """;
+        String code = "package sire.coordination\n\nstatic double euclideanDistance(double[] x, double[] y) {\n    double sum = 0.0;\n    for (int i = 0; i < x.length; i++) {\n        double diff = x[i] - y[i];\n        sum += diff * diff;\n    }\n    Math.sqrt(sum)\n}\n\nstatic double[] krum(double[][] weights, int k) {\n    int n = weights.size()\n    println(weights)\n    double[][] distances = new double[n][n]\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j < n; j++) {\n            distances[i][j] = euclideanDistance(weights[i], weights[j])\n            distances[j][i] = distances[i][j]\n        }\n    }\n    List<ScoreIndex> scores = []\n    for (int i = 0; i < n; i++) {\n        double[] d = distances[i]\n        double sum = d.sum()\n        scores.add(new ScoreIndex(sum, i))\n    }\n    int krumIndex = scores[0].index\n    return weights[krumIndex]\n}\n\nclass ScoreIndex implements Comparable<ScoreIndex> {\n    double score\n    int index\n\n    ScoreIndex(double score, int index) {\n        this.score = score\n        this.index = index\n    }\n\n    int compareTo(ScoreIndex other) {\n        Double.compare(score, other.score)\n    }\n}\n\ndef runExtension(ModelParams p) {\n    double[][] temp = new double[1][1]\n    temp[0] = p.getValue()\n    println(p.getValue())\n    double[] newVal = krum(temp, 2)\n    print(newVal)\n    return new ModelParams(p.getKey(), newVal)\n}";
+
 
         this.extensions.put("app1", new Extension(code, sh.parse(code)));
     }
