@@ -5,8 +5,9 @@ import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
-import sire.messages.Messages.*;
+
 import static sire.messages.ProtoUtils.*;
+import sire.messages.Messages.*;
 import com.google.protobuf.ByteString;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;

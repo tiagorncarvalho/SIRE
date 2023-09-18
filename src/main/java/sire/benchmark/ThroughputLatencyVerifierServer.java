@@ -282,7 +282,10 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 byte[] value = byteStringToByteArray(out, msg.getValue());
                 out.close();
-                storage.put(msg.getAppId(), msg.getKey(), value);
+                if(msg.getKey().contains("model"))
+                    storage.put(msg.getAppId(), msg.getKey(), msg.getThetaList().stream().mapToDouble(d -> d).toArray());
+                else
+                    storage.put(msg.getAppId(), msg.getKey(), value);
                 lock.unlock();
 
                 return new ConfidentialMessage();

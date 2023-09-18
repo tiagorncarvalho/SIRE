@@ -88,6 +88,14 @@ task localDeploy (dependsOn: installDist) {
                 from "build/install/${project.name}"
                 into target
             }
+            copy {
+                from "src/main/java/${project.name}/ml"
+                into target
+            }
+            copy {
+                from "src/main/java/${project.name}/benchmark/BenchmarkWorker.py"
+                into target
+            }
         }
         managers.each {
             def target = dst + System.getProperty("file.separator") + "man${it}"

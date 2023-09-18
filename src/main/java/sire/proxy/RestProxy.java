@@ -5,10 +5,10 @@ import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import sire.management.AppManager;
 import sire.attestation.Policy;
-import sire.messages.Messages;
 import sire.membership.DeviceContext;
 import sire.serverProxyUtils.SireException;
 import vss.facade.SecretSharingException;
+import sire.messages.Messages;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

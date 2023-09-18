@@ -82,6 +82,7 @@ message ProxyMessage {
   bytes pubKey = 13;
 
   repeated double theta = 14;
+  double latency = 15;
 }
 
 message ProxyResponse {

@@ -1,9 +1,9 @@
 package sire.management;
 
 import sire.api.ManagementInterface;
-import sire.messages.Messages;
 import sire.attestation.Policy;
 import sire.membership.DeviceContext;
+import sire.messages.Messages.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -34,8 +34,8 @@ public class ManagementStub implements ManagementInterface {
 
     @Override
     public void addExtension(String key, String code) {
-        Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
-                .setOperation(Messages.ProxyMessage.Operation.EXTENSION_ADD)
+        ProxyMessage msg = ProxyMessage.newBuilder()
+                .setOperation(ProxyMessage.Operation.EXTENSION_ADD)
                 .setKey(key)
                 .setCode(code)
                 .build();
@@ -49,8 +49,8 @@ public class ManagementStub implements ManagementInterface {
 
     @Override
     public void removeExtension(String key) {
-        Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
-                .setOperation(Messages.ProxyMessage.Operation.EXTENSION_REMOVE)
+        ProxyMessage msg = ProxyMessage.newBuilder()
+                .setOperation(ProxyMessage.Operation.EXTENSION_REMOVE)
                 .setKey(key)
                 .build();
         try {
@@ -63,16 +63,16 @@ public class ManagementStub implements ManagementInterface {
 
     @Override
     public String getExtension(String key) {
-        Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
-                .setOperation(Messages.ProxyMessage.Operation.EXTENSION_GET)
+        ProxyMessage msg = ProxyMessage.newBuilder()
+                .setOperation(ProxyMessage.Operation.EXTENSION_GET)
                 .setKey(key)
                 .build();
         try {
             this.oos.writeObject(msg);
             Object o = this.ois.readObject();
-            if(o instanceof Messages.ProxyResponse) {
-                Messages.ProxyResponse res = (Messages.ProxyResponse) o;
-                if(res.getType() == Messages.ProxyResponse.ResponseType.EXTENSION_GET)
+            if(o instanceof ProxyResponse) {
+                ProxyResponse res = (ProxyResponse) o;
+                if(res.getType() == ProxyResponse.ResponseType.EXTENSION_GET)
                     return res.getExtPolicy();
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -83,10 +83,10 @@ public class ManagementStub implements ManagementInterface {
 
     @Override
     public void setPolicy(String appId, String policy, boolean type) {
-        Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+        ProxyMessage msg = ProxyMessage.newBuilder()
                 .setAppId(appId)
-                .setOperation(Messages.ProxyMessage.Operation.POLICY_ADD)
-                .setPolicy(Messages.ProxyMessage.ProtoPolicy.newBuilder()
+                .setOperation(ProxyMessage.Operation.POLICY_ADD)
+                .setPolicy(ProxyMessage.ProtoPolicy.newBuilder()
                         .setPolicy(policy)
                         .setType(type)
                         .build())
@@ -100,9 +100,9 @@ public class ManagementStub implements ManagementInterface {
 
     @Override
     public void deletePolicy(String appId) {
-        Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+        ProxyMessage msg = ProxyMessage.newBuilder()
                 .setAppId(appId)
-                .setOperation(Messages.ProxyMessage.Operation.POLICY_REMOVE)
+                .setOperation(ProxyMessage.Operation.POLICY_REMOVE)
                 .build();
         try {
             this.oos.writeObject(msg);
@@ -113,16 +113,16 @@ public class ManagementStub implements ManagementInterface {
 
     @Override
     public Policy getPolicy(String appId) {
-        Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
+        ProxyMessage msg = ProxyMessage.newBuilder()
                 .setAppId(appId)
-                .setOperation(Messages.ProxyMessage.Operation.POLICY_GET)
+                .setOperation(ProxyMessage.Operation.POLICY_GET)
                 .build();
         try {
             this.oos.writeObject(msg);
             Object o = this.ois.readObject();
-            if(o instanceof Messages.ProxyResponse) {
-                Messages.ProxyResponse res = (Messages.ProxyResponse) o;
-                if(res.getType() == Messages.ProxyResponse.ResponseType.POLICY_GET)
+            if(o instanceof ProxyResponse) {
+                ProxyResponse res = (ProxyResponse) o;
+                if(res.getType() == ProxyResponse.ResponseType.POLICY_GET)
                     return new Policy(res.getExtPolicy(), false);
             }
         } catch (IOException | ClassNotFoundException e) {

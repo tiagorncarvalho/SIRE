@@ -1,6 +1,5 @@
 package sire.membership;
 
-import sire.api.MembershipInterface;
 import sire.coordination.ExtensionManager;
 import sire.coordination.ExtensionType;
 import sire.coordination.MemberParams;

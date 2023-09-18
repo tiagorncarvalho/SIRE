@@ -22,8 +22,6 @@ import sire.coordination.CoordinationManager;
 import sire.coordination.ExtensionManager;
 import sire.membership.DeviceContext;
 import sire.membership.MembershipManager;
-import sire.messages.Messages.ProxyMessage;
-import sire.messages.Messages.ProxyResponse;
 import sire.schnorr.*;
 import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
@@ -41,6 +39,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static sire.messages.ProtoUtils.*;
+import sire.messages.Messages.*;
 
 /**
  * @author robin
