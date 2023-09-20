@@ -17,7 +17,6 @@
 package sire.proxy;
 
 import com.google.protobuf.ByteString;
-import confidential.ConfidentialExtractedResponse;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import org.bouncycastle.math.ec.ECPoint;
@@ -59,9 +58,9 @@ public class RestProxy  {
 
     public RestProxy(int proxyId) throws SireException {
         try {
-            ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
+            UncombinedServersResponseHandler responseHandler = new UncombinedServersResponseHandler();
             serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
-            messageDigest = MessageDigest.getInstance("SHA256");
+            messageDigest = MessageDigest.getInstance("SHA-256");
         } catch (SecretSharingException | NoSuchAlgorithmException e) {
             throw new SireException("Failed to contact the distributed verifier", e);
         }
@@ -181,9 +180,9 @@ public class RestProxy  {
                     .setSignature(schnorrToProto(schnorrSignature))
                     .build();
 
-            ConfidentialExtractedResponse res = serviceProxy.invokeOrdered2(timestampMsg.toByteArray());
-            SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
-            byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 124, res.getPlainData().length);
+            Response res = serviceProxy.invokeOrdered(timestampMsg.toByteArray());
+            SchnorrSignature sign = combineSignatures(res);
+            byte[] data = Arrays.copyOfRange(res.getPainData(), res.getPainData().length - 124, res.getPainData().length);
             byte[] ts = Arrays.copyOfRange(data, 0, 91);
             byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
             Base64.Encoder enc = Base64.getEncoder();
@@ -197,7 +196,7 @@ public class RestProxy  {
 
     private SchnorrSignature combineSignatures (UncombinedConfidentialResponse res) throws SireException {
         PublicPartialSignature partialSignature;
-        byte[] signs = Arrays.copyOfRange(res.getPlainData(), 0, 199);
+        byte[] signs = Arrays.copyOfRange(res.getContent(), 0, 199);
         //System.out.println(Arrays.toString(signs));
         try (ByteArrayInputStream bis = new ByteArrayInputStream(signs);
              ObjectInput in = new ObjectInputStream(bis)) {
@@ -217,7 +216,7 @@ public class RestProxy  {
         if (randomKeyCommitment == null)
             throw new IllegalStateException("Random key commitment is null");
 
-        byte[] data = Arrays.copyOfRange(res.getPlainData(), 199, res.getPlainData().length);
+        byte[] data = Arrays.copyOfRange(res.getContent(), 199, res.getContent().length);
 
         try {
             BigInteger sigma = signatureScheme.combinePartialSignatures(
@@ -247,9 +246,9 @@ public class RestProxy  {
                     .setPubKey(ByteString.copyFrom(attesterPublicKey))
                     .setSignature(schnorrToProto(sign))
                     .build();
-            ConfidentialExtractedResponse res = serviceProxy.invokeOrdered2(joinMsg.toByteArray());
+            Response res = serviceProxy.invokeOrdered(joinMsg.toByteArray());
 
-            byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 156, res.getPlainData().length);
+            byte[] data = Arrays.copyOfRange(res.getPainData(), res.getPainData().length - 156, res.getPainData().length);
             byte[] time = Arrays.copyOfRange(data, 0, 91);
             byte[] pubKey = Arrays.copyOfRange(data, 91, 124);
             byte[] hash = Arrays.copyOfRange(data, 124, data.length);

@@ -32,7 +32,7 @@ public class SignatureBenchmark {
 
     static {
         try {
-            messageDigest = MessageDigest.getInstance("SHA256");
+            messageDigest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

@@ -77,7 +77,7 @@ public class DeviceStub {
         }
 
         secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-        messageDigest = MessageDigest.getInstance("SHA256");
+        messageDigest = MessageDigest.getInstance("SHA-256");
         macEngine = new CMac(new AESEngine());
         symmetricCipher = Cipher.getInstance("AES/GCM/NoPadding");
         BigInteger prime = new BigInteger("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF", 16);

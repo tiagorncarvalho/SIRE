@@ -131,14 +131,14 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         signingRequestContexts = new TreeMap<>();
         signingData = new TreeMap<>();
         cr = new ConfidentialRecoverable(id, this);
-        serviceReplica = new ServiceReplica(id, cr, cr, null, null, null, null, cr);
+        serviceReplica = new ServiceReplica(id, "", cr, cr, null, null, null, null, cr);
         verifierManager = new VerifierManager();
         serverCommunicationSystem = serviceReplica.getServerCommunicationSystem();
         distributedPolynomialManager = cr.getDistributedPolynomialManager();
         distributedPolynomialManager.setRandomPolynomialListener(this);
         distributedPolynomialManager.setRandomKeyPolynomialListener(this);
         schnorrSignatureScheme = new SchnorrSignatureScheme();
-        messageDigest = MessageDigest.getInstance("SHA256");
+        messageDigest = MessageDigest.getInstance("SHA-256");
         devicesTimestamps = new TreeMap<>();
         schnorrNonceManager = new SchnorrNonceManager(id, serviceReplica.getReplicaContext().getCurrentView().getF(),
                 schnorrSignatureScheme.getCurve());
@@ -327,6 +327,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
                 receiverContext.getSequence(),
                 receiverContext.getOperationId(),
                 response.serialize(),
+                false,
                 serviceReplica.getReplicaContext().getSVController().getCurrentViewId(),
                 receiverContext.getType()
         );

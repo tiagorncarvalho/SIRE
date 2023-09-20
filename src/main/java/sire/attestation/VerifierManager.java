@@ -32,7 +32,7 @@ public class VerifierManager {
 
     public VerifierManager() throws NoSuchAlgorithmException {
         signatureScheme = new SchnorrSignatureScheme();
-        messageDigest = MessageDigest.getInstance("SHA256");
+        messageDigest = MessageDigest.getInstance("SHA-256");
         policyManager = PolicyManager.getInstance();
     }
 

@@ -35,7 +35,6 @@ import java.util.Set;
  * @author robin
  */
 public class SchnorrSignatureScheme {
-	private final MessageDigest messageDigest;
 	private final ECPoint generator;
 	private final BigInteger order;
 	private final Set<BigInteger> corruptedShareholders;
@@ -43,7 +42,6 @@ public class SchnorrSignatureScheme {
 	private final ECCurve curve;
 
 	public SchnorrSignatureScheme() throws NoSuchAlgorithmException {
-		messageDigest = MessageDigest.getInstance("SHA256");
 
 		//secp256r1 curve domain parameters
 		BigInteger prime = new BigInteger("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF", 16);
@@ -157,10 +155,16 @@ public class SchnorrSignatureScheme {
 	}
 
 	private byte[] computeHash(byte[]... contents) {
-		for (byte[] content : contents) {
-			messageDigest.update(content);
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+			for (byte[] content : contents) {
+				messageDigest.update(content);
+			}
+			return messageDigest.digest();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
 		}
-		return messageDigest.digest();
+		return null;
 	}
 
 	public ECPoint decodePublicKey(byte[] encodedKey) {

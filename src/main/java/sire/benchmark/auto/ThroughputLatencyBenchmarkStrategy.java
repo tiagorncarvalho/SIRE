@@ -93,7 +93,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
 
         int nServerWorkers = 3 * f + 1;
         int nClientWorkers = workers.length - nServerWorkers;
-        int maxClientsPerProcess = 50;
+        int maxClientsPerProcess = 25;
         int nRequests = 10_000_000;
         int sleepBetweenRounds = 10;
         int[] clientsPerRound = new int[tokens.length];
@@ -263,7 +263,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
             return new int[]{1, nClients};
         }
         nClientWorkers--; //for measurement client
-        int nWorkersToUse = Math.min(nClientWorkers - 1, nClients / maxClientsPerProcess);
+        int nWorkersToUse = Math.min(nClientWorkers, nClients / maxClientsPerProcess);
         int[] distribution = new int[nWorkersToUse + 1];//one for measurement worker
         Arrays.fill(distribution, nClients / nWorkersToUse);
         distribution[0] = 1;

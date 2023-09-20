@@ -16,18 +16,18 @@
 
 package sire.proxy;
 
-import confidential.ConfidentialExtractedResponse;
+import bftsmart.tom.util.ServiceResponse;
 import vss.secretsharing.VerifiableShare;
 
 /**
  * @author robin
  */
-public class UncombinedConfidentialResponse extends ConfidentialExtractedResponse {
+public class UncombinedConfidentialResponse extends ServiceResponse {
 	private final VerifiableShare[][] verifiableShares;
 	private final byte[][] sharedData;
 
-	public UncombinedConfidentialResponse(int viewID, byte[] plainData, VerifiableShare[][] verifiableShares, byte[][] sharedData) {
-		super(viewID, plainData, null, null);
+	public UncombinedConfidentialResponse(byte[] plainData, VerifiableShare[][] verifiableShares, byte[][] sharedData) {
+		super(plainData);
 		this.verifiableShares = verifiableShares;
 		this.sharedData = sharedData;
 	}

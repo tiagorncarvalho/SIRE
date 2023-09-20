@@ -133,7 +133,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		signingRequestContexts = new TreeMap<>();
 		signingData = new TreeMap<>();
 		cr = new ConfidentialRecoverable(id, this);
-		serviceReplica = new ServiceReplica(id, cr, cr, null, null, null, null, cr);
+		serviceReplica = new ServiceReplica(id, "", cr, cr, null, null, null, null, cr);
 		verifierManager = new VerifierManager();
 		policyManager = PolicyManager.getInstance();
 		serverCommunicationSystem = serviceReplica.getServerCommunicationSystem();
@@ -141,7 +141,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		distributedPolynomialManager.setRandomPolynomialListener(this);
 		distributedPolynomialManager.setRandomKeyPolynomialListener(this);
 		schnorrSignatureScheme = new SchnorrSignatureScheme();
-		messageDigest = MessageDigest.getInstance("SHA256");
+		messageDigest = MessageDigest.getInstance("SHA-256");
 		devicesTimestamps = new TreeMap<>();
 		schnorrNonceManager = new SchnorrNonceManager(id, serviceReplica.getReplicaContext().getCurrentView().getF(),
 				schnorrSignatureScheme.getCurve());
@@ -404,6 +404,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				receiverContext.getSequence(),
 				receiverContext.getOperationId(),
 				response.serialize(),
+				false,
 				serviceReplica.getReplicaContext().getSVController().getCurrentViewId(),
 				receiverContext.getType()
 		);

@@ -34,7 +34,7 @@ public class SchnorrNonceManager {
 
 	public SchnorrNonceManager(int pid, int threshold, ECCurve curve)
 			throws NoSuchAlgorithmException {
-		messageDigest = MessageDigest.getInstance("SHA256");
+		messageDigest = MessageDigest.getInstance("SHA-256");
 		String fileSeparator = File.separator;
 		String keysDirName = "config" + fileSeparator + "schnorr";
 		String publicKeysFileName = keysDirName + fileSeparator + threshold + "_publicKeys.txt";

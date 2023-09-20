@@ -18,13 +18,11 @@ package sire.benchmark;
 
 
 import com.google.protobuf.ByteString;
-import confidential.ConfidentialExtractedResponse;
 import confidential.client.ConfidentialServiceProxy;
 import confidential.client.Response;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.attestation.Evidence;
 import sire.messages.Messages;
-import sire.proxy.ServersResponseHandlerWithoutCombine;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.SireException;
@@ -67,16 +65,7 @@ public class PreComputedProxy {
             .build().toByteArray();
     static BigInteger attesterPrivateKey = new BigInteger("4049546346519992604730332816858472394381393488413156548605745581385");
     static ECPoint attesterPubKey = scheme.getGenerator().multiply(attesterPrivateKey);
-    static MessageDigest messageDigest;
     static ECPoint verifierPublicKey;
-
-    static {
-        try {
-            messageDigest = MessageDigest.getInstance("SHA256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }
 
     static BigInteger randomPrivateKey = new BigInteger("2673E6E0D6F66A15DB4FA597B8160F23AB8767ED0E46692E01E04D49BD154426", 16);
     static ECPoint randomPublicKey = scheme.getGenerator().multiply(randomPrivateKey);
@@ -88,10 +77,16 @@ public class PreComputedProxy {
 
 
     private static byte[] computeHash(byte[]... contents) {
-        for (byte[] content : contents) {
-            messageDigest.update(content);
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            for (byte[] content : contents) {
+                messageDigest.update(content);
+            }
+            return messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-        return messageDigest.digest();
+        return null;
     }
 
 
@@ -156,7 +151,6 @@ public class PreComputedProxy {
             this.operation = operation;
             this.measurementLeader = measurementLeader;
             this.latch = latch;
-            ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
 
             msg0 = Messages.ProxyMessage.newBuilder()
                     .setDeviceId("" + id)
@@ -165,7 +159,7 @@ public class PreComputedProxy {
                     .setOperation(Messages.ProxyMessage.Operation.ATTEST_TIMESTAMP)
                     .build().toByteArray();
 
-            serviceProxy = new ConfidentialServiceProxy(id, responseHandler);
+            serviceProxy = new ConfidentialServiceProxy(id);
 
             if(measurementLeader) {
                 Response response;
@@ -244,8 +238,8 @@ public class PreComputedProxy {
         }
 
         private void attest() throws SecretSharingException {
-            ConfidentialExtractedResponse res = serviceProxy.invokeOrdered2(msg0);
-            byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 124, res.getPlainData().length);
+            Response res = serviceProxy.invokeOrdered(msg0);
+            byte[] data = Arrays.copyOfRange(res.getPainData(), res.getPainData().length - 124, res.getPainData().length);
             byte[] ts = Arrays.copyOfRange(data, 0, 91);
 
             Evidence evidence = new Evidence("1.0", "measure1".getBytes(), attesterPubKey.getEncoded(true));
@@ -270,7 +264,7 @@ public class PreComputedProxy {
                     .setPubKey(ByteString.copyFrom(attesterPubKey.getEncoded(true)))
                     .setSignature(schnorrToProto(signature))
                     .build();
-            serviceProxy.invokeOrdered2(attReq.toByteArray());
+            serviceProxy.invokeOrdered(attReq.toByteArray());
         }
     }
 
