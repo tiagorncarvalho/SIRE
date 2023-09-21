@@ -24,12 +24,11 @@ def linear_regression(worker_type, X, y, learning_rate=0.1, num_iterations=10, i
         return np.random.normal(size=(2, 1), loc=0.0, scale=1.0).astype(np.float32)
 
 if __name__ == '__main__':
-    print("Yooooooooooooooooo")
     worker_id = int(sys.argv[1])
-    worker_type = 1
+    worker_type = WorkerType.Correct
     num_rounds = int(sys.argv[3])
     initial_id = int(sys.argv[4])
-    measurement_leader = bool(sys.argv[5])
+    measurement_leader = bool(int(sys.argv[5]))
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = "localhost"
     port = 2500 + worker_id
@@ -49,7 +48,7 @@ if __name__ == '__main__':
         print("Not measurement leader")
 
     if worker_id == initial_id:
-        print(f'Executing experiment for {num_rounds} ops')
+        print('Executing experiment for', num_rounds, 'ops')
     lat = 0
     for i in range(num_rounds):
         current_theta = linear_regression(worker_type, X, y, initial_theta=current_theta)
