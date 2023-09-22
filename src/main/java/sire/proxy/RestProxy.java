@@ -31,6 +31,7 @@ import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
+import vss.facade.Mode;
 import vss.facade.SecretSharingException;
 import vss.secretsharing.Share;
 import vss.secretsharing.VerifiableShare;
@@ -180,9 +181,9 @@ public class RestProxy  {
                     .setSignature(schnorrToProto(schnorrSignature))
                     .build();
 
-            Response res = serviceProxy.invokeOrdered(timestampMsg.toByteArray());
+            UncombinedConfidentialResponse res = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered(timestampMsg.toByteArray(), Mode.LARGE_SECRET);
             SchnorrSignature sign = combineSignatures(res);
-            byte[] data = Arrays.copyOfRange(res.getPainData(), res.getPainData().length - 124, res.getPainData().length);
+            byte[] data = Arrays.copyOfRange(res.getContent(), res.getContent().length - 124, res.getContent().length);
             byte[] ts = Arrays.copyOfRange(data, 0, 91);
             byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
             Base64.Encoder enc = Base64.getEncoder();

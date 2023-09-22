@@ -151,6 +151,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
 		try {
+			System.out.println("bytes: " + Arrays.toString(bytes));
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
 			ProxyMessage.Operation op = msg.getOperation();
 			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
@@ -195,41 +196,45 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 
 	private ConfidentialMessage executeOrderedAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
-		switch(op) {
-			case ATTEST_GET_PUBLIC_KEY:
-				try {
-					lock.lock();
-					if (verifierSigningKeyPair == null && signingKeyRequests.isEmpty()) {
-						signingKeyRequests.add(messageContext);
-						generateSigningKey();
-					} else if (verifierSigningKeyPair != null) {
-						logger.warn("I already have a signing key.");
-						System.out.println("Signing key already created...");
-						return new ConfidentialMessage(verifierSigningKeyPair.getPublicKeyShare().getEncoded(true));
-					} else {
-						logger.warn("Signing key is being created.");
-					}
-				} finally {
-					lock.unlock();
-				}
-			case ATTEST_TIMESTAMP:
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				Timestamp ts = new Timestamp(messageContext.getTimestamp());
-				SchnorrSignature sign = protoToSchnorr(msg.getSignature());
-				boolean isValid = schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),
-						schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey())),
-						schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey()), new BigInteger(sign.getSigma()));
-				if(isValid) {
-					byte[] tis = serialize(ts);
-					byte[] pubKey = byteStringToByteArray(baos, msg.getPubKey());
-					byte[] data = concat(tis, pubKey);
-					devicesTimestamps.put(msg.getDeviceId(), ts);
-					return sign(data, messageContext);//new ConfidentialMessage();
+		System.out.println("operation " + op);
+		if(op == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
+			try {
+				lock.lock();
+				if (verifierSigningKeyPair == null && signingKeyRequests.isEmpty()) {
+					System.out.println("first if");
+					signingKeyRequests.add(messageContext);
+					generateSigningKey();
+				} else if (verifierSigningKeyPair != null) {
+					logger.warn("I already have a signing key.");
+					System.out.println("Signing key already created...");
+					return new ConfidentialMessage(verifierSigningKeyPair.getPublicKeyShare().getEncoded(true));
 				} else {
-					throw new SireException("Invalid signature!");
+					logger.warn("Signing key is being created.");
 				}
-			default: return null;
+			} finally {
+				lock.unlock();
+			}
 		}
+		else if(op == ProxyMessage.Operation.ATTEST_TIMESTAMP) {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			System.out.println("Message: " + msg);
+			Timestamp ts = new Timestamp(messageContext.getTimestamp());
+			SchnorrSignature sign = protoToSchnorr(msg.getSignature());
+			boolean isValid = schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),
+					schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey())),
+					schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey()), new BigInteger(sign.getSigma()));
+			if(isValid) {
+				byte[] tis = serialize(ts);
+				byte[] pubKey = byteStringToByteArray(baos, msg.getPubKey());
+				byte[] data = concat(tis, pubKey);
+				devicesTimestamps.put(msg.getDeviceId(), ts);
+				return sign(data, messageContext);//new ConfidentialMessage();
+			} else {
+				throw new SireException("Invalid signature!");
+			}
+		}
+		System.out.println("Returning null");
+		return null;
 	}
 
 	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {

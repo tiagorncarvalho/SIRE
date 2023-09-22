@@ -23,9 +23,12 @@ import confidential.client.Response;
 import org.bouncycastle.math.ec.ECPoint;
 import sire.attestation.Evidence;
 import sire.messages.Messages;
+import sire.proxy.UncombinedConfidentialResponse;
+import sire.proxy.UncombinedServersResponseHandler;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.serverProxyUtils.SireException;
+import vss.facade.Mode;
 import vss.facade.SecretSharingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -159,20 +162,21 @@ public class PreComputedProxy {
                     .setOperation(Messages.ProxyMessage.Operation.ATTEST_TIMESTAMP)
                     .build().toByteArray();
 
-            serviceProxy = new ConfidentialServiceProxy(id);
+            UncombinedServersResponseHandler responseHandler = new UncombinedServersResponseHandler();
+            serviceProxy = new ConfidentialServiceProxy(id, responseHandler);
 
             if(measurementLeader) {
-                Response response;
+                UncombinedConfidentialResponse response;
                 try {
                     Messages.ProxyMessage msg = Messages.ProxyMessage.newBuilder()
                             .setOperation(Messages.ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY)
                             .build();
                     byte[] b = msg.toByteArray();
-                    response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
+                    response = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered(b, Mode.LARGE_SECRET);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
                 } catch (SecretSharingException e) {
                     throw new SireException("Failed to obtain verifier's public key", e);
                 }
-                verifierPublicKey = scheme.decodePublicKey(response.getPainData());
+                verifierPublicKey = scheme.decodePublicKey(response.getContent());
             }
         }
 
@@ -230,16 +234,16 @@ public class PreComputedProxy {
         }
 
         private void get() throws SecretSharingException {
-            serviceProxy.invokeUnordered(getMsg);
+            serviceProxy.invokeUnordered(getMsg, Mode.LARGE_SECRET);
         }
 
         private void put() throws SecretSharingException {
-            serviceProxy.invokeOrdered(putMsg);
+            serviceProxy.invokeOrdered(putMsg, Mode.LARGE_SECRET);
         }
 
         private void attest() throws SecretSharingException {
-            Response res = serviceProxy.invokeOrdered(msg0);
-            byte[] data = Arrays.copyOfRange(res.getPainData(), res.getPainData().length - 124, res.getPainData().length);
+            UncombinedConfidentialResponse res = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered(msg0, Mode.LARGE_SECRET);
+            byte[] data = Arrays.copyOfRange(res.getContent(), res.getContent().length - 124, res.getContent().length);
             byte[] ts = Arrays.copyOfRange(data, 0, 91);
 
             Evidence evidence = new Evidence("1.0", "measure1".getBytes(), attesterPubKey.getEncoded(true));
@@ -264,7 +268,7 @@ public class PreComputedProxy {
                     .setPubKey(ByteString.copyFrom(attesterPubKey.getEncoded(true)))
                     .setSignature(schnorrToProto(signature))
                     .build();
-            serviceProxy.invokeOrdered(attReq.toByteArray());
+            serviceProxy.invokeOrdered(attReq.toByteArray(), Mode.LARGE_SECRET);
         }
     }
 

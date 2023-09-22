@@ -16,10 +16,10 @@
 
 package sire.proxy;
 
+import bftsmart.tom.util.ServiceResponse;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
 import confidential.client.ConfidentialServiceProxy;
-import confidential.client.Response;
 import org.bouncycastle.crypto.BlockCipher;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.math.ec.ECPoint;
@@ -33,6 +33,7 @@ import static sire.messages.ProtoUtils.*;
 import sire.messages.Messages.*;
 import sire.schnorr.SchnorrSignatureScheme;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
+import vss.facade.Mode;
 import vss.facade.SecretSharingException;
 import vss.secretsharing.Share;
 import vss.secretsharing.VerifiableShare;
@@ -61,7 +62,8 @@ public class SocketProxy implements Runnable {
 		this.proxyId = proxyId;
 
 		try {
-			serviceProxy = new ConfidentialServiceProxy(proxyId);
+			UncombinedServersResponseHandler responseHandler = new UncombinedServersResponseHandler();
+			serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
 			proxyLock = new Object();
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to contact the distributed verifier", e);
@@ -74,17 +76,22 @@ public class SocketProxy implements Runnable {
 		} catch (NoSuchAlgorithmException e) {
 			throw new SireException("Failed to initialize cryptographic tools", e);
 		}
-		Response response;
+		UncombinedConfidentialResponse response;
 		try {
-			ProxyMessage msg = ProxyMessage.newBuilder()
+			ProxyMessage proxyMsg = ProxyMessage.newBuilder()
+					.setAppId("ola")
 					.setOperation(ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY)
 					.build();
-			byte[] b = msg.toByteArray();
-			response = serviceProxy.invokeOrdered(b);//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
+
+			byte[] b = proxyMsg.toByteArray();
+			System.out.println("Message: " + Arrays.toString(b));
+			ServiceResponse temporary = serviceProxy.invokeOrdered(b, Mode.LARGE_SECRET);
+			System.out.println("=====>" + temporary);
+			response = (UncombinedConfidentialResponse) temporary;//new byte[]{(byte) Operation.GENERATE_SIGNING_KEY.ordinal()});
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to obtain verifier's public key", e);
 		}
-		verifierPublicKey = signatureScheme.decodePublicKey(response.getPainData());
+		verifierPublicKey = signatureScheme.decodePublicKey(response.getContent());
 
 	}
 
@@ -140,16 +147,16 @@ public class SocketProxy implements Runnable {
 		}
 
 		private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {
-			Response res;
+			UncombinedConfidentialResponse res;
 			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW"))
-				res = serviceProxy.invokeUnordered(msg.toByteArray());
+				res = (UncombinedConfidentialResponse) serviceProxy.invokeUnordered(msg.toByteArray(), Mode.LARGE_SECRET);
 			else if(msg.getOperation() == ProxyMessage.Operation.ATTEST_TIMESTAMP)
-				return timestampAtt(serviceProxy.invokeOrdered(msg.toByteArray()));
+				return timestampAtt((UncombinedConfidentialResponse) serviceProxy.invokeOrdered(msg.toByteArray(), Mode.LARGE_SECRET));
 			else if(msg.getOperation() == ProxyMessage.Operation.MEMBERSHIP_JOIN)
-				return join(serviceProxy.invokeOrdered(msg.toByteArray()));
+				return join((UncombinedConfidentialResponse) serviceProxy.invokeOrdered(msg.toByteArray(), Mode.LARGE_SECRET));
 			else {
 				synchronized (proxyLock) {
-					res = serviceProxy.invokeOrdered(msg.toByteArray());
+					res = (UncombinedConfidentialResponse) serviceProxy.invokeOrdered(msg.toByteArray(), Mode.LARGE_SECRET);
 				}
 			}
 			switch(msg.getOperation()) {
@@ -163,9 +170,9 @@ public class SocketProxy implements Runnable {
 			}
 		}
 
-		private ProxyResponse join(Response res) throws SireException {
+		private ProxyResponse join(UncombinedConfidentialResponse res) throws SireException {
 			SchnorrSignature sign = combineSignatures(res);
-			byte[] data = Arrays.copyOfRange(res.getPainData(), res.getPainData().length - 156, res.getPainData().length);
+			byte[] data = Arrays.copyOfRange(res.getContent(), res.getContent().length - 156, res.getContent().length);
 			byte[] ts = Arrays.copyOfRange(data, 0, 91);
 			byte[] pubKey = Arrays.copyOfRange(data, 91, 124);
 			byte[] hash = Arrays.copyOfRange(data, 124, data.length);
@@ -177,9 +184,9 @@ public class SocketProxy implements Runnable {
 					.build();
 		}
 
-		private ProxyResponse timestampAtt(Response res) throws SireException {
+		private ProxyResponse timestampAtt(UncombinedConfidentialResponse res) throws SireException {
 			SchnorrSignature sign = combineSignatures(res);
-			byte[] data = Arrays.copyOfRange(res.getPainData(), res.getPainData().length - 124, res.getPainData().length);
+			byte[] data = Arrays.copyOfRange(res.getContent(), res.getContent().length - 124, res.getContent().length);
 			byte[] ts = Arrays.copyOfRange(data, 0, 91);
 			byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
 			return ProxyResponse.newBuilder()
@@ -189,9 +196,9 @@ public class SocketProxy implements Runnable {
 					.build();
 		}
 
-		private SchnorrSignature combineSignatures (Response res) throws SireException {
+		private SchnorrSignature combineSignatures (UncombinedConfidentialResponse res) throws SireException {
 			PublicPartialSignature partialSignature;
-			byte[] signs = Arrays.copyOfRange(res.getPainData(), 0, 199);
+			byte[] signs = Arrays.copyOfRange(res.getContent(), 0, 199);
 			try (ByteArrayInputStream bis = new ByteArrayInputStream(signs);
 				 ObjectInput in = new ObjectInputStream(bis)) {
 				partialSignature = PublicPartialSignature.deserialize(signatureScheme, in);
@@ -201,7 +208,7 @@ public class SocketProxy implements Runnable {
 			EllipticCurveCommitment signingKeyCommitment = partialSignature.getSigningKeyCommitment();
 			EllipticCurveCommitment randomKeyCommitment = partialSignature.getRandomKeyCommitment();
 			ECPoint randomPublicKey = partialSignature.getRandomPublicKey();
-			VerifiableShare[] verifiableShares = res.getConfidentialData()[0];
+			VerifiableShare[] verifiableShares = res.getVerifiableShares()[0];
 			Share[] partialSignatures = new Share[verifiableShares.length];
 			for (int i = 0; i < verifiableShares.length; i++) {
 				partialSignatures[i] = verifiableShares[i].getShare();
@@ -210,7 +217,7 @@ public class SocketProxy implements Runnable {
 			if (randomKeyCommitment == null)
 				throw new IllegalStateException("Random key commitment is null");
 
-			byte[] data = Arrays.copyOfRange(res.getPainData(), 199, res.getPainData().length);
+			byte[] data = Arrays.copyOfRange(res.getContent(), 199, res.getContent().length);
 
 			try {
 				BigInteger sigma = signatureScheme.combinePartialSignatures(
@@ -228,12 +235,12 @@ public class SocketProxy implements Runnable {
 			}
 		}
 
-		private ProxyResponse timestampGet(Response res) {
+		private ProxyResponse timestampGet(UncombinedConfidentialResponse res) {
 			return null;
 		}
 
-		private ProxyResponse policyGet(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
-			byte[] tmp = res.getPainData();
+		private ProxyResponse policyGet(UncombinedConfidentialResponse res) throws IOException, ClassNotFoundException, SecretSharingException {
+			byte[] tmp = res.getContent();
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()
 						.setType(ProxyResponse.ResponseType.POLICY_GET)
@@ -245,8 +252,8 @@ public class SocketProxy implements Runnable {
 
 		}
 
-		private ProxyResponse extGet(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
-			byte[] tmp = res.getPainData();
+		private ProxyResponse extGet(UncombinedConfidentialResponse res) throws IOException, ClassNotFoundException, SecretSharingException {
+			byte[] tmp = res.getContent();
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()
 						.setType(ProxyResponse.ResponseType.EXTENSION_GET)
@@ -257,8 +264,8 @@ public class SocketProxy implements Runnable {
 			}
 		}
 
-		private ProxyResponse memberView(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
-			byte[] tmp = res.getPainData();
+		private ProxyResponse memberView(UncombinedConfidentialResponse res) throws IOException, ClassNotFoundException, SecretSharingException {
+			byte[] tmp = res.getContent();
 			ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
 			if (tmp != null) {
 				ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
@@ -288,8 +295,8 @@ public class SocketProxy implements Runnable {
 			return prBuilder.build();
 		}
 
-		private ProxyResponse mapList(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
-			byte[] tmp = res.getPainData();
+		private ProxyResponse mapList(UncombinedConfidentialResponse res) throws IOException, ClassNotFoundException, SecretSharingException {
+			byte[] tmp = res.getContent();
 			ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
 			if (tmp != null) {
 				ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
@@ -301,8 +308,8 @@ public class SocketProxy implements Runnable {
 			return prBuilder.build();
 		}
 
-		private ProxyResponse mapGet(Response res) throws SecretSharingException {
-			byte[] tmp = res.getPainData();
+		private ProxyResponse mapGet(UncombinedConfidentialResponse res) throws SecretSharingException {
+			byte[] tmp = res.getContent();
 			if (tmp != null) {
 				return ProxyResponse.newBuilder()
 						.setValue(ByteString.copyFrom(tmp))

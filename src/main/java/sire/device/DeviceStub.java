@@ -71,7 +71,7 @@ public class DeviceStub {
             prop = new Properties();
             prop.load(input);
             port = Integer.parseInt(prop.getProperty("port"));
-            ip = prop.getProperty("ip");
+            ip = "localhost";
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -89,6 +89,7 @@ public class DeviceStub {
         curve = new ECCurve.Fp(prime, a, b, order, cofactor);
 
         try {
+            System.out.println(port);
             this.s = new Socket(ip, port);
             this.oos = new ObjectOutputStream(s.getOutputStream());
             this.ois = new ObjectInputStream(s.getInputStream());

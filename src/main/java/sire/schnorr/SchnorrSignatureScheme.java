@@ -28,6 +28,7 @@ import vss.secretsharing.Share;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -168,6 +169,7 @@ public class SchnorrSignatureScheme {
 	}
 
 	public ECPoint decodePublicKey(byte[] encodedKey) {
+		System.out.println(Arrays.toString(encodedKey));
 		return curve.decodePoint(encodedKey);
 	}
 
