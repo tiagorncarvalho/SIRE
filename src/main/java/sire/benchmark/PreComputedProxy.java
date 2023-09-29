@@ -67,17 +67,7 @@ public class PreComputedProxy {
             .build().toByteArray();
     static BigInteger attesterPrivateKey = new BigInteger("4049546346519992604730332816858472394381393488413156548605745581385");
     static ECPoint attesterPubKey = scheme.getGenerator().multiply(attesterPrivateKey);
-    static MessageDigest messageDigest;
     static ECPoint verifierPublicKey;
-
-    static {
-        try {
-            messageDigest = MessageDigest.getInstance("SHA256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }
-
     static BigInteger randomPrivateKey = new BigInteger("2673E6E0D6F66A15DB4FA597B8160F23AB8767ED0E46692E01E04D49BD154426", 16);
     static ECPoint randomPublicKey = scheme.getGenerator().multiply(randomPrivateKey);
 
@@ -88,12 +78,17 @@ public class PreComputedProxy {
 
 
     private static byte[] computeHash(byte[]... contents) {
-        for (byte[] content : contents) {
-            messageDigest.update(content);
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            for (byte[] content : contents) {
+                messageDigest.update(content);
+            }
+            return messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-        return messageDigest.digest();
+        return null;
     }
-
 
     public PreComputedProxy() throws NoSuchAlgorithmException {
     }
@@ -106,7 +101,6 @@ public class PreComputedProxy {
         }
         initialId = Integer.parseInt(args[0]);
         int numClients = Integer.parseInt(args[1]);
-        System.out.println(numClients);
         int numOperations = Integer.parseInt(args[2]);
         Messages.ProxyMessage.Operation operation;
         if((operation = operationFromString(args[3])) == null) {
@@ -127,7 +121,6 @@ public class PreComputedProxy {
 
         Client[] clients = new Client[numClients];
         for (int i = 0; i < numClients; i++) {
-            System.out.println("Client " + i);
             int sleepTime = random.nextInt(2000);
             Thread.sleep(sleepTime);
 

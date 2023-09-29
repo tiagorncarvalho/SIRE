@@ -262,7 +262,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
         if (nClients <= maxClientsPerProcess) {
             return new int[]{1, nClients};
         }
-        nClientWorkers--; //for measurement client
+        //nClientWorkers--; //for measurement client
         int nWorkersToUse = Math.min(nClientWorkers - 1, nClients / maxClientsPerProcess);
         int[] distribution = new int[nWorkersToUse + 1];//one for measurement worker
         Arrays.fill(distribution, nClients / nWorkersToUse);

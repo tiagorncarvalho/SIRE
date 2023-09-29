@@ -53,7 +53,6 @@ import static sire.messages.ProtoUtils.*;
 
 public class RestProxy  {
     private final ConfidentialServiceProxy serviceProxy;
-    private static MessageDigest messageDigest;
     private final ECPoint verifierPublicKey;
     private final SchnorrSignatureScheme signatureScheme;
 
@@ -61,8 +60,7 @@ public class RestProxy  {
         try {
             ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
             serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
-            messageDigest = MessageDigest.getInstance("SHA256");
-        } catch (SecretSharingException | NoSuchAlgorithmException e) {
+        } catch (SecretSharingException e) {
             throw new SireException("Failed to contact the distributed verifier", e);
         }
 
@@ -264,10 +262,16 @@ public class RestProxy  {
     }
 
     private static byte[] computeHash(byte[]... contents) {
-        for (byte[] content : contents) {
-            messageDigest.update(content);
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            for (byte[] content : contents) {
+                messageDigest.update(content);
+            }
+            return messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-        return messageDigest.digest();
+        return null;
     }
 
 

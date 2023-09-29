@@ -91,7 +91,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	//private VerifiableShare verifierSigningPrivateKeyShare;
 	//private ECPoint verifierSigningPublicKey;
 
-	MessageDigest messageDigest;
 	//private final ECPoint dummyAttesterPublicKey;
 
 	//key value store for information concerning devices, applications and more
@@ -141,7 +140,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		distributedPolynomialManager.setRandomPolynomialListener(this);
 		distributedPolynomialManager.setRandomKeyPolynomialListener(this);
 		schnorrSignatureScheme = new SchnorrSignatureScheme();
-		messageDigest = MessageDigest.getInstance("SHA256");
 		devicesTimestamps = new TreeMap<>();
 		schnorrNonceManager = new SchnorrNonceManager(id, serviceReplica.getReplicaContext().getCurrentView().getF(),
 				schnorrSignatureScheme.getCurve());
@@ -212,6 +210,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				} finally {
 					lock.unlock();
 				}
+				break;
 			case ATTEST_TIMESTAMP:
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				Timestamp ts = new Timestamp(messageContext.getTimestamp());
@@ -230,6 +229,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				}
 			default: return null;
 		}
+		return null;
 	}
 
 	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
@@ -574,10 +574,16 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		}
 	}
 
-	private byte[] computeHash(byte[]... contents) {
-		for (byte[] content : contents) {
-			messageDigest.update(content);
+	private static byte[] computeHash(byte[]... contents) {
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+			for (byte[] content : contents) {
+				messageDigest.update(content);
+			}
+			return messageDigest.digest();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
 		}
-		return messageDigest.digest();
+		return null;
 	}
 }

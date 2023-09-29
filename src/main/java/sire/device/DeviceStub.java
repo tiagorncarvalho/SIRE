@@ -54,7 +54,6 @@ public class DeviceStub {
     private static final SecureRandom rndGenerator = new SecureRandom("sire".getBytes());
     private static CMac macEngine;
     private static SecretKeyFactory secretKeyFactory;
-    private static MessageDigest messageDigest;
     private static Cipher symmetricCipher;
     private BigInteger attesterPrivateKey;
     private ECPoint attesterPublicKey;
@@ -77,7 +76,6 @@ public class DeviceStub {
         }
 
         secretKeyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-        messageDigest = MessageDigest.getInstance("SHA256");
         macEngine = new CMac(new AESEngine());
         symmetricCipher = Cipher.getInstance("AES/GCM/NoPadding");
         BigInteger prime = new BigInteger("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF", 16);
@@ -183,10 +181,16 @@ public class DeviceStub {
     }
 
     private static byte[] computeHash(byte[]... contents) {
-        for (byte[] content : contents) {
-            messageDigest.update(content);
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            for (byte[] content : contents) {
+                messageDigest.update(content);
+            }
+            return messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-        return messageDigest.digest();
+        return null;
     }
 
 /*    private static SecretKey createSecretKey(char[] password, byte[] salt) throws InvalidKeySpecException {

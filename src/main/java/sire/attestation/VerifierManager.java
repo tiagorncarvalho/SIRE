@@ -27,12 +27,10 @@ import java.security.NoSuchAlgorithmException;
 
 public class VerifierManager {
     SchnorrSignatureScheme signatureScheme;
-    MessageDigest messageDigest;
     private final PolicyManager policyManager;
 
     public VerifierManager() throws NoSuchAlgorithmException {
         signatureScheme = new SchnorrSignatureScheme();
-        messageDigest = MessageDigest.getInstance("SHA256");
         policyManager = PolicyManager.getInstance();
     }
 
@@ -61,10 +59,16 @@ public class VerifierManager {
         return policyManager.executePolicy(appId, evidence);
     }
 
-    private byte[] computeHash(byte[]... contents) {
-        for (byte[] content : contents) {
-            messageDigest.update(content);
+    private static byte[] computeHash(byte[]... contents) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            for (byte[] content : contents) {
+                messageDigest.update(content);
+            }
+            return messageDigest.digest();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
-        return messageDigest.digest();
+        return null;
     }
 }

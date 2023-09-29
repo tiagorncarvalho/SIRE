@@ -129,7 +129,7 @@ dependencies {
     implementation group: 'com.google.protobuf', name: 'protobuf-java', version: '3.17.3'
 
     // https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all
-    implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.4'
+    //mplementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.4'
     implementation 'org.codehaus.groovy:groovy:3.0.8'
 
     implementation 'org.springframework.boot:spring-boot-starter'
