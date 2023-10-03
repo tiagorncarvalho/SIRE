@@ -54,6 +54,8 @@ public class PreComputedProxy {
     private static Map<String, Integer> responseCounter;
     private static final Object counterLock = new Object();
 
+    private static int numClientsPerHour;
+
     static {
         try {
             scheme = new SchnorrSignatureScheme();
@@ -107,9 +109,9 @@ public class PreComputedProxy {
     }
 
     public static void main(String[] args) throws InterruptedException, SecretSharingException, SireException, IOException {
-        if (args.length != 5) {
+        if (args.length != 6) {
             System.out.println("USAGE: benchmark.LatencyAttestationClient <initial client id> " +
-                    "<num clients> <number of ops> <operation> <measurement leader?>");
+                    "<num clients> <number of ops> <operation> <clients per hour> <measurement leader?>");
             System.exit(-1);
         }
         initialId = Integer.parseInt(args[0]);
@@ -121,10 +123,11 @@ public class PreComputedProxy {
             System.out.println("Couldn't parse operation. Available operations:\n - attest\n - getKey");
             System.exit(-1);
         }
+        numClientsPerHour = Integer.parseInt(args[4]);
 
         System.out.println("Operation: " + operation);
 
-        boolean measurementLeader = Boolean.parseBoolean(args[4]);
+        boolean measurementLeader = Boolean.parseBoolean(args[5]);
         CountDownLatch latch = new CountDownLatch(numClients);
 
         Random random = new Random(1L);
@@ -204,16 +207,17 @@ public class PreComputedProxy {
             }
         }
 
-        void sendOperation() {
+        long sendOperation() {
             try {
                 switch (operation) {
                     case MEMBERSHIP_JOIN: attest();
-                    case MAP_PUT: accessIntersection(new Random().nextInt(9) - 1);
+                    case MAP_PUT: return accessIntersection(new Random().nextInt(9) - 1);
                     case MAP_GET: get();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            return 0;
         }
 
         @Override
@@ -222,9 +226,9 @@ public class PreComputedProxy {
             for (int i = 1; i < numOperations; i++) {
                 long t2;
                 long t1 = System.nanoTime();
-                sendOperation();
+                long waitTime = sendOperation();
                 t2 = System.nanoTime();
-                long latency = t2 - t1;
+                long latency = t2 - t1 - waitTime;
                 if (id == initialId && measurementLeader)
                     System.out.println("M: " + latency);
 
@@ -233,6 +237,8 @@ public class PreComputedProxy {
                         Thread.sleep(rampup);
                         rampup -= 100;
                     }
+                    else
+                        Thread.sleep((numClientsPerHour/3600) * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -260,7 +266,7 @@ public class PreComputedProxy {
             serviceProxy.invokeUnordered(getMsg);
         }
 
-        public void accessIntersection(int lane) throws InterruptedException, SecretSharingException {
+        public long accessIntersection(int lane) throws InterruptedException, SecretSharingException {
             System.out.println("Requesting!");
             Messages.ProxyMessage.Builder builder = Messages.ProxyMessage.newBuilder()
                     .setOperation(Messages.ProxyMessage.Operation.MAP_PUT)
@@ -272,7 +278,9 @@ public class PreComputedProxy {
             Response res = serviceProxy.invokeOrdered(request.toByteArray());
 
             byte b = res.getPainData()[0];
+            long waitTime = 3000000000L;
             if(b == 0) {
+                long startTime = System.nanoTime();
                 System.out.println("Idle... " + this.id);
                 synchronized (counterLock) {
                     responseCounter.put(this.id + "", 0);
@@ -287,6 +295,7 @@ public class PreComputedProxy {
                 synchronized (counterLock) {
                     responseCounter.remove(this.id + "");
                 }
+                waitTime = System.nanoTime() - startTime + 5000000000L;
                 System.out.println("Crossing...");
                 Thread.sleep(5000);
             } else {
@@ -295,6 +304,7 @@ public class PreComputedProxy {
             }
             System.out.println("Releasing!");
             serviceProxy.invokeOrdered(release.toByteArray());
+            return waitTime;
         }
 
         private void attest() throws SecretSharingException {
@@ -363,7 +373,9 @@ public class PreComputedProxy {
 
     private static Messages.ProxyMessage.Operation operationFromString(String str) {
         switch (str) {
-            case "mapPut": return Messages.ProxyMessage.Operation.MAP_PUT;
+            case "mapPut":
+            case "intersection" :
+                return Messages.ProxyMessage.Operation.MAP_PUT;
             case "mapGet": return Messages.ProxyMessage.Operation.MAP_GET;
             case "attest": return Messages.ProxyMessage.Operation.MEMBERSHIP_JOIN;
             default: return null;

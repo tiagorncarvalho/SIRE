@@ -87,7 +87,8 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
         logger.info("Starting throughput-latency benchmark strategy");
         long startTime = System.currentTimeMillis();
         f = Integer.parseInt(benchmarkParameters.getProperty("experiment.f"));
-        String[] tokens = benchmarkParameters.getProperty("experiment.clients_per_round").split(" ");
+        String[] hourTokens = benchmarkParameters.getProperty("experiment.clients_per_hour").split(" ");
+        //String[] tokens = benchmarkParameters.getProperty("experiment.clients_per_round").split(" ");
         operation = benchmarkParameters.getProperty("experiment.operation");
         measureResources = Boolean.parseBoolean(benchmarkParameters.getProperty("experiment.measure_resources"));
 
@@ -96,11 +97,14 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
         int maxClientsPerProcess = 50;
         int nRequests = 10_000_000;
         int sleepBetweenRounds = 10;
-        int[] clientsPerRound = new int[tokens.length];
-        for (int i = 0; i < tokens.length; i++) {
-            clientsPerRound[i] = Integer.parseInt(tokens[i]);
+        //int[] clientsPerRound = new int[tokens.length];
+        int[] clientsPerHour = new int[hourTokens.length];
+        for (int i = 0; i < hourTokens.length; i++) {
+            //clientsPerRound[i] = Integer.parseInt(tokens[i]);
+            clientsPerHour[i] = Integer.parseInt(hourTokens[i]);
         }
-        int nRounds = clientsPerRound.length;
+
+        int nRounds = clientsPerHour.length;
         numMaxRealClients = new ArrayList<>(nRounds);
         avgLatency = new ArrayList<>(nRounds);
         latencyDev = new ArrayList<>(nRounds);
@@ -124,20 +128,22 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
                 logger.info("============ Round {} out of {} ============", round, nRounds);
                 measurementWorkers.clear();
                 storageFileNamePrefix = String.format("f_%d_%s_round_%d_", f, operation, round);
-                int nClients = clientsPerRound[round - 1];
+                //int nClients = clientsPerRound[round - 1];
+                int nClientHour = clientsPerHour[round - 1];
 
                 //Distribute clients per workers
-                int[] clientsPerWorker = distributeClientsPerWorkers(nClientWorkers, nClients, maxClientsPerProcess);
-                String vector = Arrays.toString(clientsPerWorker);
-                int total = Arrays.stream(clientsPerWorker).sum();
-                logger.info("Clients per worker: {} -> Total: {}", vector, total);
+                //int[] clientsPerWorker = distributeClientsPerWorkers(nClientWorkers, nClients, maxClientsPerProcess);
+                //String vector = Arrays.toString(clientsPerWorker);
+                //int total = Arrays.stream(clientsPerWorker).sum();
+                //logger.info("Clients per worker: {} -> Total: {}", vector, total);
+                logger.info("Clients per hour: {}", nClientHour);
 
                 //Start servers
                 startServers(nServerWorkers, serverWorkers);
 
                 //Start clients
                 startClients(nServerWorkers, maxClientsPerProcess, nRequests, operation,
-                        clientWorkers, clientsPerWorker);
+                        clientWorkers, nClientHour);
 
                 //Wait for system to stabilize
                 logger.info("Waiting 10s...");
@@ -198,17 +204,16 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
     }
 
     private void startClients(int nServerWorkers, int maxClientsPerProcess, int nRequests,
-                              String operation, WorkerHandler[] clientWorkers,
-                              int[] clientsPerWorker) throws InterruptedException {
+                              String operation, WorkerHandler[] clientWorkers, int clientsPerHour) throws InterruptedException {
         logger.info("Starting clients...");
-        clientsReadyCounter = new CountDownLatch(clientsPerWorker.length);
+        clientsReadyCounter = new CountDownLatch(1);
         int clientInitialId = nServerWorkers + 1000;
         measurementWorkers.put(clientWorkers[0].getWorkerId(), clientWorkers[0]);
-        if (measureResources && clientsPerWorker.length > 1)
+        if (measureResources)
             measurementWorkers.put(clientWorkers[1].getWorkerId(), clientWorkers[1]);
 
-        for (int i = 0; i < clientsPerWorker.length && i < clientWorkers.length; i++) {
-            int totalClientsPerWorker = clientsPerWorker[i];
+        for (int i = 0; i < clientWorkers.length; i++) {
+            int totalClientsPerWorker = 1;
             int nProcesses = totalClientsPerWorker / maxClientsPerProcess
                     + (totalClientsPerWorker % maxClientsPerProcess == 0 ? 0 : 1);
             int nCommands = nProcesses + (measureResources && i < 2 ? 1 : 0);
@@ -218,7 +223,7 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
             for (int j = 0; j < nProcesses; j++) {
                 int clientsPerProcess = Math.min(totalClientsPerWorker, maxClientsPerProcess);
                 String command = clientCommand + clientInitialId + " " + clientsPerProcess
-                        + " " + nRequests + " " + operation + " " + isMeasurementWorker;
+                        + " " + nRequests + " " + operation + " " + clientsPerHour + " " + isMeasurementWorker;
                 commands[j] = new ProcessInformation(command, ".");
                 totalClientsPerWorker -= clientsPerProcess;
                 clientInitialId += clientsPerProcess;
