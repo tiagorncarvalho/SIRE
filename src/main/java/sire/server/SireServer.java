@@ -322,13 +322,17 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				byte[] value = byteStringToByteArray(out, msg.getValue());
 				out.close();
-				if(msg.getKey().contains("model"))
-					storage.put(msg.getAppId(), msg.getKey(), msg.getThetaList().stream().mapToDouble(d -> d).toArray());
-				else
+				ConfidentialMessage response;
+				if(msg.getKey().contains("model")) {
+					byte[] res = storage.put(msg.getAppId(), msg.getKey(), msg.getThetaList().stream().mapToDouble(d -> d).toArray());
+					response = new ConfidentialMessage(res);
+				}
+				else {
 					storage.put(msg.getAppId(), msg.getKey(), value);
+					response = new ConfidentialMessage();
+				}
 				lock.unlock();
-
-				return new ConfidentialMessage();
+				return response;
 			case MAP_DELETE:
 				lock.lock();
 				storage.remove(msg.getAppId(), msg.getKey());

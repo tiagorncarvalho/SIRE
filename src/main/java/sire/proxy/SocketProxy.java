@@ -153,6 +153,7 @@ public class SocketProxy implements Runnable {
 			}
 			switch(msg.getOperation()) {
 				case MAP_GET: return mapGet(res);
+				case MAP_PUT: return mapPut(res);
 				case MAP_LIST: return mapList(res);
 				case MEMBERSHIP_VIEW: return memberView(res);
 				case EXTENSION_GET: return extGet(res);
@@ -313,10 +314,24 @@ public class SocketProxy implements Runnable {
 			}
 		}
 
+		private ProxyResponse mapPut(Response res) {
+			byte[] tmp = res.getPainData();
+			if (tmp != null) {
+				return ProxyResponse.newBuilder()
+						.setValue(ByteString.copyFrom(tmp))
+						.build();
+			}
+			else {
+				return null;
+			}
+		}
+
 		private void close() {
 			synchronized (proxyLock) {
 				serviceProxy.close();
 			}
 		}
 	}
+
+
 }

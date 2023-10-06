@@ -68,3 +68,5 @@ if __name__ == '__main__':
         byted_put = model_put.SerializeToString()
         sock.send(len(byted_put).to_bytes(4, byteorder='big'))
         sock.send(byted_put)
+        size = sock.recv(4)
+        sock.recv(size)

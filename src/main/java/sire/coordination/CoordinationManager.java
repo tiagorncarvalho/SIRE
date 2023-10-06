@@ -1,6 +1,7 @@
 package sire.coordination;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.*;
 
 public class CoordinationManager {
@@ -13,7 +14,7 @@ public class CoordinationManager {
                 "wwehfuq652ru0ibdr79eddqmwmhpmcjfz0hx3ihee3gu".getBytes()); //just for benchmarking
         extensionManager = ExtensionManager.getInstance();
     }
-    public void put(String appId, String key, double[] value) {
+    public byte[] put(String appId, String key, double[] value) {
         if(key.contains("model")) {
             int count;
             if(storage.containsKey(key))
@@ -21,11 +22,16 @@ public class CoordinationManager {
             else
                 count = 1;
             if(count < 1)
-                return;
+                return null;
             else
                 storage.put(appId + key, BigInteger.valueOf(count).toByteArray());
         }
-        extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ModelParams(key, value));
+        double[] doubles = extensionManager.runExtension(appId, ExtensionType.EXT_PUT, key, new ModelParams(key, value)).getValue();
+        ByteBuffer bb = ByteBuffer.allocate(doubles.length * 8);
+        for(double d : doubles) {
+            bb.putDouble(d);
+        }
+        return bb.array();
     }
 
     public void put(String appId, String key, byte[] value) {
