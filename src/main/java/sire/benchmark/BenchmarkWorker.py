@@ -28,7 +28,7 @@ if __name__ == '__main__':
     worker_type = WorkerType.Correct
     num_rounds = int(sys.argv[3])
     initial_id = int(sys.argv[4])
-    measurement_leader = bool(int(sys.argv[5]))
+    measurement_leader = bool(sys.argv[5])
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = "localhost"
     port = 2500 + worker_id

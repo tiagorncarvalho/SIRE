@@ -61,7 +61,7 @@ public class PreComputedProxy {
 
         new Thread(() -> {
             try {
-                ServerSocket ss = new ServerSocket(2500 + initialId);
+                ServerSocket ss = new ServerSocket(2500);
                 Socket s;
                 while(true) {
                     s = ss.accept();
@@ -83,7 +83,7 @@ public class PreComputedProxy {
             Thread.sleep(sleepTime);
 
             int id = initialId + i;
-            clients[i] = new ClientProcess(new ProcessBuilder("python", "BenchmarkWorker.py",
+            clients[i] = new ClientProcess(new ProcessBuilder("python3", "BenchmarkWorker.py",
                     String.valueOf(id), "1", String.valueOf(numOperations), String.valueOf(initialId),
                     String.valueOf(measurementLeader)).inheritIO(), id, numOperations,
                     operation, measurementLeader, latch);
