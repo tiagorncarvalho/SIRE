@@ -181,8 +181,8 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
         measurementWorkers.values().forEach(WorkerHandler::startProcessing);
 
         //Wait for measurements
-        logger.info("Measuring during 120s");
-        sleepSeconds(120);
+        logger.info("Measuring during 1h");
+        sleepSeconds(3600);
 
         //Stop measurements
         measurementWorkers.values().forEach(WorkerHandler::stopProcessing);

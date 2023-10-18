@@ -159,7 +159,7 @@ public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecut
         senders.add(messageContext.getSender());
         try {
             if(!proxies.containsKey(messageContext.getSender())) {
-                Socket s = new Socket("localhost", 5151 + messageContext.getSender()); //192.168.2.22
+                Socket s = new Socket("192.168.2.22", 5151 + messageContext.getSender()); //192.168.2.22
                 proxies.put(messageContext.getSender(), new ObjectOutputStream(s.getOutputStream()));
             }
             Messages.ProxyMessage msg = Messages.ProxyMessage.parseFrom(bytes);
