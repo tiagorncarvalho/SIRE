@@ -29,8 +29,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import static sire.messages.ProtoUtils.bytesToHex;
-
 public class ManagementStub implements ManagementInterface {
 
     final int proxyId;

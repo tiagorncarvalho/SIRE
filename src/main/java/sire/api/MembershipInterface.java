@@ -17,7 +17,7 @@
 package sire.api;
 
 import sire.membership.DeviceContext;
-import sire.messages.Messages.ProxyMessage;
+import sire.messages.Messages.*;
 
 import java.sql.Timestamp;
 import java.util.List;

@@ -69,6 +69,8 @@ message ProxyMessage {
 
   //========INITIAL REQUEST==========//
   bytes pubKey = 12;
+
+  //bytes sigBytes = 13;
 }
 
 message ProxyResponse {

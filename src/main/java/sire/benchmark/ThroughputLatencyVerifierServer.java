@@ -36,7 +36,6 @@ import sire.attestation.DeviceEvidence;
 import sire.attestation.VerifierManager;
 import sire.coordination.CoordinationManager;
 import sire.membership.MembershipManager;
-import sire.messages.Messages;
 import sire.schnorr.*;
 import sire.serverProxyUtils.SireException;
 import vss.commitment.ellipticCurve.EllipticCurveCommitment;
@@ -53,6 +52,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static sire.messages.ProtoUtils.*;
+import sire.messages.Messages;
 
 public class ThroughputLatencyVerifierServer implements ConfidentialSingleExecutable, RandomPolynomialListener, RandomKeyPolynomialListener {
     private final Logger logger = LoggerFactory.getLogger("sire");

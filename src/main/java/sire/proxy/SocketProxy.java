@@ -42,6 +42,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -117,24 +118,28 @@ public class SocketProxy implements Runnable {
 		@Override
 		public void run() {
 			try {
-				ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-				ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+				OutputStream os = s.getOutputStream();
+				DataOutputStream dos = new DataOutputStream(os);
+				InputStream is = s.getInputStream();
 
 				while (!s.isClosed()) {
-					Object o;
-					while ((o = ois.readObject()) != null) {
-						if (o instanceof ProxyMessage) {
-							ProxyMessage msg = (ProxyMessage) o;
-							if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
-								oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
-							} else {
-								ProxyResponse result = runProxyMessage(msg);
-								if (result != null)
-									oos.writeObject(result);
-							}
-						}
+					int size = ByteBuffer.wrap(is.readNBytes(4)).getInt();
+					byte[] bytes = is.readNBytes(size);
+					ProxyMessage msg = ProxyMessage.parseFrom(bytes);
+					//System.out.println(msg.toString());
 
+					if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
+						//oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
+						System.out.println("Wrong operation!");
+					} else {
+						ProxyResponse result = runProxyMessage(msg);
+						if (result != null) {
+							byte[] bs = result.toByteArray();
+							dos.writeInt(bs.length);
+							dos.write(bs);
+						}
 					}
+					dos.flush();
 				}
 			} catch (ClassNotFoundException | SecretSharingException | SireException e) {
 				e.printStackTrace();
@@ -180,10 +185,13 @@ public class SocketProxy implements Runnable {
 		}
 
 		private ProxyResponse timestampAtt(ConfidentialExtractedResponse res) throws SireException {
+			System.out.println("Getting timestamp!");
 			SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
+			System.out.println("Signatures combined!");
 			byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 124, res.getPlainData().length);
 			byte[] ts = Arrays.copyOfRange(data, 0, 91);
 			byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
+			System.out.println("timestamp " + Arrays.toString(ts) + " pubKey " + Arrays.toString(pubKey));
 			return ProxyResponse.newBuilder()
 					.setPubKey(ByteString.copyFrom(pubKey))
 					.setTimestamp(ByteString.copyFrom(ts))

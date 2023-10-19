@@ -16,7 +16,6 @@
 
 package sire.device;
 
-import com.google.gson.Gson;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
