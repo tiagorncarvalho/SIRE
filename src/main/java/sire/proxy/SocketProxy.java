@@ -61,7 +61,6 @@ public class SocketProxy implements Runnable {
 	public SocketProxy(int proxyId) throws SireException{
 		System.out.println("Proxy start!");
 		this.proxyId = proxyId;
-
 		try {
 			ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
 			serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
@@ -185,13 +184,10 @@ public class SocketProxy implements Runnable {
 		}
 
 		private ProxyResponse timestampAtt(ConfidentialExtractedResponse res) throws SireException {
-			System.out.println("Getting timestamp!");
 			SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
-			System.out.println("Signatures combined!");
 			byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 124, res.getPlainData().length);
 			byte[] ts = Arrays.copyOfRange(data, 0, 91);
 			byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
-			System.out.println("timestamp " + Arrays.toString(ts) + " pubKey " + Arrays.toString(pubKey));
 			return ProxyResponse.newBuilder()
 					.setPubKey(ByteString.copyFrom(pubKey))
 					.setTimestamp(ByteString.copyFrom(ts))

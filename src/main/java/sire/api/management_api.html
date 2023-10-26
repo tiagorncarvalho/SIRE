@@ -164,8 +164,8 @@
         mainContainer.innerHTML = "";
         for(let i = 0; i < data.length; i++) {
             const div = document.createElement("code");
-            div.innerHTML = 'Device ID: ' + data[i].deviceId + ' Device Type: ' + data[i].deviceType + ' Last ping: ' +
-                data[i].lastPing;
+            div.innerHTML = 'Device ID: ' + data[i].deviceId + ' Last ping: ' +
+                data[i].lastPing + '<br>';
             mainContainer.appendChild(div);
         }
     }

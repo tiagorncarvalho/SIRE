@@ -148,7 +148,6 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	public ConfidentialMessage appExecuteOrdered(byte[] bytes, VerifiableShare[] verifiableShares,
 												 MessageContext messageContext) {
 		try {
-			System.out.println("Received request!");
 			ProxyMessage msg = ProxyMessage.parseFrom(bytes);
 			ProxyMessage.Operation op = msg.getOperation();
 			if(membership.containsApp(msg.getAppId()) && membership.hasDevice(msg.getAppId(), msg.getDeviceId()))
@@ -212,7 +211,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				}
 				break;
 			case ATTEST_TIMESTAMP:
-				System.out.println("Timestamp request!");
+				System.out.println("Received attest timestamp request from device with id " + msg.getDeviceId());
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				Timestamp ts = new Timestamp(messageContext.getTimestamp());
 				SchnorrSignature sign = protoToSchnorr(msg.getSignature());
@@ -251,6 +250,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 					byte[] data = concat(serialize(new Timestamp(messageContext.getTimestamp())),
 							byteStringToByteArray(new ByteArrayOutputStream(), msg.getPubKey()), computeHash(msg.toByteArray()));
 					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
+					System.out.println("Device with id " + msg.getDeviceId() + " attested at " + new Timestamp(messageContext.getTimestamp()));
 
 					return sign(data, messageContext);
 				} else {

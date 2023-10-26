@@ -29,6 +29,7 @@ import sire.serverProxyUtils.SireException;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
