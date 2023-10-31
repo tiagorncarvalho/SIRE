@@ -127,7 +127,11 @@ public class ThroughputLatencyBenchmarkStrategy implements IBenchmarkStrategy, I
                 int nClients = clientsPerRound[round - 1];
 
                 //Distribute clients per workers
-                int[] clientsPerWorker = distributeClientsPerWorkers(nClientWorkers, nClients, maxClientsPerProcess);
+                //int[] clientsPerWorker = distributeClientsPerWorkers(nClientWorkers, nClients, maxClientsPerProcess);
+                int[] clientsPerWorker = new int[nClientWorkers];
+                Arrays.fill(clientsPerWorker, (nClients - 1) / (nClientWorkers - 1));
+                clientsPerWorker[0] = 1;
+                        //{1, (nClients -1) / (nClientWorkers - 1),  (nClients -1) / (nClientWorkers - 1)};
                 String vector = Arrays.toString(clientsPerWorker);
                 int total = Arrays.stream(clientsPerWorker).sum();
                 logger.info("Clients per worker: {} -> Total: {}", vector, total);

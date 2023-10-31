@@ -31,7 +31,7 @@ if __name__ == '__main__':
     measurement_leader = bool(sys.argv[5])
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     host = "localhost"
-    port = 2500 + worker_id
+    port = 2500
     sock.connect((host, port))
     np.random.seed(51)
     X = np.random.rand(100, 2)

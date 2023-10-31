@@ -50,7 +50,7 @@ public class PreComputedProxy {
         int numOperations = Integer.parseInt(args[2]);
         Messages.ProxyMessage.Operation operation = Messages.ProxyMessage.Operation.MAP_PUT;
 
-        System.out.println("Operation: " + operation);
+        System.out.println("Operation: federated learning");
 
         boolean measurementLeader = Boolean.parseBoolean(args[3]);
         CountDownLatch latch = new CountDownLatch(numClients);
