@@ -162,11 +162,11 @@ public class ManagementStub implements ManagementInterface {
             if (o instanceof Messages.ProxyResponse) {
                 List<Messages.ProxyResponse.ProtoDeviceContext> res = ((Messages.ProxyResponse) o).getMembersList();
                 ArrayList<DeviceContext> tmp = new ArrayList<>();
-                for (Messages.ProxyResponse.ProtoDeviceContext d : res) {
+                /*for (Messages.ProxyResponse.ProtoDeviceContext d : res) {
                     DeviceContext dev = new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000),
                             new Timestamp(d.getCertExpTime().getSeconds() * 1000));
                     tmp.add(dev);
-                }
+                }*/
                 return tmp;
             }
         } catch (IOException | ClassNotFoundException e) {

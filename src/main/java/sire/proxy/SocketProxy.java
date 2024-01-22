@@ -47,7 +47,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
- * @author robin
+ * @author Tiago
  */
 
 public class SocketProxy implements Runnable {
@@ -274,19 +274,19 @@ public class SocketProxy implements Runnable {
 					if(d.isCertificateValid()) {
 						prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
 								.setDeviceId(d.getDeviceId())
-								.setTime(Timestamp.newBuilder()
+								/*.setTime(Timestamp.newBuilder()
 										.setSeconds(d.getLastPing().getTime() / 1000)
 										.build())
 								.setCertExpTime(Timestamp.newBuilder()
 										.setSeconds(d.getCertExpTime().getTime() / 1000)
-										.build())
+										.build())*/
 								.build());
 					} else {
 						prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
 								.setDeviceId(d.getDeviceId())
-								.setTime(Timestamp.newBuilder()
+								/*.setTime(Timestamp.newBuilder()
 										.setSeconds(d.getLastPing().getTime() / 1000)
-										.build())
+										.build())*/
 								.build());
 					}
 

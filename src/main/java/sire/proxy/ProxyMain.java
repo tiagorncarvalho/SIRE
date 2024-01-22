@@ -16,7 +16,7 @@
 
 package sire.proxy;
 
-import org.springframework.boot.SpringApplication;
+/*import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 import sire.attestation.Evidence;
@@ -24,39 +24,35 @@ import sire.coordination.Extension;
 import sire.attestation.Policy;
 import sire.membership.DeviceContext;
 import sire.messages.*;
-import sire.schnorr.SchnorrSignature;
+import sire.schnorr.SchnorrSignature;*/
 import sire.serverProxyUtils.SireException;
 
-import java.io.IOException;
+/*import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import static sire.messages.ProtoUtils.deserialize;
+import static sire.messages.ProtoUtils.deserialize;*/
 
-@SpringBootApplication
+//@SpringBootApplication
 public class ProxyMain {
-    static SocketProxy proxy;
-    static RestProxy restProxy;
+    static SocketProxyMock proxy;
+    //static RestProxy restProxy;
     public static void main(String[] args) {
-        if (args.length < 1) {
-            System.out.println("Usage: sire.proxy.ProxyMain <proxy id>");
-            System.exit(-1);
-        }
         proxy = null;
         try {
-            int proxyId = Integer.parseInt(args[0]);
-            proxy = new SocketProxy(proxyId);
-            restProxy = new RestProxy(proxyId + 1);
+            int proxyId = 1;
+            proxy = new SocketProxyMock(proxyId);
+            //restProxy = new RestProxy(proxyId + 1);
         } catch (SireException e) {
             e.printStackTrace();
         }
-        SpringApplication.run(ProxyMain.class, args);
+        //SpringApplication.run(ProxyMain.class, args);
         proxy.run();
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "*")
+   /* @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RestController
     public static class RestProxyController {
 
@@ -214,5 +210,5 @@ public class ProxyMain {
                 throw new SireException("Malformed deviceId");
             return restProxy.getList(appId, deviceId);
         }
-    }
+    }*/
 }

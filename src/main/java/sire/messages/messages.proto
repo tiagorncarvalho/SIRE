@@ -1,7 +1,5 @@
 syntax= "proto3";
 
-import "google/protobuf/timestamp.proto";
-
 package sire.messages;
 
 //Complementary
@@ -88,8 +86,6 @@ message ProxyResponse {
   bytes value = 3;
   message ProtoDeviceContext {
     string deviceId = 1;
-    google.protobuf.Timestamp time = 2;
-    google.protobuf.Timestamp certExpTime = 3;
   }
   repeated ProtoDeviceContext members = 4;
   string extPolicy = 5;

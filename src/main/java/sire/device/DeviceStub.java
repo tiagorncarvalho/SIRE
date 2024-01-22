@@ -424,11 +424,11 @@ public class DeviceStub {
         if(o instanceof ProxyResponse) {
             List<ProxyResponse.ProtoDeviceContext> res = ((ProxyResponse) o).getMembersList();
             ArrayList<DeviceContext> tmp = new ArrayList<>();
-            for(ProxyResponse.ProtoDeviceContext d : res) {
+            /*for(ProxyResponse.ProtoDeviceContext d : res) {
                 DeviceContext dev = new DeviceContext(d.getDeviceId(), new Timestamp(d.getTime().getSeconds() * 1000),
                         new Timestamp(d.getCertExpTime().getSeconds() * 1000));
                 tmp.add(dev);
-            }
+            }*/
             return tmp;
         }
         return null;
