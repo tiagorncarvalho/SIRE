@@ -15,32 +15,43 @@ message ProtoEvidence {
   bytes servicePubKey = 3;
 }
 
+message ProtoMQTTEvidence{
+  int32 securityVersion = 1;
+  int32 productId = 2;
+  bytes claim = 3;
+  string nonce = 4;
+  bytes mrEnclave = 5;
+  bytes mrSigner = 6;
+}
+
 message ProxyMessage {
   enum Operation {
     //----------ATTESTATION-----------
     ATTEST_GET_PUBLIC_KEY = 0;
     ATTEST_TIMESTAMP = 1;
+    ATTEST_TIMESTAMP_MQTT = 2;
     //--------------MAP--------------
-    MAP_PUT = 2;
-    MAP_DELETE = 3;
-    MAP_GET = 4;
-    MAP_LIST = 5;
-    MAP_CAS = 6;
+    MAP_PUT = 3;
+    MAP_DELETE = 4;
+    MAP_GET = 5;
+    MAP_LIST = 6;
+    MAP_CAS = 7;
     //-----------MEMBERSHIP-----------
-    MEMBERSHIP_JOIN = 7;
-    MEMBERSHIP_LEAVE = 8;
-    MEMBERSHIP_VIEW = 9;
-    MEMBERSHIP_PING = 10;
+    MEMBERSHIP_JOIN = 8;
+    MEMBERSHIP_JOIN_MQTT = 9;
+    MEMBERSHIP_LEAVE = 10;
+    MEMBERSHIP_VIEW = 11;
+    MEMBERSHIP_PING = 12;
     //-----------EXTENSION------------
-    EXTENSION_ADD = 11;
-    EXTENSION_REMOVE = 12;
-    EXTENSION_GET = 13;
+    EXTENSION_ADD = 13;
+    EXTENSION_REMOVE = 14;
+    EXTENSION_GET = 15;
     //-------------POLICY-------------
-    POLICY_ADD = 14;
-    POLICY_REMOVE = 15;
-    POLICY_GET = 16;
+    POLICY_ADD = 16;
+    POLICY_REMOVE = 17;
+    POLICY_GET = 18;
     //-----------TIMESTAMP------------
-    TIMESTAMP_GET = 17;
+    TIMESTAMP_GET = 19;
   }
   Operation operation = 1;
 
@@ -67,6 +78,7 @@ message ProxyMessage {
 
   //========INITIAL REQUEST==========//
   bytes pubKey = 12;
+  ProtoMQTTEvidence mqttEvidence = 13;
 
   //bytes sigBytes = 13;
 }
@@ -79,7 +91,9 @@ message ProxyResponse {
     EXTENSION_GET = 3;
     POLICY_GET = 4;
     PREJOIN = 5;
-    JOIN = 6;
+    PREJOIN_MQTT = 6;
+    JOIN = 7;
+    JOIN_MQTT = 8;
   }
   ResponseType type = 1;
   repeated bytes list = 2;

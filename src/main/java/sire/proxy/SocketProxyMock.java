@@ -116,7 +116,6 @@ public class SocketProxyMock implements Runnable {
 					byte[] bytes = is.readNBytes(size);
 					ProxyMessage msg = readMessage(bytes);
 					//= ProxyMessage.parseFrom(bytes);
-					//System.out.println(msg.toString());
 
 					if (msg.getOperation() == ProxyMessage.Operation.ATTEST_GET_PUBLIC_KEY) {
 						//oos.writeObject(SchnorrSignatureScheme.encodePublicKey(verifierPublicKey));
@@ -137,10 +136,27 @@ public class SocketProxyMock implements Runnable {
 		private byte[] writeMessage(ProxyResponse response) {
 			if(response.getType() == ProxyResponse.ResponseType.PREJOIN)
 				return writeMessage1(response);
+			else if(response.getType() == ProxyResponse.ResponseType.PREJOIN_MQTT || response.getType() == ProxyResponse
+					.ResponseType.JOIN_MQTT)
+				return writeMessage1n3MQTT(response);
 			else if(response.getType() == ProxyResponse.ResponseType.JOIN)
 				return writeMessage3(response);
 			else
 				return new byte[0];
+		}
+
+		private byte[] writeMessage1n3MQTT(ProxyResponse response) {
+			try {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				byte[] timestamp = byteStringToByteArray(baos, response.getTimestamp());
+				byte[] timestampLen = BigInteger.valueOf(timestamp.length).toByteArray();
+				baos.write(timestampLen);
+				baos.write(timestamp);
+				return baos.toByteArray();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return new byte[0];
 		}
 
 		private byte[] writeMessage3(ProxyResponse response) {
@@ -187,10 +203,74 @@ public class SocketProxyMock implements Runnable {
 			int op = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 0, 4)).getInt();
 			if(op == 1)
 				return readMessage0(Arrays.copyOfRange(bytes, 4, bytes.length));
-			else if(op == 7)
+			else if(op == 2)
+				return readMessage0MQTT(Arrays.copyOfRange(bytes, 4, bytes.length));
+			else if(op == 8)
 				return readMessage2(Arrays.copyOfRange(bytes, 4, bytes.length));
+			else if(op == 9)
+				return readMessage2MQTT(Arrays.copyOfRange(bytes, 4, bytes.length));
 			else
 				throw new IOException();
+		}
+
+		private ProxyMessage readMessage0MQTT(byte[] bytes) {
+			int idLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 0, 4)).getInt();
+			String id = new String(Arrays.copyOfRange(bytes, 4, 4 + idLen));
+			int appIdLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 4 + idLen, 8 + idLen)).getInt();
+			String appId = new String(Arrays.copyOfRange(bytes, 8 + idLen, 8 + idLen + appIdLen));
+			return ProxyMessage.newBuilder()
+					.setDeviceId(id)
+					.setAppId(appId)
+					.setOperation(ProxyMessage.Operation.ATTEST_TIMESTAMP_MQTT)
+					.build();
+		}
+
+		private ProxyMessage readMessage2MQTT(byte[] bytes) {
+			int idLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 0, 4)).getInt();
+			String id = new String(Arrays.copyOfRange(bytes, 4, 4 + idLen));
+			int appIdLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 4 + idLen, 8 + idLen)).getInt();
+			String appId = new String(Arrays.copyOfRange(bytes, 8 + idLen, 8 + idLen + appIdLen));
+			int securityVersion = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 8 + idLen + appIdLen,
+					12 + idLen + appIdLen)).getInt();
+			int productId = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 12 + idLen + appIdLen,
+					16 + idLen + appIdLen)).getInt();
+			int claimLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 16 + idLen + appIdLen,
+					20 + idLen + appIdLen)).getInt();
+			byte[] claim = Arrays.copyOfRange(bytes, 20 + idLen + appIdLen, 20 + idLen + appIdLen
+					+ claimLen);
+			int nonceLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 20 + idLen + appIdLen + claimLen,
+					24 + idLen + appIdLen + claimLen)).getInt();
+			String nonce = new String(Arrays.copyOfRange(bytes, 24 + idLen + appIdLen + claimLen,
+					24 + idLen + appIdLen + claimLen + nonceLen));
+			int mrEnclaveLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 24 + idLen + appIdLen + claimLen + nonceLen,
+					28 + idLen + appIdLen + claimLen + nonceLen)).getInt();
+			byte[] mrEnclave = Arrays.copyOfRange(bytes, 28 + idLen + appIdLen + claimLen + nonceLen,
+					28 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen);
+			int mrSignerLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 28 + idLen + appIdLen + claimLen
+							+ nonceLen + mrEnclaveLen, 32 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen)).getInt();
+			byte[] mrSigner = Arrays.copyOfRange(bytes, 32 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen,
+					32 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen + mrSignerLen);
+			int tsLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 32 + idLen + appIdLen + claimLen + nonceLen +
+					mrEnclaveLen + mrSignerLen, 36 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen + mrSignerLen)).getInt();
+			byte[] ts = Arrays.copyOfRange(bytes, 36 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen + mrSignerLen,
+					36 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen + mrSignerLen + tsLen);
+
+
+			ProtoMQTTEvidence mqttEvidence = ProtoMQTTEvidence.newBuilder()
+					.setSecurityVersion(securityVersion)
+					.setProductId(productId)
+					.setClaim(ByteString.copyFrom(claim))
+					.setNonce(nonce)
+					.setMrEnclave(ByteString.copyFrom(mrEnclave))
+					.setMrSigner(ByteString.copyFrom(mrSigner))
+					.build();
+			return ProxyMessage.newBuilder()
+					.setDeviceId(id)
+					.setAppId(appId)
+					.setMqttEvidence(mqttEvidence)
+					.setTimestamp(ByteString.copyFrom(ts))
+					.setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN_MQTT)
+					.build();
 		}
 
 		private ProxyMessage readMessage2(byte[] bytes) {
@@ -234,6 +314,7 @@ public class SocketProxyMock implements Runnable {
 					.setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN)
 					.setEvidence(protoEvidence)
 					.setSignature(protoSchnorr)
+					.setTimestamp(ByteString.copyFrom(timestamp))
 					.build();
 		}
 
@@ -257,38 +338,36 @@ public class SocketProxyMock implements Runnable {
 			if(msg.getOperation() == ProxyMessage.Operation.ATTEST_TIMESTAMP)
 				return timestampAttMock(msg);
 				//return timestampAtt(serviceProxy.invokeOrdered2(msg.toByteArray()));
+			else if(msg.getOperation() == ProxyMessage.Operation.ATTEST_TIMESTAMP_MQTT)
+				return timestampAttMQTTMock(msg);
 			else if(msg.getOperation() == ProxyMessage.Operation.MEMBERSHIP_JOIN)
 				return joinMock(msg);
+			else if(msg.getOperation() == ProxyMessage.Operation.MEMBERSHIP_JOIN_MQTT)
+				return joinMQTTMock(msg);
 			else
 				return null;
 		}
 
-		/*private ProxyResponse runProxyMessage(ProxyMessage msg) throws IOException, SecretSharingException, ClassNotFoundException, SireException {
-			Response res;
-			if(msg.getOperation().toString().contains("GET") || msg.getOperation().toString().contains("VIEW"))
-				res = null;//serviceProxy.invokeUnordered(msg.toByteArray());
-			else if(msg.getOperation() == ProxyMessage.Operation.ATTEST_TIMESTAMP)
-				return timestampAttMock(msg);
-				//return timestampAtt(serviceProxy.invokeOrdered2(msg.toByteArray()));
-			else if(msg.getOperation() == ProxyMessage.Operation.MEMBERSHIP_JOIN)
-				return joinMock(msg);
-				//return join(serviceProxy.invokeOrdered2(msg.toByteArray()));
-			else {
-				res = null;
-				*//*synchronized (proxyLock) {
-					res = serviceProxy.invokeOrdered(msg.toByteArray());
-				}*//*
-			}
-			switch(msg.getOperation()) {
-				case MAP_GET: return mapGet(res);
-				case MAP_LIST: return mapList(res);
-				case MEMBERSHIP_VIEW: return memberView(res);
-				case EXTENSION_GET: return extGet(res);
-				case POLICY_GET: return policyGet(res);
-				case TIMESTAMP_GET: return timestampGet(res);
-				default: return null;
-			}
-		}*/
+		private ProxyResponse joinMQTTMock(ProxyMessage msg) throws IOException {
+			boolean isVerified = verifyMQTTEvidence(msg.getMqttEvidence());
+			java.sql.Timestamp ts = new java.sql.Timestamp(System.currentTimeMillis());
+			System.out.println("MQTT with id " + msg.getDeviceId() + " attested at " + ts);
+			if(isVerified)
+				return ProxyResponse.newBuilder()
+						.setTimestamp(ByteString.copyFrom(serialize(ts)))
+						.setType(ProxyResponse.ResponseType.JOIN_MQTT)
+						.build();
+			else
+				return ProxyResponse.newBuilder().build();
+		}
+
+		private boolean verifyMQTTEvidence(ProtoMQTTEvidence evidence) throws IOException {
+			byte[] hashClaim = computeHash("measure1".getBytes());
+			byte[] computedClaim = computeHash(hashClaim, evidence.getNonce().getBytes());
+			byte[] sentCompClaim = byteStringToByteArray(new ByteArrayOutputStream(), evidence.getClaim());
+
+			return Arrays.equals(computedClaim, sentCompClaim);
+		}
 
 		private ProxyResponse joinMock(ProxyMessage msg) throws IOException {
 			//SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
@@ -321,6 +400,18 @@ public class SocketProxyMock implements Runnable {
 					.build();
 		}
 
+		private ProxyResponse timestampAttMQTTMock(ProxyMessage msg) throws IOException {
+			System.out.println("Received attest timestamp request from mqtt with id " + msg.getDeviceId());
+			//byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 124, res.getPlainData().length);
+			java.sql.Timestamp ts = new java.sql.Timestamp(System.currentTimeMillis());
+			//byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
+			return ProxyResponse.newBuilder()
+					.setTimestamp(ByteString.copyFrom(serialize(ts)))
+					.setType(ProxyResponse.ResponseType.PREJOIN_MQTT)
+					//.setSign(schnorrToProto(sign))
+					.build();
+		}
+
 		private byte[] computeHash(byte[]... contents) {
 			try {
 				MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -333,160 +424,5 @@ public class SocketProxyMock implements Runnable {
 			}
 			return null;
 		}
-
-		/*private ProxyResponse join(ConfidentialExtractedResponse res) throws SireException {
-			SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
-			byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 156, res.getPlainData().length);
-			byte[] ts = Arrays.copyOfRange(data, 0, 91);
-			byte[] pubKey = Arrays.copyOfRange(data, 91, 124);
-			byte[] hash = Arrays.copyOfRange(data, 124, data.length);
-			return ProxyResponse.newBuilder()
-					.setPubKey(ByteString.copyFrom(pubKey))
-					.setTimestamp(ByteString.copyFrom(ts))
-					.setHash(ByteString.copyFrom(hash))
-					.setSign(schnorrToProto(sign))
-					.build();
-		}
-
-		private ProxyResponse timestampAtt(ConfidentialExtractedResponse res) throws SireException {
-			SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
-			byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 124, res.getPlainData().length);
-			byte[] ts = Arrays.copyOfRange(data, 0, 91);
-			byte[] pubKey = Arrays.copyOfRange(data, 91, data.length);
-			return ProxyResponse.newBuilder()
-					.setPubKey(ByteString.copyFrom(pubKey))
-					.setTimestamp(ByteString.copyFrom(ts))
-					.setSign(schnorrToProto(sign))
-					.build();
-		}*/
-
-		/*private SchnorrSignature combineSignatures (UncombinedConfidentialResponse res) throws SireException {
-			PublicPartialSignature partialSignature;
-			byte[] signs = Arrays.copyOfRange(res.getPlainData(), 0, 199);
-			try (ByteArrayInputStream bis = new ByteArrayInputStream(signs);
-				 ObjectInput in = new ObjectInputStream(bis)) {
-				partialSignature = PublicPartialSignature.deserialize(signatureScheme, in);
-			} catch (IOException | ClassNotFoundException e) {
-				throw new SireException("Failed to deserialize public data of partial signatures");
-			}
-			EllipticCurveCommitment signingKeyCommitment = partialSignature.getSigningKeyCommitment();
-			EllipticCurveCommitment randomKeyCommitment = partialSignature.getRandomKeyCommitment();
-			ECPoint randomPublicKey = partialSignature.getRandomPublicKey();
-			VerifiableShare[] verifiableShares = res.getVerifiableShares()[0];
-			Share[] partialSignatures = new Share[verifiableShares.length];
-			for (int i = 0; i < verifiableShares.length; i++) {
-				partialSignatures[i] = verifiableShares[i].getShare();
-			}
-
-			if (randomKeyCommitment == null)
-				throw new IllegalStateException("Random key commitment is null");
-
-			byte[] data = Arrays.copyOfRange(res.getPlainData(), 199, res.getPlainData().length);
-
-			try {
-				BigInteger sigma = signatureScheme.combinePartialSignatures(
-						serviceProxy.getCurrentF(),
-						data,
-						signingKeyCommitment,
-						randomKeyCommitment,
-						randomPublicKey,
-						partialSignatures
-				);
-				return new SchnorrSignature(sigma.toByteArray(), verifierPublicKey.getEncoded(true),
-						randomPublicKey.getEncoded(true));
-			} catch (SecretSharingException e) {
-				throw new SireException("Failed to combine partial signatures", e);
-			}
-		}*/
-
-		/*private ProxyResponse timestampGet(Response res) {
-			return null;
-		}
-
-		private ProxyResponse policyGet(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
-			byte[] tmp = res.getPainData();
-			if (tmp != null) {
-				return ProxyResponse.newBuilder()
-						.setType(ProxyResponse.ResponseType.POLICY_GET)
-						.setExtPolicy((String) deserialize(tmp))
-						.build();
-			} else {
-				return ProxyResponse.newBuilder().build();
-			}
-
-		}
-
-		private ProxyResponse extGet(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
-			byte[] tmp = res.getPainData();
-			if (tmp != null) {
-				return ProxyResponse.newBuilder()
-						.setType(ProxyResponse.ResponseType.EXTENSION_GET)
-						.setExtPolicy((String) deserialize(tmp))
-						.build();
-			} else {
-				return ProxyResponse.newBuilder().build();
-			}
-		}
-
-		private ProxyResponse memberView(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
-			byte[] tmp = res.getPainData();
-			ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
-			if (tmp != null) {
-				ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
-				ObjectInputStream oin = new ObjectInputStream(bin);
-				List<DeviceContext> members = (List<DeviceContext>) oin.readObject();
-				for (DeviceContext d : members)
-					if(d.isCertificateValid()) {
-						prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
-								.setDeviceId(d.getDeviceId())
-								.setTime(Timestamp.newBuilder()
-										.setSeconds(d.getLastPing().getTime() / 1000)
-										.build())
-								.setCertExpTime(Timestamp.newBuilder()
-										.setSeconds(d.getCertExpTime().getTime() / 1000)
-										.build())
-								.build());
-					} else {
-						prBuilder.addMembers(ProxyResponse.ProtoDeviceContext.newBuilder()
-								.setDeviceId(d.getDeviceId())
-								.setTime(Timestamp.newBuilder()
-										.setSeconds(d.getLastPing().getTime() / 1000)
-										.build())
-								.build());
-					}
-
-			}
-			return prBuilder.build();
-		}
-
-		private ProxyResponse mapList(Response res) throws IOException, ClassNotFoundException, SecretSharingException {
-			byte[] tmp = res.getPainData();
-			ProxyResponse.Builder prBuilder = ProxyResponse.newBuilder();
-			if (tmp != null) {
-				ByteArrayInputStream bin = new ByteArrayInputStream(tmp);
-				ObjectInputStream oin = new ObjectInputStream(bin);
-				ArrayList<byte[]> lst = (ArrayList<byte[]>) oin.readObject();
-				for (byte[] b : lst)
-					prBuilder.addList(ByteString.copyFrom(b));
-			}
-			return prBuilder.build();
-		}
-
-		private ProxyResponse mapGet(Response res) throws SecretSharingException {
-			byte[] tmp = res.getPainData();
-			if (tmp != null) {
-				return ProxyResponse.newBuilder()
-						.setValue(ByteString.copyFrom(tmp))
-						.build();
-			} else {
-				return ProxyResponse.newBuilder().build();
-			}
-		}
-
-		private void close() {
-			synchronized (proxyLock) {
-				serviceProxy.close();
-			}
-		}*/
 	}
 }

@@ -1378,6 +1378,936 @@ public final class Messages {
 
   }
 
+  public interface ProtoMQTTEvidenceOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:sire.messages.ProtoMQTTEvidence)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int32 securityVersion = 1;</code>
+     * @return The securityVersion.
+     */
+    int getSecurityVersion();
+
+    /**
+     * <code>int32 productId = 2;</code>
+     * @return The productId.
+     */
+    int getProductId();
+
+    /**
+     * <code>bytes claim = 3;</code>
+     * @return The claim.
+     */
+    com.google.protobuf.ByteString getClaim();
+
+    /**
+     * <code>string nonce = 4;</code>
+     * @return The nonce.
+     */
+    java.lang.String getNonce();
+    /**
+     * <code>string nonce = 4;</code>
+     * @return The bytes for nonce.
+     */
+    com.google.protobuf.ByteString
+        getNonceBytes();
+
+    /**
+     * <code>bytes mrEnclave = 5;</code>
+     * @return The mrEnclave.
+     */
+    com.google.protobuf.ByteString getMrEnclave();
+
+    /**
+     * <code>bytes mrSigner = 6;</code>
+     * @return The mrSigner.
+     */
+    com.google.protobuf.ByteString getMrSigner();
+  }
+  /**
+   * Protobuf type {@code sire.messages.ProtoMQTTEvidence}
+   */
+  public static final class ProtoMQTTEvidence extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:sire.messages.ProtoMQTTEvidence)
+      ProtoMQTTEvidenceOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ProtoMQTTEvidence.newBuilder() to construct.
+    private ProtoMQTTEvidence(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ProtoMQTTEvidence() {
+      claim_ = com.google.protobuf.ByteString.EMPTY;
+      nonce_ = "";
+      mrEnclave_ = com.google.protobuf.ByteString.EMPTY;
+      mrSigner_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ProtoMQTTEvidence();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProtoMQTTEvidence(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              securityVersion_ = input.readInt32();
+              break;
+            }
+            case 16: {
+
+              productId_ = input.readInt32();
+              break;
+            }
+            case 26: {
+
+              claim_ = input.readBytes();
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              nonce_ = s;
+              break;
+            }
+            case 42: {
+
+              mrEnclave_ = input.readBytes();
+              break;
+            }
+            case 50: {
+
+              mrSigner_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return sire.messages.Messages.internal_static_sire_messages_ProtoMQTTEvidence_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return sire.messages.Messages.internal_static_sire_messages_ProtoMQTTEvidence_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              sire.messages.Messages.ProtoMQTTEvidence.class, sire.messages.Messages.ProtoMQTTEvidence.Builder.class);
+    }
+
+    public static final int SECURITYVERSION_FIELD_NUMBER = 1;
+    private int securityVersion_;
+    /**
+     * <code>int32 securityVersion = 1;</code>
+     * @return The securityVersion.
+     */
+    @java.lang.Override
+    public int getSecurityVersion() {
+      return securityVersion_;
+    }
+
+    public static final int PRODUCTID_FIELD_NUMBER = 2;
+    private int productId_;
+    /**
+     * <code>int32 productId = 2;</code>
+     * @return The productId.
+     */
+    @java.lang.Override
+    public int getProductId() {
+      return productId_;
+    }
+
+    public static final int CLAIM_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString claim_;
+    /**
+     * <code>bytes claim = 3;</code>
+     * @return The claim.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getClaim() {
+      return claim_;
+    }
+
+    public static final int NONCE_FIELD_NUMBER = 4;
+    private volatile java.lang.Object nonce_;
+    /**
+     * <code>string nonce = 4;</code>
+     * @return The nonce.
+     */
+    @java.lang.Override
+    public java.lang.String getNonce() {
+      java.lang.Object ref = nonce_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        nonce_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string nonce = 4;</code>
+     * @return The bytes for nonce.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getNonceBytes() {
+      java.lang.Object ref = nonce_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        nonce_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int MRENCLAVE_FIELD_NUMBER = 5;
+    private com.google.protobuf.ByteString mrEnclave_;
+    /**
+     * <code>bytes mrEnclave = 5;</code>
+     * @return The mrEnclave.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getMrEnclave() {
+      return mrEnclave_;
+    }
+
+    public static final int MRSIGNER_FIELD_NUMBER = 6;
+    private com.google.protobuf.ByteString mrSigner_;
+    /**
+     * <code>bytes mrSigner = 6;</code>
+     * @return The mrSigner.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString getMrSigner() {
+      return mrSigner_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @java.lang.Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (securityVersion_ != 0) {
+        output.writeInt32(1, securityVersion_);
+      }
+      if (productId_ != 0) {
+        output.writeInt32(2, productId_);
+      }
+      if (!claim_.isEmpty()) {
+        output.writeBytes(3, claim_);
+      }
+      if (!getNonceBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, nonce_);
+      }
+      if (!mrEnclave_.isEmpty()) {
+        output.writeBytes(5, mrEnclave_);
+      }
+      if (!mrSigner_.isEmpty()) {
+        output.writeBytes(6, mrSigner_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @java.lang.Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (securityVersion_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, securityVersion_);
+      }
+      if (productId_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, productId_);
+      }
+      if (!claim_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, claim_);
+      }
+      if (!getNonceBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, nonce_);
+      }
+      if (!mrEnclave_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, mrEnclave_);
+      }
+      if (!mrSigner_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, mrSigner_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof sire.messages.Messages.ProtoMQTTEvidence)) {
+        return super.equals(obj);
+      }
+      sire.messages.Messages.ProtoMQTTEvidence other = (sire.messages.Messages.ProtoMQTTEvidence) obj;
+
+      if (getSecurityVersion()
+          != other.getSecurityVersion()) return false;
+      if (getProductId()
+          != other.getProductId()) return false;
+      if (!getClaim()
+          .equals(other.getClaim())) return false;
+      if (!getNonce()
+          .equals(other.getNonce())) return false;
+      if (!getMrEnclave()
+          .equals(other.getMrEnclave())) return false;
+      if (!getMrSigner()
+          .equals(other.getMrSigner())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + SECURITYVERSION_FIELD_NUMBER;
+      hash = (53 * hash) + getSecurityVersion();
+      hash = (37 * hash) + PRODUCTID_FIELD_NUMBER;
+      hash = (53 * hash) + getProductId();
+      hash = (37 * hash) + CLAIM_FIELD_NUMBER;
+      hash = (53 * hash) + getClaim().hashCode();
+      hash = (37 * hash) + NONCE_FIELD_NUMBER;
+      hash = (53 * hash) + getNonce().hashCode();
+      hash = (37 * hash) + MRENCLAVE_FIELD_NUMBER;
+      hash = (53 * hash) + getMrEnclave().hashCode();
+      hash = (37 * hash) + MRSIGNER_FIELD_NUMBER;
+      hash = (53 * hash) + getMrSigner().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static sire.messages.Messages.ProtoMQTTEvidence parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static sire.messages.Messages.ProtoMQTTEvidence parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(sire.messages.Messages.ProtoMQTTEvidence prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code sire.messages.ProtoMQTTEvidence}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:sire.messages.ProtoMQTTEvidence)
+        sire.messages.Messages.ProtoMQTTEvidenceOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMQTTEvidence_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMQTTEvidence_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                sire.messages.Messages.ProtoMQTTEvidence.class, sire.messages.Messages.ProtoMQTTEvidence.Builder.class);
+      }
+
+      // Construct using sire.messages.Messages.ProtoMQTTEvidence.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        securityVersion_ = 0;
+
+        productId_ = 0;
+
+        claim_ = com.google.protobuf.ByteString.EMPTY;
+
+        nonce_ = "";
+
+        mrEnclave_ = com.google.protobuf.ByteString.EMPTY;
+
+        mrSigner_ = com.google.protobuf.ByteString.EMPTY;
+
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return sire.messages.Messages.internal_static_sire_messages_ProtoMQTTEvidence_descriptor;
+      }
+
+      @java.lang.Override
+      public sire.messages.Messages.ProtoMQTTEvidence getDefaultInstanceForType() {
+        return sire.messages.Messages.ProtoMQTTEvidence.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public sire.messages.Messages.ProtoMQTTEvidence build() {
+        sire.messages.Messages.ProtoMQTTEvidence result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public sire.messages.Messages.ProtoMQTTEvidence buildPartial() {
+        sire.messages.Messages.ProtoMQTTEvidence result = new sire.messages.Messages.ProtoMQTTEvidence(this);
+        result.securityVersion_ = securityVersion_;
+        result.productId_ = productId_;
+        result.claim_ = claim_;
+        result.nonce_ = nonce_;
+        result.mrEnclave_ = mrEnclave_;
+        result.mrSigner_ = mrSigner_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof sire.messages.Messages.ProtoMQTTEvidence) {
+          return mergeFrom((sire.messages.Messages.ProtoMQTTEvidence)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(sire.messages.Messages.ProtoMQTTEvidence other) {
+        if (other == sire.messages.Messages.ProtoMQTTEvidence.getDefaultInstance()) return this;
+        if (other.getSecurityVersion() != 0) {
+          setSecurityVersion(other.getSecurityVersion());
+        }
+        if (other.getProductId() != 0) {
+          setProductId(other.getProductId());
+        }
+        if (other.getClaim() != com.google.protobuf.ByteString.EMPTY) {
+          setClaim(other.getClaim());
+        }
+        if (!other.getNonce().isEmpty()) {
+          nonce_ = other.nonce_;
+          onChanged();
+        }
+        if (other.getMrEnclave() != com.google.protobuf.ByteString.EMPTY) {
+          setMrEnclave(other.getMrEnclave());
+        }
+        if (other.getMrSigner() != com.google.protobuf.ByteString.EMPTY) {
+          setMrSigner(other.getMrSigner());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        sire.messages.Messages.ProtoMQTTEvidence parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (sire.messages.Messages.ProtoMQTTEvidence) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int securityVersion_ ;
+      /**
+       * <code>int32 securityVersion = 1;</code>
+       * @return The securityVersion.
+       */
+      @java.lang.Override
+      public int getSecurityVersion() {
+        return securityVersion_;
+      }
+      /**
+       * <code>int32 securityVersion = 1;</code>
+       * @param value The securityVersion to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSecurityVersion(int value) {
+        
+        securityVersion_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 securityVersion = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSecurityVersion() {
+        
+        securityVersion_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int productId_ ;
+      /**
+       * <code>int32 productId = 2;</code>
+       * @return The productId.
+       */
+      @java.lang.Override
+      public int getProductId() {
+        return productId_;
+      }
+      /**
+       * <code>int32 productId = 2;</code>
+       * @param value The productId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProductId(int value) {
+        
+        productId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 productId = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearProductId() {
+        
+        productId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString claim_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes claim = 3;</code>
+       * @return The claim.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString getClaim() {
+        return claim_;
+      }
+      /**
+       * <code>bytes claim = 3;</code>
+       * @param value The claim to set.
+       * @return This builder for chaining.
+       */
+      public Builder setClaim(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        claim_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes claim = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearClaim() {
+        
+        claim_ = getDefaultInstance().getClaim();
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object nonce_ = "";
+      /**
+       * <code>string nonce = 4;</code>
+       * @return The nonce.
+       */
+      public java.lang.String getNonce() {
+        java.lang.Object ref = nonce_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          nonce_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string nonce = 4;</code>
+       * @return The bytes for nonce.
+       */
+      public com.google.protobuf.ByteString
+          getNonceBytes() {
+        java.lang.Object ref = nonce_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          nonce_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string nonce = 4;</code>
+       * @param value The nonce to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNonce(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        nonce_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string nonce = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearNonce() {
+        
+        nonce_ = getDefaultInstance().getNonce();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string nonce = 4;</code>
+       * @param value The bytes for nonce to set.
+       * @return This builder for chaining.
+       */
+      public Builder setNonceBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        nonce_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString mrEnclave_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes mrEnclave = 5;</code>
+       * @return The mrEnclave.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString getMrEnclave() {
+        return mrEnclave_;
+      }
+      /**
+       * <code>bytes mrEnclave = 5;</code>
+       * @param value The mrEnclave to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMrEnclave(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        mrEnclave_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes mrEnclave = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMrEnclave() {
+        
+        mrEnclave_ = getDefaultInstance().getMrEnclave();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString mrSigner_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes mrSigner = 6;</code>
+       * @return The mrSigner.
+       */
+      @java.lang.Override
+      public com.google.protobuf.ByteString getMrSigner() {
+        return mrSigner_;
+      }
+      /**
+       * <code>bytes mrSigner = 6;</code>
+       * @param value The mrSigner to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMrSigner(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        mrSigner_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes mrSigner = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMrSigner() {
+        
+        mrSigner_ = getDefaultInstance().getMrSigner();
+        onChanged();
+        return this;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:sire.messages.ProtoMQTTEvidence)
+    }
+
+    // @@protoc_insertion_point(class_scope:sire.messages.ProtoMQTTEvidence)
+    private static final sire.messages.Messages.ProtoMQTTEvidence DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new sire.messages.Messages.ProtoMQTTEvidence();
+    }
+
+    public static sire.messages.Messages.ProtoMQTTEvidence getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ProtoMQTTEvidence>
+        PARSER = new com.google.protobuf.AbstractParser<ProtoMQTTEvidence>() {
+      @java.lang.Override
+      public ProtoMQTTEvidence parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ProtoMQTTEvidence(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ProtoMQTTEvidence> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProtoMQTTEvidence> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public sire.messages.Messages.ProtoMQTTEvidence getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface ProxyMessageOrBuilder extends
       // @@protoc_insertion_point(interface_extends:sire.messages.ProxyMessage)
       com.google.protobuf.MessageOrBuilder {
@@ -1529,6 +2459,21 @@ public final class Messages {
      * @return The pubKey.
      */
     com.google.protobuf.ByteString getPubKey();
+
+    /**
+     * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+     * @return Whether the mqttEvidence field is set.
+     */
+    boolean hasMqttEvidence();
+    /**
+     * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+     * @return The mqttEvidence.
+     */
+    sire.messages.Messages.ProtoMQTTEvidence getMqttEvidence();
+    /**
+     * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+     */
+    sire.messages.Messages.ProtoMQTTEvidenceOrBuilder getMqttEvidenceOrBuilder();
   }
   /**
    * Protobuf type {@code sire.messages.ProxyMessage}
@@ -1673,6 +2618,19 @@ public final class Messages {
               pubKey_ = input.readBytes();
               break;
             }
+            case 106: {
+              sire.messages.Messages.ProtoMQTTEvidence.Builder subBuilder = null;
+              if (mqttEvidence_ != null) {
+                subBuilder = mqttEvidence_.toBuilder();
+              }
+              mqttEvidence_ = input.readMessage(sire.messages.Messages.ProtoMQTTEvidence.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(mqttEvidence_);
+                mqttEvidence_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -1723,89 +2681,97 @@ public final class Messages {
        */
       ATTEST_TIMESTAMP(1),
       /**
+       * <code>ATTEST_TIMESTAMP_MQTT = 2;</code>
+       */
+      ATTEST_TIMESTAMP_MQTT(2),
+      /**
        * <pre>
        *--------------MAP--------------
        * </pre>
        *
-       * <code>MAP_PUT = 2;</code>
+       * <code>MAP_PUT = 3;</code>
        */
-      MAP_PUT(2),
+      MAP_PUT(3),
       /**
-       * <code>MAP_DELETE = 3;</code>
+       * <code>MAP_DELETE = 4;</code>
        */
-      MAP_DELETE(3),
+      MAP_DELETE(4),
       /**
-       * <code>MAP_GET = 4;</code>
+       * <code>MAP_GET = 5;</code>
        */
-      MAP_GET(4),
+      MAP_GET(5),
       /**
-       * <code>MAP_LIST = 5;</code>
+       * <code>MAP_LIST = 6;</code>
        */
-      MAP_LIST(5),
+      MAP_LIST(6),
       /**
-       * <code>MAP_CAS = 6;</code>
+       * <code>MAP_CAS = 7;</code>
        */
-      MAP_CAS(6),
+      MAP_CAS(7),
       /**
        * <pre>
        *-----------MEMBERSHIP-----------
        * </pre>
        *
-       * <code>MEMBERSHIP_JOIN = 7;</code>
+       * <code>MEMBERSHIP_JOIN = 8;</code>
        */
-      MEMBERSHIP_JOIN(7),
+      MEMBERSHIP_JOIN(8),
       /**
-       * <code>MEMBERSHIP_LEAVE = 8;</code>
+       * <code>MEMBERSHIP_JOIN_MQTT = 9;</code>
        */
-      MEMBERSHIP_LEAVE(8),
+      MEMBERSHIP_JOIN_MQTT(9),
       /**
-       * <code>MEMBERSHIP_VIEW = 9;</code>
+       * <code>MEMBERSHIP_LEAVE = 10;</code>
        */
-      MEMBERSHIP_VIEW(9),
+      MEMBERSHIP_LEAVE(10),
       /**
-       * <code>MEMBERSHIP_PING = 10;</code>
+       * <code>MEMBERSHIP_VIEW = 11;</code>
        */
-      MEMBERSHIP_PING(10),
+      MEMBERSHIP_VIEW(11),
+      /**
+       * <code>MEMBERSHIP_PING = 12;</code>
+       */
+      MEMBERSHIP_PING(12),
       /**
        * <pre>
        *-----------EXTENSION------------
        * </pre>
        *
-       * <code>EXTENSION_ADD = 11;</code>
+       * <code>EXTENSION_ADD = 13;</code>
        */
-      EXTENSION_ADD(11),
+      EXTENSION_ADD(13),
       /**
-       * <code>EXTENSION_REMOVE = 12;</code>
+       * <code>EXTENSION_REMOVE = 14;</code>
        */
-      EXTENSION_REMOVE(12),
+      EXTENSION_REMOVE(14),
       /**
-       * <code>EXTENSION_GET = 13;</code>
+       * <code>EXTENSION_GET = 15;</code>
        */
-      EXTENSION_GET(13),
+      EXTENSION_GET(15),
       /**
        * <pre>
        *-------------POLICY-------------
        * </pre>
        *
-       * <code>POLICY_ADD = 14;</code>
+       * <code>POLICY_ADD = 16;</code>
        */
-      POLICY_ADD(14),
+      POLICY_ADD(16),
       /**
-       * <code>POLICY_REMOVE = 15;</code>
+       * <code>POLICY_REMOVE = 17;</code>
        */
-      POLICY_REMOVE(15),
+      POLICY_REMOVE(17),
       /**
-       * <code>POLICY_GET = 16;</code>
+       * <code>POLICY_GET = 18;</code>
        */
-      POLICY_GET(16),
+      POLICY_GET(18),
       /**
        * <pre>
        *-----------TIMESTAMP------------
        * </pre>
        *
-       * <code>TIMESTAMP_GET = 17;</code>
+       * <code>TIMESTAMP_GET = 19;</code>
        */
-      TIMESTAMP_GET(17),
+      TIMESTAMP_GET(19),
       UNRECOGNIZED(-1),
       ;
 
@@ -1822,89 +2788,97 @@ public final class Messages {
        */
       public static final int ATTEST_TIMESTAMP_VALUE = 1;
       /**
+       * <code>ATTEST_TIMESTAMP_MQTT = 2;</code>
+       */
+      public static final int ATTEST_TIMESTAMP_MQTT_VALUE = 2;
+      /**
        * <pre>
        *--------------MAP--------------
        * </pre>
        *
-       * <code>MAP_PUT = 2;</code>
+       * <code>MAP_PUT = 3;</code>
        */
-      public static final int MAP_PUT_VALUE = 2;
+      public static final int MAP_PUT_VALUE = 3;
       /**
-       * <code>MAP_DELETE = 3;</code>
+       * <code>MAP_DELETE = 4;</code>
        */
-      public static final int MAP_DELETE_VALUE = 3;
+      public static final int MAP_DELETE_VALUE = 4;
       /**
-       * <code>MAP_GET = 4;</code>
+       * <code>MAP_GET = 5;</code>
        */
-      public static final int MAP_GET_VALUE = 4;
+      public static final int MAP_GET_VALUE = 5;
       /**
-       * <code>MAP_LIST = 5;</code>
+       * <code>MAP_LIST = 6;</code>
        */
-      public static final int MAP_LIST_VALUE = 5;
+      public static final int MAP_LIST_VALUE = 6;
       /**
-       * <code>MAP_CAS = 6;</code>
+       * <code>MAP_CAS = 7;</code>
        */
-      public static final int MAP_CAS_VALUE = 6;
+      public static final int MAP_CAS_VALUE = 7;
       /**
        * <pre>
        *-----------MEMBERSHIP-----------
        * </pre>
        *
-       * <code>MEMBERSHIP_JOIN = 7;</code>
+       * <code>MEMBERSHIP_JOIN = 8;</code>
        */
-      public static final int MEMBERSHIP_JOIN_VALUE = 7;
+      public static final int MEMBERSHIP_JOIN_VALUE = 8;
       /**
-       * <code>MEMBERSHIP_LEAVE = 8;</code>
+       * <code>MEMBERSHIP_JOIN_MQTT = 9;</code>
        */
-      public static final int MEMBERSHIP_LEAVE_VALUE = 8;
+      public static final int MEMBERSHIP_JOIN_MQTT_VALUE = 9;
       /**
-       * <code>MEMBERSHIP_VIEW = 9;</code>
+       * <code>MEMBERSHIP_LEAVE = 10;</code>
        */
-      public static final int MEMBERSHIP_VIEW_VALUE = 9;
+      public static final int MEMBERSHIP_LEAVE_VALUE = 10;
       /**
-       * <code>MEMBERSHIP_PING = 10;</code>
+       * <code>MEMBERSHIP_VIEW = 11;</code>
        */
-      public static final int MEMBERSHIP_PING_VALUE = 10;
+      public static final int MEMBERSHIP_VIEW_VALUE = 11;
+      /**
+       * <code>MEMBERSHIP_PING = 12;</code>
+       */
+      public static final int MEMBERSHIP_PING_VALUE = 12;
       /**
        * <pre>
        *-----------EXTENSION------------
        * </pre>
        *
-       * <code>EXTENSION_ADD = 11;</code>
+       * <code>EXTENSION_ADD = 13;</code>
        */
-      public static final int EXTENSION_ADD_VALUE = 11;
+      public static final int EXTENSION_ADD_VALUE = 13;
       /**
-       * <code>EXTENSION_REMOVE = 12;</code>
+       * <code>EXTENSION_REMOVE = 14;</code>
        */
-      public static final int EXTENSION_REMOVE_VALUE = 12;
+      public static final int EXTENSION_REMOVE_VALUE = 14;
       /**
-       * <code>EXTENSION_GET = 13;</code>
+       * <code>EXTENSION_GET = 15;</code>
        */
-      public static final int EXTENSION_GET_VALUE = 13;
+      public static final int EXTENSION_GET_VALUE = 15;
       /**
        * <pre>
        *-------------POLICY-------------
        * </pre>
        *
-       * <code>POLICY_ADD = 14;</code>
+       * <code>POLICY_ADD = 16;</code>
        */
-      public static final int POLICY_ADD_VALUE = 14;
+      public static final int POLICY_ADD_VALUE = 16;
       /**
-       * <code>POLICY_REMOVE = 15;</code>
+       * <code>POLICY_REMOVE = 17;</code>
        */
-      public static final int POLICY_REMOVE_VALUE = 15;
+      public static final int POLICY_REMOVE_VALUE = 17;
       /**
-       * <code>POLICY_GET = 16;</code>
+       * <code>POLICY_GET = 18;</code>
        */
-      public static final int POLICY_GET_VALUE = 16;
+      public static final int POLICY_GET_VALUE = 18;
       /**
        * <pre>
        *-----------TIMESTAMP------------
        * </pre>
        *
-       * <code>TIMESTAMP_GET = 17;</code>
+       * <code>TIMESTAMP_GET = 19;</code>
        */
-      public static final int TIMESTAMP_GET_VALUE = 17;
+      public static final int TIMESTAMP_GET_VALUE = 19;
 
 
       public final int getNumber() {
@@ -1933,22 +2907,24 @@ public final class Messages {
         switch (value) {
           case 0: return ATTEST_GET_PUBLIC_KEY;
           case 1: return ATTEST_TIMESTAMP;
-          case 2: return MAP_PUT;
-          case 3: return MAP_DELETE;
-          case 4: return MAP_GET;
-          case 5: return MAP_LIST;
-          case 6: return MAP_CAS;
-          case 7: return MEMBERSHIP_JOIN;
-          case 8: return MEMBERSHIP_LEAVE;
-          case 9: return MEMBERSHIP_VIEW;
-          case 10: return MEMBERSHIP_PING;
-          case 11: return EXTENSION_ADD;
-          case 12: return EXTENSION_REMOVE;
-          case 13: return EXTENSION_GET;
-          case 14: return POLICY_ADD;
-          case 15: return POLICY_REMOVE;
-          case 16: return POLICY_GET;
-          case 17: return TIMESTAMP_GET;
+          case 2: return ATTEST_TIMESTAMP_MQTT;
+          case 3: return MAP_PUT;
+          case 4: return MAP_DELETE;
+          case 5: return MAP_GET;
+          case 6: return MAP_LIST;
+          case 7: return MAP_CAS;
+          case 8: return MEMBERSHIP_JOIN;
+          case 9: return MEMBERSHIP_JOIN_MQTT;
+          case 10: return MEMBERSHIP_LEAVE;
+          case 11: return MEMBERSHIP_VIEW;
+          case 12: return MEMBERSHIP_PING;
+          case 13: return EXTENSION_ADD;
+          case 14: return EXTENSION_REMOVE;
+          case 15: return EXTENSION_GET;
+          case 16: return POLICY_ADD;
+          case 17: return POLICY_REMOVE;
+          case 18: return POLICY_GET;
+          case 19: return TIMESTAMP_GET;
           default: return null;
         }
       }
@@ -2977,6 +3953,32 @@ public final class Messages {
       return pubKey_;
     }
 
+    public static final int MQTTEVIDENCE_FIELD_NUMBER = 13;
+    private sire.messages.Messages.ProtoMQTTEvidence mqttEvidence_;
+    /**
+     * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+     * @return Whether the mqttEvidence field is set.
+     */
+    @java.lang.Override
+    public boolean hasMqttEvidence() {
+      return mqttEvidence_ != null;
+    }
+    /**
+     * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+     * @return The mqttEvidence.
+     */
+    @java.lang.Override
+    public sire.messages.Messages.ProtoMQTTEvidence getMqttEvidence() {
+      return mqttEvidence_ == null ? sire.messages.Messages.ProtoMQTTEvidence.getDefaultInstance() : mqttEvidence_;
+    }
+    /**
+     * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+     */
+    @java.lang.Override
+    public sire.messages.Messages.ProtoMQTTEvidenceOrBuilder getMqttEvidenceOrBuilder() {
+      return getMqttEvidence();
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3026,6 +4028,9 @@ public final class Messages {
       }
       if (!pubKey_.isEmpty()) {
         output.writeBytes(12, pubKey_);
+      }
+      if (mqttEvidence_ != null) {
+        output.writeMessage(13, getMqttEvidence());
       }
       unknownFields.writeTo(output);
     }
@@ -3080,6 +4085,10 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(12, pubKey_);
       }
+      if (mqttEvidence_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(13, getMqttEvidence());
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -3127,6 +4136,11 @@ public final class Messages {
       }
       if (!getPubKey()
           .equals(other.getPubKey())) return false;
+      if (hasMqttEvidence() != other.hasMqttEvidence()) return false;
+      if (hasMqttEvidence()) {
+        if (!getMqttEvidence()
+            .equals(other.getMqttEvidence())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -3168,6 +4182,10 @@ public final class Messages {
       }
       hash = (37 * hash) + PUBKEY_FIELD_NUMBER;
       hash = (53 * hash) + getPubKey().hashCode();
+      if (hasMqttEvidence()) {
+        hash = (37 * hash) + MQTTEVIDENCE_FIELD_NUMBER;
+        hash = (53 * hash) + getMqttEvidence().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3337,6 +4355,12 @@ public final class Messages {
         }
         pubKey_ = com.google.protobuf.ByteString.EMPTY;
 
+        if (mqttEvidenceBuilder_ == null) {
+          mqttEvidence_ = null;
+        } else {
+          mqttEvidence_ = null;
+          mqttEvidenceBuilder_ = null;
+        }
         return this;
       }
 
@@ -3387,6 +4411,11 @@ public final class Messages {
           result.policy_ = policyBuilder_.build();
         }
         result.pubKey_ = pubKey_;
+        if (mqttEvidenceBuilder_ == null) {
+          result.mqttEvidence_ = mqttEvidence_;
+        } else {
+          result.mqttEvidence_ = mqttEvidenceBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -3474,6 +4503,9 @@ public final class Messages {
         }
         if (other.getPubKey() != com.google.protobuf.ByteString.EMPTY) {
           setPubKey(other.getPubKey());
+        }
+        if (other.hasMqttEvidence()) {
+          mergeMqttEvidence(other.getMqttEvidence());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4414,6 +5446,125 @@ public final class Messages {
         onChanged();
         return this;
       }
+
+      private sire.messages.Messages.ProtoMQTTEvidence mqttEvidence_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          sire.messages.Messages.ProtoMQTTEvidence, sire.messages.Messages.ProtoMQTTEvidence.Builder, sire.messages.Messages.ProtoMQTTEvidenceOrBuilder> mqttEvidenceBuilder_;
+      /**
+       * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+       * @return Whether the mqttEvidence field is set.
+       */
+      public boolean hasMqttEvidence() {
+        return mqttEvidenceBuilder_ != null || mqttEvidence_ != null;
+      }
+      /**
+       * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+       * @return The mqttEvidence.
+       */
+      public sire.messages.Messages.ProtoMQTTEvidence getMqttEvidence() {
+        if (mqttEvidenceBuilder_ == null) {
+          return mqttEvidence_ == null ? sire.messages.Messages.ProtoMQTTEvidence.getDefaultInstance() : mqttEvidence_;
+        } else {
+          return mqttEvidenceBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+       */
+      public Builder setMqttEvidence(sire.messages.Messages.ProtoMQTTEvidence value) {
+        if (mqttEvidenceBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          mqttEvidence_ = value;
+          onChanged();
+        } else {
+          mqttEvidenceBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+       */
+      public Builder setMqttEvidence(
+          sire.messages.Messages.ProtoMQTTEvidence.Builder builderForValue) {
+        if (mqttEvidenceBuilder_ == null) {
+          mqttEvidence_ = builderForValue.build();
+          onChanged();
+        } else {
+          mqttEvidenceBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+       */
+      public Builder mergeMqttEvidence(sire.messages.Messages.ProtoMQTTEvidence value) {
+        if (mqttEvidenceBuilder_ == null) {
+          if (mqttEvidence_ != null) {
+            mqttEvidence_ =
+              sire.messages.Messages.ProtoMQTTEvidence.newBuilder(mqttEvidence_).mergeFrom(value).buildPartial();
+          } else {
+            mqttEvidence_ = value;
+          }
+          onChanged();
+        } else {
+          mqttEvidenceBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+       */
+      public Builder clearMqttEvidence() {
+        if (mqttEvidenceBuilder_ == null) {
+          mqttEvidence_ = null;
+          onChanged();
+        } else {
+          mqttEvidence_ = null;
+          mqttEvidenceBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+       */
+      public sire.messages.Messages.ProtoMQTTEvidence.Builder getMqttEvidenceBuilder() {
+        
+        onChanged();
+        return getMqttEvidenceFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+       */
+      public sire.messages.Messages.ProtoMQTTEvidenceOrBuilder getMqttEvidenceOrBuilder() {
+        if (mqttEvidenceBuilder_ != null) {
+          return mqttEvidenceBuilder_.getMessageOrBuilder();
+        } else {
+          return mqttEvidence_ == null ?
+              sire.messages.Messages.ProtoMQTTEvidence.getDefaultInstance() : mqttEvidence_;
+        }
+      }
+      /**
+       * <code>.sire.messages.ProtoMQTTEvidence mqttEvidence = 13;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          sire.messages.Messages.ProtoMQTTEvidence, sire.messages.Messages.ProtoMQTTEvidence.Builder, sire.messages.Messages.ProtoMQTTEvidenceOrBuilder> 
+          getMqttEvidenceFieldBuilder() {
+        if (mqttEvidenceBuilder_ == null) {
+          mqttEvidenceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              sire.messages.Messages.ProtoMQTTEvidence, sire.messages.Messages.ProtoMQTTEvidence.Builder, sire.messages.Messages.ProtoMQTTEvidenceOrBuilder>(
+                  getMqttEvidence(),
+                  getParentForChildren(),
+                  isClean());
+          mqttEvidence_ = null;
+        }
+        return mqttEvidenceBuilder_;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -4774,9 +5925,17 @@ public final class Messages {
        */
       PREJOIN(5),
       /**
-       * <code>JOIN = 6;</code>
+       * <code>PREJOIN_MQTT = 6;</code>
        */
-      JOIN(6),
+      PREJOIN_MQTT(6),
+      /**
+       * <code>JOIN = 7;</code>
+       */
+      JOIN(7),
+      /**
+       * <code>JOIN_MQTT = 8;</code>
+       */
+      JOIN_MQTT(8),
       UNRECOGNIZED(-1),
       ;
 
@@ -4805,9 +5964,17 @@ public final class Messages {
        */
       public static final int PREJOIN_VALUE = 5;
       /**
-       * <code>JOIN = 6;</code>
+       * <code>PREJOIN_MQTT = 6;</code>
        */
-      public static final int JOIN_VALUE = 6;
+      public static final int PREJOIN_MQTT_VALUE = 6;
+      /**
+       * <code>JOIN = 7;</code>
+       */
+      public static final int JOIN_VALUE = 7;
+      /**
+       * <code>JOIN_MQTT = 8;</code>
+       */
+      public static final int JOIN_MQTT_VALUE = 8;
 
 
       public final int getNumber() {
@@ -4840,7 +6007,9 @@ public final class Messages {
           case 3: return EXTENSION_GET;
           case 4: return POLICY_GET;
           case 5: return PREJOIN;
-          case 6: return JOIN;
+          case 6: return PREJOIN_MQTT;
+          case 7: return JOIN;
+          case 8: return JOIN_MQTT;
           default: return null;
         }
       }
@@ -7004,6 +8173,11 @@ public final class Messages {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_sire_messages_ProtoEvidence_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_sire_messages_ProtoMQTTEvidence_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_sire_messages_ProtoMQTTEvidence_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_sire_messages_ProxyMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -7036,37 +8210,44 @@ public final class Messages {
       "sages\"G\n\014ProtoSchnorr\022\r\n\005sigma\030\001 \001(\014\022\022\n\n" +
       "signPubKey\030\002 \001(\014\022\024\n\014randomPubKey\030\003 \001(\014\"F" +
       "\n\rProtoEvidence\022\017\n\007version\030\001 \001(\t\022\r\n\005clai" +
-      "m\030\002 \001(\014\022\025\n\rservicePubKey\030\003 \001(\014\"\350\005\n\014Proxy" +
-      "Message\0228\n\toperation\030\001 \001(\0162%.sire.messag" +
-      "es.ProxyMessage.Operation\022.\n\010evidence\030\002 " +
-      "\001(\0132\034.sire.messages.ProtoEvidence\022\021\n\ttim" +
-      "estamp\030\003 \001(\014\022.\n\tsignature\030\004 \001(\0132\033.sire.m" +
-      "essages.ProtoSchnorr\022\013\n\003key\030\005 \001(\t\022\r\n\005val" +
-      "ue\030\006 \001(\014\022\017\n\007oldData\030\007 \001(\014\022\020\n\010deviceId\030\010 " +
-      "\001(\t\022\r\n\005appId\030\t \001(\t\022\014\n\004code\030\n \001(\t\0227\n\006poli" +
-      "cy\030\013 \001(\0132\'.sire.messages.ProxyMessage.Pr" +
-      "otoPolicy\022\016\n\006pubKey\030\014 \001(\014\032+\n\013ProtoPolicy" +
-      "\022\016\n\006policy\030\001 \001(\t\022\014\n\004type\030\002 \001(\010\"\330\002\n\tOpera" +
-      "tion\022\031\n\025ATTEST_GET_PUBLIC_KEY\020\000\022\024\n\020ATTES" +
-      "T_TIMESTAMP\020\001\022\013\n\007MAP_PUT\020\002\022\016\n\nMAP_DELETE" +
-      "\020\003\022\013\n\007MAP_GET\020\004\022\014\n\010MAP_LIST\020\005\022\013\n\007MAP_CAS" +
-      "\020\006\022\023\n\017MEMBERSHIP_JOIN\020\007\022\024\n\020MEMBERSHIP_LE" +
-      "AVE\020\010\022\023\n\017MEMBERSHIP_VIEW\020\t\022\023\n\017MEMBERSHIP" +
-      "_PING\020\n\022\021\n\rEXTENSION_ADD\020\013\022\024\n\020EXTENSION_" +
-      "REMOVE\020\014\022\021\n\rEXTENSION_GET\020\r\022\016\n\nPOLICY_AD" +
-      "D\020\016\022\021\n\rPOLICY_REMOVE\020\017\022\016\n\nPOLICY_GET\020\020\022\021" +
-      "\n\rTIMESTAMP_GET\020\021\"\255\003\n\rProxyResponse\0227\n\004t" +
-      "ype\030\001 \001(\0162).sire.messages.ProxyResponse." +
-      "ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 \001(" +
-      "\014\022@\n\007members\030\004 \003(\0132/.sire.messages.Proxy" +
-      "Response.ProtoDeviceContext\022\021\n\textPolicy" +
-      "\030\005 \001(\t\022)\n\004sign\030\006 \001(\0132\033.sire.messages.Pro" +
-      "toSchnorr\022\021\n\ttimestamp\030\007 \001(\014\022\016\n\006pubKey\030\010" +
-      " \001(\014\022\014\n\004hash\030\t \001(\014\032&\n\022ProtoDeviceContext" +
-      "\022\020\n\010deviceId\030\001 \001(\t\"m\n\014ResponseType\022\013\n\007MA" +
-      "P_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTEN" +
-      "SION_GET\020\003\022\016\n\nPOLICY_GET\020\004\022\013\n\007PREJOIN\020\005\022" +
-      "\010\n\004JOIN\020\006b\006proto3"
+      "m\030\002 \001(\014\022\025\n\rservicePubKey\030\003 \001(\014\"\202\001\n\021Proto" +
+      "MQTTEvidence\022\027\n\017securityVersion\030\001 \001(\005\022\021\n" +
+      "\tproductId\030\002 \001(\005\022\r\n\005claim\030\003 \001(\014\022\r\n\005nonce" +
+      "\030\004 \001(\t\022\021\n\tmrEnclave\030\005 \001(\014\022\020\n\010mrSigner\030\006 " +
+      "\001(\014\"\325\006\n\014ProxyMessage\0228\n\toperation\030\001 \001(\0162" +
+      "%.sire.messages.ProxyMessage.Operation\022." +
+      "\n\010evidence\030\002 \001(\0132\034.sire.messages.ProtoEv" +
+      "idence\022\021\n\ttimestamp\030\003 \001(\014\022.\n\tsignature\030\004" +
+      " \001(\0132\033.sire.messages.ProtoSchnorr\022\013\n\003key" +
+      "\030\005 \001(\t\022\r\n\005value\030\006 \001(\014\022\017\n\007oldData\030\007 \001(\014\022\020" +
+      "\n\010deviceId\030\010 \001(\t\022\r\n\005appId\030\t \001(\t\022\014\n\004code\030" +
+      "\n \001(\t\0227\n\006policy\030\013 \001(\0132\'.sire.messages.Pr" +
+      "oxyMessage.ProtoPolicy\022\016\n\006pubKey\030\014 \001(\014\0226" +
+      "\n\014mqttEvidence\030\r \001(\0132 .sire.messages.Pro" +
+      "toMQTTEvidence\032+\n\013ProtoPolicy\022\016\n\006policy\030" +
+      "\001 \001(\t\022\014\n\004type\030\002 \001(\010\"\215\003\n\tOperation\022\031\n\025ATT" +
+      "EST_GET_PUBLIC_KEY\020\000\022\024\n\020ATTEST_TIMESTAMP" +
+      "\020\001\022\031\n\025ATTEST_TIMESTAMP_MQTT\020\002\022\013\n\007MAP_PUT" +
+      "\020\003\022\016\n\nMAP_DELETE\020\004\022\013\n\007MAP_GET\020\005\022\014\n\010MAP_L" +
+      "IST\020\006\022\013\n\007MAP_CAS\020\007\022\023\n\017MEMBERSHIP_JOIN\020\010\022" +
+      "\030\n\024MEMBERSHIP_JOIN_MQTT\020\t\022\024\n\020MEMBERSHIP_" +
+      "LEAVE\020\n\022\023\n\017MEMBERSHIP_VIEW\020\013\022\023\n\017MEMBERSH" +
+      "IP_PING\020\014\022\021\n\rEXTENSION_ADD\020\r\022\024\n\020EXTENSIO" +
+      "N_REMOVE\020\016\022\021\n\rEXTENSION_GET\020\017\022\016\n\nPOLICY_" +
+      "ADD\020\020\022\021\n\rPOLICY_REMOVE\020\021\022\016\n\nPOLICY_GET\020\022" +
+      "\022\021\n\rTIMESTAMP_GET\020\023\"\317\003\n\rProxyResponse\0227\n" +
+      "\004type\030\001 \001(\0162).sire.messages.ProxyRespons" +
+      "e.ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 " +
+      "\001(\014\022@\n\007members\030\004 \003(\0132/.sire.messages.Pro" +
+      "xyResponse.ProtoDeviceContext\022\021\n\textPoli" +
+      "cy\030\005 \001(\t\022)\n\004sign\030\006 \001(\0132\033.sire.messages.P" +
+      "rotoSchnorr\022\021\n\ttimestamp\030\007 \001(\014\022\016\n\006pubKey" +
+      "\030\010 \001(\014\022\014\n\004hash\030\t \001(\014\032&\n\022ProtoDeviceConte" +
+      "xt\022\020\n\010deviceId\030\001 \001(\t\"\216\001\n\014ResponseType\022\013\n" +
+      "\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEX" +
+      "TENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004\022\013\n\007PREJOIN" +
+      "\020\005\022\020\n\014PREJOIN_MQTT\020\006\022\010\n\004JOIN\020\007\022\r\n\tJOIN_M" +
+      "QTT\020\010b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7084,12 +8265,18 @@ public final class Messages {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProtoEvidence_descriptor,
         new java.lang.String[] { "Version", "Claim", "ServicePubKey", });
-    internal_static_sire_messages_ProxyMessage_descriptor =
+    internal_static_sire_messages_ProtoMQTTEvidence_descriptor =
       getDescriptor().getMessageTypes().get(2);
+    internal_static_sire_messages_ProtoMQTTEvidence_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_sire_messages_ProtoMQTTEvidence_descriptor,
+        new java.lang.String[] { "SecurityVersion", "ProductId", "Claim", "Nonce", "MrEnclave", "MrSigner", });
+    internal_static_sire_messages_ProxyMessage_descriptor =
+      getDescriptor().getMessageTypes().get(3);
     internal_static_sire_messages_ProxyMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProxyMessage_descriptor,
-        new java.lang.String[] { "Operation", "Evidence", "Timestamp", "Signature", "Key", "Value", "OldData", "DeviceId", "AppId", "Code", "Policy", "PubKey", });
+        new java.lang.String[] { "Operation", "Evidence", "Timestamp", "Signature", "Key", "Value", "OldData", "DeviceId", "AppId", "Code", "Policy", "PubKey", "MqttEvidence", });
     internal_static_sire_messages_ProxyMessage_ProtoPolicy_descriptor =
       internal_static_sire_messages_ProxyMessage_descriptor.getNestedTypes().get(0);
     internal_static_sire_messages_ProxyMessage_ProtoPolicy_fieldAccessorTable = new
@@ -7097,7 +8284,7 @@ public final class Messages {
         internal_static_sire_messages_ProxyMessage_ProtoPolicy_descriptor,
         new java.lang.String[] { "Policy", "Type", });
     internal_static_sire_messages_ProxyResponse_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(4);
     internal_static_sire_messages_ProxyResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProxyResponse_descriptor,

@@ -21,6 +21,7 @@ import org.bouncycastle.crypto.macs.CMac;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
+import sire.attestation.Evidence;
 import sire.messages.Messages.*;
 import static sire.messages.ProtoUtils.*;
 import com.google.protobuf.ByteString;
@@ -28,7 +29,6 @@ import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 import sire.membership.DeviceContext;
 import sire.serverProxyUtils.SireException;
-import sire.attestation.Evidence;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;

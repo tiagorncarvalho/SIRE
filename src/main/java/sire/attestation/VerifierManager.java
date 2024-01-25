@@ -16,12 +16,10 @@
 
 package sire.attestation;
 
-import org.bouncycastle.math.ec.ECPoint;
 import sire.schnorr.SchnorrSignature;
 import sire.schnorr.SchnorrSignatureScheme;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 

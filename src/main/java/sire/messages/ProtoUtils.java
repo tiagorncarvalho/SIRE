@@ -19,7 +19,6 @@ package sire.messages;
 import com.google.protobuf.ByteString;
 import sire.attestation.Evidence;
 import sire.schnorr.SchnorrSignature;
-import sire.membership.DeviceContext;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -43,8 +42,8 @@ public class ProtoUtils {
 
     public static Evidence protoToEvidence(Messages.ProtoEvidence evidence) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Evidence evi = new Evidence ( evidence.getVersion(), byteStringToByteArray(out, evidence.getClaim()),
-                byteStringToByteArray(out, evidence.getServicePubKey()));
+        Evidence evi = new Evidence(evidence.getVersion(), byteStringToByteArray(out,
+                evidence.getClaim()), byteStringToByteArray(out, evidence.getServicePubKey()));
         out.close();
         return evi;
     }
