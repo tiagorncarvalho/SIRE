@@ -32,6 +32,7 @@ import org.bouncycastle.math.ec.ECPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sire.attestation.DeviceEvidence;
+import sire.attestation.MQTTEvidence;
 import sire.attestation.PolicyManager;
 import sire.attestation.VerifierManager;
 import sire.coordination.CoordinationManager;
@@ -191,6 +192,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	}
 
 	private ConfidentialMessage executeOrderedAttestation(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ProxyMessage.Operation op = msg.getOperation();
 		switch(op) {
 			case ATTEST_GET_PUBLIC_KEY:
@@ -212,9 +214,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				break;
 			case ATTEST_TIMESTAMP:
 				System.out.println("Received attest timestamp request from device with id " + msg.getDeviceId());
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				Timestamp ts = new Timestamp(messageContext.getTimestamp());
-				SchnorrSignature sign = protoToSchnorr(msg.getSignature());
+				//SchnorrSignature sign = protoToSchnorr(msg.getSignature());
 				boolean isValid = true; /*schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),
 						schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey())),
 						schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey()), new BigInteger(sign.getSigma()));*/
@@ -227,6 +228,20 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 				} else {
 					throw new SireException("Invalid signature!");
 				}
+			case ATTEST_TIMESTAMP_MQTT:
+				System.out.println("Received mqtt attest timestamp request from device with id " + msg.getDeviceId());
+				Timestamp tsMQTT = new Timestamp(messageContext.getTimestamp());
+				//SchnorrSignature sign = protoToSchnorr(msg.getSignature());
+				boolean isValidMQTT = true; /*schnorrSignatureScheme.verifySignature(computeHash(byteStringToByteArray(baos, msg.getPubKey())),
+						schnorrSignatureScheme.decodePublicKey(byteStringToByteArray(baos, msg.getPubKey())),
+						schnorrSignatureScheme.decodePublicKey(sign.getRandomPublicKey()), new BigInteger(sign.getSigma()));*/
+				if(isValidMQTT) {
+					byte[] tis = serialize(tsMQTT);
+					devicesTimestamps.put(msg.getDeviceId(), tsMQTT);
+					return sign(tis, messageContext);//new ConfidentialMessage();
+				} else {
+					throw new SireException("Invalid signature!");
+				}
 			default: return null;
 		}
 		return null;
@@ -235,7 +250,8 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 	private ConfidentialMessage executeOrderedMembership(ProxyMessage msg, MessageContext messageContext) throws IOException, SireException {
 		ProxyMessage.Operation op = msg.getOperation();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
+		Timestamp ts = new Timestamp(messageContext.getTimestamp());
+		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && op != ProxyMessage.Operation.MEMBERSHIP_JOIN_MQTT && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
 			throw new SireException("Unknown Device: Not attested or not in this app membership.");
 		switch(op) {
 			case MEMBERSHIP_JOIN:
@@ -247,13 +263,25 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 						new Timestamp(devicesTimestamps.get(msg.getDeviceId()).getTime() + timebound));*/
 
 				if (isValidEvidence && isntTimedout) {
-					byte[] data = concat(serialize(new Timestamp(messageContext.getTimestamp())),
+					byte[] data = concat(serialize(ts),
 							byteStringToByteArray(new ByteArrayOutputStream(), msg.getPubKey()), computeHash(msg.toByteArray()));
-					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
-					System.out.println("Device with id " + msg.getDeviceId() + " attested at " + new Timestamp(messageContext.getTimestamp()));
+					membership.join(msg.getAppId(), msg.getDeviceId(), ts);
+					System.out.println("Device with id " + msg.getDeviceId() + " attested at " + ts);
 
 					return sign(data, messageContext);
 				} else {
+					return new ConfidentialMessage(new byte[]{0});
+				}
+			case MEMBERSHIP_JOIN_MQTT:
+				boolean isMQTTEvidenceValid = verifierManager.verifyMQTTEvidence(msg.getMqttEvidence());
+				if(isMQTTEvidenceValid) {
+					byte[] data = serialize(ts);
+					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
+					System.out.println("MQTT with id " + msg.getDeviceId() + " attested at " + ts);
+
+					return new ConfidentialMessage(data);
+				} else {
+					System.out.println("MQTT with id " + msg.getDeviceId() + " failed attestation at " + ts);
 					return new ConfidentialMessage(new byte[]{0});
 				}
 			case MEMBERSHIP_LEAVE:
@@ -265,7 +293,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 			case MEMBERSHIP_PING:
 				lock.lock();
 				membership.ping(msg.getAppId(), msg.getDeviceId(),
-						new Timestamp(messageContext.getTimestamp()));
+						ts);
 
 				lock.unlock();
 				return new ConfidentialMessage();

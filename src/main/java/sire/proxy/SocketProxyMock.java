@@ -16,6 +16,7 @@
 
 package sire.proxy;
 
+import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
 import confidential.client.Response;
 import org.bouncycastle.crypto.BlockCipher;
@@ -35,6 +36,7 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Base64;
 
 /**
  * @author Tiago
@@ -162,19 +164,25 @@ public class SocketProxyMock implements Runnable {
 		private byte[] writeMessage3(ProxyResponse response) {
 			try {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				byte[] pubKey = byteStringToByteArray(baos, response.getPubKey());
-				byte[] pubKeyLen = BigInteger.valueOf(pubKey.length).toByteArray();
-				byte[] timestamp = byteStringToByteArray(baos, response.getTimestamp());
-				byte[] timestampLen = BigInteger.valueOf(timestamp.length).toByteArray();
-				byte[] hash = byteStringToByteArray(baos, response.getHash());
-				byte[] hashLen = BigInteger.valueOf(hash.length).toByteArray();
-				baos.write(pubKeyLen);
-				baos.write(pubKey);
-				baos.write(timestampLen);
-				baos.write(timestamp);
-				baos.write(hashLen);
-				baos.write(hash);
-				return baos.toByteArray();
+				if(response.getIsSuccess()) {
+					byte[] pubKey = byteStringToByteArray(baos, response.getPubKey());
+					byte[] pubKeyLen = BigInteger.valueOf(pubKey.length).toByteArray();
+					byte[] timestamp = byteStringToByteArray(baos, response.getTimestamp());
+					byte[] timestampLen = BigInteger.valueOf(timestamp.length).toByteArray();
+					byte[] hash = byteStringToByteArray(baos, response.getHash());
+					byte[] hashLen = BigInteger.valueOf(hash.length).toByteArray();
+					baos.write(new byte[] {1});
+					baos.write(pubKeyLen);
+					baos.write(pubKey);
+					baos.write(timestampLen);
+					baos.write(timestamp);
+					baos.write(hashLen);
+					baos.write(hash);
+					return baos.toByteArray();
+				}
+				else {
+					baos.write(new byte[] {0});
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -230,46 +238,49 @@ public class SocketProxyMock implements Runnable {
 			String id = new String(Arrays.copyOfRange(bytes, 4, 4 + idLen));
 			int appIdLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 4 + idLen, 8 + idLen)).getInt();
 			String appId = new String(Arrays.copyOfRange(bytes, 8 + idLen, 8 + idLen + appIdLen));
-			int securityVersion = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 8 + idLen + appIdLen,
-					12 + idLen + appIdLen)).getInt();
-			int productId = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 12 + idLen + appIdLen,
-					16 + idLen + appIdLen)).getInt();
-			int claimLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 16 + idLen + appIdLen,
-					20 + idLen + appIdLen)).getInt();
-			byte[] claim = Arrays.copyOfRange(bytes, 20 + idLen + appIdLen, 20 + idLen + appIdLen
-					+ claimLen);
-			int nonceLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 20 + idLen + appIdLen + claimLen,
-					24 + idLen + appIdLen + claimLen)).getInt();
-			String nonce = new String(Arrays.copyOfRange(bytes, 24 + idLen + appIdLen + claimLen,
-					24 + idLen + appIdLen + claimLen + nonceLen));
-			int mrEnclaveLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 24 + idLen + appIdLen + claimLen + nonceLen,
-					28 + idLen + appIdLen + claimLen + nonceLen)).getInt();
-			byte[] mrEnclave = Arrays.copyOfRange(bytes, 28 + idLen + appIdLen + claimLen + nonceLen,
-					28 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen);
-			int mrSignerLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 28 + idLen + appIdLen + claimLen
-							+ nonceLen + mrEnclaveLen, 32 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen)).getInt();
-			byte[] mrSigner = Arrays.copyOfRange(bytes, 32 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen,
-					32 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen + mrSignerLen);
-			int tsLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 32 + idLen + appIdLen + claimLen + nonceLen +
-					mrEnclaveLen + mrSignerLen, 36 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen + mrSignerLen)).getInt();
-			byte[] ts = Arrays.copyOfRange(bytes, 36 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen + mrSignerLen,
-					36 + idLen + appIdLen + claimLen + nonceLen + mrEnclaveLen + mrSignerLen + tsLen);
+			int evidenceLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 8 + idLen + appIdLen, 12 + idLen + appIdLen)).getInt();
+			String evidenceRaw = new String(Arrays.copyOfRange(bytes, 12 + idLen + appIdLen, 12 + idLen + appIdLen + evidenceLen));
+			int nonceLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 12 + idLen + appIdLen + evidenceLen, 16 + idLen + appIdLen + evidenceLen)).getInt();
+			String nonce = bytesToHex(Arrays.copyOfRange(bytes, 16 + idLen + appIdLen + evidenceLen, 16 + idLen + appIdLen + evidenceLen + nonceLen));
+			int tsLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 16 + idLen + appIdLen + evidenceLen + nonceLen,
+					20 + idLen + appIdLen + evidenceLen + nonceLen)).getInt();
+			byte[] ts = Arrays.copyOfRange(bytes, 20 + idLen + appIdLen + evidenceLen + nonceLen,
+					20 + idLen + appIdLen + evidenceLen + nonceLen + tsLen);
 
+			ProtoMQTTEvidence mqttEvidence = decodeEvidence(evidenceRaw, nonce);
 
-			ProtoMQTTEvidence mqttEvidence = ProtoMQTTEvidence.newBuilder()
-					.setSecurityVersion(securityVersion)
-					.setProductId(productId)
-					.setClaim(ByteString.copyFrom(claim))
-					.setNonce(nonce)
-					.setMrEnclave(ByteString.copyFrom(mrEnclave))
-					.setMrSigner(ByteString.copyFrom(mrSigner))
-					.build();
 			return ProxyMessage.newBuilder()
 					.setDeviceId(id)
 					.setAppId(appId)
 					.setMqttEvidence(mqttEvidence)
 					.setTimestamp(ByteString.copyFrom(ts))
 					.setOperation(ProxyMessage.Operation.MEMBERSHIP_JOIN_MQTT)
+					.build();
+		}
+
+		private ProtoMQTTEvidence decodeEvidence(String evidenceRaw, String nonce) {
+			Gson gson = new Gson();
+			EvidenceJSON evidenceJson = gson.fromJson(evidenceRaw, EvidenceJSON.class);
+			byte[] decodedBytes = Base64.getDecoder().decode(evidenceJson.getReport_base64());
+			byte[] mrEnclave = Arrays.copyOfRange(decodedBytes, 0x70, 0x90);
+			byte[] mrSigner = Arrays.copyOfRange(decodedBytes, 0xB0, 0xD0);
+			short productId = ByteBuffer.wrap(Arrays.copyOfRange(decodedBytes, 0x130, 0x132)).getShort();
+			short securityVersion = ByteBuffer.wrap(Arrays.copyOfRange(decodedBytes, 0x132, 0x134)).getShort();
+			byte[] claim = Arrays.copyOfRange(decodedBytes, 0x170, 0x190);
+			/*
+			    public byte[] MrEnclave => evidenceAsBytes[0x70..0x90];
+    			public byte[] MrSigner => evidenceAsBytes[0xB0..0xD0];
+    			public ushort ProductId => BitConverter.ToUInt16(evidenceAsBytes.AsSpan(0x130, 2));
+    			public ushort SecurityVersion => BitConverter.ToUInt16(evidenceAsBytes.AsSpan(0x132, 2));
+    			public byte[] UserData => evidenceAsBytes[0x170..0x190];
+			 */
+			return ProtoMQTTEvidence.newBuilder()
+					.setSecurityVersion(securityVersion)
+					.setProductId(productId)
+					.setClaim(ByteString.copyFrom(claim))
+					.setNonce(nonce)
+					.setMrEnclave(ByteString.copyFrom(mrEnclave))
+					.setMrSigner(ByteString.copyFrom(mrSigner))
 					.build();
 		}
 
@@ -349,24 +360,59 @@ public class SocketProxyMock implements Runnable {
 		}
 
 		private ProxyResponse joinMQTTMock(ProxyMessage msg) throws IOException {
+			System.out.println("Verifying the evidence...");
 			boolean isVerified = verifyMQTTEvidence(msg.getMqttEvidence());
 			java.sql.Timestamp ts = new java.sql.Timestamp(System.currentTimeMillis());
-			System.out.println("MQTT with id " + msg.getDeviceId() + " attested at " + ts);
-			if(isVerified)
+			if(isVerified) {
+				System.out.println("MQTT with id " + msg.getDeviceId() + " attested at " + ts);
 				return ProxyResponse.newBuilder()
+						.setIsSuccess(true)
 						.setTimestamp(ByteString.copyFrom(serialize(ts)))
 						.setType(ProxyResponse.ResponseType.JOIN_MQTT)
 						.build();
-			else
-				return ProxyResponse.newBuilder().build();
+			}
+			else {
+				System.out.println("MQTT with id " + msg.getDeviceId() + " failed attestation at " + ts);
+				return ProxyResponse.newBuilder().setIsSuccess(false).build();
+			}
 		}
 
 		private boolean verifyMQTTEvidence(ProtoMQTTEvidence evidence) throws IOException {
-			byte[] hashClaim = computeHash("measure1".getBytes());
-			byte[] computedClaim = computeHash(hashClaim, evidence.getNonce().getBytes());
+			boolean isMrEnclaveValid = Arrays.equals(hexStringToByteArray("DAE0DA2F8A53A0B48F926A3BC048D6A967D47C861986766F8F5AB1C0A8D88E44"),
+					byteStringToByteArray(new ByteArrayOutputStream(),evidence.getMrEnclave()));
+			boolean isMrSignerValid = Arrays.equals(hexStringToByteArray("83D719E77DEACA1470F6BAF62A4D774303C899DB69020F9C70EE1DFC08C7CE9E"),
+					byteStringToByteArray(new ByteArrayOutputStream(),evidence.getMrSigner()));
+			boolean isSecurityVersionValid = evidence.getSecurityVersion() == 0;
+			boolean isProductIdValid = evidence.getProductId() == 0;
+			byte[] hashClaim = hexStringToByteArray("B031E46EFF37EEF7187161353B423C91C82012F026495B40409B3A15DE173343");
+			byte[] computedClaim = computeHash(hashClaim, hexStringToByteArray(evidence.getNonce()));
 			byte[] sentCompClaim = byteStringToByteArray(new ByteArrayOutputStream(), evidence.getClaim());
+			System.out.println("mrEnclave? " + isMrEnclaveValid + " isMrSigner? " + isMrSignerValid + " isSec? " +
+					isSecurityVersionValid + " isProduct? " + isProductIdValid);
+			System.out.println("computed " + Arrays.toString(computedClaim) + "\nsent " + Arrays.toString(sentCompClaim));
 
-			return Arrays.equals(computedClaim, sentCompClaim);
+			return isMrEnclaveValid && isMrSignerValid && isSecurityVersionValid && isProductIdValid && Arrays.equals(computedClaim, sentCompClaim);
+		}
+
+		public byte[] hexStringToByteArray(String s) {
+			int len = s.length();
+			byte[] data = new byte[len / 2];
+			for (int i = 0; i < len; i += 2) {
+				data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+						+ Character.digit(s.charAt(i+1), 16));
+			}
+			return data;
+		}
+
+		private final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+		public String bytesToHex(byte[] bytes) {
+			char[] hexChars = new char[bytes.length * 2];
+			for (int j = 0; j < bytes.length; j++) {
+				int v = bytes[j] & 0xFF;
+				hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+				hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+			}
+			return new String(hexChars);
 		}
 
 		private ProxyResponse joinMock(ProxyMessage msg) throws IOException {
@@ -423,6 +469,31 @@ public class SocketProxyMock implements Runnable {
 				e.printStackTrace();
 			}
 			return null;
+		}
+
+		private class EvidenceJSON {
+			String type;
+
+			String report_base64;
+			int report_len;
+
+			public EvidenceJSON(String type, String report_base64, int report_len) {
+				this.type = type;
+				this.report_base64 = report_base64;
+				this.report_len = report_len;
+			}
+
+			public String getType() {
+				return type;
+			}
+
+			public String getReport_base64() {
+				return report_base64;
+			}
+
+			public int getReport_len() {
+				return report_len;
+			}
 		}
 	}
 }

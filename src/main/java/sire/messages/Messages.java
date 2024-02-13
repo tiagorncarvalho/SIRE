@@ -5740,6 +5740,12 @@ public final class Messages {
      * @return The hash.
      */
     com.google.protobuf.ByteString getHash();
+
+    /**
+     * <code>bool isSuccess = 10;</code>
+     * @return The isSuccess.
+     */
+    boolean getIsSuccess();
   }
   /**
    * Protobuf type {@code sire.messages.ProxyResponse}
@@ -5855,6 +5861,11 @@ public final class Messages {
             case 74: {
 
               hash_ = input.readBytes();
+              break;
+            }
+            case 80: {
+
+              isSuccess_ = input.readBool();
               break;
             }
             default: {
@@ -6844,6 +6855,17 @@ public final class Messages {
       return hash_;
     }
 
+    public static final int ISSUCCESS_FIELD_NUMBER = 10;
+    private boolean isSuccess_;
+    /**
+     * <code>bool isSuccess = 10;</code>
+     * @return The isSuccess.
+     */
+    @java.lang.Override
+    public boolean getIsSuccess() {
+      return isSuccess_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -6884,6 +6906,9 @@ public final class Messages {
       }
       if (!hash_.isEmpty()) {
         output.writeBytes(9, hash_);
+      }
+      if (isSuccess_ != false) {
+        output.writeBool(10, isSuccess_);
       }
       unknownFields.writeTo(output);
     }
@@ -6934,6 +6959,10 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(9, hash_);
       }
+      if (isSuccess_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(10, isSuccess_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -6969,6 +6998,8 @@ public final class Messages {
           .equals(other.getPubKey())) return false;
       if (!getHash()
           .equals(other.getHash())) return false;
+      if (getIsSuccess()
+          != other.getIsSuccess()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -7004,6 +7035,9 @@ public final class Messages {
       hash = (53 * hash) + getPubKey().hashCode();
       hash = (37 * hash) + HASH_FIELD_NUMBER;
       hash = (53 * hash) + getHash().hashCode();
+      hash = (37 * hash) + ISSUCCESS_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getIsSuccess());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -7164,6 +7198,8 @@ public final class Messages {
 
         hash_ = com.google.protobuf.ByteString.EMPTY;
 
+        isSuccess_ = false;
+
         return this;
       }
 
@@ -7216,6 +7252,7 @@ public final class Messages {
         result.timestamp_ = timestamp_;
         result.pubKey_ = pubKey_;
         result.hash_ = hash_;
+        result.isSuccess_ = isSuccess_;
         onBuilt();
         return result;
       }
@@ -7321,6 +7358,9 @@ public final class Messages {
         }
         if (other.getHash() != com.google.protobuf.ByteString.EMPTY) {
           setHash(other.getHash());
+        }
+        if (other.getIsSuccess() != false) {
+          setIsSuccess(other.getIsSuccess());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -8109,6 +8149,37 @@ public final class Messages {
         onChanged();
         return this;
       }
+
+      private boolean isSuccess_ ;
+      /**
+       * <code>bool isSuccess = 10;</code>
+       * @return The isSuccess.
+       */
+      @java.lang.Override
+      public boolean getIsSuccess() {
+        return isSuccess_;
+      }
+      /**
+       * <code>bool isSuccess = 10;</code>
+       * @param value The isSuccess to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIsSuccess(boolean value) {
+        
+        isSuccess_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bool isSuccess = 10;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIsSuccess() {
+        
+        isSuccess_ = false;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -8235,19 +8306,19 @@ public final class Messages {
       "IP_PING\020\014\022\021\n\rEXTENSION_ADD\020\r\022\024\n\020EXTENSIO" +
       "N_REMOVE\020\016\022\021\n\rEXTENSION_GET\020\017\022\016\n\nPOLICY_" +
       "ADD\020\020\022\021\n\rPOLICY_REMOVE\020\021\022\016\n\nPOLICY_GET\020\022" +
-      "\022\021\n\rTIMESTAMP_GET\020\023\"\317\003\n\rProxyResponse\0227\n" +
+      "\022\021\n\rTIMESTAMP_GET\020\023\"\342\003\n\rProxyResponse\0227\n" +
       "\004type\030\001 \001(\0162).sire.messages.ProxyRespons" +
       "e.ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 " +
       "\001(\014\022@\n\007members\030\004 \003(\0132/.sire.messages.Pro" +
       "xyResponse.ProtoDeviceContext\022\021\n\textPoli" +
       "cy\030\005 \001(\t\022)\n\004sign\030\006 \001(\0132\033.sire.messages.P" +
       "rotoSchnorr\022\021\n\ttimestamp\030\007 \001(\014\022\016\n\006pubKey" +
-      "\030\010 \001(\014\022\014\n\004hash\030\t \001(\014\032&\n\022ProtoDeviceConte" +
-      "xt\022\020\n\010deviceId\030\001 \001(\t\"\216\001\n\014ResponseType\022\013\n" +
-      "\007MAP_GET\020\000\022\014\n\010MAP_LIST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEX" +
-      "TENSION_GET\020\003\022\016\n\nPOLICY_GET\020\004\022\013\n\007PREJOIN" +
-      "\020\005\022\020\n\014PREJOIN_MQTT\020\006\022\010\n\004JOIN\020\007\022\r\n\tJOIN_M" +
-      "QTT\020\010b\006proto3"
+      "\030\010 \001(\014\022\014\n\004hash\030\t \001(\014\022\021\n\tisSuccess\030\n \001(\010\032" +
+      "&\n\022ProtoDeviceContext\022\020\n\010deviceId\030\001 \001(\t\"" +
+      "\216\001\n\014ResponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIS" +
+      "T\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n\nPOLI" +
+      "CY_GET\020\004\022\013\n\007PREJOIN\020\005\022\020\n\014PREJOIN_MQTT\020\006\022" +
+      "\010\n\004JOIN\020\007\022\r\n\tJOIN_MQTT\020\010b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8288,7 +8359,7 @@ public final class Messages {
     internal_static_sire_messages_ProxyResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProxyResponse_descriptor,
-        new java.lang.String[] { "Type", "List", "Value", "Members", "ExtPolicy", "Sign", "Timestamp", "PubKey", "Hash", });
+        new java.lang.String[] { "Type", "List", "Value", "Members", "ExtPolicy", "Sign", "Timestamp", "PubKey", "Hash", "IsSuccess", });
     internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor =
       internal_static_sire_messages_ProxyResponse_descriptor.getNestedTypes().get(0);
     internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_fieldAccessorTable = new

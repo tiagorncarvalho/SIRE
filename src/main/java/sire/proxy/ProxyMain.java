@@ -37,13 +37,13 @@ import static sire.messages.ProtoUtils.deserialize;*/
 
 //@SpringBootApplication
 public class ProxyMain {
-    static SocketProxyMock proxy;
+    static SocketProxy proxy;
     //static RestProxy restProxy;
     public static void main(String[] args) {
         proxy = null;
         try {
             int proxyId = 1;
-            proxy = new SocketProxyMock(proxyId);
+            proxy = new SocketProxy(proxyId);
             //restProxy = new RestProxy(proxyId + 1);
         } catch (SireException e) {
             e.printStackTrace();
