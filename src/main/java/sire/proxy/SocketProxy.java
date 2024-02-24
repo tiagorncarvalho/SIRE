@@ -18,6 +18,7 @@ package sire.proxy;
 
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Timestamp;
 import confidential.ConfidentialExtractedResponse;
 import confidential.client.ConfidentialServiceProxy;
@@ -25,6 +26,7 @@ import confidential.client.Response;
 import org.bouncycastle.crypto.BlockCipher;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.math.ec.ECPoint;
+import sire.attestation.AttValueStore;
 import sire.attestation.EvidenceJSON;
 import sire.membership.DeviceContext;
 import sire.schnorr.PublicPartialSignature;
@@ -59,14 +61,31 @@ public class SocketProxy implements Runnable {
 	private final SchnorrSignatureScheme signatureScheme;
 	private final int proxyId;
 	private final Object proxyLock;
+	private List<String> stateUpdates;
 
-	public SocketProxy(int proxyId) throws SireException{
+	public SocketProxy(int proxyId, List<String> stateUp) throws SireException{
 		System.out.println("Proxy start!");
 		this.proxyId = proxyId;
 		try {
 			ServersResponseHandlerWithoutCombine responseHandler = new ServersResponseHandlerWithoutCombine();
 			serviceProxy = new ConfidentialServiceProxy(proxyId, responseHandler);
 			proxyLock = new Object();
+			this.stateUpdates = stateUp;
+			AttValueStore attValueStore = AttValueStore.getInstance();
+
+			stateUpdates.add("<span style='color:#F6BE00'>Version</span>: 1.0");
+			stateUpdates.add("<span style='color:#F6BE00'>Replicas</span>: 4");
+			stateUpdates.add("<span style='color:#72bcd4'>Tolerated Faults</span>: 1 <br>");
+			stateUpdates.add("<hr>");
+			stateUpdates.add("<span style='color:#ff8c00'>Application</span>: 'app1'");
+			stateUpdates.add("<span style='color:#ff8c00'>Measuring for</span>: ");
+			stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;- <span style='color:#CF9FFF'>MrEnclave</span>: " + bytesToHex(attValueStore.getMrEnclave()));
+			stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;- <span style='color:#CF9FFF'>MrSigner</span>: " + bytesToHex(attValueStore.getMrSigner()));
+			stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;- <span style='color:#026440'>Security Version</span>: " + attValueStore.getSecurityVersion());
+			stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;- <span style='color:#026440'>Product Id</span>: " + attValueStore.getProductId());
+			stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;- <span style='color:#026440'>WASM Bytecode Hash</span>: " + Arrays.toString(attValueStore.getWasmByteCodeHash()));
+
+			stateUpdates.add("<hr>");
 		} catch (SecretSharingException e) {
 			throw new SireException("Failed to contact the distributed verifier", e);
 		}
@@ -169,6 +188,7 @@ public class SocketProxy implements Runnable {
 			int pubKeyLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 8 + idLen + appIdLen, 12 + idLen
 					+ appIdLen)).getInt();
 			byte[] pubKey = Arrays.copyOfRange(bytes, 12 + idLen + appIdLen, 12 + idLen + appIdLen + pubKeyLen);
+			stateUpdates.add("Received attest timestamp request from device with id " + id);
 			return ProxyMessage.newBuilder()
 					.setDeviceId(id)
 					.setAppId(appId)
@@ -227,6 +247,7 @@ public class SocketProxy implements Runnable {
 			String id = new String(Arrays.copyOfRange(bytes, 4, 4 + idLen));
 			int appIdLen = ByteBuffer.wrap(Arrays.copyOfRange(bytes, 4 + idLen, 8 + idLen)).getInt();
 			String appId = new String(Arrays.copyOfRange(bytes, 8 + idLen, 8 + idLen + appIdLen));
+			stateUpdates.add("Received mqtt attest timestamp request from device with id " + id);
 			return ProxyMessage.newBuilder()
 					.setDeviceId(id)
 					.setAppId(appId)
@@ -324,13 +345,12 @@ public class SocketProxy implements Runnable {
 					baos.write(hash);
 					return baos.toByteArray();
 				}
-				else {
+				else
 					baos.write(new byte[] {0});
-				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return new byte[0];
+            return new byte[0];
 		}
 
 		private byte[] writeMessage1(ProxyResponse response) {
@@ -379,8 +399,14 @@ public class SocketProxy implements Runnable {
 			}
 		}
 
-		private ProxyResponse join(ConfidentialExtractedResponse res) {
+		private ProxyResponse join(ConfidentialExtractedResponse res) throws InvalidProtocolBufferException {
+			ProxyResponse response = ProxyResponse.parseFrom(res.getPlainData());
+			stateUpdates.add(response.getFailureMessage());
+			System.out.println(response.getFailureMessage());
+			return response;
+
 			//SchnorrSignature sign = combineSignatures((UncombinedConfidentialResponse) res);
+			/*
 			if(res.getPlainData()[0] != 0) {
 				byte[] data = Arrays.copyOfRange(res.getPlainData(), res.getPlainData().length - 156, res.getPlainData().length);
 				byte[] ts = Arrays.copyOfRange(data, 0, 91);
@@ -394,20 +420,26 @@ public class SocketProxy implements Runnable {
 						.setType(ProxyResponse.ResponseType.JOIN)
 						//.setSign(schnorrToProto(sign))
 						.build();
+
+
+				return ProxyResponse.parseFrom(res.getPlainData());
 			}
 			else
-				return ProxyResponse.newBuilder().setIsSuccess(false).build();
+				return ProxyResponse.newBuilder().setType(ProxyResponse.ResponseType.JOIN).setIsSuccess(false).build();*/
 		}
 
-		private ProxyResponse joinMQTT(ConfidentialExtractedResponse res) {
-			if(res.getPlainData()[0] != 0)
+		private ProxyResponse joinMQTT(ConfidentialExtractedResponse res) throws InvalidProtocolBufferException {
+			ProxyResponse response = ProxyResponse.parseFrom(res.getPlainData());
+			stateUpdates.add(response.getFailureMessage());
+			return response;
+			/*if(res.getPlainData()[0] != 0)
 				return ProxyResponse.newBuilder()
 						.setIsSuccess(true)
 						.setTimestamp(ByteString.copyFrom(res.getPlainData()))
 						.setType(ProxyResponse.ResponseType.JOIN_MQTT)
 						.build();
 			else
-				return ProxyResponse.newBuilder().setIsSuccess(false).build();
+				return ProxyResponse.newBuilder().setType(ProxyResponse.ResponseType.JOIN_MQTT).setIsSuccess(false).build();*/
 
 		}
 

@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.Arrays;
 
 import static sire.messages.ProtoUtils.byteStringToByteArray;
@@ -31,10 +32,14 @@ import static sire.messages.ProtoUtils.byteStringToByteArray;
 public class VerifierManager {
     SchnorrSignatureScheme signatureScheme;
     private final PolicyManager policyManager;
+    private final AttValueStore attValueStore;
+
+    private String failMessage;
 
     public VerifierManager() throws NoSuchAlgorithmException {
         signatureScheme = new SchnorrSignatureScheme();
         policyManager = PolicyManager.getInstance();
+        attValueStore = AttValueStore.getInstance();
     }
 
     public boolean verifyEvidence(String appId, DeviceEvidence deviceEvidence, byte[] ts) throws IOException {
@@ -74,22 +79,46 @@ public class VerifierManager {
         return null;
     }
 
-    public boolean verifyMQTTEvidence(Messages.ProtoMQTTEvidence evidence) throws IOException {
-        boolean isMrEnclaveValid = Arrays.equals(hexStringToByteArray("DAE0DA2F8A53A0B48F926A3BC048D6A967D47C861986766F8F5AB1C0A8D88E44"),
+    public boolean verifyMQTTEvidence(String deviceId, Timestamp ts, Messages.ProtoMQTTEvidence evidence) throws IOException {
+        boolean isMrEnclaveValid = Arrays.equals(attValueStore.getMrEnclave(),
                 byteStringToByteArray(new ByteArrayOutputStream(),evidence.getMrEnclave()));
-        boolean isMrSignerValid = Arrays.equals(hexStringToByteArray("83D719E77DEACA1470F6BAF62A4D774303C899DB69020F9C70EE1DFC08C7CE9E"),
+        if(!isMrEnclaveValid) {
+            failMessage = "MQTT with id " + deviceId + " failed attestation at " + ts + ": MrEnclave invalid";
+            System.out.println(failMessage);
+            return false;
+        }
+        boolean isMrSignerValid = Arrays.equals(attValueStore.getMrSigner(),
                 byteStringToByteArray(new ByteArrayOutputStream(),evidence.getMrSigner()));
-        boolean isSecurityVersionValid = evidence.getSecurityVersion() == 0;
-        boolean isProductIdValid = evidence.getProductId() == 0;
-        byte[] hashClaim = hexStringToByteArray("B031E46EFF37EEF7187161353B423C91C82012F026495B40409B3A15DE173343");
+        if(!isMrSignerValid) {
+            failMessage = "MQTT with id " + deviceId + " failed attestation at " + ts + ": MrSigner invalid";
+            System.out.println(failMessage);
+            return false;
+        }
+        boolean isSecurityVersionValid = evidence.getSecurityVersion() == attValueStore.getSecurityVersion();
+        if(!isSecurityVersionValid) {
+            failMessage = "MQTT with id " + deviceId + " failed attestation at " + ts + ": security version invalid";
+            System.out.println(failMessage);
+            return false;
+        }
+        boolean isProductIdValid = evidence.getProductId() == attValueStore.getProductId();
+        if(!isProductIdValid) {
+            failMessage = "MQTT with id " + deviceId + " failed attestation at " + ts + ": MrEnclave invalid";
+            System.out.println(failMessage);
+            return false;
+        }
+        byte[] hashClaim = attValueStore.getWasmByteCodeHash();
         byte[] computedClaim = computeHash(hashClaim, hexStringToByteArray(evidence.getNonce()));
         byte[] sentCompClaim = byteStringToByteArray(new ByteArrayOutputStream(), evidence.getClaim());
-        /*System.out.println("mrEnclave? " + isMrEnclaveValid + " isMrSigner? " + isMrSignerValid + " isSec? " +
-                isSecurityVersionValid + " isProduct? " + isProductIdValid);
-        System.out.println("computed " + Arrays.toString(computedClaim) + "\nsent " + Arrays.toString(sentCompClaim));*/
+        boolean isClaimValid = Arrays.equals(computedClaim, sentCompClaim);
+        if(!isClaimValid) {
+            failMessage = "MQTT with id " + deviceId + " failed attestation at " + ts + ": Claim invalid";
+            System.out.println(failMessage);
+            return false;
+        }
 
-        return isMrEnclaveValid && isMrSignerValid && isSecurityVersionValid && isProductIdValid && Arrays.equals(computedClaim, sentCompClaim);
+        return true;
     }
+
 
     public byte[] hexStringToByteArray(String s) {
         int len = s.length();
@@ -110,5 +139,9 @@ public class VerifierManager {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public String getFailMessage() {
+        return failMessage;
     }
 }

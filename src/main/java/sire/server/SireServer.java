@@ -20,6 +20,7 @@ import bftsmart.communication.ServerCommunicationSystem;
 import bftsmart.tom.MessageContext;
 import bftsmart.tom.ServiceReplica;
 import bftsmart.tom.core.messages.TOMMessage;
+import com.google.protobuf.ByteString;
 import confidential.ConfidentialMessage;
 import confidential.facade.server.ConfidentialSingleExecutable;
 import confidential.polynomial.DistributedPolynomialManager;
@@ -251,6 +252,7 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 		ProxyMessage.Operation op = msg.getOperation();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Timestamp ts = new Timestamp(messageContext.getTimestamp());
+		ProxyResponse proxyResponse;
 		if(op != ProxyMessage.Operation.MEMBERSHIP_JOIN && op != ProxyMessage.Operation.MEMBERSHIP_JOIN_MQTT && membership.isDeviceValid(msg.getAppId(), msg.getDeviceId()))
 			throw new SireException("Unknown Device: Not attested or not in this app membership.");
 		switch(op) {
@@ -261,28 +263,51 @@ public class SireServer implements ConfidentialSingleExecutable, RandomPolynomia
 						byteStringToByteArray(baos, msg.getTimestamp()));
 				boolean isntTimedout = true;/*(new Timestamp(messageContext.getTimestamp())).before(
 						new Timestamp(devicesTimestamps.get(msg.getDeviceId()).getTime() + timebound));*/
-
 				if (isValidEvidence && isntTimedout) {
 					byte[] data = concat(serialize(ts),
 							byteStringToByteArray(new ByteArrayOutputStream(), msg.getPubKey()), computeHash(msg.toByteArray()));
 					membership.join(msg.getAppId(), msg.getDeviceId(), ts);
 					System.out.println("Device with id " + msg.getDeviceId() + " attested at " + ts);
-
-					return sign(data, messageContext);
+					proxyResponse = ProxyResponse.newBuilder()
+							.setFailureMessage("Device with id " + msg.getDeviceId() + " attested at " + ts)
+							.setTimestamp(ByteString.copyFrom(serialize(ts)))
+							.setIsSuccess(true)
+							.setPubKey(msg.getPubKey())
+							.setHash(ByteString.copyFrom(computeHash(msg.toByteArray())))
+							.setType(ProxyResponse.ResponseType.JOIN)
+							.build();
+					return new ConfidentialMessage(proxyResponse.toByteArray());
 				} else {
-					return new ConfidentialMessage(new byte[]{0});
+					proxyResponse = ProxyResponse.newBuilder()
+							.setIsSuccess(false)
+							.setFailureMessage(verifierManager.getFailMessage())
+							.setType(ProxyResponse.ResponseType.JOIN)
+							.build();
+					System.out.println("Device with id " + msg.getDeviceId() + " failed attestation at " + ts);
+					return new ConfidentialMessage(proxyResponse.toByteArray());
 				}
 			case MEMBERSHIP_JOIN_MQTT:
-				boolean isMQTTEvidenceValid = verifierManager.verifyMQTTEvidence(msg.getMqttEvidence());
+
+				boolean isMQTTEvidenceValid = verifierManager.verifyMQTTEvidence(msg.getDeviceId(), ts, msg.getMqttEvidence());
 				if(isMQTTEvidenceValid) {
-					byte[] data = serialize(ts);
 					membership.join(msg.getAppId(), msg.getDeviceId(), new Timestamp(messageContext.getTimestamp()));
 					System.out.println("MQTT with id " + msg.getDeviceId() + " attested at " + ts);
 
-					return new ConfidentialMessage(data);
+					proxyResponse = ProxyResponse.newBuilder()
+							.setIsSuccess(true)
+							.setTimestamp(ByteString.copyFrom(serialize(ts)))
+							.setFailureMessage("MQTT with id " + msg.getDeviceId() + " attested at " + ts)
+							.setType(ProxyResponse.ResponseType.JOIN_MQTT)
+							.build();
+
+					return new ConfidentialMessage(proxyResponse.toByteArray());
 				} else {
-					System.out.println("MQTT with id " + msg.getDeviceId() + " failed attestation at " + ts);
-					return new ConfidentialMessage(new byte[]{0});
+					proxyResponse = ProxyResponse.newBuilder()
+							.setIsSuccess(false)
+							.setFailureMessage(verifierManager.getFailMessage())
+							.setType(ProxyResponse.ResponseType.JOIN_MQTT)
+							.build();
+					return new ConfidentialMessage(proxyResponse.toByteArray());
 				}
 			case MEMBERSHIP_LEAVE:
 				lock.lock();

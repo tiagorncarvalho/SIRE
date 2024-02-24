@@ -5746,6 +5746,30 @@ public final class Messages {
      * @return The isSuccess.
      */
     boolean getIsSuccess();
+
+    /**
+     * <code>string deviceId = 11;</code>
+     * @return The deviceId.
+     */
+    java.lang.String getDeviceId();
+    /**
+     * <code>string deviceId = 11;</code>
+     * @return The bytes for deviceId.
+     */
+    com.google.protobuf.ByteString
+        getDeviceIdBytes();
+
+    /**
+     * <code>string failureMessage = 12;</code>
+     * @return The failureMessage.
+     */
+    java.lang.String getFailureMessage();
+    /**
+     * <code>string failureMessage = 12;</code>
+     * @return The bytes for failureMessage.
+     */
+    com.google.protobuf.ByteString
+        getFailureMessageBytes();
   }
   /**
    * Protobuf type {@code sire.messages.ProxyResponse}
@@ -5768,6 +5792,8 @@ public final class Messages {
       timestamp_ = com.google.protobuf.ByteString.EMPTY;
       pubKey_ = com.google.protobuf.ByteString.EMPTY;
       hash_ = com.google.protobuf.ByteString.EMPTY;
+      deviceId_ = "";
+      failureMessage_ = "";
     }
 
     @java.lang.Override
@@ -5866,6 +5892,18 @@ public final class Messages {
             case 80: {
 
               isSuccess_ = input.readBool();
+              break;
+            }
+            case 90: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              deviceId_ = s;
+              break;
+            }
+            case 98: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              failureMessage_ = s;
               break;
             }
             default: {
@@ -6866,6 +6904,82 @@ public final class Messages {
       return isSuccess_;
     }
 
+    public static final int DEVICEID_FIELD_NUMBER = 11;
+    private volatile java.lang.Object deviceId_;
+    /**
+     * <code>string deviceId = 11;</code>
+     * @return The deviceId.
+     */
+    @java.lang.Override
+    public java.lang.String getDeviceId() {
+      java.lang.Object ref = deviceId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        deviceId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string deviceId = 11;</code>
+     * @return The bytes for deviceId.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getDeviceIdBytes() {
+      java.lang.Object ref = deviceId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        deviceId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int FAILUREMESSAGE_FIELD_NUMBER = 12;
+    private volatile java.lang.Object failureMessage_;
+    /**
+     * <code>string failureMessage = 12;</code>
+     * @return The failureMessage.
+     */
+    @java.lang.Override
+    public java.lang.String getFailureMessage() {
+      java.lang.Object ref = failureMessage_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        failureMessage_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string failureMessage = 12;</code>
+     * @return The bytes for failureMessage.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getFailureMessageBytes() {
+      java.lang.Object ref = failureMessage_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        failureMessage_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -6909,6 +7023,12 @@ public final class Messages {
       }
       if (isSuccess_ != false) {
         output.writeBool(10, isSuccess_);
+      }
+      if (!getDeviceIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 11, deviceId_);
+      }
+      if (!getFailureMessageBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 12, failureMessage_);
       }
       unknownFields.writeTo(output);
     }
@@ -6963,6 +7083,12 @@ public final class Messages {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(10, isSuccess_);
       }
+      if (!getDeviceIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, deviceId_);
+      }
+      if (!getFailureMessageBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, failureMessage_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -7000,6 +7126,10 @@ public final class Messages {
           .equals(other.getHash())) return false;
       if (getIsSuccess()
           != other.getIsSuccess()) return false;
+      if (!getDeviceId()
+          .equals(other.getDeviceId())) return false;
+      if (!getFailureMessage()
+          .equals(other.getFailureMessage())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -7038,6 +7168,10 @@ public final class Messages {
       hash = (37 * hash) + ISSUCCESS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getIsSuccess());
+      hash = (37 * hash) + DEVICEID_FIELD_NUMBER;
+      hash = (53 * hash) + getDeviceId().hashCode();
+      hash = (37 * hash) + FAILUREMESSAGE_FIELD_NUMBER;
+      hash = (53 * hash) + getFailureMessage().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -7200,6 +7334,10 @@ public final class Messages {
 
         isSuccess_ = false;
 
+        deviceId_ = "";
+
+        failureMessage_ = "";
+
         return this;
       }
 
@@ -7253,6 +7391,8 @@ public final class Messages {
         result.pubKey_ = pubKey_;
         result.hash_ = hash_;
         result.isSuccess_ = isSuccess_;
+        result.deviceId_ = deviceId_;
+        result.failureMessage_ = failureMessage_;
         onBuilt();
         return result;
       }
@@ -7361,6 +7501,14 @@ public final class Messages {
         }
         if (other.getIsSuccess() != false) {
           setIsSuccess(other.getIsSuccess());
+        }
+        if (!other.getDeviceId().isEmpty()) {
+          deviceId_ = other.deviceId_;
+          onChanged();
+        }
+        if (!other.getFailureMessage().isEmpty()) {
+          failureMessage_ = other.failureMessage_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -8180,6 +8328,158 @@ public final class Messages {
         onChanged();
         return this;
       }
+
+      private java.lang.Object deviceId_ = "";
+      /**
+       * <code>string deviceId = 11;</code>
+       * @return The deviceId.
+       */
+      public java.lang.String getDeviceId() {
+        java.lang.Object ref = deviceId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          deviceId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string deviceId = 11;</code>
+       * @return The bytes for deviceId.
+       */
+      public com.google.protobuf.ByteString
+          getDeviceIdBytes() {
+        java.lang.Object ref = deviceId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          deviceId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string deviceId = 11;</code>
+       * @param value The deviceId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDeviceId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        deviceId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string deviceId = 11;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDeviceId() {
+        
+        deviceId_ = getDefaultInstance().getDeviceId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string deviceId = 11;</code>
+       * @param value The bytes for deviceId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDeviceIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        deviceId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object failureMessage_ = "";
+      /**
+       * <code>string failureMessage = 12;</code>
+       * @return The failureMessage.
+       */
+      public java.lang.String getFailureMessage() {
+        java.lang.Object ref = failureMessage_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          failureMessage_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string failureMessage = 12;</code>
+       * @return The bytes for failureMessage.
+       */
+      public com.google.protobuf.ByteString
+          getFailureMessageBytes() {
+        java.lang.Object ref = failureMessage_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          failureMessage_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string failureMessage = 12;</code>
+       * @param value The failureMessage to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFailureMessage(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        failureMessage_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string failureMessage = 12;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFailureMessage() {
+        
+        failureMessage_ = getDefaultInstance().getFailureMessage();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string failureMessage = 12;</code>
+       * @param value The bytes for failureMessage to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFailureMessageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        failureMessage_ = value;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -8306,19 +8606,20 @@ public final class Messages {
       "IP_PING\020\014\022\021\n\rEXTENSION_ADD\020\r\022\024\n\020EXTENSIO" +
       "N_REMOVE\020\016\022\021\n\rEXTENSION_GET\020\017\022\016\n\nPOLICY_" +
       "ADD\020\020\022\021\n\rPOLICY_REMOVE\020\021\022\016\n\nPOLICY_GET\020\022" +
-      "\022\021\n\rTIMESTAMP_GET\020\023\"\342\003\n\rProxyResponse\0227\n" +
+      "\022\021\n\rTIMESTAMP_GET\020\023\"\214\004\n\rProxyResponse\0227\n" +
       "\004type\030\001 \001(\0162).sire.messages.ProxyRespons" +
       "e.ResponseType\022\014\n\004list\030\002 \003(\014\022\r\n\005value\030\003 " +
       "\001(\014\022@\n\007members\030\004 \003(\0132/.sire.messages.Pro" +
       "xyResponse.ProtoDeviceContext\022\021\n\textPoli" +
       "cy\030\005 \001(\t\022)\n\004sign\030\006 \001(\0132\033.sire.messages.P" +
       "rotoSchnorr\022\021\n\ttimestamp\030\007 \001(\014\022\016\n\006pubKey" +
-      "\030\010 \001(\014\022\014\n\004hash\030\t \001(\014\022\021\n\tisSuccess\030\n \001(\010\032" +
-      "&\n\022ProtoDeviceContext\022\020\n\010deviceId\030\001 \001(\t\"" +
-      "\216\001\n\014ResponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_LIS" +
-      "T\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n\nPOLI" +
-      "CY_GET\020\004\022\013\n\007PREJOIN\020\005\022\020\n\014PREJOIN_MQTT\020\006\022" +
-      "\010\n\004JOIN\020\007\022\r\n\tJOIN_MQTT\020\010b\006proto3"
+      "\030\010 \001(\014\022\014\n\004hash\030\t \001(\014\022\021\n\tisSuccess\030\n \001(\010\022" +
+      "\020\n\010deviceId\030\013 \001(\t\022\026\n\016failureMessage\030\014 \001(" +
+      "\t\032&\n\022ProtoDeviceContext\022\020\n\010deviceId\030\001 \001(" +
+      "\t\"\216\001\n\014ResponseType\022\013\n\007MAP_GET\020\000\022\014\n\010MAP_L" +
+      "IST\020\001\022\010\n\004VIEW\020\002\022\021\n\rEXTENSION_GET\020\003\022\016\n\nPO" +
+      "LICY_GET\020\004\022\013\n\007PREJOIN\020\005\022\020\n\014PREJOIN_MQTT\020" +
+      "\006\022\010\n\004JOIN\020\007\022\r\n\tJOIN_MQTT\020\010b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8359,7 +8660,7 @@ public final class Messages {
     internal_static_sire_messages_ProxyResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_sire_messages_ProxyResponse_descriptor,
-        new java.lang.String[] { "Type", "List", "Value", "Members", "ExtPolicy", "Sign", "Timestamp", "PubKey", "Hash", "IsSuccess", });
+        new java.lang.String[] { "Type", "List", "Value", "Members", "ExtPolicy", "Sign", "Timestamp", "PubKey", "Hash", "IsSuccess", "DeviceId", "FailureMessage", });
     internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_descriptor =
       internal_static_sire_messages_ProxyResponse_descriptor.getNestedTypes().get(0);
     internal_static_sire_messages_ProxyResponse_ProtoDeviceContext_fieldAccessorTable = new

@@ -110,4 +110,6 @@ message ProxyResponse {
   bytes pubKey = 8;
   bytes hash = 9;
   bool isSuccess = 10;
+  string deviceId = 11;
+  string failureMessage = 12;
 }

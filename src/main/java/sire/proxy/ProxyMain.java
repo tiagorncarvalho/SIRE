@@ -16,9 +16,9 @@
 
 package sire.proxy;
 
-/*import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*;/*
 import sire.attestation.Evidence;
 import sire.coordination.Extension;
 import sire.attestation.Policy;
@@ -27,35 +27,54 @@ import sire.messages.*;
 import sire.schnorr.SchnorrSignature;*/
 import sire.serverProxyUtils.SireException;
 
+import java.util.Collections;
+
 /*import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Base64;*/
 import java.util.ArrayList;
-import java.util.Base64;
+
 import java.util.List;
 
-import static sire.messages.ProtoUtils.deserialize;*/
+//import static sire.messages.ProtoUtils.deserialize;*/
 
-//@SpringBootApplication
+@SpringBootApplication
 public class ProxyMain {
     static SocketProxy proxy;
     //static RestProxy restProxy;
+    private static List<String> stateUpdates;
     public static void main(String[] args) {
         proxy = null;
+        stateUpdates = new ArrayList<>();
         try {
             int proxyId = 1;
-            proxy = new SocketProxy(proxyId);
+            proxy = new SocketProxy(proxyId, stateUpdates);
             //restProxy = new RestProxy(proxyId + 1);
         } catch (SireException e) {
             e.printStackTrace();
         }
         //SpringApplication.run(ProxyMain.class, args);
+        SpringApplication app = new SpringApplication(ProxyMain.class);
+        app.setDefaultProperties(Collections
+                .singletonMap("server.port", "8083"));
+        app.run(args);
         proxy.run();
     }
 
-   /* @CrossOrigin(origins = "*", allowedHeaders = "*")
+   @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RestController
     public static class RestProxyController {
+       @GetMapping("/state")
+       public List<String> getState() {
+           List<String> temp = new ArrayList<>(stateUpdates);
+           stateUpdates.clear();
 
+           if(temp.size() > 0)
+               System.out.println("Sent: " + temp.get(0));
+
+           return temp;
+       }
+        /*
         @PostMapping("/extension")
         public void addExtension(@RequestParam(value = "key") String key, @RequestBody String code) throws SireException {
             if(key == null || key.equals(""))
@@ -209,6 +228,6 @@ public class ProxyMain {
             else if(deviceId == null || deviceId.equals(""))
                 throw new SireException("Malformed deviceId");
             return restProxy.getList(appId, deviceId);
-        }
-    }*/
+        }*/
+    }
 }
