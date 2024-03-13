@@ -83,7 +83,7 @@ public class SocketProxy implements Runnable {
 			stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;- <span style='color:#CF9FFF'>MrSigner</span>: " + bytesToHex(attValueStore.getMrSigner()));
 			stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;- <span style='color:#026440'>Security Version</span>: " + attValueStore.getSecurityVersion());
 			stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;- <span style='color:#026440'>Product Id</span>: " + attValueStore.getProductId());
-			stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;- <span style='color:#026440'>WASM Bytecode Hash</span>: " + Arrays.toString(attValueStore.getWasmByteCodeHash()));
+			stateUpdates.add("&nbsp;&nbsp;&nbsp;&nbsp;- <span style='color:#026440'>WASM Bytecode Hash</span>: " + bytesToHex(attValueStore.getWasmByteCodeHash()));
 
 			stateUpdates.add("<hr>");
 		} catch (SecretSharingException e) {
