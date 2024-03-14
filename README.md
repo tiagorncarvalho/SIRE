@@ -230,5 +230,9 @@ Each operation can be accessed as follows:
 The body of the requests should be in JSON format, and all byte array values are expected to be encoded in Base64.
 The format of the requests and responses can be found in the ``RESTRequests.java`` and ``RESTResponses.java``, respectively.
 
+# Acknowledgments
+
+This work was supported by the FCT through the LASIGE Research Unit (UIDB/00408/2020 and UIDP/00408/2020), and by the European Commission through the VEDLIoT project (H2020 957197).
+
 
 
