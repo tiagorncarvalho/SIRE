@@ -20,6 +20,13 @@ The servers' addresses must be specified in the file ``config\hosts.config``:
 2 127.0.0.1 11020 11021
 3 127.0.0.1 11030 11031
 ```
+
+The number of server replicas, tolerated faults and initial view must be specified in the file ``config\system.config``:
+ - Line 66: ``system.servers.num = 4``
+ - Line 69: ``system.servers.f = 1``
+ - Line 153: ``system.initial.view = 0,1,2,3``
+The configuration for this file should match what was configured in the ``hosts.config`` file.
+
 The proxy address can be specified in the file ``config\proxy.properties``:
 ```
 ip=127.0.0.1
